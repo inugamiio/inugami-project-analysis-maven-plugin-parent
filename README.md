@@ -1,1 +1,0 @@
-# inugami-project-analysis-maven-plugin-parent

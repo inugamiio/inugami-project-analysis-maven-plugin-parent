@@ -1,0 +1,24 @@
+= Inugami Project analysis maven plugin
+
+
+== Cypher queries
+
+Find all dependencies :
+----
+MATCH (n:Artifact)-[]-(v:Version)-[:DEPENDENCY*0..10]->(d:Version) where n.groupId = "{groupId}"
+OPTIONAL MATCH (v)-[:PARENT]->(p:Version)
+OPTIONAL MATCH (v)-[]->(s:Service)
+return n,v,d,p,s
+----
+
+
+All REST producers and consumers from a specifics groupID :
+---
+MATCH (n:Artifact)-[]-(v:Version)-[:DEPENDENCY*0..10]->(d:Version) where n.groupId = "{groupId}" and d.groupId="{groupId}"
+OPTIONAL MATCH (v)-[:PARENT]->(p:Version)
+OPTIONAL MATCH (v)-[]->(s:Service)-[]->(st:ServiceType)
+OPTIONAL MATCH (d)-[]->(sd:Service)-[]->(sdt:ServiceType)
+return n as artifact,
+v as version,
+d,p,s,st,sd,sdt
+----

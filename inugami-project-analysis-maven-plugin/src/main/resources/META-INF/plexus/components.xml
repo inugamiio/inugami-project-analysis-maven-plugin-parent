@@ -1,0 +1,22 @@
+<component-set>
+    <components>
+        <component>
+            <role-hint>inugami-maven-lifecycle_deploy_plugin</role-hint>
+            <role>org.apache.maven.lifecycle.Lifecycle</role>
+            <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
+            <configuration>
+                <id>inugami-maven-info</id>
+                <phases>
+                    <phase>validate</phase>
+                    <phase>initialize</phase>
+                    <phase>info</phase>
+                </phases>
+
+                <default-phases>
+                    <deploy-plugin>org.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerInformation
+                    </deploy-plugin>
+                </default-phases>
+            </configuration>
+        </component>
+    </components>
+</component-set>

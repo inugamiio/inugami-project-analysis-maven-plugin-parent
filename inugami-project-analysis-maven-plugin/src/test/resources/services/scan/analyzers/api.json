@@ -1,0 +1,40 @@
+{
+  "baseContext" : "/simpleRest",
+  "endpoints" : [ {
+    "consume" : "",
+    "headers" : "",
+    "produce" : "",
+    "uri" : "/simpleRest/users/{name}/process",
+    "verb" : "GET"
+  }, {
+    "body" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\"<<Comment>>\"],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
+    "consume" : "application/json",
+    "headers" : "",
+    "produce" : "application/json",
+    "responseType" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
+    "uri" : "/simpleRest/users/{name}/comments",
+    "verb" : "POST"
+  }, {
+    "consume" : "",
+    "headers" : "correlationId,requestId",
+    "produce" : "",
+    "responseType" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
+    "uri" : "/simpleRest/users/{name}",
+    "verb" : "GET"
+  }, {
+    "consume" : "",
+    "headers" : "",
+    "produce" : "",
+    "responseType" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
+    "uri" : "/simpleRest/users/{name}",
+    "verb" : "GET"
+  }, {
+    "consume" : "",
+    "headers" : "",
+    "produce" : "",
+    "responseType" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
+    "uri" : "/simpleRest/users",
+    "verb" : "GET"
+  } ],
+  "name" : "USERS"
+}

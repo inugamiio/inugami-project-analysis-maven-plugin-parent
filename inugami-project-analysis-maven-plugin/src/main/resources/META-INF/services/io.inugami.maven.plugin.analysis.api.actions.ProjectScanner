@@ -1,0 +1,3 @@
+io.inugami.maven.plugin.analysis.plugin.services.scan.dependencies.ScanDependencies
+io.inugami.maven.plugin.analysis.plugin.services.scan.parents.ScanParent
+io.inugami.maven.plugin.analysis.plugin.services.scan.classes.ClassesScan

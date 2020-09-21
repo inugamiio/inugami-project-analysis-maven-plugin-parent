@@ -1,0 +1,288 @@
+/* --------------------------------------------------------------------
+ *  Inugami
+ * --------------------------------------------------------------------
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package io.inugami.maven.plugin.analysis.api.utils.reflection;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.inugami.api.loggers.Loggers;
+import io.inugami.api.spi.SpiLoader;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ReflectionService {
+    private static       ClassLoader            CLASS_LOADER       = null;
+    private static final Map<String, JsonNode>  CACHE              = new HashMap<>();
+    // =========================================================================
+    // API
+    // =========================================================================
+    private static final List<FieldTransformer> FIELD_TRANSFORMERS = SpiLoader.INSTANCE
+            .loadSpiServicesByPriority(FieldTransformer.class, new DefaultFieldTransformer());
+
+    public static Class<?> loadClass(final String className, final ClassLoader classLoader) {
+        try {
+            return Class.forName(className, true, classLoader);
+        }
+        catch (final ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    public static <AE extends AnnotatedElement> boolean hasAnnotation(final AE annotatedElement,
+                                                                      final Class<? extends Annotation>... annotations) {
+        boolean result = false;
+        if (annotatedElement != null && annotations != null) {
+            for (final Class<? extends Annotation> annotation : annotations) {
+                result = annotatedElement.getDeclaredAnnotation(annotation) != null;
+                if (result) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+
+    public static <T, A extends Annotation, AE extends AnnotatedElement> T ifHasAnnotation(final AE annotatedElement,
+                                                                                           final Class<A> annotation,
+                                                                                           final Function<A, T> handler) {
+        return ifHasAnnotation(annotatedElement, annotation, handler, null);
+    }
+
+
+    public static <T, A extends Annotation, AE extends AnnotatedElement> T ifHasAnnotation(final AE annotatedElement,
+                                                                                           final Class<A> annotation,
+                                                                                           final Function<A, T> handler,
+                                                                                           final Supplier<T> defaultValue) {
+        T result = null;
+        if (hasAnnotation(annotatedElement, annotation)) {
+            result = handler == null ? null : handler.apply(annotatedElement.getDeclaredAnnotation(annotation));
+        }
+
+        if (result == null && defaultValue != null) {
+            result = defaultValue.get();
+        }
+        return result;
+    }
+
+
+    public static <T, A extends Annotation, AE extends AnnotatedElement> void processOnAnnotation(
+            final AE annotatedElement,
+            final Class<A> annotationClass,
+            final Consumer<A> handler) {
+        final A annotation = annotatedElement == null ? null : annotatedElement.getDeclaredAnnotation(annotationClass);
+        if (annotation != null && handler != null) {
+            handler.accept(annotation);
+        }
+    }
+
+
+    public static JsonNode renderParameterType(final Parameter parameter) {
+
+        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor());
+    }
+
+
+    public static JsonNode renderReturnType(final Method method) {
+        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor());
+    }
+
+    public static JsonNode renderType(final Class<?> type,
+                                      final Type genericReturnType,
+                                      final ClassCursor classCursor) {
+        final String key = "class:" + (type == null ? "null" : type
+                .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName());
+
+        final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
+        JsonNode          result = CACHE.get(key);
+        if (result == null) {
+            final Class<?> returnClass = type;
+
+            final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
+            if (returnClass != null && !"void".equals(returnClass.getName())) {
+
+                String     path       = null;
+                final Type returnType = genericReturnType;
+
+                Class<?> currentClass = returnClass;
+                if (returnType != null) {
+                    currentClass = extractGenericType(returnType);
+                }
+
+                if (Collection.class.isAssignableFrom(returnClass)) {
+                    final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
+                    builder.list(true);
+                    path = "[]";
+                    builder.path("[]");
+                    JsonNode structure = null;
+                    if (currentClass != null) {
+                        structure = renderStructureJson(currentClass, path, cursorChildren);
+                    }
+
+                    if (structure != null) {
+                        builder.children(List.of(structure));
+                    }
+                    result = builder.build();
+                }
+                else {
+                    result = renderStructureJson(currentClass, null, cursorChildren);
+
+                }
+                Loggers.DEBUG.debug("json structure : {}\n{}", returnType.getTypeName(), result.convertToJson());
+            }
+
+            if (result != null) {
+                CACHE.put(key, result);
+            }
+
+        }
+
+        return result;
+    }
+
+    public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
+                                               final ClassCursor cursor) {
+        final JsonNode.JsonNodeBuilder result = JsonNode.builder();
+        result.structure(true);
+        final String currentPath = path == null ? "" : path + ".";
+        result.path(currentPath);
+
+        if (genericType == null) {
+            Loggers.DEBUG.warn("generic is null for path : {}", path);
+        }
+        else {
+            final List<Field> fields = new ArrayList<>(Arrays.asList(genericType.getDeclaredFields()));
+            fields.addAll(extractParentsFields(genericType.getSuperclass()));
+            final List<JsonNode> fieldNodes = new ArrayList<>();
+
+            for (final Field field : fields) {
+                fieldNodes.add(renderFieldJson(field, currentPath, cursor));
+            }
+            result.children(fieldNodes);
+        }
+
+        return result.build();
+    }
+
+    public static JsonNode renderFieldJson(final Field field, final String parentPath,
+                                           final ClassCursor cursor) {
+        final JsonNode.JsonNodeBuilder result      = JsonNode.builder();
+        final Type                     genericType = field.getGenericType();
+        final Class<?> fieldClass = genericType == null && genericType != Class.class ? field
+                .getType() : extractGenericType(genericType);
+
+        final String name = ifHasAnnotation(field, JsonProperty.class, JsonProperty::value, field::getName);
+        result.fieldName(name);
+
+        final String currentPath = parentPath + "." + name;
+        result.path(currentPath);
+
+
+        for (final FieldTransformer transformer : FIELD_TRANSFORMERS) {
+            if (transformer.accept(field, fieldClass, genericType, currentPath)) {
+                try {
+                }
+                catch (final Exception error) {
+                    log.error(error.getMessage(), error);
+                }
+                transformer.transform(field, fieldClass, genericType, result, currentPath, cursor);
+                if (transformer.stop(field, fieldClass, genericType, currentPath)) {
+                    break;
+                }
+            }
+        }
+
+        return result.build();
+    }
+
+
+    public static String renderFieldType(final Class<?> classType) {
+        return classType.getSimpleName();
+    }
+
+    public static String renderFieldTypeRecursive(final Class<?> classType) {
+        return String.format("\"<<%s>>\"", classType.getSimpleName());
+    }
+
+    public static String renderFieldTypeRecursiveNoQuot(final Class<?> classType) {
+        return String.format("<<%s>>", classType.getSimpleName());
+    }
+
+
+    public static List<Field> extractParentsFields(final Class<?> superclass) {
+        final List<Field> result = new ArrayList<>();
+        if (superclass != null) {
+            result.addAll(Arrays.asList(superclass.getDeclaredFields()));
+            if (superclass.getSuperclass() != null) {
+                result.addAll(extractParentsFields(superclass.getSuperclass()));
+            }
+        }
+        return result;
+    }
+
+
+    public static Class<?> getGenericType(final Type type) {
+        Class<?> result = null;
+        if (type instanceof ParameterizedType) {
+            final ParameterizedType paramType = (ParameterizedType) type;
+            final Type[]            argTypes  = paramType.getActualTypeArguments();
+            if (argTypes.length > 0) {
+                result = argTypes[0].getClass();
+            }
+        }
+        return result;
+    }
+
+    public static Class<?> extractGenericType(final Type genericType) {
+        Class<?> result = null;
+        if (genericType != null) {
+            if (genericType instanceof ParameterizedType) {
+                final String className = ((ParameterizedType) genericType).getActualTypeArguments()[0].getTypeName();
+                try {
+                    result = getClassloader().loadClass(className);
+                }
+                catch (final ClassNotFoundException e) {
+                    log.error("no class def found : {}", genericType);
+                }
+            }
+            else if (genericType instanceof Class) {
+                result = (Class<?>) genericType;
+            }
+
+        }
+        return result;
+    }
+
+    private static ClassLoader getClassloader() {
+        return CLASS_LOADER == null ? Thread.currentThread().getContextClassLoader() : CLASS_LOADER;
+    }
+
+    public static synchronized void initializeClassloader(final ClassLoader classLoader) {
+        CLASS_LOADER = classLoader;
+    }
+
+
+}
