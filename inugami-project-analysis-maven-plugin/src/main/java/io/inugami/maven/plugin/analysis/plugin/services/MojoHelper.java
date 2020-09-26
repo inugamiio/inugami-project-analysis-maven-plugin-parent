@@ -16,7 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services;
 
-import io.inugami.maven.plugin.analysis.api.utils.ConsoleColors;
+import io.inugami.api.tools.ConsoleColors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

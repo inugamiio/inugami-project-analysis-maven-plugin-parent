@@ -162,6 +162,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_commons_test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -182,6 +188,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>

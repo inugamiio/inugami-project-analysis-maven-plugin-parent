@@ -1,0 +1,89 @@
+{
+  "nodes" : [ {
+    "name" : "parent.timeout",
+    "properties" : {
+      "propertyType" : "long",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "parent.timeout"
+  }, {
+    "name" : "current.name",
+    "properties" : {
+      "defaultValue" : "someBean.value",
+      "propertyType" : "String"
+    },
+    "type" : "Property",
+    "uid" : "current.name"
+  }, {
+    "name" : "current.enable",
+    "properties" : {
+      "defaultValue" : "true",
+      "propertyType" : "java.lang.Boolean"
+    },
+    "type" : "Property",
+    "uid" : "current.enable"
+  }, {
+    "name" : "current.sender",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "current.sender"
+  }, {
+    "name" : "current.timeout",
+    "properties" : {
+      "defaultValue" : "5000",
+      "propertyType" : "long"
+    },
+    "type" : "Property",
+    "uid" : "current.timeout"
+  }, {
+    "name" : "parent.value",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "parent.value"
+  }, {
+    "name" : "current.provider",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "current.provider"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "parent.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.name",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.enable",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.sender",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "parent.value",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.provider",
+    "type" : "USE_PROPERTY"
+  } ]
+}

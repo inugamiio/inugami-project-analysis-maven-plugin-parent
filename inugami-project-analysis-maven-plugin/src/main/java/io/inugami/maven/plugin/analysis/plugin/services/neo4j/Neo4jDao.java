@@ -78,16 +78,17 @@ public class Neo4jDao {
             final int size = nodesToDeletes.size();
 
             log.info("{} nodes to delete", size);
+            String previous = null;
             for (int i = 0; i < size; i++) {
-                if (i % 10 == 0) {
-                    log.info("delete node : {}/{}", i, size);
-                }
+                previous = writeProgression(i, size, previous);
+
                 final String uid = nodesToDeletes.get(i);
                 deleteNode(uid);
             }
             log.info("deleting nodes done");
         }
     }
+
 
     public void deleteNode(final String uid) {
         final Session session = driver.session();
@@ -113,10 +114,9 @@ public class Neo4jDao {
         if (nodes != null) {
             final int size = nodes.size();
             log.info("{} nodes to create", size);
+            String previous = null;
             for (int i = 0; i < size; i++) {
-                if (i % 50 == 0) {
-                    log.info("create node : {}/{}", i, size);
-                }
+                previous = writeProgression(i, size, previous);
                 final io.inugami.maven.plugin.analysis.api.models.Node node       = nodes.get(i);
                 final Map<String, Object>                              parameters = new HashMap<>();
                 if (node.getProperties() != null) {
@@ -136,11 +136,10 @@ public class Neo4jDao {
         if (relationships != null) {
             final int size = relationships.size();
             log.info("{} relationships to create", size);
+            String previous = null;
             for (int i = 0; i < size; i++) {
                 final Relationship relationship = relationships.get(i);
-                if (i % 50 == 0) {
-                    log.info("create node : {}/{}", i, size);
-                }
+                previous = writeProgression(i, size, previous);
                 final String cypherQuery = buildRelationshipQuery(relationship);
                 processSave(cypherQuery);
             }
@@ -320,5 +319,15 @@ public class Neo4jDao {
         return result;
     }
 
+
+    private String writeProgression(final int cursor, final int size, final String previous) {
+        final int percent = (int) ((Double.valueOf(cursor + 1) / size) * 100);
+
+        final String current = new StringBuilder().append(percent).append("%").toString();
+        if (!current.equals(previous)) {
+            System.out.println(current);
+        }
+        return current;
+    }
 
 }

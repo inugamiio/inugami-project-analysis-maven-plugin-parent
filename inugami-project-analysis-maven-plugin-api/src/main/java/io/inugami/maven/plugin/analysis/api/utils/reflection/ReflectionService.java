@@ -51,6 +51,59 @@ public final class ReflectionService {
         }
     }
 
+    public static Set<Field> loadAllFields(final Class<?> clazz) {
+        final Set<Field> result = new HashSet<>();
+        try {
+            if (clazz != null && clazz != Object.class) {
+                result.addAll(Arrays.asList(clazz.getDeclaredFields()));
+                if (clazz.getSuperclass() != null) {
+                    result.addAll(loadAllFields(clazz.getSuperclass()));
+                }
+            }
+        }
+        catch (final Throwable err) {
+            Loggers.DEBUG.warn(err.getMessage());
+        }
+
+        return result;
+    }
+
+    public static Set<Constructor<?>> loadAllConstructors(final Class<?> clazz) {
+        final Set<Constructor<?>> result = new HashSet<>();
+        try {
+            if (clazz != null && clazz != Object.class) {
+                result.addAll(Arrays.asList(clazz.getDeclaredConstructors()));
+                if (clazz.getSuperclass() != null) {
+                    result.addAll(loadAllConstructors(clazz.getSuperclass()));
+                }
+            }
+        }
+        catch (final Throwable err) {
+            Loggers.DEBUG.warn(err.getMessage());
+        }
+
+        return result;
+    }
+
+    public static List<Method> loadAllMethods(final Class<?> clazz) {
+        final List<Method> result = new ArrayList<>();
+
+        try {
+            if (clazz != null && clazz != Object.class) {
+                result.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+                if (clazz.getSuperclass() != null) {
+                    result.addAll(loadAllMethods(clazz.getSuperclass()));
+                }
+            }
+
+        }
+        catch (final Throwable err) {
+            Loggers.DEBUG.warn(err.getMessage());
+        }
+
+        return result;
+    }
+
     public static <AE extends AnnotatedElement> boolean hasAnnotation(final AE annotatedElement,
                                                                       final Class<? extends Annotation>... annotations) {
         boolean result = false;

@@ -22,19 +22,20 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Map;
 
+@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder(toBuilder = true)
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Relationship implements JsonObject {
 
-    private static final long serialVersionUID = 973646684487506001L;
+    private static final long   serialVersionUID = 973646684487506001L;
     @EqualsAndHashCode.Include
-    private final String from;
+    private final        String from;
     @EqualsAndHashCode.Include
-    private final String to;
+    private final        String to;
     @EqualsAndHashCode.Include
-    private final String type;
+    private final        String type;
 
     private final Map<String, Serializable> properties;
 }

@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.rest;
 
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.api.tools.ConsoleColors;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
@@ -28,7 +29,6 @@ import io.inugami.maven.plugin.analysis.api.models.neo4j.VersionNode;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
-import io.inugami.maven.plugin.analysis.api.utils.ConsoleColors;
 import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;

@@ -20,6 +20,7 @@ import io.inugami.api.loggers.Loggers;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
+import io.inugami.api.tools.ConsoleColors;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectPostAnalyzer;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectPreAnalyzer;
@@ -27,7 +28,6 @@ import io.inugami.maven.plugin.analysis.api.actions.ProjectScanner;
 import io.inugami.maven.plugin.analysis.api.actions.ResultWriter;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
-import io.inugami.maven.plugin.analysis.api.utils.ConsoleColors;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
@@ -244,10 +244,10 @@ public class CheckMojo extends AbstractMojo {
     private JarClassLoader buildClassloader(final ArtifactResolverListener listener) throws MojoExecutionException {
         try {
 
-            final JarClassLoader     dependenciesClassLoader = buildDependenciesClassLoader(listener);
-            final Collection<String> dependencies            = getDependentClasspathElements();
-            final URL[]              urls                    = new URL[dependencies.size()];
-            final int                index                   = 0;
+            final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
+            final Set<String>    dependencies            = new HashSet(getDependentClasspathElements());
+            final URL[]          urls                    = new URL[dependencies.size()];
+            final int            index                   = 0;
             for (final String dependency : dependencies) {
                 dependenciesClassLoader.add(Paths.get(dependency).toUri().toURL());
             }
