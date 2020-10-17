@@ -34,8 +34,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.maven.plugin.analysis.plugin.services.scan.UnitTestHelper.assertText;
-import static io.inugami.maven.plugin.analysis.plugin.services.scan.UnitTestHelper.loadJsonReference;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,7 +60,7 @@ class SpringRestControllersAnalyzerTest {
 
         assertThat(api.getEndpoints()).isNotNull();
         assertThat(api.getEndpoints().size()).isEqualTo(5);
-        assertText(api, loadJsonReference("/services/scan/analyzers/api.json"));
+        assertTextRelatif(api, "/services/scan/analyzers/api.json");
     }
 
 

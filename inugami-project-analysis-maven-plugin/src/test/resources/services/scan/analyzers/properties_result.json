@@ -11,7 +11,8 @@
     "name" : "current.name",
     "properties" : {
       "defaultValue" : "someBean.value",
-      "propertyType" : "String"
+      "propertyType" : "String",
+      "mandatory" : false
     },
     "type" : "Property",
     "uid" : "current.name"
@@ -19,7 +20,8 @@
     "name" : "current.enable",
     "properties" : {
       "defaultValue" : "true",
-      "propertyType" : "java.lang.Boolean"
+      "propertyType" : "java.lang.Boolean",
+      "mandatory" : false
     },
     "type" : "Property",
     "uid" : "current.enable"
@@ -35,7 +37,8 @@
     "name" : "current.timeout",
     "properties" : {
       "defaultValue" : "5000",
-      "propertyType" : "long"
+      "propertyType" : "long",
+      "mandatory" : false
     },
     "type" : "Property",
     "uid" : "current.timeout"

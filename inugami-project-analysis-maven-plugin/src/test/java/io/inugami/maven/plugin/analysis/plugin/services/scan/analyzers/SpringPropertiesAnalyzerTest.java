@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import lombok.Getter;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +27,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
-import static io.inugami.maven.plugin.analysis.plugin.services.scan.UnitTestHelper.assertText;
-import static io.inugami.maven.plugin.analysis.plugin.services.scan.UnitTestHelper.loadJsonReference;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
@@ -64,7 +69,17 @@ class SpringPropertiesAnalyzerTest {
         final List<JsonObject> result = new SpringPropertiesAnalyzer().analyze(Example.class, context);
         assertThat(result).isNotNull().size().isEqualTo(1);
         final ScanNeo4jResult nodesResult = (ScanNeo4jResult) result.get(0);
-        assertText(nodesResult, loadJsonReference("services/scan/analyzers/properties_result.json"));
+        assertTextRelatif(nodesResult, "services/scan/analyzers/properties_result.json");
+    }
+
+    @Test
+    void analyze_withBeanProperties_shouldFoundThem() {
+        final List<JsonObject> result = new SpringPropertiesAnalyzer().analyze(BeanProperty.class, context);
+        assertThat(result).isNotNull().size().isEqualTo(1);
+        final ScanNeo4jResult nodesResult = (ScanNeo4jResult) result.get(0);
+
+        //TODO
+        //assertTextRelatif(nodesResult, "services/scan/analyzers/properties_bean_result.json");
     }
 
     // =========================================================================
@@ -79,6 +94,12 @@ class SpringPropertiesAnalyzerTest {
         }
     }
 
+    public static class Service {
+        public String process() {
+            return "done";
+        }
+    }
+
     private static class Example extends ParentExample {
         @Value("${current.name:#{someBean.value}")
         private String name;
@@ -86,17 +107,63 @@ class SpringPropertiesAnalyzerTest {
         @Value("${current.enable:true}")
         private Boolean enable;
 
+        @NotEmpty
         @Value("${current.timeout:5000}")
         private long timeout;
 
         private final String provider;
 
-        public Example(@Value("${current.provider}") final String provider) {
+        public Example(@NotNull @Value("${current.provider}") final String provider) {
             this.provider = provider;
         }
 
         public void processing(@Value("${current.sender}") final String sender) {
 
         }
+
+        @ConditionalOnProperty(prefix = "project.service", name = "enable", havingValue = "true")
+        public Service buildBean() {
+            return new Service();
+        }
+
+        @ConditionalOnProperty(name = "current.enable", havingValue = "true")
+        public String buildValue() {
+            return "OK";
+        }
+
+    }
+
+    @Getter
+    @ConfigurationProperties("project.bean")
+    public static class BeanProperty {
+
+        private boolean                          enable;
+        private Long                             timeout;
+        private Map<String, String>              headers;
+        private PoolConfiguration                poolConfiguration;
+        private Map<String, DeviceConfiguration> devices;
+        private List<Key>                        keys;
+        @NotEmpty
+        private String                           url;
+    }
+
+    @Getter
+    public static class PoolConfiguration {
+        private int  nbThreads;
+        private long timeout;
+    }
+
+    @Getter
+    public static class Key {
+        private String value;
+    }
+
+    @Getter
+    public static class DeviceConfiguration {
+        private boolean             enable;
+        @NotEmpty
+        private String              title;
+        private Map<String, String> headers;
+        private List<String>        countries;
     }
 }
