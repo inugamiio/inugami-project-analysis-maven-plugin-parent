@@ -34,8 +34,19 @@ import java.util.function.Supplier;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
-    private static       ClassLoader            CLASS_LOADER       = null;
-    private static final Map<String, JsonNode>  CACHE              = new HashMap<>();
+    private static       ClassLoader           CLASS_LOADER   = null;
+    private static final Map<String, JsonNode> CACHE          = new HashMap<>();
+    private static final List<Class<?>>        PRIMITIF_TYPES = List.of(
+            boolean.class,
+            byte.class,
+            char.class,
+            short.class,
+            int.class,
+            long.class,
+            float.class,
+            double.class,
+            long.class);
+
     // =========================================================================
     // API
     // =========================================================================
@@ -200,6 +211,12 @@ public final class ReflectionService {
                     }
                     result = builder.build();
                 }
+                else if (isBasicType(currentClass)) {
+                    final JsonNode.JsonNodeBuilder node = JsonNode.builder()
+                                                                  .type(renderFieldType(currentClass))
+                                                                  .basicType(true);
+                    result = node.build();
+                }
                 else {
                     result = renderStructureJson(currentClass, null, cursorChildren);
 
@@ -214,6 +231,11 @@ public final class ReflectionService {
         }
 
         return result;
+    }
+
+
+    public static boolean isBasicType(final Class<?> currentClass) {
+        return PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang");
     }
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
@@ -310,10 +332,15 @@ public final class ReflectionService {
     }
 
     public static Class<?> extractGenericType(final Type genericType) {
+        return extractGenericType(genericType, 0);
+    }
+
+    public static Class<?> extractGenericType(final Type genericType, final int typeIndex) {
         Class<?> result = null;
         if (genericType != null) {
             if (genericType instanceof ParameterizedType) {
-                final String className = ((ParameterizedType) genericType).getActualTypeArguments()[0].getTypeName();
+                final String className = ((ParameterizedType) genericType).getActualTypeArguments()[typeIndex]
+                        .getTypeName();
                 try {
                     result = getClassloader().loadClass(className);
                 }
@@ -336,6 +363,21 @@ public final class ReflectionService {
     public static synchronized void initializeClassloader(final ClassLoader classLoader) {
         CLASS_LOADER = classLoader;
     }
+
+
+    public static Field buildField(final Class<?> type, final String name){
+        Field field = null;
+        final Constructor<?> constructor = Field.class.getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+        try {
+            field = (Field)constructor.newInstance(type,name,type,0,0,null,null);
+        }
+        catch (final Exception e) {
+            Loggers.DEBUG.error(e.getMessage());
+        }
+        return field;
+    }
+
 
 
 }

@@ -36,6 +36,7 @@ public class JsonNode implements JsonObject {
     private final String  path;
     private final boolean list;
     private final boolean structure;
+
     private final boolean map;
     private final String  fieldName;
     private final String  type;
@@ -45,6 +46,8 @@ public class JsonNode implements JsonObject {
     private final JsonNode mapValue;
 
     private final List<JsonNode> children;
+
+    private final boolean basicType;
 
     @Override
     public String convertToJson() {
@@ -59,6 +62,18 @@ public class JsonNode implements JsonObject {
 
             json.openList();
             if (type != null) {
+                json.write(type);
+            }
+        }
+        else if(basicType){
+            if(level>0){
+                final String currentFieldIndentation = buildIndentation(level);
+                json.write(currentFieldIndentation);
+                if(fieldName!=null){
+                    json.addField(fieldName);
+                }
+                json.valueQuot(type);
+            }else{
                 json.write(type);
             }
         }

@@ -22,6 +22,7 @@ import java.util.Collections;
 
 public class UnknownJsonType extends JsonNode {
     public static final String OBJECT = "<object>";
+    private static final long serialVersionUID = -4473300215794854497L;
 
     // =========================================================================
     // CONSTRUCTORS
@@ -29,7 +30,7 @@ public class UnknownJsonType extends JsonNode {
 
 
     public UnknownJsonType() {
-        super(null, false, false, false, null, null, null, null, Collections.emptyList());
+        super(null, false, false, false, null, null, null, null, Collections.emptyList(), false);
     }
 
     @Override

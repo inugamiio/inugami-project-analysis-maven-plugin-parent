@@ -49,6 +49,13 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_produce")
                                .type("cql")
                                .description("Allow to search all exposed rest services")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_properties.cql")
+                               .name("search_properties")
+                               .type("cql")
+                               .description("Allow to search all consumed properties")
                                .build()
 
                       );

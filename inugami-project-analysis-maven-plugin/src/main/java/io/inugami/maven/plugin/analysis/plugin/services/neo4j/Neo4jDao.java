@@ -120,7 +120,11 @@ public class Neo4jDao {
                 final io.inugami.maven.plugin.analysis.api.models.Node node       = nodes.get(i);
                 final Map<String, Object>                              parameters = new HashMap<>();
                 if (node.getProperties() != null) {
-                    parameters.putAll(node.getProperties());
+                    for (final Map.Entry<String, Serializable> entry : node.getProperties().entrySet()) {
+                        if (entry.getKey() != null && entry.getValue() != null) {
+                            parameters.put(entry.getKey(), entry.getValue());
+                        }
+                    }
                 }
                 parameters.put("name", node.getUid());
                 parameters.put("shortName", node.getName());
@@ -265,12 +269,16 @@ public class Neo4jDao {
         query.append(String.format("%s (n:%s {", action, node.getType()));
 
         final Iterator<Map.Entry<String, Object>> iterator = parameters.entrySet().iterator();
+        boolean                                   first    = true;
         while (iterator.hasNext()) {
             final Map.Entry<String, Object> entry        = iterator.next();
             final String                    encodedValue = convertValue(entry.getValue());
-            query.append(entry.getKey()).append(":").append(encodedValue);
-            if (iterator.hasNext()) {
-                query.append(",");
+            if (encodedValue != null) {
+                if (!first) {
+                    query.append(",");
+                }
+                query.append(entry.getKey()).append(":").append(encodedValue);
+                first = false;
             }
         }
 
@@ -288,15 +296,20 @@ public class Neo4jDao {
 
         if (relationship.getProperties() != null && !relationship.getProperties().isEmpty()) {
             query.append(" {");
+            boolean                                   first    = true;
             final Iterator<Map.Entry<String, Serializable>> iterator = relationship.getProperties().entrySet()
                                                                                    .iterator();
             while (iterator.hasNext()) {
                 final Map.Entry<String, Serializable> entry        = iterator.next();
                 final String                          encodedValue = convertValue(entry.getValue());
-                query.append(entry.getKey()).append(":").append(encodedValue);
-                if (iterator.hasNext()) {
-                    query.append(",");
+                if (encodedValue != null) {
+                    if (!first) {
+                        query.append(",");
+                    }
+                    query.append(entry.getKey()).append(":").append(encodedValue);
+                    first = false;
                 }
+
             }
             query.append("}");
         }

@@ -1,12 +1,15 @@
 {
   "nodes" : [ {
-    "name" : "parent.timeout",
+    "name" : "current.enable",
     "properties" : {
-      "propertyType" : "long",
-      "mandatory" : true
+      "defaultValue" : "true",
+      "propertyType" : "Boolean",
+      "matchIfMissing" : false,
+      "mandatory" : false,
+      "useForConditionalBean" : true
     },
     "type" : "Property",
-    "uid" : "parent.timeout"
+    "uid" : "current.enable"
   }, {
     "name" : "current.name",
     "properties" : {
@@ -17,14 +20,14 @@
     "type" : "Property",
     "uid" : "current.name"
   }, {
-    "name" : "current.enable",
+    "name" : "current.provider",
     "properties" : {
-      "defaultValue" : "true",
-      "propertyType" : "java.lang.Boolean",
-      "mandatory" : false
+      "constraintType" : "javax.validation.constraints.NotNull",
+      "propertyType" : "String",
+      "mandatory" : true
     },
     "type" : "Property",
-    "uid" : "current.enable"
+    "uid" : "current.provider"
   }, {
     "name" : "current.sender",
     "properties" : {
@@ -36,12 +39,21 @@
   }, {
     "name" : "current.timeout",
     "properties" : {
+      "constraintType" : "javax.validation.constraints.NotEmpty",
       "defaultValue" : "5000",
       "propertyType" : "long",
-      "mandatory" : false
+      "mandatory" : true
     },
     "type" : "Property",
     "uid" : "current.timeout"
+  }, {
+    "name" : "parent.timeout",
+    "properties" : {
+      "propertyType" : "long",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "parent.timeout"
   }, {
     "name" : "parent.value",
     "properties" : {
@@ -51,13 +63,15 @@
     "type" : "Property",
     "uid" : "parent.value"
   }, {
-    "name" : "current.provider",
+    "name" : "project.service.enable",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "propertyType" : "boolean",
+      "matchIfMissing" : false,
+      "mandatory" : false,
+      "useForConditionalBean" : true
     },
     "type" : "Property",
-    "uid" : "current.provider"
+    "uid" : "project.service.enable"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
@@ -75,6 +89,10 @@
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "current.sender",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.service.enable",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",

@@ -25,6 +25,7 @@ import java.util.Map;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Builder(toBuilder = true)
+@Setter
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Node implements JsonObject {
@@ -34,5 +35,5 @@ public class Node implements JsonObject {
     private final String                    name;
     @EqualsAndHashCode.Include
     private final String                    uid;
-    private final Map<String, Serializable> properties;
+    private  Map<String, Serializable> properties;
 }

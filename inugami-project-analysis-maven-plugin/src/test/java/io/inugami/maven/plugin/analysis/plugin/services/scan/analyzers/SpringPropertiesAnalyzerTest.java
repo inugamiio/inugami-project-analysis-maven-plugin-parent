@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -78,8 +79,7 @@ class SpringPropertiesAnalyzerTest {
         assertThat(result).isNotNull().size().isEqualTo(1);
         final ScanNeo4jResult nodesResult = (ScanNeo4jResult) result.get(0);
 
-        //TODO
-        //assertTextRelatif(nodesResult, "services/scan/analyzers/properties_bean_result.json");
+        assertTextRelatif(nodesResult, "services/scan/analyzers/properties_bean_result.json");
     }
 
     // =========================================================================
@@ -138,11 +138,13 @@ class SpringPropertiesAnalyzerTest {
     public static class BeanProperty {
 
         private boolean                          enable;
+        @Min(value=500)
         private Long                             timeout;
         private Map<String, String>              headers;
         private PoolConfiguration                poolConfiguration;
         private Map<String, DeviceConfiguration> devices;
         private List<Key>                        keys;
+
         @NotEmpty
         private String                           url;
     }
@@ -156,6 +158,12 @@ class SpringPropertiesAnalyzerTest {
     @Getter
     public static class Key {
         private String value;
+        private Information info;
+    }
+    @Getter
+    public static class Information {
+        private String comment;
+        private String detail;
     }
 
     @Getter
@@ -164,6 +172,8 @@ class SpringPropertiesAnalyzerTest {
         @NotEmpty
         private String              title;
         private Map<String, String> headers;
+
+        @NotEmpty
         private List<String>        countries;
     }
 }

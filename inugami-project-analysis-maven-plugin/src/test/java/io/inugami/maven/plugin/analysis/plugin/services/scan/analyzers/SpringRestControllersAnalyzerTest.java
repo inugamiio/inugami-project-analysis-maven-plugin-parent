@@ -59,7 +59,7 @@ class SpringRestControllersAnalyzerTest {
         assertThat(api.getBaseContext()).isEqualTo("/simpleRest");
 
         assertThat(api.getEndpoints()).isNotNull();
-        assertThat(api.getEndpoints().size()).isEqualTo(5);
+        assertThat(api.getEndpoints().size()).isEqualTo(6);
         assertTextRelatif(api, "/services/scan/analyzers/api.json");
     }
 
@@ -90,6 +90,10 @@ class SpringRestControllersAnalyzerTest {
 
         @GetMapping(path = "/users/{name}/process")
         public void process(@PathVariable("name") final String name) {
+        }
+        @GetMapping(path = "/health")
+        public String process() {
+            return "hello";
         }
 
 
