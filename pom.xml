@@ -53,7 +53,7 @@
         <org.reflections.version>0.9.11</org.reflections.version>
         <org.junit.jupiter>5.7.0-M1</org.junit.jupiter>
         <org.apache.log4j.version>2.13.3</org.apache.log4j.version>
-
+        <plugins.org-apache-maven-plugins.maven-javadoc-plugin>2.10.1</plugins.org-apache-maven-plugins.maven-javadoc-plugin>
         <!--[ net ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <net.sf.flexjson.version>3.3</net.sf.flexjson.version>
 
@@ -335,6 +335,22 @@
                     </dependencies>
                 </plugin>
 
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${plugins.org-apache-maven-plugins.maven-javadoc-plugin}</version>
+                    <configuration>
+                        <source>${super.jdk}</source>
+                        <target>${super.jdk}</target>
+                        <javadocVersion>${super.jdk}</javadocVersion>
+                        <quiet>true</quiet>
+                        <charset>${project.build.sourceEncoding}</charset>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <docencoding>${project.build.sourceEncoding}</docencoding>
+                        <additionalJOption>-J-Xmx512m</additionalJOption>
+                        <author>false</author>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
