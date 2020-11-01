@@ -260,31 +260,24 @@
     <!-- =======================================================================
     = REPOSITORIES
     =========================================================================-->
-    <repositories>
-        <repository>
-            <id>nuxeo</id>
-            <name>nuxeo</name>
-            <url>https://maven-eu.nuxeo.org/nexus/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>inugami-release</id>
-            <name>inugami-release</name>
-            <url>http://inugami.io/artifactory/inugami-release</url>
-        </repository>
-        <repository>
-            <id>inugami-snapshot</id>
-            <name>inugami-snapshot</name>
-            <url>http://inugami.io/artifactory/inugami-snapshot</url>
-        </repository>
-    </repositories>
+    <scm>
+        <url>https://github.com/inugamiio/inugami-project-analysis-maven-plugin-parent</url>
+        <connection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git</connection>
+        <developerConnection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git</developerConnection>
+        <tag>v0.0.0</tag>
+    </scm>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>inugami-release</id>
-            <name>inugami-release</name>
-            <url>http://inugami.io/artifactory/inugami-release</url>
-        </pluginRepository>
-    </pluginRepositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <!-- ======================================================================= 
     = BUILD
