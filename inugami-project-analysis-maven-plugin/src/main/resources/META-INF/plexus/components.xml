@@ -1,7 +1,7 @@
 <component-set>
     <components>
         <component>
-            <role-hint>inugami-maven-lifecycle_deploy_plugin</role-hint>
+            <role-hint>inugami-maven-lifecycle_info</role-hint>
             <role>org.apache.maven.lifecycle.Lifecycle</role>
             <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
             <configuration>
@@ -14,6 +14,29 @@
 
                 <default-phases>
                     <deploy-plugin>org.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerInformation
+                    </deploy-plugin>
+                </default-phases>
+            </configuration>
+        </component>
+
+        <component>
+            <role-hint>inugami-maven-lifecycle_analyse</role-hint>
+            <role>org.apache.maven.lifecycle.Lifecycle</role>
+            <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
+            <configuration>
+                <id>inugami-maven-analyse</id>
+                <phases>
+                    <phase>validate</phase>
+                    <phase>initialize</phase>
+                    <phase>process-resources</phase>
+                    <phase>compile</phase>
+                    <phase>process-test-resources</phase>
+                    <phase>test-compile</phase>
+                    <phase>analyse</phase>
+                </phases>
+
+                <default-phases>
+                    <deploy-plugin>org.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerAnalyse
                     </deploy-plugin>
                 </default-phases>
             </configuration>

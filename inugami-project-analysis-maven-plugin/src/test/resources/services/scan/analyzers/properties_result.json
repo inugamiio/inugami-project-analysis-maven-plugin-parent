@@ -63,6 +63,16 @@
     "type" : "Property",
     "uid" : "parent.value"
   }, {
+    "name" : "project.feature.enable",
+    "properties" : {
+      "propertyType" : "boolean",
+      "matchIfMissing" : false,
+      "mandatory" : false,
+      "useForConditionalBean" : true
+    },
+    "type" : "Property",
+    "uid" : "project.feature.enable"
+  }, {
     "name" : "project.service.enable",
     "properties" : {
       "propertyType" : "boolean",
@@ -89,6 +99,10 @@
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "current.sender",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.feature.enable",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",

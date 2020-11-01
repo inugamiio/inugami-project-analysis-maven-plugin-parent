@@ -42,9 +42,9 @@ public class ClassesScan implements ProjectScanner {
     public List<JsonObject> scan(final ScanConext context) {
         final List<JsonObject> result = new ArrayList<>();
 
-        final List<String>        foundClasses = scanProjectSource(
+        final List<String> foundClasses = scanProjectSource(
                 context.getProject().getBuild().getOutputDirectory());
-        final List<ClassAnalyzer> analyzers    = SpiLoader.INSTANCE.loadSpiServicesByPriority(ClassAnalyzer.class);
+        final List<ClassAnalyzer> analyzers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ClassAnalyzer.class);
         for (final String className : foundClasses) {
             try {
                 final Class<?> clazz = context.getClassLoader().loadClass(className);
@@ -65,6 +65,7 @@ public class ClassesScan implements ProjectScanner {
                                           final List<ClassAnalyzer> analyzers,
                                           final ScanConext context) {
         final List<JsonObject> result = new ArrayList<>();
+        log.info("analyse class : {}", clazz);
         for (final ClassAnalyzer analyzer : analyzers) {
             if (analyzer.accept(clazz, context)) {
                 try {

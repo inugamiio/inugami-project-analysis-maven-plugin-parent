@@ -20,6 +20,7 @@ import org.neo4j.driver.Value;
 import org.neo4j.driver.types.Node;
 
 import java.util.*;
+import java.util.function.Function;
 
 @Slf4j
 public class Properties implements ProjectInformation, QueryConfigurator {
@@ -115,13 +116,26 @@ public class Properties implements ProjectInformation, QueryConfigurator {
                 final List<PropertyDto> propertyData = properties.get(artifactName);
                 Collections.sort(propertyData, (value, ref) -> value.getName().compareTo(ref.getName()));
 
+                final int propertyColSize = searchMaxSize(propertyData, PropertyDto::getName);
+                final int typeColSize     = searchMaxSize(propertyData, PropertyDto::getType);
                 for (final PropertyDto property : propertyData) {
-                    renderProperty(property, writer);
+                    renderProperty(property, writer, propertyColSize, typeColSize);
                 }
             }
         }
 
         log.info(writer.toString());
+    }
+
+    private int searchMaxSize(final List<PropertyDto> propertyData, final Function<PropertyDto, String> extractor) {
+        int result = 0;
+        for (final PropertyDto dto : propertyData) {
+            final String value = extractor.apply(dto);
+            if (value != null && value.length() > result) {
+                result = value.length();
+            }
+        }
+        return result;
     }
 
     private void mapResultSet(final Map<String, List<PropertyDto>> properties, final Node artifact,
@@ -140,39 +154,68 @@ public class Properties implements ProjectInformation, QueryConfigurator {
                                           .name(property.get("name").asString())
                                           .type(property.get("propertyType").asString())
                                           .defaultValue(notNull(property.get("defaultValue")) ? property.get("defaultValue").asString() : null)
+                                          .mandatory(notNull(property.get("mandatory")) ?property.get("mandatory").asBoolean() : false)
                                           .constraintType(notNull(property.get("constraintType")) ? property.get("constraintType").asString() : null)
                                           .constraintDetail(notNull(property.get("constraintDetail")) ? property.get("constraintDetail").asString() : null)
+
+                                          .useForConditionalBean(notNull(property.get("useForConditionalBean")) ?property.get("useForConditionalBean").asBoolean() : false)
+                                          .matchIfMissing(notNull(property.get("matchIfMissing")) ?property.get("matchIfMissing").asBoolean() : false)
                                           .build());
         //@formatter:on
     }
 
-    private void renderProperty(final PropertyDto property, final JsonBuilder writer) {
+    private void renderProperty(final PropertyDto property, final JsonBuilder writer, final int propertyColSize,
+                                final int typeColSize) {
+        writer.line();
 
         if (property.isMandatory()) {
             writer.write(ConsoleColors.RED);
             writer.write("* ");
         }
+        else if (property.useForConditionalBean) {
+            writer.write(ConsoleColors.YELLOW);
+            writer.write("! ");
+        }
         else {
             writer.write("  ");
         }
-        writer.line();
-        writer.write(property.getName());
-        writer.write(" : ");
-        writer.write(property.getType());
 
-        if(property.getDefaultValue() != null){
+        writer.write(property.getName());
+        writer.write(ConsoleColors.createLine(" ", propertyColSize - property.getName().length()));
+
+        writer.write(" | ");
+        writer.write(property.getType());
+        writer.write(ConsoleColors.createLine(" ", typeColSize - property.getType().length()));
+
+        if (property.getDefaultValue() != null) {
             writer.write(" | default : ");
             writer.write(property.getDefaultValue());
+        }else{
+            writer.write(" | default : null");
         }
 
-
-
+        final int detailTab = propertyColSize + typeColSize + 6;
+        if (property.isUseForConditionalBean()) {
+            writer.line()
+                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write("| use for conditional bean :").write("true");
+        }
+        if (property.isMatchIfMissing()) {
+            writer.line()
+                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write("| match if missing : ").write(property.isMatchIfMissing());
+        }
         if (property.getConstraintType() != null) {
-            writer.line().write("\t\t|").write(property.getConstraintType());
+            writer.line()
+                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write("| constraint :").write(property.getConstraintType());
         }
         if (property.getConstraintDetail() != null) {
-            writer.line().write("\t\t|").write(property.getConstraintDetail());
+            writer.line()
+                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write("| constraint detail :").write(property.getConstraintDetail());
         }
+
         writer.write(ConsoleColors.RESET);
     }
 
@@ -186,7 +229,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     }
 
     private boolean notNull(final Value value) {
-        return value != null && !"null".equals(value.asString());
+        return value != null && !"null".equals(String.valueOf(value.asObject()));
     }
 
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -194,11 +237,14 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     @Builder
     private static class PropertyDto {
         private final boolean mandatory;
+        private final boolean useForConditionalBean;
+        private final boolean matchIfMissing;
+
         @EqualsAndHashCode.Include
-        private final String  name;
-        private final String  type;
-        private final String  defaultValue;
-        private final String  constraintType;
-        private final String  constraintDetail;
+        private final String name;
+        private final String type;
+        private final String defaultValue;
+        private final String constraintType;
+        private final String constraintDetail;
     }
 }

@@ -229,7 +229,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         final Set<Node> result = new HashSet<>();
         final String[]  values = annotation.value();
         final String[]  names  = annotation.name();
-        if (names != null && names.length > 0) {
+        if ((names != null && names.length > 0 )|| (values!=null && values.length>0)) {
 
             final String prefix = annotation.prefix() == null || "".equals(annotation.prefix().trim())
                                   ? null
@@ -237,7 +237,15 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
             final String  havingValue    = annotation.havingValue();
             final boolean matchIfMissing = annotation.matchIfMissing();
 
-            for (final String name : names) {
+            final Set<String> currentNames = new HashSet<>();
+            if(values !=null){
+                currentNames.addAll(Arrays.asList(values));
+            }
+            if(names !=null){
+                currentNames.addAll(Arrays.asList(names));
+            }
+
+            for (final String name : currentNames) {
                 if (stringNotEmpty(name)) {
 
                     final String                    valueFull      = (prefix == null ? "" : prefix + ".") + name;

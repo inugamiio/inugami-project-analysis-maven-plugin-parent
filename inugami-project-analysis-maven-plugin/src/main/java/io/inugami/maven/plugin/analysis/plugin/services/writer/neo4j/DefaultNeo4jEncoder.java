@@ -22,10 +22,17 @@ import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DefaultNeo4jEncoder implements Neo4jValueEncoder {
 
-
+    public static final String DATE_ISO                   = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     // =========================================================================
     // API
     // =========================================================================
@@ -40,14 +47,21 @@ public class DefaultNeo4jEncoder implements Neo4jValueEncoder {
 
     private String processEncoding(final Object value) {
         String result = null;
-        if (value instanceof String) {
-            result = quotValue(NodeUtils.cleanLines(String.valueOf(value)));
+        if (value instanceof Boolean) {
+            result = String.valueOf(value);
         }
         else if (isNumber(value)) {
             result = encodeNumber(value);
         }
+        else if(isDate(value)){
+            result = quotValue(encodeDate(value));
+        }
+        else {
+            result = quotValue(NodeUtils.cleanLines(String.valueOf(value)));
+        }
         return result;
     }
+
 
 
     // =========================================================================
@@ -64,6 +78,37 @@ public class DefaultNeo4jEncoder implements Neo4jValueEncoder {
 
     private String encodeNumber(final Object value) {
         return String.valueOf(value);
+    }
+
+
+    // =========================================================================
+    // DATE
+    // =========================================================================
+    private boolean isDate(final Object value) {
+        return value instanceof Date ||
+                value instanceof Calendar ||
+                value instanceof LocalDate ||
+                value instanceof LocalDateTime ||
+                value instanceof ZonedDateTime ;
+    }
+    private String encodeDate(final Object value) {
+        String result = null;
+        try{
+            if(value instanceof Date){
+                result = new SimpleDateFormat(DATE_ISO).format((Date)value);
+            }else if(value instanceof Calendar){
+                result = new SimpleDateFormat(DATE_ISO).format(((Calendar)value).getTime());
+            }else if(value instanceof LocalDate){
+                result = ((LocalDate)value).format(DateTimeFormatter.ISO_DATE);
+            }else if(value instanceof LocalDateTime){
+                result = ((LocalDateTime)value).format(DateTimeFormatter.ISO_DATE);
+            }else if(value instanceof ZonedDateTime){
+                result = ((ZonedDateTime)value).format(DateTimeFormatter.ISO_DATE);
+            }
+        }catch (final Exception e){
+        }
+
+        return result;
     }
 
     // =========================================================================

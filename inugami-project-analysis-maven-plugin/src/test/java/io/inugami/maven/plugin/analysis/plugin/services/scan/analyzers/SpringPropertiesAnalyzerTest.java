@@ -100,6 +100,7 @@ class SpringPropertiesAnalyzerTest {
         }
     }
 
+    @ConditionalOnProperty(prefix = "project.feature", name = "enable", havingValue = "true")
     private static class Example extends ParentExample {
         @Value("${current.name:#{someBean.value}")
         private String name;
