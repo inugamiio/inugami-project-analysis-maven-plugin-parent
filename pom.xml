@@ -10,8 +10,12 @@
     =========================================================================-->
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Specifics maven lifecycle to package and run inugami project</description>
+    <url>http://inugami.io</url>
+
 
     <!-- ======================================================================= 
     = LICENSE
@@ -22,7 +26,25 @@
             <url>https://www.gnu.org/licenses/gpl.txt</url>
         </license>
     </licenses>
+    <!-- =======================================================================
+    = DEVELOPERS
+    ======================================================================== -->
+    <developers>
+        <developer>
+            <name>Mikhaïl Sadovnikov</name>
+            <email>mis.strator@inugami.io</email>
+            <organization>Inugami.io</organization>
+            <organizationUrl>http://inugami.io</organizationUrl>
+        </developer>
 
+        <developer>
+            <name>Patrick Guillerm</name>
+            <email>patrickguillerm@inugami.io</email>
+            <organization>Inugami.io</organization>
+            <organizationUrl>http://inugami.io</organizationUrl>
+        </developer>
+
+    </developers>
     <!-- ======================================================================= 
     = PROPERTIES
     =========================================================================-->
