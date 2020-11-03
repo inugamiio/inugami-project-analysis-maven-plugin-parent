@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.5.0</maven>
@@ -38,7 +39,7 @@
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>2.0.0</io.inugami.version>
+        <io.inugami.version>2.0.0-SNAPSHOT</io.inugami.version>
 
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <org.slf4j.version>1.7.21</org.slf4j.version>
@@ -54,7 +55,8 @@
         <org.reflections.version>0.9.11</org.reflections.version>
         <org.junit.jupiter>5.7.0-M1</org.junit.jupiter>
         <org.apache.log4j.version>2.13.3</org.apache.log4j.version>
-        <plugins.org-apache-maven-plugins.maven-javadoc-plugin>3.2.0</plugins.org-apache-maven-plugins.maven-javadoc-plugin>
+        <plugins.org-apache-maven-plugins.maven-javadoc-plugin>3.2.0
+        </plugins.org-apache-maven-plugins.maven-javadoc-plugin>
         <!--[ net ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <net.sf.flexjson.version>3.3</net.sf.flexjson.version>
 
@@ -76,7 +78,8 @@
     <scm>
         <url>https://github.com/inugamiio/inugami-project-analysis-maven-plugin-parent</url>
         <connection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git</connection>
-        <developerConnection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git
+        </developerConnection>
         <tag>v0.0.0</tag>
     </scm>
 
@@ -257,9 +260,7 @@
     </dependencyManagement>
 
 
-
-
-    <!-- ======================================================================= 
+    <!-- =======================================================================
     = BUILD
     =========================================================================-->
     <build>
@@ -303,29 +304,102 @@
                     </dependencies>
                 </plugin>
 
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${plugins.org-apache-maven-plugins.maven-javadoc-plugin}</version>
-                    <configuration>
-                        <source>${super.jdk}</source>
-                        <target>${super.jdk}</target>
-                        <javadocVersion>${super.jdk}</javadocVersion>
-                        <quiet>true</quiet>
-                        <charset>${project.build.sourceEncoding}</charset>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <docencoding>${project.build.sourceEncoding}</docencoding>
-                        <additionalJOption>-J-Xmx512m</additionalJOption>
-                        <author>false</author>
-                        <additionalparam>-Xdoclint:none</additionalparam>
-                        <sourcepath>
-                            target/classes
-                        </sourcepath>
-                    </configuration>
-                </plugin>
+
             </plugins>
         </pluginManagement>
 
+        <plugins>
 
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.16.0</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/lombok</outputDirectory>
+                    <addOutputDirectory>false</addOutputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>install</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>${super.jdk}</source>
+                    <target>${super.jdk}</target>
+                    <javadocVersion>${super.jdk}</javadocVersion>
+                    <quiet>true</quiet>
+                    <charset>${project.build.sourceEncoding}</charset>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <docencoding>${project.build.sourceEncoding}</docencoding>
+                    <additionalJOption>-J-Xmx512m</additionalJOption>
+                    <author>false</author>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                    <sourcepath>${project.build.directory}/lombok</sourcepath>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <useAgent>true</useAgent>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 
