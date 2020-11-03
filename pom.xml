@@ -39,7 +39,7 @@
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>2.0.0</io.inugami.version>
+        <io.inugami.version>2.0.0   </io.inugami.version>
 
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <org.slf4j.version>1.7.21</org.slf4j.version>
