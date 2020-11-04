@@ -1,24 +1,55 @@
 = Inugami Project analysis maven plugin
 
+== Release:
+io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:1.0.1
 
-== Cypher queries
+== How to use :
 
-Find all dependencies :
+In your project pom.xml (or settings) we need to add some properties :
+
 ----
-MATCH (n:Artifact)-[]-(v:Version)-[:DEPENDENCY*0..10]->(d:Version) where n.groupId = "{groupId}"
-OPTIONAL MATCH (v)-[:PARENT]->(p:Version)
-OPTIONAL MATCH (v)-[]->(s:Service)
-return n,v,d,p,s
+<properties>
+    <inugami.maven.plugin.analysis.project.base.name>your.base.package</inugami.maven.plugin.analysis.project.base.name>
+            <inugami.maven.plugin.analysis.writer.neo4j.url>bolt://localhost:7687</inugami.maven.plugin.analysis.writer.neo4j.url>
+        <inugami.maven.plugin.analysis.writer.neo4j.user>neo4j</inugami.maven.plugin.analysis.writer.neo4j.user>
+            <inugami.maven.plugin.analysis.writer.neo4j.password>password</inugami.maven.plugin.analysis.writer.neo4j.password>
+</properties>
 ----
 
+In your project build definition :
+----
+<plugin>
+                <groupId>io.inugami.maven.plugin.analysis</groupId>
+                <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <phase>analyse</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>info</id>
+                        <phase>info</phase>
+                        <goals>
+                            <goal>retrieveInformation</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+----
 
-All REST producers and consumers from a specifics groupID :
----
-MATCH (n:Artifact)-[]-(v:Version)-[:DEPENDENCY*0..10]->(d:Version) where n.groupId = "{groupId}" and d.groupId="{groupId}"
-OPTIONAL MATCH (v)-[:PARENT]->(p:Version)
-OPTIONAL MATCH (v)-[]->(s:Service)-[]->(st:ServiceType)
-OPTIONAL MATCH (d)-[]->(sd:Service)-[]->(sdt:ServiceType)
-return n as artifact,
-v as version,
-d,p,s,st,sd,sdt
+First you need to analyse your project to send into Neo4j data :
+
+----
+mvn analyse
+----
+
+After this analyse you can see in Neo4j your project informations or execute maven phase  info
+
+----
+mvn info
 ----
