@@ -29,12 +29,6 @@ import java.util.List;
 
 @Slf4j
 public class ClassesScan implements ProjectScanner {
-
-    // =========================================================================
-    // ATTRIBUTES
-    // =========================================================================
-
-
     // =========================================================================
     // API
     // =========================================================================
@@ -111,11 +105,21 @@ public class ClassesScan implements ProjectScanner {
         return classes;
     }
 
+    //TODO : fix File separator on windows
     private String buildClassName(final String absolutePath, final String baseFolder) {
-        return absolutePath.substring(baseFolder.length() + 1)
+        return buildClassNameNormilized(absolutePath, baseFolder,File.separator);
+    }
+
+    protected static String buildClassNameNormilized(final String absolutePath, final String baseFolder, final String fileSeparator) {
+         String currentPath = absolutePath;
+       if("\\".equals(fileSeparator)){
+           currentPath = String.join("/",currentPath.split("\\\\"));
+       }
+
+        return currentPath.substring(baseFolder.length() + 1)
                            .replaceAll(".class", "")
                            .replaceAll("[$]", ".")
-                           .replaceAll(File.separator, ".");
+                           .replaceAll("/", ".");
     }
 
 

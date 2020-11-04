@@ -201,7 +201,7 @@ public class CheckMojo extends AbstractMojo {
                          .repoSystem(repoSystem)
                          .repoSession(repoSession)
                          .repositories(repositories)
-                         .classLoader(buildClassloader(listener))
+                         .classLoader(buildClassloader(listener,configuration))
                          .dependencies(listener.getArtifacts())
                          .directDependencies(extractDirectDependencies())
                          .pluginDescriptor(pluginDescriptor)
@@ -241,7 +241,8 @@ public class CheckMojo extends AbstractMojo {
     }
 
 
-    private JarClassLoader buildClassloader(final ArtifactResolverListener listener) throws MojoExecutionException {
+    private JarClassLoader buildClassloader(final ArtifactResolverListener listener,
+                                            final ConfigHandler<String, String> configuration) throws MojoExecutionException {
         try {
 
             final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
@@ -254,6 +255,13 @@ public class CheckMojo extends AbstractMojo {
 
             final JarClassLoader currentClassloader = new JarClassLoader(dependenciesClassLoader);
             currentClassloader.add(project.getBuild().getOutputDirectory());
+
+            final String additionalFolders =configuration.get("inugami.maven.plugin.analysis.additional.output.folders");
+            if(additionalFolders != null){
+                for(final String additionalPath : additionalFolders.split(";")){
+                    currentClassloader.add(new File(additionalPath.trim()).getAbsoluteFile().toURI().toURL());
+                }
+            }
             ReflectionService.initializeClassloader(currentClassloader);
             return currentClassloader;
         }
