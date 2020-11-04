@@ -1,7 +1,7 @@
 = Inugami Project analysis maven plugin
 
 == Release:
-io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:1.0.1
+io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:1.0.2
 
 == How to use :
 
