@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
+import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,7 +61,15 @@ class SpringRestControllersAnalyzerTest {
 
         assertThat(api.getEndpoints()).isNotNull();
         assertThat(api.getEndpoints().size()).isEqualTo(7);
+
+        api.getEndpoints().sort((val,ref)->{
+            return buildPath(val).compareTo(buildPath(ref));
+        });
         assertTextRelatif(api, "/services/scan/analyzers/api.json");
+    }
+
+    private String buildPath(final RestEndpoint value) {
+        return String.join("_", value.getVerb(),value.getUri());
     }
 
 
