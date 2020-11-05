@@ -36,6 +36,7 @@ public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
     private final String description;
     private final String responseType;
     private final String uid;
+    private final String method;
 
     @Override
     public int compareTo(final RestEndpoint value) {

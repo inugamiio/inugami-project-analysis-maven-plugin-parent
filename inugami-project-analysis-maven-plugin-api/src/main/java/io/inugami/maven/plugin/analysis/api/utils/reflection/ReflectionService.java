@@ -248,6 +248,11 @@ public final class ReflectionService {
         if (genericType == null) {
             Loggers.DEBUG.warn("generic is null for path : {}", path);
         }
+        else if(isBasicType(genericType)){
+            result.structure(false);
+            result.basicType(true);
+            result.type(renderFieldType(genericType));
+        }
         else {
             final List<Field> fields = new ArrayList<>(Arrays.asList(genericType.getDeclaredFields()));
             fields.addAll(extractParentsFields(genericType.getSuperclass()));

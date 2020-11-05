@@ -268,6 +268,9 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
         result.write("[").write(endpoint.getVerb()).write("] ").write(endpoint.getUri()).write(ConsoleColors.RESET)
               .line();
         result.write("\tuid:").write(endpoint.getUid()).line();
+        NodeUtils.processIfNotEmptyForce(endpoint.getMethod(),
+                                         (value) -> result.write("\tMethod:").write(value).line());
+
         NodeUtils.processIfNotEmptyForce(endpoint.getDescription(),
                                          (value) -> result.write("\tDescription:").write(value).line());
         NodeUtils

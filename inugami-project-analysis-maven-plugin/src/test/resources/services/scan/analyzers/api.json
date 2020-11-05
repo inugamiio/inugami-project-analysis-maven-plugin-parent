@@ -3,6 +3,7 @@
   "endpoints" : [ {
     "consume" : "",
     "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.process",
     "produce" : "",
     "uri" : "/simpleRest/users/{name}/process",
     "verb" : "GET"
@@ -10,6 +11,7 @@
     "body" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\"<<Comment>>\"],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
     "consume" : "application/json",
     "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.addComment",
     "produce" : "application/json",
     "responseType" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
     "uri" : "/simpleRest/users/{name}/comments",
@@ -17,6 +19,7 @@
   }, {
     "consume" : "",
     "headers" : "correlationId,requestId",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.retrieveUserInformation",
     "produce" : "",
     "responseType" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
     "uri" : "/simpleRest/users/{name}",
@@ -24,6 +27,7 @@
   }, {
     "consume" : "",
     "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.retrieveInformation",
     "produce" : "",
     "responseType" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
     "uri" : "/simpleRest/users/{name}",
@@ -31,6 +35,7 @@
   }, {
     "consume" : "",
     "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.retrieveAllInformation",
     "produce" : "",
     "responseType" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
     "uri" : "/simpleRest/users",
@@ -38,6 +43,15 @@
   }, {
     "consume" : "",
     "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.getAllUids",
+    "produce" : "",
+    "responseType" : "[\n    \"Long\"\n]",
+    "uri" : "/simpleRest/uids",
+    "verb" : "GET"
+  }, {
+    "consume" : "",
+    "headers" : "",
+    "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.process",
     "produce" : "",
     "responseType" : "String",
     "uri" : "/simpleRest/health",

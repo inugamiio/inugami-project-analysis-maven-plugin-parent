@@ -36,6 +36,7 @@ public final class RestEndpointConvertor {
                                                  .body(node.get("requestPayload").asString())
                                                  .responseType(node.get("responsePayload").asString())
                                                  .description(node.get("description").asString())
+                                                 .method(node.get("method").asString())
                                                  .build();
     }
 

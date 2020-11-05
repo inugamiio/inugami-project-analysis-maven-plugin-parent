@@ -59,7 +59,7 @@ class SpringRestControllersAnalyzerTest {
         assertThat(api.getBaseContext()).isEqualTo("/simpleRest");
 
         assertThat(api.getEndpoints()).isNotNull();
-        assertThat(api.getEndpoints().size()).isEqualTo(6);
+        assertThat(api.getEndpoints().size()).isEqualTo(7);
         assertTextRelatif(api, "/services/scan/analyzers/api.json");
     }
 
@@ -74,6 +74,10 @@ class SpringRestControllersAnalyzerTest {
         public List<Dto> retrieveUserInformation(@PathVariable("name") final String name,
                                                  @RequestHeader("correlationId") final String correlationId,
                                                  @RequestHeader("requestId") final String requestId) {
+            return null;
+        }
+        @GetMapping(path = "/uids", produces = MediaType.APPLICATION_JSON_VALUE)
+        public List<Long> getAllUids() {
             return null;
         }
 
