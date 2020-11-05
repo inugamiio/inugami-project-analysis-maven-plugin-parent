@@ -85,7 +85,7 @@ class SpringRestControllersAnalyzerTest {
     @Api("USERS")
     @RestController("simpleRest")
     public static class BasicRestController {
-        @GetMapping(path = "/users/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+        @GetMapping(path = "/users/headers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
         public List<Dto> retrieveUserInformation(@PathVariable("name") final String name,
                                                  @RequestHeader("correlationId") final String correlationId,
                                                  @RequestHeader("requestId") final String requestId) {

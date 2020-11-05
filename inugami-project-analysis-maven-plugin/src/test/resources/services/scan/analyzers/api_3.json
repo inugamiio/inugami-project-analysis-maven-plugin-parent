@@ -4,6 +4,6 @@
   "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.retrieveUserInformation",
   "produce" : "",
   "responseType" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
-  "uri" : "/simpleRest/users/{name}",
+  "uri" : "/simpleRest/users/headers/{name}",
   "verb" : "GET"
 }
