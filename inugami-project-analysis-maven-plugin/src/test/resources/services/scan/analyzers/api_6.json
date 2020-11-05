@@ -1,0 +1,10 @@
+{
+  "body" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\"<<Comment>>\"],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
+  "consume" : "application/json",
+  "headers" : "",
+  "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.addComment",
+  "produce" : "application/json",
+  "responseType" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"publishDate\":\"yyyy-MM-dd\"\n}",
+  "uri" : "/simpleRest/users/{name}/comments",
+  "verb" : "POST"
+}

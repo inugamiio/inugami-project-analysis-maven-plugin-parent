@@ -23,6 +23,7 @@ import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class SpringRestControllersAnalyzerTest {
 
@@ -65,7 +66,12 @@ class SpringRestControllersAnalyzerTest {
         api.getEndpoints().sort((val,ref)->{
             return buildPath(val).compareTo(buildPath(ref));
         });
-        assertTextRelatif(api, "/services/scan/analyzers/api.json");
+
+        for(int i=0;i<api.getEndpoints().size(); i++){
+            log.info("check api {}",i);
+            assertTextRelatif(api.getEndpoints().get(i), "/services/scan/analyzers/api_"+i+".json");
+        }
+
     }
 
     private String buildPath(final RestEndpoint value) {
