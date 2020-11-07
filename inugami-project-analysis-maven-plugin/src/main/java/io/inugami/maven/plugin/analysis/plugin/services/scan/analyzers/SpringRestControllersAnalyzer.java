@@ -44,7 +44,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
-
+    public static final String FEATURE = "inugami.maven.plugin.analysis.analyzer.restControllers.enable";
 
     public static final  String SEPARATOR                 = ",";
     public static final  String URI_SEP                   = "/";
@@ -77,7 +77,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return clazz.getAnnotation(RestController.class) != null;
+        return isEnable(FEATURE,context,true) && clazz.getAnnotation(RestController.class) != null;
     }
 
 

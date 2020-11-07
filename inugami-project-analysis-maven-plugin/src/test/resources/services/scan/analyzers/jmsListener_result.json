@@ -1,0 +1,123 @@
+{
+  "nodes" : [ {
+    "name" : "JMS",
+    "type" : "ServiceType",
+    "uid" : "JMS"
+  }, {
+    "name" : "create.user.queue",
+    "properties" : {
+      "destination" : "${my.activeMq.onUserCreated.queue}",
+      "containerFactory" : "myContainerFactory",
+      "event" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
+    },
+    "type" : "Service",
+    "uid" : "create.user.queue"
+  }, {
+    "name" : "create.user.queue",
+    "properties" : {
+      "destination" : "${my.activeMq.onUserCreated.queue}",
+      "event" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
+    },
+    "type" : "Service",
+    "uid" : "create.user.queue"
+  }, {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
+      "major" : 1,
+      "minor" : 0,
+      "patch" : 0,
+      "tag" : "SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  }, {
+    "name" : "my.activeMq.onCreated.queue",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "my.activeMq.onCreated.queue"
+  }, {
+    "name" : "my.activeMq.onUserCreated.queue",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "my.activeMq.onUserCreated.queue"
+  }, {
+    "name" : "my.activeMq.selector",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "my.activeMq.selector"
+  }, {
+    "name" : "my.activeMq.subscription",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "my.activeMq.subscription"
+  }, {
+    "name" : "onCreateComment",
+    "properties" : {
+      "destination" : "${my.activeMq.onCreated.queue}",
+      "containerFactory" : "myContainerFactory",
+      "subscription" : "${my.activeMq.subscription}",
+      "selector" : "${my.activeMq.selector}",
+      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}"
+    },
+    "type" : "Service",
+    "uid" : "onCreateComment"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "create.user.queue",
+    "to" : "JMS",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "create.user.queue",
+    "to" : "JMS",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "create.user.queue",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "create.user.queue",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "my.activeMq.onCreated.queue",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "my.activeMq.onUserCreated.queue",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "my.activeMq.selector",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "my.activeMq.subscription",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "onCreateComment",
+    "type" : "CONSUME"
+  }, {
+    "from" : "onCreateComment",
+    "to" : "JMS",
+    "type" : "SERVICE_TYPE"
+  } ]
+}

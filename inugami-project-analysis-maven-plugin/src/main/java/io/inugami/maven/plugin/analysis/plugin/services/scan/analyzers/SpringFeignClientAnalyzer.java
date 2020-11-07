@@ -26,7 +26,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import java.util.List;
 
 public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer implements ClassAnalyzer {
-
+    public static final String FEATURE = "inugami.maven.plugin.analysis.analyzer.feign.enable";
     private static final String CONSUME = "CONSUME";
 
     // =========================================================================
@@ -34,7 +34,7 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return clazz.getAnnotation(FeignClient.class) != null;
+        return  isEnable(FEATURE,context,true) && clazz.getAnnotation(FeignClient.class) != null;
     }
 
     @Override

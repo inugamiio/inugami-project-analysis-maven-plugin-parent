@@ -1,9 +1,16 @@
 = Inugami Project analysis maven plugin
+:toc:
 
-== Release:
-io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:1.0.2
+== Last Release:
+----
+<dependency>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.0.3</version>
+</dependency>
+----
 
-== How to use :
+== Quick start :
 
 In your project pom.xml (or settings) we need to add some properties :
 
@@ -19,27 +26,27 @@ In your project pom.xml (or settings) we need to add some properties :
 In your project build definition :
 ----
 <plugin>
-                <groupId>io.inugami.maven.plugin.analysis</groupId>
-                <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>check</id>
-                        <phase>analyse</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>info</id>
-                        <phase>info</phase>
-                        <goals>
-                            <goal>retrieveInformation</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.0.1</version>
+    <extensions>true</extensions>
+    <executions>
+        <execution>
+            <id>check</id>
+            <phase>analyse</phase>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>info</id>
+            <phase>info</phase>
+            <goals>
+                <goal>retrieveInformation</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
 ----
 
 First you need to analyse your project to send into Neo4j data :
@@ -53,3 +60,118 @@ After this analyse you can see in Neo4j your project informations or execute mav
 ----
 mvn info
 ----
+
+
+== Analyzers :
+
+=== Feign clients
+Feign clients analyzer scan all feign client interface to resolve project consuming REST endpoints;
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.feign.enable
+|boolean
+|true
+|Allow to disable feign client analyzer
+|===
+
+=== SpringBoot RestControllers
+To resolve project REST endpoint exposition, this analyzer scan all SpringBoot RestController.
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.restControllers.enable
+|boolean
+|true
+|Allow to disable feign client analyzer
+|===
+
+=== Spring properties
+Most part of issues on project come from wrong properties configuration.
+This analyzer scan all properties injected by @Value annotation or Bean configuration definition.
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.properties.enable
+|boolean
+|true
+|Allow to disable feign client analyzer
+|===
+
+=== ActiveMQ
+For resolve activeMQ consumers and listeners, this analyzer is able to scan all Spring @JmsListener annotation.
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.jms.enable
+|boolean
+|true
+|Allow to disable feign client analyzer
+|===
+
+==== Sender tracking
+Spring doesn't include annotation for ActiveMQ senders. Sending message is execute by calling JmsTemplate.
+To retrieve this information, Inugami project have specific annotation to flag your methods who send JMS events :
+
+----
+@JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
+public void sendCreateUser(final String someParameter, @JmsSenderBody final User user) {
+    // implementation
+}
+----
+
+The destination have the same sens than Spring @JmsListener destination.
+
+This specific annotation is present in inugami-project-analysis-maven-plugin-annotations :
+----
+<dependency>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
+    <version>${project.version}</version>
+</dependency>
+----
+
+
+
+== Extents with custom analyzers :
+This plugin allow to append plugin by including basic JAR dependencies. All plugin features are
+define by SPI interfaces.
+
+
+=== ProjectScanner
+
+----
+include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectScanner.java[lines=17..30]
+----
+
+
+=== ClassAnalyzer
+
+----
+include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ClassAnalyzer.java[lines=17..35]
+----
+
+=== ProjectPreAnalyzer
+
+----
+include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectPreAnalyzer.java[lines=17..32]
+----
+
+=== ProjectPostAnalyzer
+----
+include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectPostAnalyzer.java[lines=17..33]
+----
+
+=== ResultWriter
+----
+include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ResultWriter.java[lines=17..34]
+----
+

@@ -17,6 +17,8 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.inugami.api.processors.ConfigHandler;
+import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
@@ -24,6 +26,7 @@ import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -38,12 +41,22 @@ import java.util.Map;
 
 import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.lenient;
+
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class SpringRestControllersAnalyzerTest {
 
     @Mock
     private ScanConext context;
+
+    @BeforeEach
+    public void setup() {
+        final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap(
+                Map.ofEntries(Map.entry(SpringRestControllersAnalyzer.FEATURE, "true"))
+        );
+        lenient().when(context.getConfiguration()).thenReturn(configuration);
+    }
 
     @Test
     void testAccept() {

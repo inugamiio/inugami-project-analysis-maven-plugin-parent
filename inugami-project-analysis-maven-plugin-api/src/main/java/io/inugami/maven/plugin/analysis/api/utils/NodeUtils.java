@@ -49,4 +49,8 @@ public class NodeUtils {
     public static String cleanLines(final String value) {
         return value == null ? null : value.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     }
+
+    public static boolean hasText(final String value) {
+        return value != null && !value.trim().isEmpty();
+    }
 }

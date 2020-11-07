@@ -17,6 +17,8 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.processors.ConfigHandler;
+import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import lombok.Getter;
@@ -58,6 +60,11 @@ class SpringPropertiesAnalyzerTest {
         lenient().when(mavenProject.getPackaging()).thenReturn("jar");
 
         lenient().when(context.getProject()).thenReturn(mavenProject);
+
+        final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap(
+                Map.ofEntries(Map.entry(SpringPropertiesAnalyzer.FEATURE, "true"))
+        );
+        lenient().when(context.getConfiguration()).thenReturn(configuration);
     }
 
     @Test

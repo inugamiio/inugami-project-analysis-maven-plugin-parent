@@ -23,13 +23,8 @@ import java.util.List;
 
 @FunctionalInterface
 public interface ProjectScanner {
-
-
     default boolean enable(final ScanConext context) {
         return true;
     }
-
     List<JsonObject> scan(final ScanConext context);
-
-
 }

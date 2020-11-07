@@ -59,6 +59,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
+    public static final  String                         FEATURE               = "inugami.maven.plugin.analysis.analyzer.properties.enable";
     private static final List<Class<?>>                 SHORT_NAME            = List.of(Boolean.class,
                                                                                         String.class,
                                                                                         Short.class,
@@ -86,7 +87,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     private static final String  GROUP_PROPERTY           = "property";
     private static final String  GROUP_DEFAULT_VALUE      = "defaultValue";
     private static final Pattern VALUE_PATTERN            = Pattern.compile("(?:[$][{])(?<property>[^:}]+)(?:[:](?:#[{]){0,1}(?<defaultValue>[^}]+)(?:[}]){0,1}){0,1}(?:[}]){0,1}");
-    private static final String  USE_PROPERTY             = "USE_PROPERTY";
+    public static final String  USE_PROPERTY             = "USE_PROPERTY";
     public  static final String  PROPERTY                 = "Property";
     private static final String  DEFAULT_VALUE            = "defaultValue";
     private static final String  MANDATORY                = "mandatory";
@@ -106,7 +107,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return true;
+        return isEnable(FEATURE, context, true);
     }
 
 
@@ -133,15 +134,19 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
             final Node artifact = buildNodeVersion(context.getProject());
             for (final Node propertyNode : nodes) {
-                result.addRelationship(Relationship.builder()
-                                                   .from(artifact.getUid())
-                                                   .to(propertyNode.getUid())
-                                                   .type(USE_PROPERTY)
-                                                   .build());
+                result.addRelationship(buildRelationship(artifact, propertyNode));
             }
         }
 
         return List.of(result);
+    }
+
+    public Relationship buildRelationship(final Node artifact, final Node propertyNode) {
+        return Relationship.builder()
+                           .from(artifact.getUid())
+                           .to(propertyNode.getUid())
+                           .type(USE_PROPERTY)
+                           .build();
     }
 
 
@@ -297,11 +302,14 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     private <A extends Annotation> Node mapToNode(final Value annotation,
                                                   final Class<?> type) {
+        final String value = annotation.value();
+        return buildPropertyNode(type, value);
+    }
+
+    public Node buildPropertyNode(final Class<?> type, final String value) {
         Node   result       = null;
         String property     = null;
         String defaultValue = null;
-
-        final String value = annotation.value();
         if (value != null && value.contains("$")) {
             final Matcher matcher = VALUE_PATTERN.matcher(value);
             if (matcher.matches()) {
@@ -358,7 +366,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public Set<Node> extractProperties(final String path, final Class<?> clazz) {
         final Set<Node>  result = new HashSet<>();
         final Set<Field> fields = loadAllFields(clazz);
-        CYCLIC_CLASSES_RESOLVER.register(path,clazz);
+        CYCLIC_CLASSES_RESOLVER.register(path, clazz);
         if (fields != null) {
             for (final Field field : fields) {
                 result.addAll(extractFieldProperties(path, clazz, field));
@@ -377,7 +385,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                   field == null ? null : field.getName());
 
         for (final BeanPropertyTypeResolver resolver : TYPE_RESOLVERS) {
-            CYCLIC_CLASSES_RESOLVER.register(fullPath,field);
+            CYCLIC_CLASSES_RESOLVER.register(fullPath, field);
             final Set<Node> nodes = resolver.resolve(path, field, field.getType(), clazz, this);
             if (nodes != null) {
                 result.addAll(nodes);

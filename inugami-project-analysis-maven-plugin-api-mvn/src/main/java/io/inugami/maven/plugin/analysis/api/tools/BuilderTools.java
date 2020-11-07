@@ -21,6 +21,8 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import org.apache.maven.project.MavenProject;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,66 +51,71 @@ public class BuilderTools {
     }
 
     public static Node buildNodeVersion(final Gav gav) {
+        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("groupId", gav.getGroupId());
+        additionalInfo.put("artifactId", gav.getArtifactId());
+        additionalInfo.put("version", gav.getVersion());
+        additionalInfo.put("packaging", gav.getType());
+        additionalInfo.put("major", extractMajorVersion(gav.getVersion()));
+        additionalInfo.put("minor", extractMinorVersion(gav.getVersion()));
+        additionalInfo.put("patch", extractPatchVersion(gav.getVersion()));
+        additionalInfo.put("tag", extractTag(gav.getVersion()));
+
         return Node.builder()
                    .type("Version")
                    .uid(String.join(":", gav.getGroupId(), gav.getArtifactId(), gav.getVersion(),
                                     gav.getType()))
                    .name(gav.getVersion())
-                   .properties(Map.ofEntries(
-                           Map.entry("groupId", gav.getGroupId()),
-                           Map.entry("artifactId", gav.getArtifactId()),
-                           Map.entry("version", gav.getVersion()),
-                           Map.entry("packaging", gav.getType()),
-                           Map.entry("major", extractMajorVersion(gav.getVersion())),
-                           Map.entry("minor", extractMinorVersion(gav.getVersion())),
-                           Map.entry("patch", extractPatchVersion(gav.getVersion())),
-                           Map.entry("tag", extractTag(gav.getVersion()))
-                                            ))
+                   .properties(additionalInfo)
                    .build();
     }
 
     public static Node buildNodeVersion(final MavenProject project) {
+        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("groupId", project.getGroupId());
+        additionalInfo.put("artifactId", project.getArtifactId());
+        additionalInfo.put("version", project.getVersion());
+        additionalInfo.put("packaging", project.getPackaging());
+        additionalInfo.put("major", extractMajorVersion(project.getVersion()));
+        additionalInfo.put("minor", extractMinorVersion(project.getVersion()));
+        additionalInfo.put("patch", extractPatchVersion(project.getVersion()));
+        additionalInfo.put("tag", extractTag(project.getVersion()));
+
         return Node.builder()
                    .type("Version")
                    .uid(String.join(":", project.getGroupId(), project.getArtifactId(), project.getVersion(),
                                     project.getPackaging()))
                    .name(project.getVersion())
-                   .properties(Map.ofEntries(
-                           Map.entry("groupId", project.getGroupId()),
-                           Map.entry("artifactId", project.getArtifactId()),
-                           Map.entry("version", project.getVersion()),
-                           Map.entry("packaging", project.getPackaging()),
-                           Map.entry("major", extractMajorVersion(project.getVersion())),
-                           Map.entry("minor", extractMinorVersion(project.getVersion())),
-                           Map.entry("patch", extractPatchVersion(project.getVersion())),
-                           Map.entry("tag", extractTag(project.getVersion()))
-                                            ))
+                   .properties(additionalInfo)
                    .build();
     }
 
     public static Node buildGavNodeArtifact(final Gav gav) {
+        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("groupId", gav.getGroupId());
+        additionalInfo.put("artifactId", gav.getArtifactId());
+        additionalInfo.put("version", gav.getVersion());
+        additionalInfo.put("packaging", gav.getType());
+
         return Node.builder()
                    .type("Artifact")
                    .uid(String.join(":", gav.getGroupId(), gav.getArtifactId(), gav.getType()))
                    .name(gav.getArtifactId())
-                   .properties(Map.ofEntries(
-                           Map.entry("groupId", gav.getGroupId()),
-                           Map.entry("artifactId", gav.getArtifactId()),
-                           Map.entry("version", gav.getVersion()),
-                           Map.entry("packaging", gav.getType())))
+                   .properties(additionalInfo)
                    .build();
     }
 
     public static Node buildArtifactNode(final MavenProject project) {
+        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("groupId", project.getGroupId());
+        additionalInfo.put("artifactId", project.getArtifactId());
+        additionalInfo.put("version", project.getVersion());
+        additionalInfo.put("packaging", project.getPackaging());
         return Node.builder()
                    .type("Artifact")
                    .uid(String.join(":", project.getGroupId(), project.getArtifactId(), project.getPackaging()))
                    .name(project.getArtifactId())
-                   .properties(Map.ofEntries(
-                           Map.entry("groupId", project.getGroupId()),
-                           Map.entry("artifactId", project.getArtifactId()),
-                           Map.entry("version", project.getVersion()),
-                           Map.entry("packaging", project.getPackaging())))
+                   .properties(additionalInfo)
                    .build();
     }
 
