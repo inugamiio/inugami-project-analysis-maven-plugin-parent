@@ -27,6 +27,8 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.CyclicClassesResolver;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -51,6 +53,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@Slf4j
 public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     // =========================================================================
@@ -91,6 +94,10 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     private static final String  MATCH_IF_MISSING         = "matchIfMissing";
     private static final String  CONSTRAINT_TYPE          = "constraintType";
     private static final List<BeanPropertyTypeResolver> TYPE_RESOLVERS = new SpiLoader().loadSpiServicesByPriority(BeanPropertyTypeResolver.class);
+    private static final CyclicClassesResolver CYCLIC_CLASSES_RESOLVER = (CyclicClassesResolver)TYPE_RESOLVERS.stream()
+                                                                                          .filter(service->service instanceof CyclicClassesResolver)
+                                                                                          .findFirst()
+                                                                                          .get();
     private static final List<ConstraintInformationResolver> CONSTRAINTS_INFO_RESOLVERS = new SpiLoader().loadSpiServicesByPriority(ConstraintInformationResolver.class);
     //@formatter:on
 
@@ -229,7 +236,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         final Set<Node> result = new HashSet<>();
         final String[]  values = annotation.value();
         final String[]  names  = annotation.name();
-        if ((names != null && names.length > 0 )|| (values!=null && values.length>0)) {
+        if ((names != null && names.length > 0) || (values != null && values.length > 0)) {
 
             final String prefix = annotation.prefix() == null || "".equals(annotation.prefix().trim())
                                   ? null
@@ -238,10 +245,10 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
             final boolean matchIfMissing = annotation.matchIfMissing();
 
             final Set<String> currentNames = new HashSet<>();
-            if(values !=null){
+            if (values != null) {
                 currentNames.addAll(Arrays.asList(values));
             }
-            if(names !=null){
+            if (names != null) {
                 currentNames.addAll(Arrays.asList(names));
             }
 
@@ -351,7 +358,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public Set<Node> extractProperties(final String path, final Class<?> clazz) {
         final Set<Node>  result = new HashSet<>();
         final Set<Field> fields = loadAllFields(clazz);
-
+        CYCLIC_CLASSES_RESOLVER.register(path,clazz);
         if (fields != null) {
             for (final Field field : fields) {
                 result.addAll(extractFieldProperties(path, clazz, field));
@@ -364,13 +371,20 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public Set<Node> extractFieldProperties(final String path, final Class<?> clazz,
                                             final Field field) {
         final Set<Node> result = new HashSet<>();
+
+        final String fullPath = CYCLIC_CLASSES_RESOLVER.buildFullPath(path, field);
+        log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(),
+                  field == null ? null : field.getName());
+
         for (final BeanPropertyTypeResolver resolver : TYPE_RESOLVERS) {
+            CYCLIC_CLASSES_RESOLVER.register(fullPath,field);
             final Set<Node> nodes = resolver.resolve(path, field, field.getType(), clazz, this);
             if (nodes != null) {
                 result.addAll(nodes);
                 break;
             }
         }
+
         return result;
     }
 

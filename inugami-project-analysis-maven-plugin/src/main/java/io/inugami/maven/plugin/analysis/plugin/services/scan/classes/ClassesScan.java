@@ -62,6 +62,7 @@ public class ClassesScan implements ProjectScanner {
         log.info("analyse class : {}", clazz);
         for (final ClassAnalyzer analyzer : analyzers) {
             if (analyzer.accept(clazz, context)) {
+                log.info("analyzer : {}", analyzer.getClass());
                 try {
                     final List<JsonObject> resultSet = analyzer.analyze(clazz, context);
                     if (resultSet != null) {
@@ -105,7 +106,6 @@ public class ClassesScan implements ProjectScanner {
         return classes;
     }
 
-    //TODO : fix File separator on windows
     private String buildClassName(final String absolutePath, final String baseFolder) {
         return buildClassNameNormilized(absolutePath, baseFolder,File.separator);
     }

@@ -16,12 +16,12 @@
     "type" : "Property",
     "uid" : "project.bean.devices.<String>.enable"
   }, {
-    "name" : "project.bean.devices.<String>.headers.<String>",
+    "name" : "project.bean.devices.<String>.headers",
     "properties" : {
-      "propertyType" : "String"
+      "propertyType" : "java.util.Map"
     },
     "type" : "Property",
-    "uid" : "project.bean.devices.<String>.headers.<String>"
+    "uid" : "project.bean.devices.<String>.headers"
   }, {
     "name" : "project.bean.devices.<String>.title",
     "properties" : {
@@ -67,6 +67,13 @@
     "type" : "Property",
     "uid" : "project.bean.keys.[].value"
   }, {
+    "name" : "project.bean.poolConfiguration.child",
+    "properties" : {
+      "propertyType" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPropertiesAnalyzerTest$PoolConfiguration"
+    },
+    "type" : "Property",
+    "uid" : "project.bean.poolConfiguration.child"
+  }, {
     "name" : "project.bean.poolConfiguration.nbThreads",
     "properties" : {
       "propertyType" : "int"
@@ -106,15 +113,15 @@
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.bean.poolConfiguration.child",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "project.bean.headers.<String>",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "project.bean.devices.<String>.countries[].<String>",
-    "type" : "USE_PROPERTY"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.devices.<String>.headers.<String>",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
@@ -139,6 +146,10 @@
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "project.bean.poolConfiguration.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.bean.devices.<String>.headers",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",

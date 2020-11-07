@@ -154,6 +154,7 @@ class SpringPropertiesAnalyzerTest {
     public static class PoolConfiguration {
         private int  nbThreads;
         private long timeout;
+        private PoolConfiguration child;
     }
 
     @Getter
