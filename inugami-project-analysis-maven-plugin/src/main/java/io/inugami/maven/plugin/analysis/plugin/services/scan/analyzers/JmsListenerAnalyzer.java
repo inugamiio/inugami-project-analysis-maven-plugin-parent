@@ -1,3 +1,19 @@
+/* --------------------------------------------------------------------
+ *  Inugami
+ * --------------------------------------------------------------------
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import io.inugami.api.exceptions.Asserts;
@@ -9,6 +25,7 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.tools.BuilderTools;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -23,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
@@ -62,7 +80,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                 break;
             }
         }
-        return false;
+        return result;
     }
 
     // =========================================================================
@@ -83,7 +101,10 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                 buildListenerNode(method, (node, properties) -> {
                     result.addNode(node);
                     result.addNode(properties);
-                    result.addRelationship(buildRelationships(node, CONSUME, projectNode,serviceType, properties));
+
+                    final Node methodNode = buildMethodNode(clazz, method);
+                    result.addNode(methodNode);
+                    result.addRelationship(buildRelationships(node, CONSUME, projectNode,serviceType, methodNode,properties));
                 });
 
             }
@@ -91,7 +112,9 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                 buildSenderNode(method, (node, properties) -> {
                     result.addNode(node);
                     result.addNode(properties);
-                    result.addRelationship(buildRelationships(node, EXPOSE, projectNode,serviceType, properties));
+                    final Node methodNode = buildMethodNode(clazz, method);
+                    result.addNode(methodNode);
+                    result.addRelationship(buildRelationships(node, EXPOSE, projectNode,serviceType,methodNode, properties));
                 });
             }
 
@@ -107,6 +130,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                                   final String jmsNodeType,
                                                   final Node artifactNode,
                                                   final Node serviceNode,
+                                                  final Node methodNode,
                                                   final List<Node> properties) {
 
         final List<Relationship> result = new ArrayList<>();
@@ -117,6 +141,17 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                .type(jmsNodeType)
                                .build());
 
+        result.add(Relationship.builder()
+                               .from(methodNode.getUid())
+                               .to(artifactNode.getUid())
+                               .type(BuilderTools.RELATION_HAS_METHOD)
+                               .build());
+
+        result.add(Relationship.builder()
+                               .from(jmsNode.getUid())
+                               .to(methodNode.getUid())
+                               .type(BuilderTools.RELATION_USE_BY)
+                               .build());
         result.add(Relationship.builder()
                                .from(jmsNode.getUid())
                                .to(serviceNode.getUid())

@@ -1,0 +1,113 @@
+{
+  "nodes" : [ {
+    "name" : "events.method.exchangeName",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "events.method.exchangeName"
+  }, {
+    "name" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+      "listenerId" : "method-listener",
+      "containerFactory" : "myContainerFactory",
+      "queue" : "",
+      "queuesToDeclare" : "[]",
+      "exclusive" : false,
+      "errorHandler" : "myListenerErrorHandler",
+      "autoStartup" : "true",
+      "converterWinsContentType" : "true",
+      "bindings" : "[{\"queue\":{\"name\":\"${events.method.user.queueName}\",\"durable\":\"true\",\"exclusive\":\"\",\"autoDelete\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"declare\":\"true\",\"arguments\":[{\"name\":\"x-dead-letter-exchange\",\"value\":\"\",\"type\":\"java.lang.String\"},{\"name\":\"x-dead-letter-routing-key\",\"value\":\"${events.method.user.dlqName}\",\"type\":\"java.lang.String\"}],\"admins\":null},\"key\":[\"${events.user.method.created.routingKey}\"],\"exchange\":{\"name\":\"${events.method.exchangeName}\",\"type\":\"topic\",\"durable\":\"true\",\"autoDelete\":\"false\",\"internal\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"delayed\":\"false\",\"declare\":\"true\",\"arguments\":null,\"admins\":null},\"declare\":\"true\",\"ignoreDeclarationExceptions\":\"false\",\"admins\":null}]"
+    },
+    "type" : "Service",
+    "uid" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey"
+  }, {
+    "name" : "events.method.user.dlqName",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "events.method.user.dlqName"
+  }, {
+    "name" : "events.method.user.queueName",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "events.method.user.queueName"
+  }, {
+    "name" : "events.user.method.created.routingKey",
+    "properties" : {
+      "propertyType" : "String",
+      "mandatory" : true
+    },
+    "type" : "Property",
+    "uid" : "events.user.method.created.routingKey"
+  }, {
+    "name" : "onUpdate",
+    "properties" : {
+      "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener",
+      "method" : "onUpdate",
+      "returnType" : "void",
+      "parameters" : "event<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>"
+    },
+    "type" : "Method",
+    "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)"
+  }, {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
+      "major" : 1,
+      "minor" : 0,
+      "patch" : 0,
+      "tag" : "SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  }, {
+    "name" : "rabbitMq",
+    "type" : "ServiceType",
+    "uid" : "rabbitMq"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey",
+    "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)",
+    "type" : "USE_BY"
+  }, {
+    "from" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey",
+    "to" : "rabbitMq",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)",
+    "to" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "type" : "HAS_METHOD"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "events.method.exchangeName",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "events.method.user.dlqName",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "events.method.user.queueName",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "events.user.method.created.routingKey",
+    "type" : "USE_PROPERTY"
+  } ]
+}

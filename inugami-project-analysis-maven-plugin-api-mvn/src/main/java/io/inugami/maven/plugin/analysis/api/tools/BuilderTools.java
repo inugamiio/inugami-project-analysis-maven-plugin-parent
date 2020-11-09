@@ -22,10 +22,17 @@ import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import org.apache.maven.project.MavenProject;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
+import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.isBasicType;
 
 public class BuilderTools {
 
@@ -41,6 +48,9 @@ public class BuilderTools {
             "(?<major>[0-9]+)((?:[.])(?<minor>[0-9]+)){0,1}((?:[.])(?<patch>[0-9]+)){0,1}((?:[-._])(?<tag>.*)){0,1}");
     public static final String  RELEASE       = "RELEASE";
     public static final String  SNAPSHOT      = "SNAPSHOT";
+
+    public static final String RELATION_HAS_METHOD = "HAS_METHOD";
+    public static final String RELATION_USE_BY     = "USE_BY";
 
     // =========================================================================
     // API
@@ -127,6 +137,61 @@ public class BuilderTools {
                            .type(RELEASE)
                            .build();
     }
+
+    public static Node buildMethodNode(final Class<?> clazz, final Method method) {
+        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("class", clazz.getName());
+        additionalInfo.put("method", method.getName());
+        processIfNotNull(method.getReturnType(), (value) -> additionalInfo.put("returnType", value.getName()));
+        processIfNotNull(method.getParameters(), (value) -> additionalInfo.put("parameters",
+                                                                               buildArgsType(value, false, true)));
+
+
+        final String uid = String.join(".",
+                                       clazz.getName(),
+                                       method.getName() + buildArgsType(method.getParameters(), true, false));
+        return Node.builder()
+                   .type("Method")
+                   .uid(uid)
+                   .name(method.getName())
+                   .properties(additionalInfo)
+                   .build();
+    }
+
+    private static String buildArgsType(final Parameter[] parameters, final boolean encapsulate,
+                                        final boolean withName) {
+        final StringBuilder result = new StringBuilder();
+        if (encapsulate) {
+            result.append('(');
+        }
+        if (parameters != null && parameters.length > 0) {
+            final Iterator<Parameter> iterator = Arrays.asList(parameters).iterator();
+            while (iterator.hasNext()) {
+                final Parameter param = iterator.next();
+
+                if (withName) {
+                    result.append(param.getName());
+                }
+                result.append('<');
+                if (isBasicType(param.getType())) {
+                    result.append(param.getType().getSimpleName());
+                }
+                else {
+                    result.append(param.getType().getName());
+                }
+                result.append('>');
+                if (iterator.hasNext()) {
+                    result.append(',');
+                }
+            }
+        }
+
+        if (encapsulate) {
+            result.append(')');
+        }
+        return result.toString();
+    }
+
 
     public static Integer extractMajorVersion(final String version) {
         return extractIntGroup(version, MAJOR);

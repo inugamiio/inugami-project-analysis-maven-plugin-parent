@@ -1,13 +1,12 @@
 package io.inugami.maven.plugin.analysis.annotations;
 
 import java.lang.annotation.*;
-@Partner(type = "JMS")
+
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface JmsSender {
+public @interface RabbitMqHandlerInfo {
     String id() default "";
-
-    String destination();
-
+    String routingKey();
+    String typeId() default "";
 }

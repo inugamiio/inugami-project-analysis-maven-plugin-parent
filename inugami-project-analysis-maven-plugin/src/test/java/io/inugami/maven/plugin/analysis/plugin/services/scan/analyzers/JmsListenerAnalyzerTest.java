@@ -55,12 +55,12 @@ class JmsListenerAnalyzerTest {
     }
 
     // =========================================================================
-    // BASIC PROPERTIES
+    // TESTS
     // =========================================================================
     @Test
     public void accept_withJmsListenerOrSender_shouldAccept() {
         final JmsListenerAnalyzer analyzer = new JmsListenerAnalyzer();
-        assertThat(analyzer.accept(Listener.class, context));
+        assertThat(analyzer.accept(Listener.class, context)).isTrue();
     }
 
     @Test
