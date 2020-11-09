@@ -24,6 +24,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.Constraint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
@@ -177,8 +178,16 @@ public final class ReflectionService {
     public static JsonNode renderType(final Class<?> type,
                                       final Type genericReturnType,
                                       final ClassCursor classCursor) {
+        return renderType(type, genericReturnType, classCursor, true);
+    }
+
+    public static JsonNode renderType(final Class<?> type,
+                                      final Type genericReturnType,
+                                      final ClassCursor classCursor,
+                                      final boolean strict) {
         final String key = "class:" + (type == null ? "null" : type
-                .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName());
+                .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName())
+                +":strict "+strict;
 
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
@@ -218,10 +227,10 @@ public final class ReflectionService {
                     result = node.build();
                 }
                 else {
-                    result = renderStructureJson(currentClass, null, cursorChildren);
+                    result = renderStructureJson(currentClass, null, cursorChildren, strict);
 
                 }
-                Loggers.DEBUG.debug("json structure : {}\n{}", returnType.getTypeName(), result.convertToJson());
+                Loggers.DEBUG.debug("json structure : {}\n{}", currentClass.getTypeName(), result.convertToJson());
             }
 
             if (result != null) {
@@ -240,6 +249,12 @@ public final class ReflectionService {
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
                                                final ClassCursor cursor) {
+        return renderStructureJson(genericType, path, cursor, true);
+    }
+
+    public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
+                                               final ClassCursor cursor,
+                                               final boolean strict) {
         final JsonNode.JsonNodeBuilder result = JsonNode.builder();
         result.structure(true);
         final String currentPath = path == null ? "" : path + ".";
@@ -248,7 +263,7 @@ public final class ReflectionService {
         if (genericType == null) {
             Loggers.DEBUG.warn("generic is null for path : {}", path);
         }
-        else if(isBasicType(genericType)){
+        else if (isBasicType(genericType)) {
             result.structure(false);
             result.basicType(true);
             result.type(renderFieldType(genericType));
@@ -259,12 +274,28 @@ public final class ReflectionService {
             final List<JsonNode> fieldNodes = new ArrayList<>();
 
             for (final Field field : fields) {
-                fieldNodes.add(renderFieldJson(field, currentPath, cursor));
+                if (strict || hasConstraints(field)) {
+                    fieldNodes.add(renderFieldJson(field, currentPath, cursor));
+                }
             }
             result.children(fieldNodes);
         }
 
         return result.build();
+    }
+
+    private static boolean hasConstraints(final Field field) {
+        boolean result = false;
+        if (field.getAnnotations().length > 0) {
+            for (final Annotation annotation : field.getAnnotations()) {
+                result = annotation.annotationType().getName().endsWith(".persistence.Id") || hasAnnotation(
+                        annotation.annotationType(), Constraint.class);
+                if(result){
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     public static JsonNode renderFieldJson(final Field field, final String parentPath,
@@ -370,19 +401,18 @@ public final class ReflectionService {
     }
 
 
-    public static Field buildField(final Class<?> type, final String name){
-        Field field = null;
+    public static Field buildField(final Class<?> type, final String name) {
+        Field                field       = null;
         final Constructor<?> constructor = Field.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
         try {
-            field = (Field)constructor.newInstance(type,name,type,0,0,null,null);
+            field = (Field) constructor.newInstance(type, name, type, 0, 0, null, null);
         }
         catch (final Exception e) {
             Loggers.DEBUG.error(e.getMessage());
         }
         return field;
     }
-
 
 
 }

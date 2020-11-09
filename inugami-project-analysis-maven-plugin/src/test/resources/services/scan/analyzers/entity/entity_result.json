@@ -1,0 +1,45 @@
+{
+  "nodes" : [ {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
+      "major" : 1,
+      "minor" : 0,
+      "patch" : 0,
+      "tag" : "SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  }, {
+    "name" : "local@mainDatabase_app_user",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":\"Address\"\n}"
+    },
+    "type" : "LocalEntity",
+    "uid" : "local@mainDatabase_app_user"
+  }, {
+    "name" : "mainDatabase_app_user",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\"\n}"
+    },
+    "type" : "Entity",
+    "uid" : "mainDatabase_app_user"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "local@mainDatabase_app_user",
+    "type" : "HAS_LOCAL_ENTITY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "mainDatabase_app_user",
+    "type" : "HAS_ENTITY"
+  }, {
+    "from" : "local@mainDatabase_app_user",
+    "to" : "mainDatabase_app_user",
+    "type" : "HAS_ENTITY_REFERENCE"
+  } ]
+}

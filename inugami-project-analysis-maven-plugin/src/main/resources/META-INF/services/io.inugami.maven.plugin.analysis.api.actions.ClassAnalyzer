@@ -3,3 +3,4 @@ io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClien
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPropertiesAnalyzer
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzer
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzer
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer
