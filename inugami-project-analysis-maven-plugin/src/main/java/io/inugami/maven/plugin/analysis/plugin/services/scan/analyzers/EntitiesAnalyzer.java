@@ -102,6 +102,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
                                            .type("HAS_ENTITY")
                                            .build());
 
+
         result.addRelationship(Relationship.builder()
                                            .from(localEntityNode.getUid())
                                            .to(entityNode.getUid())
