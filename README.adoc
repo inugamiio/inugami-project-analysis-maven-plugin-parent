@@ -62,6 +62,10 @@ mvn info
 ----
 
 
+
+== Neo4j data structure :
+image::doc/nodes.png[]
+
 == Analyzers :
 
 === Feign clients
