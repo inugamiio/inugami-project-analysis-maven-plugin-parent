@@ -56,8 +56,21 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_properties")
                                .type("cql")
                                .description("Allow to search all consumed properties")
-                               .build()
+                               .build(),
 
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_services_queue_expose.cql")
+                               .name("search_queue")
+                               .type("cql")
+                               .description("Allow to search all produced queue")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_services_queue_consume.cql")
+                               .name("search_queue")
+                               .type("cql")
+                               .description("Allow to search all consumes queue")
+                               .build()
                       );
     }
 

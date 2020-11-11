@@ -45,6 +45,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionSe
 
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE = "inugami.maven.plugin.analysis.analyzer.restControllers.enable";
+    public static final String STRICT = "inugami.maven.plugin.analysis.analyzer.restControllers.strict";
 
     public static final  String SEPARATOR                 = ",";
     public static final  String URI_SEP                   = "/";
@@ -83,8 +84,8 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
-
-        final RestApi restApi = analyseClass(clazz);
+        final boolean strict = context.getConfiguration().grabBoolean(STRICT,true);
+        final RestApi restApi = analyseClass(clazz,strict);
 
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
@@ -184,13 +185,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // INTERNAL
     // =========================================================================
-    protected RestApi analyseClass(final Class<?> clazz) {
+    protected RestApi analyseClass(final Class<?> clazz, final boolean strict) {
         final String name        = getApiName(clazz);
         final String baseContext = getBaseContext(clazz);
         return RestApi.builder()
                       .name(name)
                       .baseContext(URI_SEP + baseContext)
-                      .endpoints(resolveEndpoints(clazz, baseContext))
+                      .endpoints(resolveEndpoints(clazz, baseContext,strict))
                       .build()
                       .orderEndPoint();
     }
@@ -204,18 +205,18 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
 
-    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext) {
+    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext,final boolean strict) {
         final List<RestEndpoint> result = new ArrayList<>();
         for (final Method method : clazz.getMethods()) {
             if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
                               DeleteMapping.class)) {
-                result.add(resolveEndpoint(method, baseContext, clazz));
+                result.add(resolveEndpoint(method, baseContext, clazz,strict));
             }
         }
         return result;
     }
 
-    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz) {
+    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,final boolean strict) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
         processOnAnnotation(method, RequestMapping.class, (annotation) -> {
@@ -255,9 +256,9 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
         builder.method(String.join(".", clazz.getName(), method.getName()));
         builder.headers(extractHeader(method.getParameters()));
-        builder.body(extractBody(method.getParameters()));
+        builder.body(extractBody(method.getParameters(), strict));
 
-        final JsonNode payload = renderReturnType(method);
+        final JsonNode payload = renderReturnType(method, strict);
         builder.responseType(payload == null ? null : payload.convertToJson());
 
         return builder.build();
@@ -272,11 +273,11 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return String.join(SEPARATOR, result);
     }
 
-    private String extractBody(final Parameter[] parameters) {
+    private String extractBody(final Parameter[] parameters, final boolean strict) {
         String result = null;
         for (final Parameter parameter : parameters) {
             if (hasAnnotation(parameter, RequestBody.class)) {
-                final JsonNode node = renderParameterType(parameter);
+                final JsonNode node = renderParameterType(parameter,strict);
                 result = node == null ? null : node.convertToJson();
                 break;
             }

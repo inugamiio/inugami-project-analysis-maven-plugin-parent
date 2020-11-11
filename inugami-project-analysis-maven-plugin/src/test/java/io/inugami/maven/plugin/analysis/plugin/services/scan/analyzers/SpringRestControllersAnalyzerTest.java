@@ -68,7 +68,7 @@ class SpringRestControllersAnalyzerTest {
     @Test
     void analyze() {
         final SpringRestControllersAnalyzer analyzer = new SpringRestControllersAnalyzer();
-        final RestApi                       api      = analyzer.analyseClass(BasicRestController.class);
+        final RestApi                       api      = analyzer.analyseClass(BasicRestController.class,true);
         assertThat(api).isNotNull();
         assertThat(api.getName()).isEqualTo("USERS");
         assertThat(api.getBaseContext()).isEqualTo("/simpleRest");

@@ -164,14 +164,17 @@ public final class ReflectionService {
         }
     }
 
-
     public static JsonNode renderParameterType(final Parameter parameter) {
-
-        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor());
+        return renderParameterType(parameter,true);
+    }
+    public static JsonNode renderParameterType(final Parameter parameter, final boolean strict) {
+        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(),strict);
     }
 
-
     public static JsonNode renderReturnType(final Method method) {
+        return renderReturnType(method,true);
+    }
+    public static JsonNode renderReturnType(final Method method, final boolean strict) {
         return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor());
     }
 

@@ -79,6 +79,9 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "events.method.exchangeName_events.method.user.queueName_events.user.method.created.routingKey",
+    "properties" : {
+      "linkType" : "consume"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)",
     "type" : "USE_BY"
   }, {

@@ -119,10 +119,16 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "create.user.queue",
+    "properties" : {
+      "linkType" : "consume"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onUserCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "USE_BY"
   }, {
     "from" : "create.user.queue",
+    "properties" : {
+      "linkType" : "produce"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "USE_BY"
   }, {
@@ -171,6 +177,9 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "onCreateComment",
+    "properties" : {
+      "linkType" : "consume"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>)",
     "type" : "USE_BY"
   } ]

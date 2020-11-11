@@ -111,7 +111,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
                     result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties));
+                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,"consume"));
                 });
             }
             else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
@@ -122,7 +122,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
                     result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties));
+                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,"produce"));
                 });
             }
         }
@@ -403,7 +403,8 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                                   final Node artifactNode,
                                                   final Node serviceNode,
                                                   final Node methodNode,
-                                                  final List<Node> properties) {
+                                                  final List<Node> properties,
+                                                  final String useByType) {
 
         final List<Relationship> result = new ArrayList<>();
 
@@ -423,6 +424,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                .from(jmsNode.getUid())
                                .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_USE_BY)
+                               .properties(Map.of("linkType",useByType))
                                .build());
 
         result.add(Relationship.builder()

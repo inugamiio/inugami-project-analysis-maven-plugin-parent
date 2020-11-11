@@ -169,6 +169,9 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "events.exchangeName_events.user.queueName_events.user.authenticated.routingKey",
+    "properties" : {
+      "linkType" : "consume"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$ClassListener.onAuthenticated(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserAuthenticatedEvent>)",
     "type" : "USE_BY"
   }, {
@@ -177,6 +180,9 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "events.exchangeName_events.user.queueName_events.user.created.routingKey",
+    "properties" : {
+      "linkType" : "consume"
+    },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$ClassListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)",
     "type" : "USE_BY"
   }, {
