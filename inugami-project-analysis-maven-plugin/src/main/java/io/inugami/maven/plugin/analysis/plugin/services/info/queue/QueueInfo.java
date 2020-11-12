@@ -47,7 +47,8 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // ATTRIBUTES
     // =========================================================================
     private static final List<String> QUERIES = List.of(
-            "META-INF/queries/search_services_queue_expose.cql"
+            "META-INF/queries/search_services_queue_expose.cql",
+            "META-INF/queries/search_services_queue_consume.cql"
                                                        );
 
     // =========================================================================
@@ -94,8 +95,8 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
         final Map<String, ArtifactService> result = new HashMap<>();
 
 
-        retrieveData("META-INF/queries/search_services_queue_expose.cql", gav, dao, config, result,true);
-        retrieveData("META-INF/queries/search_services_queue_consume.cql", gav, dao, config, result,false);
+        retrieveData("META-INF/queries/search_services_queue_expose.cql", gav, dao, config, result, true);
+        retrieveData("META-INF/queries/search_services_queue_consume.cql", gav, dao, config, result, false);
 
         return result.entrySet()
                      .stream()
@@ -149,9 +150,10 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
                 processIfNotNull(depConsumer, currentService.getConsumers()::add);
                 processIfNotNull(depExposer, currentService.getProducers()::add);
                 processIfNotNull(method, currentService.getMethods()::add);
-                if(expose){
+                if (expose) {
                     currentService.getProducers().add(dependency);
-                }else{
+                }
+                else {
                     currentService.getConsumers().add(dependency);
                 }
                 log.debug("currentService : {}", currentService);
@@ -177,10 +179,12 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
     private String extractName(final Value value) {
         final Iterable<String> labels = null;
+        Map<String, Object>    data   = null;
         if (value != null && !value.isNull()) {
             value.asNode().labels();
+            data = value.asMap();
         }
-        return value == null ? null : extractValue("name", null, value.asMap());
+        return data == null ? null : extractValue("name", null, data);
     }
 
     private String extractValue(final String key, final String defaultValue, final Map<String, Object> data) {
@@ -193,7 +197,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
     private Map<String, Object> extractMap(final Value node) {
         Map<String, Object> result = null;
-        if (node != null) {
+        if (node != null && !node.isNull()) {
             result = node.asMap();
         }
         return result;
