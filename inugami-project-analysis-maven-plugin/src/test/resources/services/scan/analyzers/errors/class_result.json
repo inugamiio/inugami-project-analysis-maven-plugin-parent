@@ -1,0 +1,43 @@
+{
+  "nodes" : [ {
+    "name" : "ERR-2",
+    "properties" : {
+      "payload" : "null",
+      "errorType" : "functional",
+      "errorCode" : "ERR-2",
+      "message" : "user require",
+      "messageDetail" : "user is require for this ation",
+      "statusCode" : 400
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_ERR-2"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
+      "major" : 1,
+      "minor" : 0,
+      "patch" : 0,
+      "tag" : "SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "errorCode_ERR-2",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-2",
+    "type" : "HAS_ERROR_CODE"
+  } ]
+}

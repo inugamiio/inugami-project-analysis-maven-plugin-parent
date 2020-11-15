@@ -24,7 +24,7 @@
             <role>org.apache.maven.lifecycle.Lifecycle</role>
             <implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
             <configuration>
-                <id>inugami-maven-analyse</id>
+                <id>inugami-maven-analyze</id>
                 <phases>
                     <phase>validate</phase>
                     <phase>initialize</phase>
@@ -35,7 +35,7 @@
                     <phase>compile</phase>
                     <phase>process-test-resources</phase>
                     <phase>test-compile</phase>
-                    <phase>analyse</phase>
+                    <phase>analyze</phase>
                 </phases>
 
                 <default-phases>

@@ -39,6 +39,12 @@ public class ClassesScan implements ProjectScanner {
         final List<String> foundClasses = scanProjectSource(
                 context.getProject().getBuild().getOutputDirectory());
         final List<ClassAnalyzer> analyzers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ClassAnalyzer.class);
+
+        for(final ClassAnalyzer analyzer : analyzers){
+            analyzer.initialize(context);
+        }
+
+
         for (final String className : foundClasses) {
             try {
                 final Class<?> clazz = context.getClassLoader().loadClass(className);

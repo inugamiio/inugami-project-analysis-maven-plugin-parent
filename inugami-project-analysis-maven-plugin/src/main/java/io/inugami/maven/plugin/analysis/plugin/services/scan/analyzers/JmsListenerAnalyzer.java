@@ -27,6 +27,7 @@ import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.BuilderTools;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Headers;
@@ -45,14 +46,15 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeV
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
-
+@Slf4j
 public class JmsListenerAnalyzer implements ClassAnalyzer {
 
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String                   FEATURE                   = "inugami.maven.plugin.analysis.analyzer.jms.enable";
+    public static final  String                   FEATURE_NAME              = "inugami.maven.plugin.analysis.analyzer.jms";
+    public static final  String                   FEATURE                   = FEATURE_NAME + ".enable";
     public static final  String                   SERVICE                   = "Service";
     private static final String                   SERVICE_TYPE              = "ServiceType";
     private static final String                   SERVICE_TYPE_RELATIONSHIP = "SERVICE_TYPE";
@@ -88,6 +90,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
+        log.info("{} : {}", FEATURE_NAME, clazz);
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
 
         final List<Method> methods = loadAllMethods(clazz);
@@ -104,7 +107,9 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
-                    result.addRelationship(buildRelationships(node, CONSUME, projectNode,serviceType, methodNode,properties,"consume"));
+                    result.addRelationship(
+                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                               "consume"));
                 });
 
             }
@@ -114,7 +119,9 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                     result.addNode(properties);
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
-                    result.addRelationship(buildRelationships(node, EXPOSE, projectNode,serviceType,methodNode, properties,"produce"));
+                    result.addRelationship(
+                            buildRelationships(node, EXPOSE, projectNode, serviceType, methodNode, properties,
+                                               "produce"));
                 });
             }
 
@@ -152,7 +159,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                .from(jmsNode.getUid())
                                .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_USE_BY)
-                               .properties(Map.of("linkType",useByType))
+                               .properties(Map.of("linkType", useByType))
                                .build());
         result.add(Relationship.builder()
                                .from(jmsNode.getUid())

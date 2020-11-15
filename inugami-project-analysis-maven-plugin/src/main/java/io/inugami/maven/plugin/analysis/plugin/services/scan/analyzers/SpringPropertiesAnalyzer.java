@@ -59,7 +59,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String                         FEATURE               = "inugami.maven.plugin.analysis.analyzer.properties.enable";
+    public static final  String                         FEATURE_NAME          = "inugami.maven.plugin.analysis.analyzer.properties";
+    public static final  String                         FEATURE               = FEATURE_NAME + ".enable";
     private static final List<Class<?>>                 SHORT_NAME            = List.of(Boolean.class,
                                                                                         String.class,
                                                                                         Short.class,
@@ -116,6 +117,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
+        log.info("{} : {}", FEATURE_NAME, clazz);
         final ScanNeo4jResult result                = ScanNeo4jResult.builder().build();
         final Set<Node>       conditionalProperties = new HashSet<>();
         final Set<Node>       nodes                 = new HashSet<>();

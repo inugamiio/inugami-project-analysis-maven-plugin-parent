@@ -28,8 +28,14 @@ public interface ClassAnalyzer {
 
     List<JsonObject> analyze(Class<?> clazz, ScanConext context);
 
+    default void initialize(final ScanConext context) {
+    }
+
     default boolean isEnable(final String feature, final ScanConext context, final boolean defaultValue) {
-        final String activation = context==null? String.valueOf(defaultValue) :context.getConfiguration().getOrDefault(feature, String.valueOf(defaultValue));
+        final String activation = context == null ? String.valueOf(defaultValue) : context.getConfiguration()
+                                                                                          .getOrDefault(feature,
+                                                                                                        String.valueOf(
+                                                                                                                defaultValue));
         return Boolean.parseBoolean(activation);
     }
 }

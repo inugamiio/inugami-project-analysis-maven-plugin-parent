@@ -80,6 +80,15 @@ public final class ReflectionService {
         return result;
     }
 
+    public static Set<Field> loadAllStaticFields(final Class<?> clazz) {
+        final Set<Field> result = new HashSet<>();
+        loadAllFields(clazz).stream()
+                            .filter(field -> Modifier.isStatic(field.getModifiers()))
+                            .forEach(result::add);
+        return result;
+    }
+
+
     public static Set<Constructor<?>> loadAllConstructors(final Class<?> clazz) {
         final Set<Constructor<?>> result = new HashSet<>();
         try {
@@ -165,15 +174,17 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderParameterType(final Parameter parameter) {
-        return renderParameterType(parameter,true);
+        return renderParameterType(parameter, true);
     }
+
     public static JsonNode renderParameterType(final Parameter parameter, final boolean strict) {
-        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(),strict);
+        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
     }
 
     public static JsonNode renderReturnType(final Method method) {
-        return renderReturnType(method,true);
+        return renderReturnType(method, true);
     }
+
     public static JsonNode renderReturnType(final Method method, final boolean strict) {
         return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor());
     }
@@ -190,7 +201,7 @@ public final class ReflectionService {
                                       final boolean strict) {
         final String key = "class:" + (type == null ? "null" : type
                 .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName())
-                +":strict "+strict;
+                + ":strict " + strict;
 
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
@@ -293,7 +304,7 @@ public final class ReflectionService {
             for (final Annotation annotation : field.getAnnotations()) {
                 result = annotation.annotationType().getName().endsWith(".persistence.Id") || hasAnnotation(
                         annotation.annotationType(), Constraint.class);
-                if(result){
+                if (result) {
                     break;
                 }
             }

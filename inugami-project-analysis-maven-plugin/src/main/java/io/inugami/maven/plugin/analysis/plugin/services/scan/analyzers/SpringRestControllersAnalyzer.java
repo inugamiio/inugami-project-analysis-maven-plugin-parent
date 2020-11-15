@@ -28,6 +28,7 @@ import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
@@ -43,9 +44,11 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeV
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
-    public static final String FEATURE = "inugami.maven.plugin.analysis.analyzer.restControllers.enable";
-    public static final String STRICT = "inugami.maven.plugin.analysis.analyzer.restControllers.strict";
+    public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
+    public static final String FEATURE      = FEATURE_NAME + ".enable";
+    public static final String STRICT       = "inugami.maven.plugin.analysis.analyzer.restControllers.strict";
 
     public static final  String SEPARATOR                 = ",";
     public static final  String URI_SEP                   = "/";
@@ -78,14 +81,15 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return isEnable(FEATURE,context,true) && clazz.getAnnotation(RestController.class) != null;
+        return isEnable(FEATURE, context, true) && clazz.getAnnotation(RestController.class) != null;
     }
 
 
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
-        final boolean strict = context.getConfiguration().grabBoolean(STRICT,true);
-        final RestApi restApi = analyseClass(clazz,strict);
+        log.info("{} : {}", FEATURE_NAME, clazz);
+        final boolean strict  = context.getConfiguration().grabBoolean(STRICT, true);
+        final RestApi restApi = analyseClass(clazz, strict);
 
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
@@ -191,7 +195,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return RestApi.builder()
                       .name(name)
                       .baseContext(URI_SEP + baseContext)
-                      .endpoints(resolveEndpoints(clazz, baseContext,strict))
+                      .endpoints(resolveEndpoints(clazz, baseContext, strict))
                       .build()
                       .orderEndPoint();
     }
@@ -205,18 +209,19 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
 
-    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext,final boolean strict) {
+    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext, final boolean strict) {
         final List<RestEndpoint> result = new ArrayList<>();
         for (final Method method : clazz.getMethods()) {
             if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
                               DeleteMapping.class)) {
-                result.add(resolveEndpoint(method, baseContext, clazz,strict));
+                result.add(resolveEndpoint(method, baseContext, clazz, strict));
             }
         }
         return result;
     }
 
-    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,final boolean strict) {
+    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,
+                                         final boolean strict) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
         processOnAnnotation(method, RequestMapping.class, (annotation) -> {
@@ -277,7 +282,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         String result = null;
         for (final Parameter parameter : parameters) {
             if (hasAnnotation(parameter, RequestBody.class)) {
-                final JsonNode node = renderParameterType(parameter,strict);
+                final JsonNode node = renderParameterType(parameter, strict);
                 result = node == null ? null : node.convertToJson();
                 break;
             }

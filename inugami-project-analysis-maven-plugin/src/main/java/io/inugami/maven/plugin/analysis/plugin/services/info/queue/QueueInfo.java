@@ -128,7 +128,10 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
                 }
 
 
-                final String              serviceName = extractName(record.get("service"));
+                String serviceName = extractName(record.get("service"));
+                if (serviceName == null) {
+                    serviceName = "undefine";
+                }
                 final Map<String, Object> service     = extractMap(record.get("service"));
                 final String              serviceType = extractName(record.get("serviceType"));
                 final String depConsumer = record.containsKey("depConsumer") ?
@@ -146,7 +149,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
                     artifactservice.getServices().put(serviceName, currentService);
                 }
 
-                currentService.getData().putAll(service);
+                processIfNotNull(service, currentService.getData()::putAll);
                 processIfNotNull(depConsumer, currentService.getConsumers()::add);
                 processIfNotNull(depExposer, currentService.getProducers()::add);
                 processIfNotNull(method, currentService.getMethods()::add);

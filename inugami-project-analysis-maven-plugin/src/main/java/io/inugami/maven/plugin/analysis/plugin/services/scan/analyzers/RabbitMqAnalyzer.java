@@ -53,7 +53,8 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String                   FEATURE                   = "inugami.maven.plugin.analysis.analyzer.jms.enable";
+    public static final  String                   FEATURE_NAME              = "inugami.maven.plugin.analysis.analyzer.jms";
+    public static final  String                   FEATURE                   = FEATURE_NAME + ".enable";
     private static final String                   SERVICE_TYPE              = "ServiceType";
     public static final  String                   SERVICE                   = "Service";
     private static final String                   RABBIT_MQ                 = "rabbitMq";
@@ -92,6 +93,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
+        log.info("{} : {}", FEATURE_NAME, clazz);
         final ScanNeo4jResult result         = ScanNeo4jResult.builder().build();
         final RabbitListener  rabbitListener = clazz.getAnnotation(RabbitListener.class);
 
@@ -111,7 +113,8 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
                     result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,"consume"));
+                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                               "consume"));
                 });
             }
             else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
@@ -122,7 +125,8 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
                     result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,"produce"));
+                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                               "produce"));
                 });
             }
         }
@@ -424,7 +428,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                .from(jmsNode.getUid())
                                .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_USE_BY)
-                               .properties(Map.of("linkType",useByType))
+                               .properties(Map.of("linkType", useByType))
                                .build());
 
         result.add(Relationship.builder()

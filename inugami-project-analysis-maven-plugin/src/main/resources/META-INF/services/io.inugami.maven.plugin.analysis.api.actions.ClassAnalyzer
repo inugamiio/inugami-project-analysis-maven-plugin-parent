@@ -4,3 +4,4 @@ io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringProperties
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzer
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzer
 io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer

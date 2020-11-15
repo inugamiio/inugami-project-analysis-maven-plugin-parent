@@ -70,6 +70,13 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_queue")
                                .type("cql")
                                .description("Allow to search all consumes queue")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_errors.cql")
+                               .name("search_error_codes")
+                               .type("cql")
+                               .description("Allow to search all error codes")
                                .build()
                       );
     }

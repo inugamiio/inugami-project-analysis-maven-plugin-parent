@@ -24,6 +24,7 @@ import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -35,12 +36,14 @@ import java.util.Map;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.hasAnnotation;
 
+@Slf4j
 public class EntitiesAnalyzer implements ClassAnalyzer {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String FEATURE = "inugami.maven.plugin.analysis.analyzer.jms.enable";
+    public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.jms";
+    public static final String FEATURE = FEATURE_NAME+".enable";
 
 
     // =========================================================================
@@ -57,6 +60,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
+        log.info("{} : {}", FEATURE_NAME,clazz);
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         final Node artifactNode = buildNodeVersion(context.getProject());
 
