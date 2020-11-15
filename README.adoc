@@ -52,7 +52,7 @@ In your project build definition :
 First you need to analyse your project to send into Neo4j data :
 
 ----
-mvn analyse
+mvn analyze
 ----
 
 After this analyse you can see in Neo4j your project informations or execute maven phase  info
@@ -120,6 +120,31 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 |true
 |Allow to disable feign client analyzer
 |===
+
+
+=== Error code
+For resolve activeMQ consumers and listeners, this analyzer is able to scan all Spring @JmsListener annotation.
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.errorCode.enable
+|boolean
+|true
+|Allow to disable error codeanalyzer
+
+|inugami.maven.plugin.analysis.analyzer.errorCode.interface
+|String
+|io.inugami.api.exceptions.ErrorCode
+|Allow to specify the error code interface, configured by default with inugami error code interface
+
+|inugami.maven.plugin.analysis.analyzer.errorCode.fieldName
+|String
+|errorCode
+|Allow to override the default error code "field". This field is resolve with method define in error code interface. Accessor prefix is ignore
+|===
+
 
 ==== Sender tracking
 Spring doesn't include annotation for ActiveMQ senders. Sending message is execute by calling JmsTemplate.
