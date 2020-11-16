@@ -258,7 +258,8 @@ public final class ReflectionService {
 
 
     public static boolean isBasicType(final Class<?> currentClass) {
-        return PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang");
+        return currentClass == null ? true :
+               PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang");
     }
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
@@ -345,7 +346,7 @@ public final class ReflectionService {
 
 
     public static String renderFieldType(final Class<?> classType) {
-        return classType.getSimpleName();
+        return classType==null? "null" : classType.getSimpleName();
     }
 
     public static String renderFieldTypeRecursive(final Class<?> classType) {

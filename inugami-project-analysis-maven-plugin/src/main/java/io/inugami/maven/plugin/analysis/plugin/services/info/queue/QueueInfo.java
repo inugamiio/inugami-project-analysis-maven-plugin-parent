@@ -81,8 +81,10 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
         final Gav                   gav  = convertMavenProjectToGav(project);
         final List<ArtifactService> data = searchService(gav, dao, configuration);
 
+        if (data != null) {
+            render(gav, data);
+        }
 
-        render(gav, data);
 
         dao.shutdown();
     }
@@ -211,7 +213,19 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     private void render(final Gav gav, final List<ArtifactService> data) {
         final JsonBuilder writer = new JsonBuilder();
-        data.sort((ref, value) -> ref.getGav().compareTo(value.getGav()));
+        data.sort((ref, value) -> {
+            int result = 0;
+            if ((ref == null || ref.getGav() == null) && value != null) {
+                result = 1;
+            }
+            else if (ref != null && ref.getGav() == null && value != null) {
+                result = ref.getGav().compareTo(value.getGav());
+            }
+            else {
+                result = -1;
+            }
+            return result;
+        });
         for (final ArtifactService artifactService : data) {
             writer.write(renderArtifactService(artifactService)).line();
         }
