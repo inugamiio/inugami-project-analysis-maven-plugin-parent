@@ -6,7 +6,7 @@
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ----
 
@@ -28,12 +28,12 @@ In your project build definition :
 <plugin>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.0.1</version>
+    <version>1.2.1</version>
     <extensions>true</extensions>
     <executions>
         <execution>
             <id>check</id>
-            <phase>analyse</phase>
+            <phase>analyze</phase>
             <goals>
                 <goal>check</goal>
             </goals>
