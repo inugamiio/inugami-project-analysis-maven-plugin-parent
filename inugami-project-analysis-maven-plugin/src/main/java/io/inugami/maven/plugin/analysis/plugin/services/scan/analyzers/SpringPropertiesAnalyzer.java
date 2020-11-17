@@ -429,7 +429,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // TOOLS
     // =========================================================================
     public boolean setShortName(final Class<?> clazz) {
-        return SHORT_NAME.contains(clazz);
+        return clazz == null ? true : SHORT_NAME.contains(clazz);
     }
 
 

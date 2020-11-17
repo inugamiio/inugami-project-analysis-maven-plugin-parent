@@ -235,6 +235,9 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
     private String renderArtifactService(final ArtifactService artifactService) {
         final JsonBuilder writer = new JsonBuilder();
+        if(artifactService==null || artifactService.getGav()==null){
+            return writer.toString();
+        }
         writer.write(ConsoleColors.CYAN);
         writer.write(ConsoleColors.createLine("=", 80)).line();
         writer.write(artifactService.gav).line();
@@ -243,6 +246,9 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
         for (final String key : orderKeys(artifactService.getServices().keySet())) {
             final Service service = artifactService.getServices().get(key);
+            if(service==null || service.getName()==null){
+                continue;
+            }
             writer.line();
             writer.write(ConsoleColors.RED);
             writer.write("<").write(service.getType()).write("> ");

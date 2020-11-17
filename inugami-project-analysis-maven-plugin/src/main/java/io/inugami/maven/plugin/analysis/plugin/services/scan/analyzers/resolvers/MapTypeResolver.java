@@ -53,11 +53,15 @@ public class MapTypeResolver implements BeanPropertyTypeResolver {
         fieldName.append('>');
 
         if (ReflectionService.isBasicType(valueType)) {
-            final String type    = springPropertiesAnalyzer.setShortName(valueType) ? valueType
-                    .getSimpleName() : valueType.getName();
+            String type = "null";
+            if (valueType != null) {
+                type = springPropertiesAnalyzer.setShortName(valueType) ? valueType
+                        .getSimpleName() : valueType.getName();
+            }
+
             final String                    nodeUid        = currentPath + ".<" + type + ">";
             final Map<String, Serializable> additionalInfo = new HashMap<>();
-            additionalInfo.put(PROPERTY_TYPE,type);
+            additionalInfo.put(PROPERTY_TYPE, type);
 
             final Node node = Node.builder()
                                   .uid(nodeUid)

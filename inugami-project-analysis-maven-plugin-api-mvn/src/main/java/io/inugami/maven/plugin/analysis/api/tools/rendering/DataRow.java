@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools.rendering;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,12 +25,14 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Setter
 @Getter
 public class DataRow {
     String                    rowColor;
+    @EqualsAndHashCode.Include
+    String                    uid;
     Map<String, Serializable> properties = new LinkedHashMap<>();
 
     public void setProperties(final Map<String, Serializable> properties) {

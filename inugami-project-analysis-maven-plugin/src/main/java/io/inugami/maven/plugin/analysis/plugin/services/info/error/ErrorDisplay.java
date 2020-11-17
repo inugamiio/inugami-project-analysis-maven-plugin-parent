@@ -40,7 +40,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderin
 public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
     public static final  String       ERROR_CODE  = "errorCode";
-    public static final String PAYLOAD = "payload";
+    public static final  String       PAYLOAD     = "payload";
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
@@ -104,12 +104,12 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
         Set<String> knowKeys = null;
         for (final Record record : resultSet) {
-            final Map<String, Object> recordData = record!=null? record.asMap():null;
-            if(recordData==null){
+            final Map<String, Object> recordData = record != null ? record.asMap() : null;
+            if (recordData == null) {
                 continue;
             }
-            final Node                dependency = (Node) recordData.get("dependency");
-            final Node                error      = (Node) recordData.get("error");
+            final Node dependency = (Node) recordData.get("dependency");
+            final Node error      = (Node) recordData.get("error");
 
             final String dependencyName = getNodeName(dependency);
 
@@ -154,8 +154,12 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
                         propertyValue = String.valueOf(propertyValueRaw);
                     }
                     dataRow.put(property, propertyValue);
-                    savedDependency.add(dataRow);
+
                 }
+                final String name = getNodeName(error);
+                dataRow.setUid(name == null ? "undefine" : name);
+                savedDependency.add(dataRow);
+
             }
 
 
@@ -203,7 +207,8 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
                     result.add(key);
                 }
             }
-        }else {
+        }
+        else {
             result.addAll(firstPass);
         }
         return result;

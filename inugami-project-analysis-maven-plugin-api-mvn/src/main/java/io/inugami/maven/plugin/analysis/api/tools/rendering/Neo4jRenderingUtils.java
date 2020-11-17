@@ -62,13 +62,19 @@ public final class Neo4jRenderingUtils {
         return writer.toString();
     }
 
-    private static String renderTable(final Collection<DataRow> data) {
+    private static String renderTable(final Collection<DataRow> inputData) {
         final JsonBuilder writer = new JsonBuilder();
 
-        if (data == null || data.isEmpty()) {
+        if (inputData == null || inputData.isEmpty()) {
             writer.write("no result").line();
         }
         else {
+            final List<DataRow> data = new ArrayList<>(inputData);
+            data.sort((ref, value) -> {
+                final String refUid   = ref == null || ref.getUid() == null ? "null" : ref.getUid();
+                final String valueUid = value == null || value.getUid() == null ? "null" : value.getUid();
+                return refUid.compareTo(valueUid);
+            });
             final Map<String, Integer> columnsSize = computeColumnSize(data);
             int displaySize = columnsSize.entrySet().stream().mapToInt(Map.Entry::getValue)
                                          .sum();
