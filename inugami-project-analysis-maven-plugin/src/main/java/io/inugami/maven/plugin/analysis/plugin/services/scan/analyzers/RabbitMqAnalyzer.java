@@ -78,7 +78,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
             final List<Method> methods = loadAllMethods(clazz);
 
             for (final Method method : methods) {
-                result = ReflectionService.hasAnnotation(method, RabbitListener.class);
+                result = ReflectionService.hasAnnotation(method, RabbitListener.class, RabbitMqSender.class);
                 if (result) {
                     break;
                 }
@@ -149,15 +149,20 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
             uid = cleanValue(sender.id());
         }
         else {
+
+            final String prefix = notNullValue(sender.echangeName()).isEmpty() ? notNullValue(
+                    sender.queue()) : notNullValue(sender.echangeName());
             uid = String.join("_",
-                              cleanValue(notNullValue(sender.echangeName())),
-                              cleanValue(notNullValue(sender.queue())),
+                              cleanValue(prefix),
                               cleanValue(notNullValue(sender.routingKey())));
         }
 
         final Parameter event = resolveRabbitEvent(method);
-
-        final String eventPayload = buildEventPayload(event);
+        if (event == null) {
+            log.warn("no RabbitMqEvent define on method parameters : {}.{}", method.getDeclaringClass(),
+                     method.getName());
+        }
+        final String eventPayload = event == null ? null : buildEventPayload(event);
         processIfNotNull(eventPayload, value -> additionalInfo.put("payload", value));
 
         final Node result = Node.builder()
@@ -287,9 +292,9 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
             }
         }
 
+        final String prefix = echanges.isEmpty() ? String.join(";", queues) : String.join(";", echanges);
         return String.join("_",
-                           String.join(";", echanges),
-                           String.join(";", queues),
+                           prefix,
                            routingKey == null ? String.join(";", routingKeys) : cleanValue(routingKey));
     }
 
@@ -419,8 +424,8 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                .build());
 
         result.add(Relationship.builder()
-                               .from(methodNode.getUid())
-                               .to(artifactNode.getUid())
+                               .from(artifactNode.getUid())
+                               .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_HAS_METHOD)
                                .build());
 

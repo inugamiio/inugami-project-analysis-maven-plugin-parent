@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ResultWriter;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
@@ -43,6 +44,11 @@ public class Neo4jWriter implements ResultWriter {
         dao = new Neo4jDao(context.getProject().getProperties());
     }
 
+    public Neo4jWriter init(final ConfigHandler<String, String> configuration) {
+        dao = new Neo4jDao(configuration);
+        return this;
+    }
+
     protected void initializeNeo4jDriver(final String url, final String userName, final String password) {
         dao = new Neo4jDao(url, userName, password);
     }
@@ -60,13 +66,17 @@ public class Neo4jWriter implements ResultWriter {
     public boolean accept(final JsonObject value, final ScanConext context) {
         final boolean result = value instanceof ScanNeo4jResult;
         if (result) {
-            final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) value;
-            data.addNode(neo4jResult.getNodes());
-            data.addRelationship(neo4jResult.getRelationships());
-            data.addNodeToDelete(neo4jResult.getNodesToDeletes());
+            appendData((ScanNeo4jResult) value);
         }
 
         return result;
+    }
+
+    public void appendData(final ScanNeo4jResult value) {
+        final ScanNeo4jResult neo4jResult = value;
+        data.addNode(neo4jResult.getNodes());
+        data.addRelationship(neo4jResult.getRelationships());
+        data.addNodeToDelete(neo4jResult.getNodesToDeletes());
     }
 
     @Override

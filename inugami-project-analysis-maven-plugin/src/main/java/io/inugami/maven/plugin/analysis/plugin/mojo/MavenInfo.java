@@ -64,6 +64,7 @@ public class MavenInfo extends AbstractMojo {
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
 
+        configuration.put("interactive", isInteractive(configuration));
         ProjectInformation handler = null;
 
         final String action = configuration.get("action");
@@ -72,6 +73,8 @@ public class MavenInfo extends AbstractMojo {
             handler = SpiLoader.INSTANCE.loadSpiService(String.valueOf(action), ProjectInformation.class, true);
             try {
                 handler.process(project, configuration);
+            }catch (final Exception e){
+                log.error(e.getMessage(),e);
             }
             finally {
                 handler.shutdown();
@@ -80,6 +83,11 @@ public class MavenInfo extends AbstractMojo {
         else {
             displayHelp();
         }
+    }
+
+    private String isInteractive(final ConfigHandler<String, String> configuration) {
+        final Boolean result = configuration.containsKey("i") || configuration.containsKey("interactive");
+        return String.valueOf(result);
     }
 
     private void displayHelp() throws MojoFailureException {

@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools;
 
+import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
@@ -23,6 +24,9 @@ import io.inugami.maven.plugin.analysis.api.models.QueryDefinition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,13 +55,30 @@ public final class TemplateRendering {
 
     public static String render(final String templatePath, final Map<String, String> properties,
                                 final Map<String, String> additionalProperties) {
-        String result = null;
+
 
         String content = null;
         if (templatePath != null) {
             content = FilesUtils.readFileFromClassLoader(templatePath);
         }
 
+        return render(properties, additionalProperties, content);
+    }
+
+    public static String render(final File templatePath, final Map<String, String> properties) {
+        String content = null;
+        try {
+            content = FilesUtils.readContent(templatePath);
+        }
+        catch (final IOException e) {
+            throw new UncheckedException(e.getMessage(),e);
+        }
+        return render(properties, new HashMap<>(), content);
+    }
+
+    private static String render(final Map<String, String> properties, final Map<String, String> additionalProperties,
+                                 final String content) {
+        String result = null;
         if (content != null) {
             final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
 

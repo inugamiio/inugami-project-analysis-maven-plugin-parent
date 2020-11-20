@@ -77,6 +77,20 @@ class JmsListenerAnalyzerTest {
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
     }
 
+    @Test
+    public void analyze_withJSenderOnly_shouldFindServices() {
+        final JmsListenerAnalyzer analyzer = new JmsListenerAnalyzer();
+
+        final List<JsonObject> result = analyzer.analyze(SenderOnly.class, context);
+
+        assertThat(result).size().isEqualTo(1);
+        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult)result.get(0);
+        neo4jResult.getNodes().sort((value,ref)->value.getUid().compareTo(ref.getUid()));
+
+        neo4jResult.getRelationships().sort((value,ref)->String.join("->", value.getFrom(),value.getTo()).compareTo(String.join("->", ref.getFrom(),ref.getTo())));
+        assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
+    }
+
     // =========================================================================
     // BASIC PROPERTIES
     // =========================================================================
@@ -99,6 +113,13 @@ class JmsListenerAnalyzerTest {
 
         }
 
+        @JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
+        public void sendCreateUser(final String someParameter, @JmsEvent final User user) {
+
+        }
+    }
+
+    private static class SenderOnly {
         @JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
         public void sendCreateUser(final String someParameter, @JmsEvent final User user) {
 

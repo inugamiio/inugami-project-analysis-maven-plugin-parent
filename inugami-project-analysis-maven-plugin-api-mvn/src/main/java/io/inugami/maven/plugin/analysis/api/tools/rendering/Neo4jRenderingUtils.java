@@ -94,18 +94,38 @@ public final class Neo4jRenderingUtils {
                 if (row.getRowColor() != null) {
                     writer.write(row.getRowColor());
                 }
-                for (final Map.Entry<String, Serializable> rowData : row.getProperties().entrySet()) {
-                    final String renderedValue = String.valueOf(rowData.getValue());
-                    writer.write(renderedValue);
-                    writer.write(
-                            ConsoleColors.createLine(" ", columnsSize.get(rowData.getKey()) - renderedValue.length()));
-                    writer.write(COLUMN_SEP);
+                int cursor = 0;
+                for (final Map.Entry<String, Integer> header : columnsSize.entrySet()) {
+                    final Serializable value = row.getProperties().get(header.getKey());
+                    if (value == null) {
+                        writer.write(ConsoleColors.createLine(" ", header.getValue()));
+                        writer.write(COLUMN_SEP);
+                    }
+                    else {
+                        final String renderedValue = processRenderingValue(value, cursor,
+                                                                           columnsSize.get(header.getKey()));
+                        writer.write(renderedValue);
+                        writer.write(ConsoleColors.createLine(" ", columnsSize.get(header.getKey()) - renderedValue
+                                .length()));
+                        writer.write(COLUMN_SEP);
+                    }
+                    cursor += columnsSize.get(header.getKey()) + COLUMN_SEP.length();
                 }
                 writer.write(ConsoleColors.RESET);
                 writer.line();
             }
         }
         return writer.toString();
+    }
+
+    private static String processRenderingValue(final Serializable value, final int tab, final int columnSize) {
+        String result = String.valueOf(value);
+        if (result.contains("\n")) {
+            result = String.join("\n" + ConsoleColors.createLine(" ", tab), result.split("\n"))
+                    + "\n"
+                    + ConsoleColors.createLine(" ", tab+columnSize);
+        }
+        return result;
     }
 
     private static Map<String, Integer> computeColumnSize(final Collection<DataRow> data) {
@@ -115,18 +135,32 @@ public final class Neo4jRenderingUtils {
             for (final DataRow item : data) {
                 if (item != null) {
                     for (final Map.Entry<String, Serializable> entry : item.getProperties().entrySet()) {
-                        final String  value      = String.valueOf(entry.getValue());
-                        final Integer resultItem = result.get(entry.getKey());
-                        if (resultItem == null || resultItem < value.length()) {
+                        final String  value        = String.valueOf(entry.getValue());
+                        final int     maxValueSize = computeMaxValueSize(value);
+                        final Integer resultItem   = result.get(entry.getKey());
+                        if (resultItem == null || resultItem < maxValueSize) {
                             result.put(entry.getKey(),
-                                       value.length() < entry.getKey().length() ? entry.getKey().length() : value
-                                               .length());
+                                       value.length() < entry.getKey().length() ? entry.getKey()
+                                                                                       .length() : maxValueSize);
                         }
                     }
                 }
             }
         }
 
+        return result;
+    }
+
+    private static int computeMaxValueSize(final String value) {
+        int result = value == null ? 0 : value.length();
+        if (value!=null && value.contains("\n")) {
+            result = 0;
+            for (final String item : value.split("\n")) {
+                if (item.length() > result) {
+                    result = item.length();
+                }
+            }
+        }
         return result;
     }
 

@@ -27,13 +27,14 @@ import java.util.Map;
 @Builder(toBuilder = true)
 @Setter
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Node implements JsonObject {
 
-    private static final long serialVersionUID = 7519867544798392684L;
-    private final String type;
-    private final String                    name;
+    private static final long                      serialVersionUID = 7519867544798392684L;
+    private              String                    type;
+    private              String                    name;
     @EqualsAndHashCode.Include
-    private final String                    uid;
-    private  Map<String, Serializable> properties;
+    private              String                    uid;
+    private              Map<String, Serializable> properties;
 }

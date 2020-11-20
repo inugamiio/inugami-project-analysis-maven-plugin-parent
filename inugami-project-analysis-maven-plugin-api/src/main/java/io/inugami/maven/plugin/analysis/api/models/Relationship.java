@@ -26,16 +26,17 @@ import java.util.Map;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder(toBuilder = true)
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Relationship implements JsonObject {
 
-    private static final long   serialVersionUID = 973646684487506001L;
-    @EqualsAndHashCode.Include
-    private final        String from;
-    @EqualsAndHashCode.Include
-    private final        String to;
-    @EqualsAndHashCode.Include
-    private final        String type;
+    private static final long serialVersionUID = 973646684487506001L;
 
-    private final Map<String, Serializable> properties;
+    @EqualsAndHashCode.Include
+    private String                    from;
+    @EqualsAndHashCode.Include
+    private String                    to;
+    @EqualsAndHashCode.Include
+    private String                    type;
+    private Map<String, Serializable> properties;
 }

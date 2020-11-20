@@ -3,18 +3,22 @@ package io.inugami.maven.plugin.analysis.api.models;
 import io.inugami.api.models.data.basic.JsonObject;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder(toBuilder = true)
+@NoArgsConstructor
+@Setter
 @Getter
 public class ScanNeo4jResult implements JsonObject {
     private static final long serialVersionUID = -1885576008301619055L;
-    private final String type;
-    private final List<String>       nodesToDeletes;
-    private final List<Node>         nodes;
-    private final List<Relationship> relationships;
+    private  String type;
+    private  List<String>       nodesToDeletes;
+    private  List<Node>         nodes;
+    private  List<Relationship> relationships;
 
     public ScanNeo4jResult(final String type, final List<String> nodesToDeletes, final List<Node> nodes,
                            final List<Relationship> relationships) {
@@ -33,6 +37,9 @@ public class ScanNeo4jResult implements JsonObject {
 
     public ScanNeo4jResult addNode(final Node... values) {
         if (values.length > 0) {
+            if(nodes==null){
+                nodes = new ArrayList<>();
+            }
             for (int i = 0; i < values.length; i++) {
                 if (values[i] != null) {
                     nodes.add(values[i]);
@@ -51,6 +58,9 @@ public class ScanNeo4jResult implements JsonObject {
     }
 
     public ScanNeo4jResult addRelationship(final Relationship... values) {
+        if(relationships==null){
+            relationships = new ArrayList<>();
+        }
         if (values.length > 0) {
             for (int i = 0; i < values.length; i++) {
                 if (values[i] != null) {
@@ -70,6 +80,9 @@ public class ScanNeo4jResult implements JsonObject {
     }
 
     public ScanNeo4jResult addNodeToDelete(final String... uids) {
+        if(nodesToDeletes==null){
+            nodesToDeletes = new ArrayList<>();
+        }
         if (uids.length > 0) {
             for (int i = 0; i < uids.length; i++) {
                 if (uids[i] != null) {
