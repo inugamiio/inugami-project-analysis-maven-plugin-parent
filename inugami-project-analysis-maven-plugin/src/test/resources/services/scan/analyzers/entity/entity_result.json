@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
@@ -41,5 +43,6 @@
     "from" : "local@mainDatabase_app_user",
     "to" : "mainDatabase_app_user",
     "type" : "HAS_ENTITY_REFERENCE"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

@@ -151,6 +151,38 @@ public class Neo4jDao {
         }
     }
 
+    public void deleteRelationship(final List<Relationship> relationshipsToDeletes) {
+        if (relationshipsToDeletes != null) {
+            final int size = relationshipsToDeletes.size();
+            log.info("{} relationships to delete", size);
+            String previous = null;
+            for (int i = 0; i < size; i++) {
+                final Relationship relationship = relationshipsToDeletes.get(i);
+                previous = writeProgression(i, size, previous);
+                final String cypherQuery = buildRelationshipToDeleteQuery(relationship);
+                processSave(cypherQuery);
+            }
+            log.info("delete relationships done");
+        }
+    }
+
+
+
+    public void processScripts(final List<String> scripts, final ConfigHandler<String, String> configuration) {
+        if (scripts != null) {
+            String    previous = null;
+            final int size     = scripts.size();
+            log.info("{} script to process", size);
+            for (int i = 0; i < size; i++) {
+                previous = writeProgression(i, size, previous);
+                final String script      = scripts.get(i);
+                final String cypherQuery = configuration == null ? script : configuration.applyProperties(script);
+                processSave(cypherQuery);
+            }
+        }
+    }
+
+
     public void processSave(final String cypherQuery) {
         final Session session = driver.session();
 
@@ -296,7 +328,7 @@ public class Neo4jDao {
 
         if (relationship.getProperties() != null && !relationship.getProperties().isEmpty()) {
             query.append(" {");
-            boolean                                   first    = true;
+            boolean first = true;
             final Iterator<Map.Entry<String, Serializable>> iterator = relationship.getProperties().entrySet()
                                                                                    .iterator();
             while (iterator.hasNext()) {
@@ -313,11 +345,22 @@ public class Neo4jDao {
             }
             query.append("}");
         }
-
-
         query.append("]->(to)").append("\n");
+        return query.toString();
+    }
 
+    private String buildRelationshipToDeleteQuery(final Relationship relationship) {
+        final JsonBuilder query = new JsonBuilder();
 
+        query.write(" MATCH (f)-[r:");
+        if(relationship.getType()!=null){
+            query.write(relationship.getType());
+        }
+        query.write("]->(to) where ");
+        query.write("f.uid=").valueQuot(relationship.getFrom());
+        query.write(" and ");
+        query.write("to.uid=").valueQuot(relationship.getTo());
+        query.write(" delete r");
         return query.toString();
     }
 
@@ -342,5 +385,6 @@ public class Neo4jDao {
         }
         return current;
     }
+
 
 }

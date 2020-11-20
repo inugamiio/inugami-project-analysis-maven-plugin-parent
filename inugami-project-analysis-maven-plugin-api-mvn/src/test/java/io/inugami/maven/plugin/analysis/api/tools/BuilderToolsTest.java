@@ -16,12 +16,57 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools;
 
+import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.Node;
+import org.apache.maven.project.MavenProject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 
+@ExtendWith(MockitoExtension.class)
 class BuilderToolsTest {
+
+    @Mock
+    private MavenProject mavenProject;
+    private Gav          gav;
+
+    @BeforeEach
+    public void setup() {
+        gav = Gav.builder()
+                 .groupId("io.inugami.test")
+                 .artifactId("basic-artifact")
+                 .version("1.0.0-SNAPSHOT")
+                 .type("jar")
+                 .build();
+
+        lenient().when(mavenProject.getGroupId()).thenReturn(gav.getGroupId());
+        lenient().when(mavenProject.getArtifactId()).thenReturn(gav.getArtifactId());
+        lenient().when(mavenProject.getVersion()).thenReturn(gav.getVersion());
+        lenient().when(mavenProject.getPackaging()).thenReturn(gav.getType());
+    }
+
+
+    @Test
+    void buildNodeVersion_withGav_shouldCreateNode() {
+        final Node nodeGav = buildNodeVersion(gav);
+        final Node nodeProject = buildNodeVersion(mavenProject);
+        assertThat(nodeGav.getUid()).isEqualTo(nodeProject.getUid());
+        assertThat(nodeGav.getUid()).isEqualTo("io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar");
+    }
+
+    @Test
+    void buildGavNodeArtifact_withGav_shouldBuildNode(){
+        final Node nodeGav = buildGavNodeArtifact(gav);
+        final Node nodeProject = buildArtifactNode(mavenProject);
+        assertThat(nodeGav.getUid()).isEqualTo(nodeProject.getUid());
+        assertThat(nodeGav.getUid()).isEqualTo("io.inugami.test:basic-artifact:jar");
+    }
     @Test
     void testExtractMajorVersion() {
         assertThat(extractMajorVersion("3.17.1")).isEqualTo(3);
@@ -32,7 +77,6 @@ class BuilderToolsTest {
     void testExtractMinorVersion() {
         assertThat(extractMinorVersion("3.17.1")).isEqualTo(17);
         assertThat(extractMinorVersion("3-FINAL")).isEqualTo(0);
-        ;
     }
 
     @Test

@@ -17,27 +17,28 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.publish;
 
 import io.inugami.api.exceptions.UncheckedException;
+import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.Node;
-import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.Neo4jWriter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
-public class Publish implements ProjectInformation {
+@Slf4j
+public class Unpublish implements ProjectInformation {
 
     // =========================================================================
     // ATTRIBUTES
@@ -50,9 +51,6 @@ public class Publish implements ProjectInformation {
     public static final String LEVEL                 = "envLevel";
     public static final String ENV_TYPE              = "envType";
     public static final String FIELD_TYPE            = "type";
-    public static final String DEPLOY                = "DEPLOY";
-    public static final String REL_ENV_TYPE          = "ENV_TYPE";
-    public static final String HAVE_ARTIFACT_VERSION = "HAVE_ARTIFACT_VERSION";
 
     // =========================================================================
     // API
@@ -75,52 +73,67 @@ public class Publish implements ProjectInformation {
     private ScanNeo4jResult buildData(final ConfigHandler<String, String> configuration, final MavenProject project) {
         final ScanNeo4jResult result = new ScanNeo4jResult();
 
-        final boolean autoUnpublish   = Boolean.parseBoolean(configuration.grabOrDefault("autoUnpublish", "false"));
-        final boolean justThisVersion = Boolean.parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
         final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
+        final boolean justThisVersion = Boolean.parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
 
         final Node artifactNode = useMavenProject ? buildNodeVersion(project)
                                                   : buildNodeVersion(buildGav(configuration, project));
         final Node env = buildEnvNode(configuration);
-        final String previousEnv = ifNull(configuration.get("previousEnv"),
-                                          () -> ConsoleTools.askQuestion("Previous environment ?"));
-        final Node envType = buildEnvType(env);
 
-        if (autoUnpublish) {
-            if (previousEnv != null) {
-                result.addDeleteScript(Unpublish.buildDeletePublishRelation(artifactNode,
-                                                                            Node.builder().uid(previousEnv).build(),
-                                                                            justThisVersion));
-            }
-            result.addDeleteScript(Unpublish.buildDeletePublishRelation(artifactNode, env, justThisVersion));
-        }
 
-        result.addNode(artifactNode, env);
-        result.addRelationship(Relationship.builder()
-                                           .from(artifactNode.getUid())
-                                           .to(env.getUid())
-                                           .type(DEPLOY)
-                                           .properties(buildDeployProperties())
-                                           .build());
-
-        result.addRelationship(Relationship.builder()
-                                           .from(env.getUid())
-                                           .to(artifactNode.getUid())
-                                           .type(HAVE_ARTIFACT_VERSION)
-                                           .properties(buildDeployProperties())
-                                           .build());
-        if (envType != null) {
-            result.addNode(envType);
-            result.addRelationship(Relationship.builder()
-                                               .from(env.getUid())
-                                               .to(envType.getUid())
-                                               .type(REL_ENV_TYPE)
-                                               .build());
-        }
+        result.addDeleteScript(buildDeletePublishRelation(artifactNode, env,justThisVersion));
 
         return result;
     }
 
+    public static List<String> buildDeletePublishRelation(final Node artifactNode, final Node env,
+                                                    final boolean justThisVersion) {
+        final List<String> result = new ArrayList<>();
+
+        result.add(buildDeleteDeploy(artifactNode, env,justThisVersion));
+        result.add(buildDeleteHaveArtifactVersion(artifactNode, env,justThisVersion));
+        return result;
+    }
+
+
+    private static String buildDeleteDeploy(final Node artifactNode, final Node env, final boolean justThisVersion) {
+        final JsonBuilder query = new JsonBuilder();
+        query.write("MATCH (v:Version)-[r:DEPLOY]->(env:Env)");
+        query.write(" where");
+        if(justThisVersion){
+            query.write(" v.name=").valueQuot(artifactNode.getUid());
+        }else{
+            query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
+            query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
+        }
+
+        query.write(" and ");
+        query.write(" env.name=").valueQuot(env.getUid());
+        query.write(" delete r");
+        final String result = query.toString();
+        log.info(result);
+        return result;
+    }
+
+    private static String buildDeleteHaveArtifactVersion(final Node artifactNode, final Node env,
+                                                  final boolean justThisVersion) {
+        final JsonBuilder query = new JsonBuilder();
+        query.write("MATCH (env:Env)-[r:HAVE_ARTIFACT_VERSION]->(v:Version)");
+        query.write(" where");
+        if(justThisVersion){
+            query.write(" v.name=").valueQuot(artifactNode.getUid());
+        }else{
+            query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
+            query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
+        }
+
+        query.write(" and ");
+        query.write(" env.name=").valueQuot(env.getUid());
+        query.write(" delete r");
+        final String result = query.toString();
+        log.info(result);
+        return result;
+    }
 
     private Gav buildGav(final ConfigHandler<String, String> configuration, final MavenProject project) {
         final String groupId = ifNull(configuration.get(GROUP_ID),
@@ -171,26 +184,6 @@ public class Publish implements ProjectInformation {
         return builder.build();
     }
 
-
-    private Node buildEnvType(final Node env) {
-        final Serializable type = env.getProperties().get(FIELD_TYPE);
-        return type == null ? null : Node.builder()
-                                         .type("EnvType")
-                                         .uid(String.valueOf(type))
-                                         .name(String.valueOf(type))
-                                         .build();
-    }
-
-    private Map<String, Serializable> buildDeployProperties() {
-        final Map<String, Serializable> result = new LinkedHashMap<>();
-        final LocalDateTime             now    = LocalDateTime.now();
-        result.put("date", DateTimeFormatter.ISO_DATE_TIME.format(now));
-        result.put("timestamp", now.toEpochSecond(
-                ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now(ZoneOffset.UTC))));
-        result.put("dateUtc", DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now(ZoneOffset.UTC)));
-        result.put("timestampUtc", now.toEpochSecond(ZoneOffset.UTC));
-        return result;
-    }
 
     // =========================================================================
     // TOOLS

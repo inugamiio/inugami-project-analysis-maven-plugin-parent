@@ -33,8 +33,9 @@ public class Neo4jWriter implements ResultWriter {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final ScanNeo4jResult data = ScanNeo4jResult.builder().build();
-    private       Neo4jDao        dao  = null;
+    private final ScanNeo4jResult               data = ScanNeo4jResult.builder().build();
+    private       Neo4jDao                      dao  = null;
+    private       ConfigHandler<String, String> configuration;
 
     // =========================================================================
     // LIFECYCLE
@@ -46,6 +47,7 @@ public class Neo4jWriter implements ResultWriter {
 
     public Neo4jWriter init(final ConfigHandler<String, String> configuration) {
         dao = new Neo4jDao(configuration);
+        this.configuration = configuration;
         return this;
     }
 
@@ -76,12 +78,20 @@ public class Neo4jWriter implements ResultWriter {
         final ScanNeo4jResult neo4jResult = value;
         data.addNode(neo4jResult.getNodes());
         data.addRelationship(neo4jResult.getRelationships());
+        data.addRelationshipToDelete(neo4jResult.getRelationshipsToDeletes());
         data.addNodeToDelete(neo4jResult.getNodesToDeletes());
+        data.addCreateScript(value.getCreateScripts());
+        data.addDeleteScript(value.getDeleteScripts());
+
     }
 
     @Override
     public void write() {
+        dao.processScripts(data.getDeleteScripts(), configuration);
+        dao.deleteRelationship(data.getRelationshipsToDeletes());
         dao.deleteNodes(data.getNodesToDeletes());
+
+        dao.processScripts(data.getCreateScripts(), configuration);
         dao.saveNodes(data.getNodes());
         dao.saveRelationships(data.getRelationships());
     }

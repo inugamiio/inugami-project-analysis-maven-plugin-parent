@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "project.bean.devices.<String>.countries[].<String>",
     "properties" : {
@@ -163,5 +165,6 @@
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "project.bean.enable",
     "type" : "USE_PROPERTY"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

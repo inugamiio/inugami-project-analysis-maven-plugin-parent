@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "events.exchangeName",
     "properties" : {
@@ -91,5 +93,6 @@
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodSenderOneParam.fireEvent(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)",
     "type" : "HAS_METHOD"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "JMS",
     "type" : "ServiceType",
@@ -56,5 +58,6 @@
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$SenderOnly.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "HAS_METHOD"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

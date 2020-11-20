@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "ERR-1",
     "properties" : {
@@ -39,5 +41,6 @@
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "errorCode_ERR-1",
     "type" : "HAS_ERROR_CODE"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

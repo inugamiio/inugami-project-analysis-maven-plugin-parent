@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "JMS",
     "type" : "ServiceType",
@@ -182,5 +184,6 @@
     },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>)",
     "type" : "USE_BY"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }

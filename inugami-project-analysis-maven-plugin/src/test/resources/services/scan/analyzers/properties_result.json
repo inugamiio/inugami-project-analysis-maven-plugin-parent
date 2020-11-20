@@ -1,4 +1,6 @@
 {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
   "nodes" : [ {
     "name" : "current.enable",
     "properties" : {
@@ -120,5 +122,6 @@
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "current.provider",
     "type" : "USE_PROPERTY"
-  } ]
+  } ],
+  "relationshipsToDeletes" : [ ]
 }
