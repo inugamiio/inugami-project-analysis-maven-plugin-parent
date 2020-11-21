@@ -33,7 +33,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.rendering;
 
 public interface ProjectInformation extends NamedSpi {
     String GROUP_ID    = "groupId";
@@ -104,7 +103,7 @@ public interface ProjectInformation extends NamedSpi {
     }
 
 
-    default String renderResultSet(final List<Record> resultSet,
+    default Map<String, Collection<DataRow>> extractDataFromResultSet(final List<Record> resultSet,
                                    final BiConsumer<Map<String, Collection<DataRow>>, Map<String, Object>> consumer) {
 
         final Map<String, Collection<DataRow>> data = new LinkedHashMap<>();
@@ -116,7 +115,7 @@ public interface ProjectInformation extends NamedSpi {
                 }
             }
         }
-        return rendering(data);
+        return data;
     }
 
 

@@ -46,6 +46,7 @@ public class ScanConext {
     private final Set<Gav>                      directDependencies;
     private final PluginDescriptor              pluginDescriptor;
     private final ConfigHandler<String, String> configuration;
+    private final ScanNeo4jResult               postNeo4jResult = new ScanNeo4jResult();
 
     public <T> T getProperty(final String key) {
         T result = null;

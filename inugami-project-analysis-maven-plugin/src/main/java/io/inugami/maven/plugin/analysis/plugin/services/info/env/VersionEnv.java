@@ -32,10 +32,10 @@ import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.types.Node;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
+
+import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.ifPropertyNotNull;
 
 @Slf4j
 public class VersionEnv implements ProjectInformation, QueryConfigurator {
@@ -49,11 +49,15 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // QUERIES
     // =========================================================================
     private static final List<String> QUERIES                   = List.of(
-            "META-INF/queries/search_deploy_artifact.cql"
+            "META-INF/queries/search_deploy_artifact.cql",
+            "META-INF/queries/search_missing_service.cql"
                                                                          );
     public static final  String       PROJECT_DEPENDENCIES      = "Project dependencies";
     public static final  String       PROJECT_CONSUMED_SERVICES = "Project consumed services";
     public static final  String       DATE_UTC                  = "dateUtc";
+    public static final  String       ARTIFACT                  = "artifact";
+    public static final  String       EMPTY                     = "";
+    public static final  String       MISSING_SERVICES          = "Missing services";
 
     @Override
     public boolean accept(final String queryPath) {
@@ -74,23 +78,50 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao       = new Neo4jDao(configuration);
-        final String   queryPath = QUERIES.get(0);
-        final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
-                                                      configure(queryPath,
-                                                                buildGav(project, configuration),
+        final Neo4jDao dao = new Neo4jDao(configuration);
+
+        final Gav gav = buildGav(project, configuration);
+        final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),
+                                                      configure(QUERIES.get(0),
+                                                                gav,
                                                                 configuration));
         log.info("query:\n{}", query);
-        final String result = renderResultSet(dao.search(query), this::buildModels);
-        log.info("\n{}", result);
+        final Map<String, Long> envs = new HashMap<>();
+        final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
+                                                                                    (data, record) -> this
+                                                                                            .buildModels(data, record,
+                                                                                                         envs));
+
+
+
+        final Map<String, Collection<DataRow>> data = sortData(firstPass, envs, extractProjectEnvs(firstPass, gav));
+
+        final String queryMissingService = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(1)),
+                                                                    configure(QUERIES.get(1),
+                                                                              gav,
+                                                                              configuration));
+
+        final Map<String, Collection<DataRow>> missingServices = extractDataFromResultSet(
+                dao.search(queryMissingService),
+                this::buildMissingService);
+
+        if(missingServices!=null && !missingServices.isEmpty()){
+            data.putAll(missingServices);
+        }
+
+        log.info("\n{}",  Neo4jRenderingUtils.rendering(data));
+
+
         dao.shutdown();
     }
+
 
     // =========================================================================
     // BUILDER
     // =========================================================================
     private void buildModels(final Map<String, Collection<DataRow>> data,
-                             final Map<String, Object> record) {
+                             final Map<String, Object> record,
+                             final Map<String, Long> envs) {
 
         log.debug("record : {}", record);
         Collection<DataRow> lines = data.get(ENVIRONMENTS);
@@ -99,26 +130,29 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
             data.put(ENVIRONMENTS, lines);
         }
 
-        buildCurrentProjectEnv(data, record);
-        buildProjectDependenciesEnv(data, record);
-        buildProjectConsumersEnv(data, record);
+        buildCurrentProjectEnv(data, record, envs);
+        buildProjectDependenciesEnv(data, record, envs);
+        buildProjectConsumersEnv(data, record, envs);
 
 
     }
 
 
-    private void buildCurrentProjectEnv(final Map<String, Collection<DataRow>> data, final Map<String, Object> record) {
-        buildLine("version", "env", "deploy", data, record, ConsoleColors.CYAN);
+    private void buildCurrentProjectEnv(final Map<String, Collection<DataRow>> data, final Map<String, Object> record,
+                                        final Map<String, Long> envs) {
+        buildLine("version", "env", "deploy", data, record, ConsoleColors.CYAN, envs);
     }
 
     private void buildProjectDependenciesEnv(final Map<String, Collection<DataRow>> data,
-                                             final Map<String, Object> record) {
-        buildLine("dep", "envDep", "deployDep", data, record);
+                                             final Map<String, Object> record,
+                                             final Map<String, Long> envs) {
+        buildLine("dep", "envDep", "deployDep", data, record, envs);
     }
 
     private void buildProjectConsumersEnv(final Map<String, Collection<DataRow>> data,
-                                          final Map<String, Object> record) {
-        buildLine("depProducer", "envProducer", "deployProducer", data, record);
+                                          final Map<String, Object> record,
+                                          final Map<String, Long> envs) {
+        buildLine("depProducer", "envProducer", "deployProducer", data, record, envs);
     }
 
 
@@ -126,13 +160,15 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                            final String envNodeName,
                            final String relationshipName,
                            final Map<String, Collection<DataRow>> data,
-                           final Map<String, Object> record) {
+                           final Map<String, Object> record,
+                           final Map<String, Long> envs) {
         buildLine(artifactNodeName,
                   envNodeName,
                   relationshipName,
                   data,
                   record,
-                  null);
+                  null,
+                  envs);
     }
 
     private void buildLine(final String artifactNodeName,
@@ -140,7 +176,8 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                            final String relationshipName,
                            final Map<String, Collection<DataRow>> data,
                            final Map<String, Object> record,
-                           final String color) {
+                           final String color,
+                           final Map<String, Long> envs) {
         final List<DataRow> lines        = (List<DataRow>) data.get(ENVIRONMENTS);
         final String        artifactName = buildArtifactName(record.get(artifactNodeName));
         if (artifactName == null) {
@@ -155,16 +192,173 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         }
         else {
             currentRow = projectLine;
-            if(color!=null){
+            if (color != null) {
                 currentRow.setRowColor(color);
             }
-            currentRow.put("artifact", artifactName);
+            currentRow.put(ARTIFACT, artifactName);
             lines.add(currentRow);
         }
-
+        final Object              envNode       = record.get(envNodeName);
+        final String              envName       = Neo4jRenderingUtils.getNodeName(envNode);
+        final Map<String, Object> envProperties = envNode instanceof Node ? ((Node) envNode).asMap() : null;
+        if (envProperties != null) {
+            final Long level = envProperties.get("level") instanceof Long ? (Long) envProperties
+                    .get("level") : 0L;
+            envs.put(envName, level);
+        }
         final String deployVersion = renderDeployVersion(record.get(artifactNodeName), record.get(relationshipName));
-        final String envName       = Neo4jRenderingUtils.getNodeName(record.get(envNodeName));
+
         currentRow.put(envName, deployVersion);
+    }
+
+    // =========================================================================
+    // MISSING SERVICE
+    // =========================================================================
+    private void buildMissingService(final Map<String, Collection<DataRow>> data,
+                                     final Map<String, Object> record) {
+        Collection<DataRow> currentData = data.get(MISSING_SERVICES);
+        if (currentData == null) {
+            currentData = new LinkedHashSet<>();
+            data.put(MISSING_SERVICES, currentData);
+        }
+
+        final Node   service = Neo4jRenderingUtils.getNode(record.get("service"));
+        final String type    = Neo4jRenderingUtils.getNodeName(record.get("serviceType"));
+
+        final DataRow row = new DataRow();
+        row.setRowColor(ConsoleColors.RED);
+        row.setUid(Neo4jRenderingUtils.getNodeName(record.get("service")));
+
+        switch (type == null ? "" : type) {
+            case "Rest":
+                row.setProperties(buildRestProperties(service, type));
+                break;
+            case "JMS":
+                row.setProperties(buildJmsProperties(service, type));
+                break;
+            case "rabbitMq":
+                row.setProperties(buildRabbitProperties(service, type));
+                break;
+            default:
+                row.setProperties(buildOtherProperties(service, type));
+                break;
+        }
+
+        currentData.add(row);
+    }
+
+    private Map<String, Serializable> buildRestProperties(final Node service, final String type) {
+        final Map<String, Serializable> result = new LinkedHashMap<>();
+        result.put("type", type);
+        result.put("id", service.id());
+
+        ifPropertyNotNull("shortName", service, (value) -> result.put("shortName", String.valueOf(value)));
+        ifPropertyNotNull("payload", service, (value) -> result.put("payload", String.valueOf(value)));
+        ifPropertyNotNull("responsePayload", service, (value) -> result.put("responsePayload", String.valueOf(value)));
+
+        return result;
+    }
+
+    private Map<String, Serializable> buildJmsProperties(final Node service, final String type) {
+        final Map<String, Serializable> result = new LinkedHashMap<>();
+        result.put("type", type);
+        result.put("id", service.id());
+        ifPropertyNotNull("shortName", service, (value) -> result.put("shortName", String.valueOf(value)));
+        ifPropertyNotNull("event", service, (value) -> result.put("payload", String.valueOf(value)));
+        return result;
+    }
+
+    private Map<String, Serializable> buildRabbitProperties(final Node service, final String type) {
+        final Map<String, Serializable> result = new LinkedHashMap<>();
+        result.put("type", type);
+        result.put("id", service.id());
+        ifPropertyNotNull("shortName", service, (value) -> result.put("shortName", String.valueOf(value)));
+        ifPropertyNotNull("payload", service, (value) -> result.put("payload", String.valueOf(value)));
+        return result;
+    }
+
+    private Map<String, Serializable> buildOtherProperties(final Node service, final String type) {
+        final Map<String, Serializable> result = new LinkedHashMap<>();
+        result.put("type", type);
+        result.put("id", service.id());
+        ifPropertyNotNull("shortName", service, (value) -> result.put("shortName", String.valueOf(value)));
+        return result;
+    }
+
+    // =========================================================================
+    // SORT
+    // =========================================================================
+    private Map<String, Collection<DataRow>> sortData(final Map<String, Collection<DataRow>> firstPass,
+                                                      final Map<String, Long> envs,
+                                                      final List<String> projectEnv) {
+        final Map<String, Collection<DataRow>> result = new LinkedHashMap<>();
+
+        if (envs.isEmpty() || firstPass == null || firstPass.isEmpty()) {
+            return firstPass;
+        }
+
+        final List<String> envNames = sortEnvironment(envs);
+
+        for (final Map.Entry<String, Collection<DataRow>> entry : firstPass.entrySet()) {
+            final List<DataRow> lines = new ArrayList<>();
+            for (final DataRow row : entry.getValue()) {
+                final DataRow                   newRow     = new DataRow();
+                final Map<String, Serializable> properties = new LinkedHashMap<>();
+                final Map<String, Serializable> props      = row.getProperties();
+                newRow.setRowColor(row.getRowColor());
+                properties.put(ARTIFACT, props.get(ARTIFACT));
+
+                for (final String env : envNames) {
+                    final Serializable envValue = props.get(env);
+                    if (envValue == null) {
+                        properties.put(env, EMPTY);
+                        if (projectEnv.contains(env)) {
+                            newRow.setRowColor(ConsoleColors.RED);
+                        }
+                    }
+                    else {
+                        properties.put(env, envValue);
+                    }
+                }
+
+
+                newRow.setUid(row.getUid());
+
+                newRow.setProperties(properties);
+                lines.add(newRow);
+            }
+
+            result.put(entry.getKey(), lines);
+        }
+        return result;
+    }
+
+    public List<String> sortEnvironment(final Map<String, Long> envs) {
+        final List<String> result = new ArrayList<>();
+
+        if (envs != null && !envs.isEmpty()) {
+            final Map<Long, Set<String>> buffer = new HashMap<>();
+            for (final Map.Entry<String, Long> entry : envs.entrySet()) {
+                Set<String> index = buffer.get(entry.getValue());
+                if (index == null) {
+                    index = new HashSet<>();
+                    buffer.put(entry.getValue(), index);
+                }
+                index.add(entry.getKey());
+            }
+
+            final List<Long> indexies = new ArrayList<>(buffer.keySet());
+            Collections.sort(indexies);
+
+            for (final Long index : indexies) {
+                final List<String> indexEnvs = new ArrayList<>(buffer.get(index));
+                Collections.sort(indexEnvs);
+                result.addAll(indexEnvs);
+            }
+        }
+
+
+        return result;
     }
 
     // =========================================================================
@@ -206,6 +400,28 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
             result.append("(").append(date).append(")");
         }
         return result.toString();
+    }
+
+    private List<String> extractProjectEnvs(final Map<String, Collection<DataRow>> data, final Gav gav) {
+        final List<String> result = new ArrayList<>();
+        if (data != null) {
+            final String name = String.join(":", gav.getGroupId(), gav.getArtifactId());
+            for (final Map.Entry<String, Collection<DataRow>> entry : data.entrySet()) {
+                for (final DataRow row : entry.getValue()) {
+                    if (name.equals(row.getUid())) {
+                        final Set<String> envs = Optional.ofNullable(row.getProperties()).orElse(new HashMap<>())
+                                                         .keySet();
+                        for (final String env : envs) {
+                            if (!ARTIFACT.equals(env)) {
+                                result.add(env);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private String asString(final Object value) {

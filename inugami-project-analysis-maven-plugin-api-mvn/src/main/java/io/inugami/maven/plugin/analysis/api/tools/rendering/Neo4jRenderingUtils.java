@@ -25,6 +25,7 @@ import org.neo4j.driver.types.Node;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Consumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jRenderingUtils {
@@ -123,7 +124,7 @@ public final class Neo4jRenderingUtils {
         if (result.contains("\n")) {
             result = String.join("\n" + ConsoleColors.createLine(" ", tab), result.split("\n"))
                     + "\n"
-                    + ConsoleColors.createLine(" ", tab+columnSize);
+                    + ConsoleColors.createLine(" ", tab + columnSize);
         }
         return result;
     }
@@ -153,7 +154,7 @@ public final class Neo4jRenderingUtils {
 
     private static int computeMaxValueSize(final String value) {
         int result = value == null ? 0 : value.length();
-        if (value!=null && value.contains("\n")) {
+        if (value != null && value.contains("\n")) {
             result = 0;
             for (final String item : value.split("\n")) {
                 if (item.length() > result) {
@@ -181,7 +182,11 @@ public final class Neo4jRenderingUtils {
     // TOOLS
     // =========================================================================
     public static String getNodeName(final Object node) {
-        return retrieve("name", node instanceof Node?(Node)node : null);
+        return retrieve("name", node instanceof Node ? (Node) node : null);
+    }
+
+    public static Node getNode(final Object node) {
+        return node instanceof Node ? (Node) node : null;
     }
 
     public static String retrieve(final String key, final Node node) {
@@ -193,5 +198,15 @@ public final class Neo4jRenderingUtils {
             }
         }
         return result;
+    }
+
+    public static <T> void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
+        final String result = null;
+        if (node != null) {
+            final Map<String, Object> values = node.asMap();
+            if (values != null && values.containsKey(key) && values.get(key) != null) {
+                consumer.accept((T) values.get(key));
+            }
+        }
     }
 }
