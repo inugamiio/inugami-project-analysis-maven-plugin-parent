@@ -18,9 +18,9 @@ package io.inugami.maven.plugin.analysis.api.tools.rendering;
 
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.tools.ConsoleColors;
+import io.inugami.maven.plugin.analysis.api.tools.ProjectInformationTools;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.neo4j.driver.Value;
 import org.neo4j.driver.types.Node;
 
 import java.io.Serializable;
@@ -182,31 +182,18 @@ public final class Neo4jRenderingUtils {
     // TOOLS
     // =========================================================================
     public static String getNodeName(final Object node) {
-        return retrieve("name", node instanceof Node ? (Node) node : null);
+        return ProjectInformationTools.getNodeName(node);
     }
 
     public static Node getNode(final Object node) {
-        return node instanceof Node ? (Node) node : null;
+        return ProjectInformationTools.getNode(node);
     }
 
     public static String retrieve(final String key, final Node node) {
-        String result = null;
-        if (node != null) {
-            final Value value = node.get(key);
-            if (value != null && !value.isNull()) {
-                result = value.asString();
-            }
-        }
-        return result;
+        return ProjectInformationTools.retrieve(key, node);
     }
 
     public static <T> void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
-        final String result = null;
-        if (node != null) {
-            final Map<String, Object> values = node.asMap();
-            if (values != null && values.containsKey(key) && values.get(key) != null) {
-                consumer.accept((T) values.get(key));
-            }
-        }
+        ProjectInformationTools.ifPropertyNotNull(key, node, consumer);
     }
 }

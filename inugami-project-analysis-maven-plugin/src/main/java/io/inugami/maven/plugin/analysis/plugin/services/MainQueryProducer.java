@@ -91,6 +91,13 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_missing_service")
                                .type("cql")
                                .description("Allow to search missing services producers")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_publish_artifact_info.cql")
+                               .name("search_publish_artifact_info")
+                               .type("cql")
+                               .description("Allow to retrieve artifact publishing information")
                                .build()
                       );
     }

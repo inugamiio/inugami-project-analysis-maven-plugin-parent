@@ -70,6 +70,7 @@ public class Neo4jWriter implements ResultWriter {
         if (result) {
             appendData((ScanNeo4jResult) value);
         }
+        appendData(context.getPostNeo4jResult());
 
         return result;
     }

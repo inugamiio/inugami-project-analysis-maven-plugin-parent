@@ -72,11 +72,12 @@ public class Publish implements ProjectInformation {
         final boolean justThisVersion = Boolean.parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
         final Node    artifactNode    = buildArtifactVersion(project, configuration);
         final Node    env             = buildEnvNode(configuration);
-        final String previousEnv = ifNull(configuration.get("previousEnv"),
-                                          () -> ConsoleTools.askQuestion("Previous environment ?"));
+
         final Node envType = buildEnvType(env);
 
         if (autoUnpublish) {
+            final String previousEnv = ifNull(configuration.get("previousEnv"),
+                                              () -> ConsoleTools.askQuestion("Previous environment ?"));
             if (previousEnv != null) {
                 result.addDeleteScript(Unpublish.buildDeletePublishRelation(artifactNode,
                                                                             Node.builder().uid(previousEnv).build(),
