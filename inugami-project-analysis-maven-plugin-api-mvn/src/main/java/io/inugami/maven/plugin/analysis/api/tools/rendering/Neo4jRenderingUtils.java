@@ -180,8 +180,8 @@ public final class Neo4jRenderingUtils {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    public static String getNodeName(final Node node) {
-        return retrieve("name", node);
+    public static String getNodeName(final Object node) {
+        return retrieve("name", node instanceof Node?(Node)node : null);
     }
 
     public static String retrieve(final String key, final Node node) {

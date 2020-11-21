@@ -33,9 +33,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
-
-import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
 @Slf4j
 public class Unpublish implements ProjectInformation {
@@ -43,14 +40,14 @@ public class Unpublish implements ProjectInformation {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String GROUP_ID              = "groupId";
-    public static final String ARTIFACT_ID           = "artifactId";
-    public static final String TYPE                  = "type";
-    public static final String VERSION               = "version";
-    public static final String ENV                   = "env";
-    public static final String LEVEL                 = "envLevel";
-    public static final String ENV_TYPE              = "envType";
-    public static final String FIELD_TYPE            = "type";
+    public static final String GROUP_ID    = "groupId";
+    public static final String ARTIFACT_ID = "artifactId";
+    public static final String TYPE        = "type";
+    public static final String VERSION     = "version";
+    public static final String ENV         = "env";
+    public static final String LEVEL       = "envLevel";
+    public static final String ENV_TYPE    = "envType";
+    public static final String FIELD_TYPE  = "type";
 
     // =========================================================================
     // API
@@ -71,27 +68,23 @@ public class Unpublish implements ProjectInformation {
     // BUILDERS
     // =========================================================================
     private ScanNeo4jResult buildData(final ConfigHandler<String, String> configuration, final MavenProject project) {
-        final ScanNeo4jResult result = new ScanNeo4jResult();
+        final ScanNeo4jResult result          = new ScanNeo4jResult();
+        final boolean         justThisVersion = Boolean
+                .parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
 
-        final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
-        final boolean justThisVersion = Boolean.parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
+        final Node            artifactNode    = buildArtifactVersion(project, configuration);
+        final Node            env             = buildEnvNode(configuration);
 
-        final Node artifactNode = useMavenProject ? buildNodeVersion(project)
-                                                  : buildNodeVersion(buildGav(configuration, project));
-        final Node env = buildEnvNode(configuration);
-
-
-        result.addDeleteScript(buildDeletePublishRelation(artifactNode, env,justThisVersion));
-
+        result.addDeleteScript(buildDeletePublishRelation(artifactNode, env, justThisVersion));
         return result;
     }
 
     public static List<String> buildDeletePublishRelation(final Node artifactNode, final Node env,
-                                                    final boolean justThisVersion) {
+                                                          final boolean justThisVersion) {
         final List<String> result = new ArrayList<>();
 
-        result.add(buildDeleteDeploy(artifactNode, env,justThisVersion));
-        result.add(buildDeleteHaveArtifactVersion(artifactNode, env,justThisVersion));
+        result.add(buildDeleteDeploy(artifactNode, env, justThisVersion));
+        result.add(buildDeleteHaveArtifactVersion(artifactNode, env, justThisVersion));
         return result;
     }
 
@@ -100,9 +93,10 @@ public class Unpublish implements ProjectInformation {
         final JsonBuilder query = new JsonBuilder();
         query.write("MATCH (v:Version)-[r:DEPLOY]->(env:Env)");
         query.write(" where");
-        if(justThisVersion){
+        if (justThisVersion) {
             query.write(" v.name=").valueQuot(artifactNode.getUid());
-        }else{
+        }
+        else {
             query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
             query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
         }
@@ -116,13 +110,14 @@ public class Unpublish implements ProjectInformation {
     }
 
     private static String buildDeleteHaveArtifactVersion(final Node artifactNode, final Node env,
-                                                  final boolean justThisVersion) {
+                                                         final boolean justThisVersion) {
         final JsonBuilder query = new JsonBuilder();
         query.write("MATCH (env:Env)-[r:HAVE_ARTIFACT_VERSION]->(v:Version)");
         query.write(" where");
-        if(justThisVersion){
+        if (justThisVersion) {
             query.write(" v.name=").valueQuot(artifactNode.getUid());
-        }else{
+        }
+        else {
             query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
             query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
         }
@@ -188,14 +183,6 @@ public class Unpublish implements ProjectInformation {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private String ifNull(final String value, final Supplier<String> handler) {
-        String result = value;
-        if (result == null) {
-            result = handler.get();
-        }
-        return result;
-    }
-
     private int convertLevel(final String value) {
         int result = 0;
         try {

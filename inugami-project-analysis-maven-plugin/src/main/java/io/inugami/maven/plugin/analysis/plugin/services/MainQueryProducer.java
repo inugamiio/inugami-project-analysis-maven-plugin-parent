@@ -77,6 +77,14 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_error_codes")
                                .type("cql")
                                .description("Allow to search all error codes")
+                               .build(),
+
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_deploy_artifact.cql")
+                               .name("search_version_deployments")
+                               .type("cql")
+                               .description("Allow to search environments where version have been deployed")
                                .build()
                       );
     }

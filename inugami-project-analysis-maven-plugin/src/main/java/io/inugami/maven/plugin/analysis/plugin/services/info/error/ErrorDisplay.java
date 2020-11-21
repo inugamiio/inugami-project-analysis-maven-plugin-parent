@@ -39,11 +39,12 @@ import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderin
 @Slf4j
 public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
-    public static final  String       ERROR_CODE  = "errorCode";
-    public static final  String       PAYLOAD     = "payload";
+
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
+    public static final  String       ERROR_CODE  = "errorCode";
+    public static final  String       PAYLOAD     = "payload";
     private static final List<String> QUERIES     = List.of(
             "META-INF/queries/search_errors.cql"
                                                            );

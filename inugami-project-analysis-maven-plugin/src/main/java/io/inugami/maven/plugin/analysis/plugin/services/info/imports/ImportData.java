@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
@@ -54,7 +55,8 @@ public class ImportData implements ProjectInformation {
         final boolean interactive  = configuration.grabBoolean("interactive");
         final Gav     gav          = convertMavenProjectToGav(project);
         final File    templatePath = loadQuery(configuration, interactive);
-
+        FilesUtils.assertCanRead(templatePath);
+        final boolean cypherScript = templatePath.getName().endsWith(".cql");
 
         final Map<String, String> properties = new HashMap<>(configuration);
         properties.put("artifactId", gav.getArtifactId());
@@ -63,7 +65,14 @@ public class ImportData implements ProjectInformation {
 
         final String importScript = TemplateRendering.render(templatePath, properties);
 
-        final ScanNeo4jResult data = readJson(importScript);
+        ScanNeo4jResult data = null;
+
+        if(cypherScript){
+            data = ScanNeo4jResult.builder().build();
+            data.addCreateScript(importScript);
+        }else{
+            data = readJson(importScript);
+        }
 
         if (data == null) {
             log.warn("no data to import");

@@ -33,19 +33,12 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-
-import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
 public class Publish implements ProjectInformation {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String GROUP_ID              = "groupId";
-    public static final String ARTIFACT_ID           = "artifactId";
-    public static final String TYPE                  = "type";
-    public static final String VERSION               = "version";
     public static final String ENV                   = "env";
     public static final String LEVEL                 = "envLevel";
     public static final String ENV_TYPE              = "envType";
@@ -77,11 +70,8 @@ public class Publish implements ProjectInformation {
 
         final boolean autoUnpublish   = Boolean.parseBoolean(configuration.grabOrDefault("autoUnpublish", "false"));
         final boolean justThisVersion = Boolean.parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
-        final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
-
-        final Node artifactNode = useMavenProject ? buildNodeVersion(project)
-                                                  : buildNodeVersion(buildGav(configuration, project));
-        final Node env = buildEnvNode(configuration);
+        final Node    artifactNode    = buildArtifactVersion(project, configuration);
+        final Node    env             = buildEnvNode(configuration);
         final String previousEnv = ifNull(configuration.get("previousEnv"),
                                           () -> ConsoleTools.askQuestion("Previous environment ?"));
         final Node envType = buildEnvType(env);
@@ -195,13 +185,7 @@ public class Publish implements ProjectInformation {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private String ifNull(final String value, final Supplier<String> handler) {
-        String result = value;
-        if (result == null) {
-            result = handler.get();
-        }
-        return result;
-    }
+
 
     private int convertLevel(final String value) {
         int result = 0;
