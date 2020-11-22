@@ -20,7 +20,10 @@ import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -39,4 +42,20 @@ public class Relationship implements JsonObject {
     @EqualsAndHashCode.Include
     private String                              type;
     private LinkedHashMap<String, Serializable> properties;
+
+    public static class RelationshipBuilder {
+        private LinkedHashMap<String, Serializable> properties;
+
+        public Relationship.RelationshipBuilder properties(final LinkedHashMap<String, Serializable> properties) {
+            if (properties != null) {
+                this.properties = new LinkedHashMap<>();
+                final List<String> keys = new ArrayList<>(properties.keySet());
+                Collections.sort(keys);
+                for (final String key : keys) {
+                    this.properties.put(key, properties.get(key));
+                }
+            }
+            return this;
+        }
+    }
 }

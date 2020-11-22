@@ -12,16 +12,16 @@
   }, {
     "name" : "events.method.exchangeName_events.user.method.created.routingKey",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
-      "listenerId" : "method-listener",
-      "containerFactory" : "myContainerFactory",
-      "queue" : "",
-      "queuesToDeclare" : "[]",
-      "exclusive" : false,
-      "errorHandler" : "myListenerErrorHandler",
       "autoStartup" : "true",
+      "bindings" : "[{\"queue\":{\"name\":\"${events.method.user.queueName}\",\"durable\":\"true\",\"exclusive\":\"\",\"autoDelete\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"declare\":\"true\",\"arguments\":[{\"name\":\"x-dead-letter-exchange\",\"value\":\"\",\"type\":\"java.lang.String\"},{\"name\":\"x-dead-letter-routing-key\",\"value\":\"${events.method.user.dlqName}\",\"type\":\"java.lang.String\"}],\"admins\":null},\"key\":[\"${events.user.method.created.routingKey}\"],\"exchange\":{\"name\":\"${events.method.exchangeName}\",\"type\":\"topic\",\"durable\":\"true\",\"autoDelete\":\"false\",\"internal\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"delayed\":\"false\",\"declare\":\"true\",\"arguments\":null,\"admins\":null},\"declare\":\"true\",\"ignoreDeclarationExceptions\":\"false\",\"admins\":null}]",
+      "containerFactory" : "myContainerFactory",
       "converterWinsContentType" : "true",
-      "bindings" : "[{\"queue\":{\"name\":\"${events.method.user.queueName}\",\"durable\":\"true\",\"exclusive\":\"\",\"autoDelete\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"declare\":\"true\",\"arguments\":[{\"name\":\"x-dead-letter-exchange\",\"value\":\"\",\"type\":\"java.lang.String\"},{\"name\":\"x-dead-letter-routing-key\",\"value\":\"${events.method.user.dlqName}\",\"type\":\"java.lang.String\"}],\"admins\":null},\"key\":[\"${events.user.method.created.routingKey}\"],\"exchange\":{\"name\":\"${events.method.exchangeName}\",\"type\":\"topic\",\"durable\":\"true\",\"autoDelete\":\"false\",\"internal\":\"false\",\"ignoreDeclarationExceptions\":\"false\",\"delayed\":\"false\",\"declare\":\"true\",\"arguments\":null,\"admins\":null},\"declare\":\"true\",\"ignoreDeclarationExceptions\":\"false\",\"admins\":null}]"
+      "errorHandler" : "myListenerErrorHandler",
+      "exclusive" : false,
+      "listenerId" : "method-listener",
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+      "queue" : "",
+      "queuesToDeclare" : "[]"
     },
     "type" : "Service",
     "uid" : "events.method.exchangeName_events.user.method.created.routingKey"
@@ -54,22 +54,22 @@
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener",
       "method" : "onUpdate",
-      "returnType" : "void",
-      "parameters" : "event<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>"
+      "parameters" : "event<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>",
+      "returnType" : "void"
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodListener.onUpdate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)"
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
-      "groupId" : "io.inugami.test",
       "artifactId" : "basic-artifact",
-      "version" : "1.0.0-SNAPSHOT",
-      "packaging" : "jar",
+      "groupId" : "io.inugami.test",
       "major" : 1,
       "minor" : 0,
+      "packaging" : "jar",
       "patch" : 0,
-      "tag" : "SNAPSHOT"
+      "tag" : "SNAPSHOT",
+      "version" : "1.0.0-SNAPSHOT"
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"

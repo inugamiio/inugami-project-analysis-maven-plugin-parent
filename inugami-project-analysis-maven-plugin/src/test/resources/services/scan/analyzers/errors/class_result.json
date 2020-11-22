@@ -4,12 +4,12 @@
   "nodes" : [ {
     "name" : "ERR-2",
     "properties" : {
-      "message" : "user require",
-      "statusCode" : 400,
       "errorCode" : "ERR-2",
-      "messageDetail" : "user is require for this ation",
       "errorType" : "functional",
-      "payload" : "null"
+      "message" : "user require",
+      "messageDetail" : "user is require for this ation",
+      "payload" : "null",
+      "statusCode" : 400
     },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-2"
@@ -20,14 +20,14 @@
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
-      "groupId" : "io.inugami.test",
       "artifactId" : "basic-artifact",
-      "version" : "1.0.0-SNAPSHOT",
-      "packaging" : "jar",
+      "groupId" : "io.inugami.test",
       "major" : 1,
       "minor" : 0,
+      "packaging" : "jar",
       "patch" : 0,
-      "tag" : "SNAPSHOT"
+      "tag" : "SNAPSHOT",
+      "version" : "1.0.0-SNAPSHOT"
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"

@@ -252,6 +252,8 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
                 .valueOf(properties.get(errorCodeFieldName));
         node.uid(ERROR_CODE_PREFIX + uid);
         node.name(uid);
+
+
         node.properties(properties);
         return node.build();
     }
