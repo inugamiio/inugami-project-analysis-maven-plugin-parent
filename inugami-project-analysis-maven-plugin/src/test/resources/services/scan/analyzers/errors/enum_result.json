@@ -5,11 +5,11 @@
     "name" : "ERR-1",
     "properties" : {
       "message" : "invalid arguments",
+      "payload" : "[]",
       "statusCode" : 500,
       "errorCode" : "ERR-1",
       "messageDetail" : "given arguments aren't valid",
-      "errorType" : "technical",
-      "payload" : "[]"
+      "errorType" : "technical"
     },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-1"

@@ -2,7 +2,10 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors;
 
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
+import io.inugami.maven.plugin.analysis.api.models.Node;
+import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import lombok.Builder;
@@ -65,6 +68,8 @@ class ErrorCodeAnalyzerTest {
         analyzer.initialize(context);
         final ScanNeo4jResult   neo4jResult = extractResult(
                 analyzer.analyze(ErrorCodeAnalyzerTest.EnumErrors.class, context));
+        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
+        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/errors/enum_result.json");
     }
 
@@ -74,7 +79,18 @@ class ErrorCodeAnalyzerTest {
         analyzer.initialize(context);
         final ScanNeo4jResult   neo4jResult = extractResult(
                 analyzer.analyze(ErrorCodeAnalyzerTest.ClassErrors.class, context));
+        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
+        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/errors/class_result.json");
+    }
+
+    private int compareNodes(final Node value, final Node ref) {
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
+    }
+    private int sortRelationship(final Relationship value, final Relationship ref) {
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
     }
     // =========================================================================
     // CLASSES

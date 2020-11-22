@@ -3,6 +3,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.annotations.JmsEvent;
 import io.inugami.maven.plugin.analysis.annotations.JmsSender;
@@ -95,13 +96,13 @@ class JmsListenerAnalyzerTest {
     }
 
     private int compareNodes(final Node value, final Node ref) {
-        return value.convertToJson().compareTo(ref.convertToJson());
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
     }
-
     private int sortRelationship(final Relationship value, final Relationship ref) {
-        return value.convertToJson().compareTo(ref.convertToJson());
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
     }
-
 
     // =========================================================================
     // BASIC PROPERTIES
