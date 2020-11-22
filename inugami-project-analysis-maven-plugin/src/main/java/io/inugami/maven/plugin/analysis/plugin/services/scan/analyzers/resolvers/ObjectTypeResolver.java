@@ -7,7 +7,7 @@ import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPro
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public class ObjectTypeResolver implements BeanPropertyTypeResolver {
     public Set<Node> processResolveOnClass(final String path, final Class<?> fieldType,
                                             final SpringPropertiesAnalyzer springPropertiesAnalyzer
                                             ) {
-        final Set<Node>  result = new HashSet<>();
+        final Set<Node>  result = new LinkedHashSet<>();
         final Set<Field> fields = ReflectionService.loadAllFields(fieldType);
 
 

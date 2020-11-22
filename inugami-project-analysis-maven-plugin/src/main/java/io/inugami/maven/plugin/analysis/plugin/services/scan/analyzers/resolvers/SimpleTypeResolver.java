@@ -7,8 +7,8 @@ import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPro
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPropertiesAnalyzer.PROPERTY;
@@ -28,7 +28,7 @@ public class SimpleTypeResolver implements BeanPropertyTypeResolver {
         Set<Node> result = null;
 
         if (ReflectionService.isBasicType(field.getType())) {
-            result = new HashSet<>();
+            result = new LinkedHashSet<>();
             final String                    uid            = (path == null ? "" : path + ".") + field.getName();
             final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             additionalInfo.put(PROPERTY_TYPE,

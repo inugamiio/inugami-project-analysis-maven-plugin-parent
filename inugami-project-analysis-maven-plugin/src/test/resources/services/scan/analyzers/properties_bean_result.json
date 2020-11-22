@@ -111,11 +111,11 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.timeout",
+    "to" : "project.bean.enable",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.poolConfiguration.child",
+    "to" : "project.bean.timeout",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
@@ -123,11 +123,19 @@
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.devices.<String>.countries[].<String>",
+    "to" : "project.bean.poolConfiguration.nbThreads",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.poolConfiguration.nbThreads",
+    "to" : "project.bean.poolConfiguration.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.bean.poolConfiguration.child",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.bean.devices.<String>.enable",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
@@ -135,7 +143,11 @@
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.keys.[].info.detail",
+    "to" : "project.bean.devices.<String>.headers",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.bean.devices.<String>.countries[].<String>",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
@@ -147,23 +159,11 @@
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.poolConfiguration.timeout",
-    "type" : "USE_PROPERTY"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.devices.<String>.headers",
-    "type" : "USE_PROPERTY"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.devices.<String>.enable",
+    "to" : "project.bean.keys.[].info.detail",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "project.bean.url",
-    "type" : "USE_PROPERTY"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "project.bean.enable",
     "type" : "USE_PROPERTY"
   } ],
   "relationshipsToDeletes" : [ ]

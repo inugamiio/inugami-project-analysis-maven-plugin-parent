@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
     private static       ClassLoader           CLASS_LOADER   = null;
-    private static final Map<String, JsonNode> CACHE          = new HashMap<>();
+    private static final Map<String, JsonNode> CACHE          = new LinkedHashMap<>();
     private static final List<Class<?>>        PRIMITIF_TYPES = List.of(
             boolean.class,
             byte.class,
@@ -64,7 +64,7 @@ public final class ReflectionService {
     }
 
     public static Set<Field> loadAllFields(final Class<?> clazz) {
-        final Set<Field> result = new HashSet<>();
+        final Set<Field> result = new LinkedHashSet<>();
         try {
             if (clazz != null && clazz != Object.class) {
                 result.addAll(Arrays.asList(clazz.getDeclaredFields()));
@@ -81,7 +81,7 @@ public final class ReflectionService {
     }
 
     public static Set<Field> loadAllStaticFields(final Class<?> clazz) {
-        final Set<Field> result = new HashSet<>();
+        final Set<Field> result = new LinkedHashSet<>();
         loadAllFields(clazz).stream()
                             .filter(field -> Modifier.isStatic(field.getModifiers()))
                             .forEach(result::add);
@@ -90,7 +90,7 @@ public final class ReflectionService {
 
 
     public static Set<Constructor<?>> loadAllConstructors(final Class<?> clazz) {
-        final Set<Constructor<?>> result = new HashSet<>();
+        final Set<Constructor<?>> result = new LinkedHashSet<>();
         try {
             if (clazz != null && clazz != Object.class) {
                 result.addAll(Arrays.asList(clazz.getDeclaredConstructors()));

@@ -119,8 +119,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
         log.info("{} : {}", FEATURE_NAME, clazz);
         final ScanNeo4jResult result                = ScanNeo4jResult.builder().build();
-        final Set<Node>       conditionalProperties = new HashSet<>();
-        final Set<Node>       nodes                 = new HashSet<>();
+        final Set<Node>       conditionalProperties = new LinkedHashSet<>();
+        final Set<Node>       nodes                 = new LinkedHashSet<>();
 
         conditionalProperties.addAll(searchOnClass(clazz));
 
@@ -156,7 +156,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // PRIVATE
     // =========================================================================
     private Set<Node> searchOnClass(final Class<?> clazz) {
-        final Set<Node> result = new HashSet<>();
+        final Set<Node> result = new LinkedHashSet<>();
         final Set<Node> nodes = ifHasAnnotation(clazz, ConditionalOnProperty.class,
                                                 annotation -> this.mapToNode(annotation));
 
@@ -194,7 +194,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     private void searchInConstructors(final Class<?> clazz,
                                       final Set<Node> nodes) {
-        final Set<Node>           result       = new HashSet<>();
+        final Set<Node>           result       = new LinkedHashSet<>();
         final Set<Constructor<?>> constructors = loadAllConstructors(clazz);
 
         for (final Constructor<?> constructor : constructors) {
@@ -240,7 +240,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // MAPPER
     // =========================================================================
     private <A extends Annotation> Set<Node> mapToNode(final ConditionalOnProperty annotation) {
-        final Set<Node> result = new HashSet<>();
+        final Set<Node> result = new LinkedHashSet<>();
         final String[]  values = annotation.value();
         final String[]  names  = annotation.name();
         if ((names != null && names.length > 0) || (values != null && values.length > 0)) {
@@ -251,7 +251,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
             final String  havingValue    = annotation.havingValue();
             final boolean matchIfMissing = annotation.matchIfMissing();
 
-            final Set<String> currentNames = new HashSet<>();
+            final Set<String> currentNames = new LinkedHashSet<>();
             if (values != null) {
                 currentNames.addAll(Arrays.asList(values));
             }
@@ -362,11 +362,11 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         }
         final Set<Node> result = extractProperties(fullPrefix.toString(), clazz);
 
-        return Optional.ofNullable(result).orElse(new HashSet<>());
+        return Optional.ofNullable(result).orElse(new LinkedHashSet<>());
     }
 
     public Set<Node> extractProperties(final String path, final Class<?> clazz) {
-        final Set<Node>  result = new HashSet<>();
+        final Set<Node>  result = new LinkedHashSet<>();
         final Set<Field> fields = loadAllFields(clazz);
         CYCLIC_CLASSES_RESOLVER.register(path, clazz);
         if (fields != null) {
@@ -380,7 +380,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     public Set<Node> extractFieldProperties(final String path, final Class<?> clazz,
                                             final Field field) {
-        final Set<Node> result = new HashSet<>();
+        final Set<Node> result = new LinkedHashSet<>();
 
         final String fullPath = CYCLIC_CLASSES_RESOLVER.buildFullPath(path, field);
         log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(),

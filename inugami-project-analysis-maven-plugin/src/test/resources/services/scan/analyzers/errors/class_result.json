@@ -5,11 +5,11 @@
     "name" : "ERR-2",
     "properties" : {
       "message" : "user require",
-      "payload" : "null",
       "statusCode" : 400,
       "errorCode" : "ERR-2",
       "messageDetail" : "user is require for this ation",
-      "errorType" : "functional"
+      "errorType" : "functional",
+      "payload" : "null"
     },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-2"

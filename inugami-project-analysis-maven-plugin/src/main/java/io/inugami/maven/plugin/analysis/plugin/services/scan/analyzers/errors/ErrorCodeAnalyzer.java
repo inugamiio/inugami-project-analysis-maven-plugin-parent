@@ -144,7 +144,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
             final Node artifactNode = buildNodeVersion(context.getProject());
             result.addNode(artifactNode);
 
-            final Set<Node> errorTypes = new HashSet<>();
+            final Set<Node> errorTypes = new LinkedHashSet<>();
             for (final Node node : nodes) {
                 result.addNode(node);
 
@@ -174,7 +174,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     // OVERRIDES
     // =========================================================================
     private List<Node> scanErrorEnum(final Class<?> clazz) {
-        final Set<Node> result = new HashSet<>();
+        final Set<Node> result = new LinkedHashSet<>();
         for (final Object enumConstants : clazz.getEnumConstants()) {
             if (errorCodeClass.isAssignableFrom(enumConstants.getClass())) {
                 final Node node = buildNode(enumConstants);
@@ -189,7 +189,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
 
     private List<Node> scanErrorOnClass(final Class<?> clazz) {
-        final Set<Node>  result = new HashSet<>();
+        final Set<Node>  result = new LinkedHashSet<>();
         final Set<Field> fields = loadAllFields(clazz);
 
         for (final Field field : fields) {

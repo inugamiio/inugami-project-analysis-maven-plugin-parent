@@ -22,14 +22,14 @@ import io.inugami.maven.plugin.analysis.api.models.QueryDefinition;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class QueriesLoader {
-    private static final Set<QueryDefinition> QUERIES = new HashSet<>();
+    private static final Set<QueryDefinition> QUERIES = new LinkedHashSet<>();
 
     // =========================================================================
     // API

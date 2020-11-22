@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -73,7 +73,7 @@ public final class TemplateRendering {
         catch (final IOException e) {
             throw new UncheckedException(e.getMessage(),e);
         }
-        return render(properties, new HashMap<>(), content);
+        return render(properties, new LinkedHashMap<>(), content);
     }
 
     private static String render(final Map<String, String> properties, final Map<String, String> additionalProperties,

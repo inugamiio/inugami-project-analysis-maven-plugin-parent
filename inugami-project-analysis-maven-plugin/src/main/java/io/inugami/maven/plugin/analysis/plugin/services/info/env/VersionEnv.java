@@ -86,7 +86,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                                                                 gav,
                                                                 configuration));
         log.info("query:\n{}", query);
-        final Map<String, Long> envs = new HashMap<>();
+        final Map<String, Long> envs = new LinkedHashMap<>();
         final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
                                                                                     (data, record) -> this
                                                                                             .buildModels(data, record,
@@ -336,11 +336,11 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final List<String> result = new ArrayList<>();
 
         if (envs != null && !envs.isEmpty()) {
-            final Map<Long, Set<String>> buffer = new HashMap<>();
+            final Map<Long, Set<String>> buffer = new LinkedHashMap<>();
             for (final Map.Entry<String, Long> entry : envs.entrySet()) {
                 Set<String> index = buffer.get(entry.getValue());
                 if (index == null) {
-                    index = new HashSet<>();
+                    index = new LinkedHashSet<>();
                     buffer.put(entry.getValue(), index);
                 }
                 index.add(entry.getKey());
@@ -408,7 +408,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
             for (final Map.Entry<String, Collection<DataRow>> entry : data.entrySet()) {
                 for (final DataRow row : entry.getValue()) {
                     if (name.equals(row.getUid())) {
-                        final Set<String> envs = Optional.ofNullable(row.getProperties()).orElse(new HashMap<>())
+                        final Set<String> envs = Optional.ofNullable(row.getProperties()).orElse(new LinkedHashMap<>())
                                                          .keySet();
                         for (final String env : envs) {
                             if (!ARTIFACT.equals(env)) {

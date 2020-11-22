@@ -33,7 +33,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -106,7 +106,7 @@ public class MavenInfo extends AbstractMojo {
 
 
     private Map<String, String> extractProperties(final Properties properties) {
-        final Map<String, String> result = new HashMap<>();
+        final Map<String, String> result = new LinkedHashMap<>();
 
         if (properties != null) {
             for (final Map.Entry<Object, Object> entry : properties.entrySet()) {

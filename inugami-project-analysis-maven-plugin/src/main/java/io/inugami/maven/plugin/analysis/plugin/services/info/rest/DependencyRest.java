@@ -19,7 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.rest;
 import lombok.Getter;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,18 +30,18 @@ public class DependencyRest {
     private final Set<String> consumers;
 
     public DependencyRest(final String producer, final String consumer) {
-        this.producers = producer == null ? new HashSet<>() : new HashSet<>(List.of(producer));
-        this.consumers = consumer == null ? new HashSet<>() : new HashSet<>(List.of(consumer));
+        this.producers = producer == null ? new LinkedHashSet<>() : new LinkedHashSet<>(List.of(producer));
+        this.consumers = consumer == null ? new LinkedHashSet<>() : new LinkedHashSet<>(List.of(consumer));
     }
 
     public DependencyRest(final Set<String> producers, final Set<String> consumers) {
-        this.producers = producers == null ? new HashSet<>() : producers;
-        this.consumers = consumers == null ? new HashSet<>() : consumers;
+        this.producers = producers == null ? new LinkedHashSet<>() : producers;
+        this.consumers = consumers == null ? new LinkedHashSet<>() : consumers;
     }
 
     public DependencyRest() {
-        this.producers = new HashSet<>();
-        this.consumers = new HashSet<>();
+        this.producers = new LinkedHashSet<>();
+        this.consumers = new LinkedHashSet<>();
     }
 
     public void addProducer(final String producer) {

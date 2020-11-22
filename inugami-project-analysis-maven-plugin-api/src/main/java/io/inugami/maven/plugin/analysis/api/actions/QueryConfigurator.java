@@ -3,7 +3,7 @@ package io.inugami.maven.plugin.analysis.api.actions;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface QueryConfigurator {
@@ -17,7 +17,7 @@ public interface QueryConfigurator {
 
     default Map<String, String> gavToMap(final Gav gav) {
         if (gav == null) {
-            return new HashMap<>();
+            return new LinkedHashMap<>();
         }
         else {
             return Map.ofEntries(

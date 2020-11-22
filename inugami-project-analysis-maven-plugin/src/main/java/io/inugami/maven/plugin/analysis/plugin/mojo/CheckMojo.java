@@ -214,7 +214,7 @@ public class CheckMojo extends AbstractMojo {
     }
 
     private Map<String, String> extractProperties(final Properties properties) {
-        final Map<String, String> result = new HashMap<>();
+        final Map<String, String> result = new LinkedHashMap<>();
 
         if (properties != null) {
             for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
@@ -232,7 +232,7 @@ public class CheckMojo extends AbstractMojo {
                                                   .stream()
                                                   .map(this::convertToGav)
                                                   .collect(Collectors.toList());
-        return new HashSet<>(dependenciesGav);
+        return new LinkedHashSet<>(dependenciesGav);
     }
 
     private Gav convertToGav(final Dependency dependency) {
@@ -250,7 +250,7 @@ public class CheckMojo extends AbstractMojo {
         try {
 
             final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
-            final Set<String>    dependencies            = new HashSet(getDependentClasspathElements());
+            final Set<String>    dependencies            = new LinkedHashSet(getDependentClasspathElements());
             final URL[]          urls                    = new URL[dependencies.size()];
             final int            index                   = 0;
             for (final String dependency : dependencies) {

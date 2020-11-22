@@ -116,7 +116,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
             Collection<DataRow> savedDependency = data.get(dependencyName);
             if (savedDependency == null) {
-                savedDependency = new HashSet<>();
+                savedDependency = new LinkedHashSet<>();
                 data.put(dependencyName, savedDependency);
             }
 

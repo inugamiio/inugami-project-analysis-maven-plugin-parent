@@ -142,7 +142,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
         final RabbitMqSender                      sender         = method.getAnnotation(RabbitMqSender.class);
         final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
-        final Set<Node>                           properties     = new HashSet<>();
+        final Set<Node>                           properties     = new LinkedHashSet<>();
 
         String uid = null;
         if (hasText(sender.id())) {
@@ -271,9 +271,9 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private String resolveUid(final RabbitListener rabbitListener, final RabbitMqHandlerInfo handlerInfo) {
         final String routingKey = handlerInfo == null ? null : handlerInfo.routingKey();
 
-        final Set<String> echanges    = new HashSet<>();
-        final Set<String> queues      = new HashSet<>();
-        final Set<String> routingKeys = new HashSet<>();
+        final Set<String> echanges    = new LinkedHashSet<>();
+        final Set<String> queues      = new LinkedHashSet<>();
+        final Set<String> routingKeys = new LinkedHashSet<>();
 
         if (rabbitListener != null) {
             for (final QueueBinding queueBinding : Optional.ofNullable(rabbitListener.bindings())
@@ -299,7 +299,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     }
 
     private List<Node> buildProperties(final RabbitListener rabbit, final RabbitMqHandlerInfo handlerInfo) {
-        final Set<Node> result = new HashSet<>();
+        final Set<Node> result = new LinkedHashSet<>();
 
 
         if (handlerInfo != null) {
@@ -368,7 +368,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
     private void buildPropNode(final String[] values, final Consumer<Collection<Node>> consumer) {
         if (values != null) {
-            final Set<Node> result = new HashSet<>();
+            final Set<Node> result = new LinkedHashSet<>();
             for (final String value : values) {
                 if (hasText(value)) {
                     processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, value), result::add);
@@ -380,7 +380,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
     private void buildPropNode(final Queue queue, final Consumer<Collection<Node>> consumer) {
         if (queue != null) {
-            final Set<Node> result = new HashSet<>();
+            final Set<Node> result = new LinkedHashSet<>();
             buildPropNode(queue.name(), result::add);
             buildPropNode(queue.value(), result::add);
             buildPropNode(queue.durable(), result::add);
@@ -396,7 +396,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
     private void buildPropNode(final Argument[] values, final Consumer<Collection<Node>> consumer) {
         if (values != null) {
-            final Set<Node> result = new HashSet<>();
+            final Set<Node> result = new LinkedHashSet<>();
             for (final Argument value : values) {
                 buildPropNode(value.name(), result::add);
                 buildPropNode(value.value(), result::add);

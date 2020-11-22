@@ -70,7 +70,8 @@ class ErrorCodeAnalyzerTest {
                 analyzer.analyze(ErrorCodeAnalyzerTest.EnumErrors.class, context));
         neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
         neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/errors/enum_result.json");
+        assertTextRelatif(neo4jResult.getNodes(), "services/scan/analyzers/errors/enum_result_nodes.json");
+        assertTextRelatif(neo4jResult.getRelationships(), "services/scan/analyzers/errors/enum_result_relationship.json");
     }
 
     @Test

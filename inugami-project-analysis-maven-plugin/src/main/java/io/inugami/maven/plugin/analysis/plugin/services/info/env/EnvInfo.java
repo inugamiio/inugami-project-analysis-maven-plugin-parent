@@ -61,7 +61,7 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
                                                                 null,
                                                                 configuration));
         log.info("query:\n{}", query);
-        final Map<String, Long> envs = new HashMap<>();
+        final Map<String, Long> envs = new LinkedHashMap<>();
         final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
                                                                                     (data, record) -> this
                                                                                             .buildModels(data, record,

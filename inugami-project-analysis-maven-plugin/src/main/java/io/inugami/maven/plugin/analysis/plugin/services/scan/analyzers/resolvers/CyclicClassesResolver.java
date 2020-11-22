@@ -18,7 +18,7 @@ public class CyclicClassesResolver implements BeanPropertyTypeResolver {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private static final Map<String, String> CACHE = new HashMap<>();
+    private static final Map<String, String> CACHE = new LinkedHashMap<>();
 
 
     // =========================================================================
@@ -30,7 +30,7 @@ public class CyclicClassesResolver implements BeanPropertyTypeResolver {
         Set<Node>    result   = null;
         final String fullPath = buildFullPath(path, field);
         if (isCyclic(fullPath, field.getType().getName())) {
-            result = new HashSet<>();
+            result = new LinkedHashSet<>();
             final String                    uid            = (path == null ? "" : path + ".") + field.getName();
             final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             additionalInfo.put(PROPERTY_TYPE,

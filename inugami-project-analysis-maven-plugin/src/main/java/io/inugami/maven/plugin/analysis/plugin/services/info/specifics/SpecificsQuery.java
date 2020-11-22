@@ -60,7 +60,7 @@ public class SpecificsQuery implements ProjectInformation {
             log.info("no query define");
         }
         else {
-            final Map<String, String> properties = new HashMap<>(configuration);
+            final Map<String, String> properties = new LinkedHashMap<>(configuration);
             properties.put("artifactId", gav.getArtifactId());
             properties.put("groupId", gav.getGroupId());
             properties.put("version", gav.getVersion());
@@ -115,11 +115,11 @@ public class SpecificsQuery implements ProjectInformation {
     // =========================================================================
     private String renderResultSet(final List<Record> resultSet, final Pattern skipRegex,final ConfigHandler<String, String> configuration) {
         final Map<String, Collection<DataRow>> data          = new LinkedHashMap<>();
-        final Collection<DataRow>              nodes         = new HashSet<>();
-        final Collection<DataRow>              relationships = new HashSet<>();
+        final Collection<DataRow>              nodes         = new LinkedHashSet<>();
+        final Collection<DataRow>              relationships = new LinkedHashSet<>();
         if (resultSet != null || !resultSet.isEmpty()) {
             for (final Record record : resultSet) {
-                final Map<String, Object> dataRecord = Optional.ofNullable(record.asMap()).orElse(new HashMap<>());
+                final Map<String, Object> dataRecord = Optional.ofNullable(record.asMap()).orElse(new LinkedHashMap<>());
                 for (final Map.Entry<String, Object> entry : dataRecord.entrySet()) {
                     final Object element = entry.getValue();
 

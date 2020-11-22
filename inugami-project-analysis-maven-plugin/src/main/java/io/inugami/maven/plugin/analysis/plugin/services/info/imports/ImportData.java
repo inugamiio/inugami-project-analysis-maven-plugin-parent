@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -58,7 +58,7 @@ public class ImportData implements ProjectInformation {
         FilesUtils.assertCanRead(templatePath);
         final boolean cypherScript = templatePath.getName().endsWith(".cql");
 
-        final Map<String, String> properties = new HashMap<>(configuration);
+        final Map<String, String> properties = new LinkedHashMap<>(configuration);
         properties.put("artifactId", gav.getArtifactId());
         properties.put("groupId", gav.getGroupId());
         properties.put("version", gav.getVersion());

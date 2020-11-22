@@ -94,7 +94,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     private List<ArtifactService> searchService(final Gav gav, final Neo4jDao dao,
                                                 final ConfigHandler<String, String> config) {
-        final Map<String, ArtifactService> result = new HashMap<>();
+        final Map<String, ArtifactService> result = new LinkedHashMap<>();
 
 
         retrieveData("META-INF/queries/search_services_queue_expose.cql", gav, dao, config, result, true);
@@ -312,9 +312,9 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
         String              name;
         String              type;
         Map<String, Object> data      = new HashMap<>();
-        Set<String>         consumers = new HashSet<>();
-        Set<String>         producers = new HashSet<>();
-        Set<String>         methods   = new HashSet<>();
+        Set<String>         consumers = new LinkedHashSet<>();
+        Set<String>         producers = new LinkedHashSet<>();
+        Set<String>         methods   = new LinkedHashSet<>();
     }
 
 

@@ -89,7 +89,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     private void rendering(final List<Record> resultSet) {
         final JsonBuilder writer = new JsonBuilder();
 
-        final Map<String, List<PropertyDto>> properties = new HashMap();
+        final Map<String, List<PropertyDto>> properties = new LinkedHashMap<>();
 
         for (final Record record : resultSet) {
             final Map<String, Object> data     = record.asMap();

@@ -97,7 +97,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
         //@formatter:on
 
         if (!resultSet.isEmpty()) {
-            final Map<RestEndpoint, DependencyRest> endpoints = new HashMap<>();
+            final Map<RestEndpoint, DependencyRest> endpoints = new LinkedHashMap<>();
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractConsumeEndpoint);
@@ -131,7 +131,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
 
         if (!resultSet.isEmpty()) {
 
-            final Map<RestEndpoint, DependencyRest> endpoints = new HashMap<>();
+            final Map<RestEndpoint, DependencyRest> endpoints = new LinkedHashMap<>();
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractExposedEndpoint);
@@ -189,7 +189,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     private Map<RestEndpoint, DependencyRest> extractAllEndpoint(final List<Record> resultSet,
                                                                  final BiConsumer<Map<RestEndpoint, DependencyRest>, Map<String, Object>> handler) {
 
-        final Map<RestEndpoint, DependencyRest> result = new HashMap<>();
+        final Map<RestEndpoint, DependencyRest> result = new LinkedHashMap<>();
         for (final Record record : resultSet) {
             handler.accept(result, record.asMap());
         }

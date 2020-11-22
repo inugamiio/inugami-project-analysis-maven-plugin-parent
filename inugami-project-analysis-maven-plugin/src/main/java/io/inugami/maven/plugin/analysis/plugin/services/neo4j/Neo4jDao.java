@@ -139,7 +139,7 @@ public class Neo4jDao {
             for (int i = 0; i < size; i++) {
                 previous = writeProgression(i, size, previous);
                 final io.inugami.maven.plugin.analysis.api.models.Node node       = nodes.get(i);
-                final Map<String, Object>                              parameters = new HashMap<>();
+                final Map<String, Object>                              parameters = new LinkedHashMap<>();
                 if (node.getProperties() != null) {
                     for (final Map.Entry<String, Serializable> entry : node.getProperties().entrySet()) {
                         if (entry.getKey() != null && entry.getValue() != null) {

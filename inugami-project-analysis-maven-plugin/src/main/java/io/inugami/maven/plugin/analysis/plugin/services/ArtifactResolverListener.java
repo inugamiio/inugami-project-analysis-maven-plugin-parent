@@ -24,7 +24,7 @@ import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.versioning.VersionRange;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public class ArtifactResolverListener implements ResolutionListener {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final Set<Gav>  artifacts       = new HashSet<>();
+    private final Set<Gav>  artifacts       = new LinkedHashSet<>();
     private       Gav       parentArtifact  = null;
     private       Gav       currentArtifact = null;
     private final List<Gav> buffer          = new ArrayList<>();
