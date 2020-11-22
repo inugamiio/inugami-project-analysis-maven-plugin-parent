@@ -31,7 +31,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Relationship implements JsonObject {
+public class Relationship implements JsonObject, Comparable<Relationship> {
 
     private static final long serialVersionUID = 973646684487506001L;
 
@@ -42,6 +42,18 @@ public class Relationship implements JsonObject {
     @EqualsAndHashCode.Include
     private String                              type;
     private LinkedHashMap<String, Serializable> properties;
+
+    @Override
+    public int compareTo(final Relationship other) {
+        return buildHash().compareTo(other.buildHash());
+    }
+
+    protected String buildHash() {
+        return new StringBuilder().append(from)
+                                  .append("-[").append(type).append("]->")
+                                  .append(to)
+                                  .toString();
+    }
 
     public static class RelationshipBuilder {
         private LinkedHashMap<String, Serializable> properties;

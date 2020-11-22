@@ -74,9 +74,7 @@ class JmsListenerAnalyzerTest {
 
         assertThat(result).size().isEqualTo(1);
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
-        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
-
-        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
+        neo4jResult.sort();
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
     }
 
@@ -89,9 +87,7 @@ class JmsListenerAnalyzerTest {
 
         assertThat(result).size().isEqualTo(1);
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
-        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
-
-        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
+        neo4jResult.sort();
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
     }
 

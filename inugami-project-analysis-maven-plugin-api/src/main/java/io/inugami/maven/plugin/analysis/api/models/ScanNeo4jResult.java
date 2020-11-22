@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -53,6 +50,14 @@ public class ScanNeo4jResult implements JsonObject {
         processIfNotNull(deleteScripts, this.deleteScripts::addAll);
     }
 
+    public void sort(){
+        Collections.sort(nodesToDeletes);
+        Collections.sort(nodes);
+        Collections.sort(createScripts);
+        Collections.sort(relationships);
+        Collections.sort(relationshipsToDeletes);
+        Collections.sort(deleteScripts);
+    }
     public ScanNeo4jResult addNode(final List<Node> values) {
         appendIfNotNull(values, nodes::addAll);
         return this;

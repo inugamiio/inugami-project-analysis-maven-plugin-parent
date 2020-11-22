@@ -32,7 +32,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Node implements JsonObject {
+public class Node implements JsonObject, Comparable<Node> {
 
     private static final long                                serialVersionUID = 7519867544798392684L;
     private              String                              type;
@@ -41,17 +41,33 @@ public class Node implements JsonObject {
     private              String                              uid;
     private              LinkedHashMap<String, Serializable> properties;
 
+    @Override
+    public int compareTo(final Node other) {
+        return buildHash().compareTo(other.buildHash());
+    }
+
+    private String buildHash() {
+        return new StringBuilder().append(uid)
+                                  .append("<")
+                                  .append(type)
+                                  .append(">")
+                                  .append("{")
+                                  .append(properties)
+                                  .append("}")
+                                  .toString();
+    }
+
 
     public static class NodeBuilder {
         private LinkedHashMap<String, Serializable> properties;
 
         public NodeBuilder properties(final LinkedHashMap<String, Serializable> properties) {
-            if(properties!=null){
+            if (properties != null) {
                 this.properties = new LinkedHashMap<>();
                 final List<String> keys = new ArrayList<>(properties.keySet());
                 Collections.sort(keys);
-                for(final String key : keys){
-                    this.properties.put(key,properties.get(key));
+                for (final String key : keys) {
+                    this.properties.put(key, properties.get(key));
                 }
             }
             return this;
