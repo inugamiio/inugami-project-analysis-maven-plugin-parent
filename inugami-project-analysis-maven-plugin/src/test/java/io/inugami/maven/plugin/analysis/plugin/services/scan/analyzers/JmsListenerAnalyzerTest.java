@@ -3,9 +3,11 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.annotations.JmsEvent;
 import io.inugami.maven.plugin.analysis.annotations.JmsSender;
+import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
@@ -71,16 +73,13 @@ class JmsListenerAnalyzerTest {
         final List<JsonObject> result = analyzer.analyze(Listener.class, context);
 
         assertThat(result).size().isEqualTo(1);
-        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult)result.get(0);
-        neo4jResult.getNodes().sort((value,ref)->value.getUid().compareTo(ref.getUid()));
+        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
+        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
 
-        neo4jResult.getRelationships().sort((value,ref)-> sortRelationship(value, ref));
+        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
     }
 
-    private int sortRelationship(final Relationship value, final Relationship ref) {
-        return String.join("-", value.getFrom(),value.getType(),value.getTo()).compareTo(String.join("-", ref.getFrom(),value.getType(),ref.getTo()));
-    }
 
     @Test
     public void analyze_withJSenderOnly_shouldFindServices() {
@@ -89,12 +88,23 @@ class JmsListenerAnalyzerTest {
         final List<JsonObject> result = analyzer.analyze(SenderOnly.class, context);
 
         assertThat(result).size().isEqualTo(1);
-        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult)result.get(0);
-        neo4jResult.getNodes().sort((value,ref)->value.getUid().compareTo(ref.getUid()));
+        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
+        neo4jResult.getNodes().sort((value, ref) -> compareNodes(value, ref));
 
-        neo4jResult.getRelationships().sort((value,ref)-> sortRelationship(value, ref));
+        neo4jResult.getRelationships().sort((value, ref) -> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
     }
+
+    private int compareNodes(final Node value, final Node ref) {
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
+    }
+
+    private int sortRelationship(final Relationship value, final Relationship ref) {
+        final EncryptionUtils sha1 = new EncryptionUtils();
+        return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
+    }
+
 
     // =========================================================================
     // BASIC PROPERTIES

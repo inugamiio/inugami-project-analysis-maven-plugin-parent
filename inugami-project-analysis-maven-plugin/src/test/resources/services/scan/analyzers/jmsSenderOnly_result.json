@@ -2,6 +2,20 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
+      "major" : 1,
+      "minor" : 0,
+      "patch" : 0,
+      "tag" : "SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  }, {
     "name" : "JMS",
     "type" : "ServiceType",
     "uid" : "JMS"
@@ -23,26 +37,16 @@
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$SenderOnly.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)"
-  }, {
-    "name" : "1.0.0-SNAPSHOT",
-    "properties" : {
-      "groupId" : "io.inugami.test",
-      "artifactId" : "basic-artifact",
-      "version" : "1.0.0-SNAPSHOT",
-      "packaging" : "jar",
-      "major" : 1,
-      "minor" : 0,
-      "patch" : 0,
-      "tag" : "SNAPSHOT"
-    },
-    "type" : "Version",
-    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
-    "from" : "create.user.queue",
-    "to" : "JMS",
-    "type" : "SERVICE_TYPE"
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "create.user.queue",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$SenderOnly.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
+    "type" : "HAS_METHOD"
   }, {
     "from" : "create.user.queue",
     "properties" : {
@@ -51,13 +55,9 @@
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$SenderOnly.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "USE_BY"
   }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "create.user.queue",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$SenderOnly.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
-    "type" : "HAS_METHOD"
+    "from" : "create.user.queue",
+    "to" : "JMS",
+    "type" : "SERVICE_TYPE"
   } ],
   "relationshipsToDeletes" : [ ]
 }
