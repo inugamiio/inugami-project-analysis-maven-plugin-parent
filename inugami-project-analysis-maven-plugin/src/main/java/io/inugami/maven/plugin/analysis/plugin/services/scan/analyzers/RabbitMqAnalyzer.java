@@ -140,9 +140,9 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private void buildSenderNode(final Method method,
                                  final BiConsumer<Node, List<Node>> onData) {
 
-        final RabbitMqSender            sender         = method.getAnnotation(RabbitMqSender.class);
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
-        final Set<Node>                 properties     = new HashSet<>();
+        final RabbitMqSender                      sender         = method.getAnnotation(RabbitMqSender.class);
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final Set<Node>                           properties     = new HashSet<>();
 
         String uid = null;
         if (hasText(sender.id())) {
@@ -213,11 +213,11 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                    final RabbitListener parentRabbitListener,
                                    final BiConsumer<Node, List<Node>> onData) {
 
-        final List<Node>                properties       = new ArrayList<>();
-        final Map<String, Serializable> additionalInfo   = new LinkedHashMap<>();
-        final RabbitListener            methodAnnotation = method.getAnnotation(RabbitListener.class);
-        final RabbitListener            rabbit           = methodAnnotation == null ? parentRabbitListener : methodAnnotation;
-        final RabbitMqHandlerInfo       handlerInfo      = method.getAnnotation(RabbitMqHandlerInfo.class);
+        final List<Node>                          properties       = new ArrayList<>();
+        final LinkedHashMap<String, Serializable> additionalInfo   = new LinkedHashMap<>();
+        final RabbitListener                      methodAnnotation = method.getAnnotation(RabbitListener.class);
+        final RabbitListener                      rabbit           = methodAnnotation == null ? parentRabbitListener : methodAnnotation;
+        final RabbitMqHandlerInfo                 handlerInfo      = method.getAnnotation(RabbitMqHandlerInfo.class);
 
         if (handlerInfo == null && log.isDebugEnabled()) {
             log.warn("cann't resolve all rabbitMQ information without RabbitMqHandlerInfo on method : {},{}",
@@ -433,7 +433,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                                .from(jmsNode.getUid())
                                .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_USE_BY)
-                               .properties(Map.of("linkType", useByType))
+                               .properties(new LinkedHashMap<>(Map.of("linkType", useByType)))
                                .build());
 
         result.add(Relationship.builder()

@@ -32,7 +32,7 @@ public class CyclicClassesResolver implements BeanPropertyTypeResolver {
         if (isCyclic(fullPath, field.getType().getName())) {
             result = new HashSet<>();
             final String                    uid            = (path == null ? "" : path + ".") + field.getName();
-            final Map<String, Serializable> additionalInfo = new HashMap<>();
+            final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             additionalInfo.put(PROPERTY_TYPE,
                                springPropertiesAnalyzer.setShortName(fieldType) ? fieldType.getSimpleName() : fieldType
                                        .getName());

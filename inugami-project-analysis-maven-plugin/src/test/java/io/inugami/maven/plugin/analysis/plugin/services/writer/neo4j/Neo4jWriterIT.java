@@ -20,6 +20,8 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 class Neo4jWriterIT {
@@ -49,14 +51,14 @@ class Neo4jWriterIT {
         writer.getDao().processSave(query2);
 
 
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
+        properties.put("nb", 5);
+        properties.put("value", "basic text");
         final String queryRel = writer.getDao().buildRelationshipQuery(Relationship.builder()
                                                                                    .from("Foobar")
                                                                                    .to("Joe")
                                                                                    .type("DEPS")
-                                                                                   .properties(Map.ofEntries(
-                                                                                     Map.entry("nb", 5),
-                                                                                     Map.entry("value", "basic text")
-                                                                                                      ))
+                                                                                   .properties(properties)
                                                                                    .build());
         writer.getDao().processSave(queryRel);
 

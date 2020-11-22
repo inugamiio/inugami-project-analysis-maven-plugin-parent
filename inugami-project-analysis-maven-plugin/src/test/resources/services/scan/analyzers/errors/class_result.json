@@ -4,12 +4,12 @@
   "nodes" : [ {
     "name" : "ERR-2",
     "properties" : {
-      "payload" : "null",
-      "errorType" : "functional",
-      "errorCode" : "ERR-2",
       "message" : "user require",
+      "statusCode" : 400,
+      "errorCode" : "ERR-2",
       "messageDetail" : "user is require for this ation",
-      "statusCode" : 400
+      "errorType" : "functional",
+      "payload" : "null"
     },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-2"

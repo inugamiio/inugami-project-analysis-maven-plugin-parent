@@ -4,83 +4,83 @@
   "nodes" : [ {
     "name" : "current.enable",
     "properties" : {
+      "mandatory" : false,
       "defaultValue" : "true",
       "propertyType" : "Boolean",
-      "matchIfMissing" : false,
-      "mandatory" : false,
-      "useForConditionalBean" : true
+      "useForConditionalBean" : true,
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "current.enable"
   }, {
     "name" : "current.name",
     "properties" : {
+      "mandatory" : false,
       "defaultValue" : "someBean.value",
-      "propertyType" : "String",
-      "mandatory" : false
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "current.name"
   }, {
     "name" : "current.provider",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.NotNull",
+      "mandatory" : true,
       "propertyType" : "String",
-      "mandatory" : true
+      "constraintType" : "javax.validation.constraints.NotNull"
     },
     "type" : "Property",
     "uid" : "current.provider"
   }, {
     "name" : "current.sender",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "current.sender"
   }, {
     "name" : "current.timeout",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.NotEmpty",
+      "mandatory" : true,
       "defaultValue" : "5000",
       "propertyType" : "long",
-      "mandatory" : true
+      "constraintType" : "javax.validation.constraints.NotEmpty"
     },
     "type" : "Property",
     "uid" : "current.timeout"
   }, {
     "name" : "parent.timeout",
     "properties" : {
-      "propertyType" : "long",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "long"
     },
     "type" : "Property",
     "uid" : "parent.timeout"
   }, {
     "name" : "parent.value",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "parent.value"
   }, {
     "name" : "project.feature.enable",
     "properties" : {
-      "propertyType" : "boolean",
-      "matchIfMissing" : false,
+      "useForConditionalBean" : true,
       "mandatory" : false,
-      "useForConditionalBean" : true
+      "propertyType" : "boolean",
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "project.feature.enable"
   }, {
     "name" : "project.service.enable",
     "properties" : {
-      "propertyType" : "boolean",
-      "matchIfMissing" : false,
+      "useForConditionalBean" : true,
       "mandatory" : false,
-      "useForConditionalBean" : true
+      "propertyType" : "boolean",
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "project.service.enable"

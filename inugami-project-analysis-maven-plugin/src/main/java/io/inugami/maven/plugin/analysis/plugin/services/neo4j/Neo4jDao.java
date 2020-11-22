@@ -21,15 +21,13 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.maven.plugin.analysis.api.actions.Neo4jValueEncoder;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import io.inugami.maven.plugin.analysis.api.tools.SecurityUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.DefaultNeo4jEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Slf4j
@@ -44,6 +42,11 @@ public class Neo4jDao {
     // =========================================================================
     // CONSTRUCTORS
     // =========================================================================
+    protected Neo4jDao() {
+        encoders = null;
+        driver   = null;
+    }
+
     public Neo4jDao(final Properties properties) {
         final String boltUri  = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.url"));
         final String login    = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.user"));
@@ -76,31 +79,17 @@ public class Neo4jDao {
 
     private String decodePassword(final ConfigHandler<String, String> config) {
         final String password   = config.grab("inugami.maven.plugin.analysis.writer.neo4j.password");
-        final String secretPass = config.grabOrDefault("inugami.maven.plugin.analysis.writer.neo4j.secret", null);
-        return decodePassword(password, secretPass);
+        final String secretPass = config.grabOrDefault("inugami.maven.plugin.analysis.secret", null);
+        return SecurityUtils.decodeAes(password, secretPass);
     }
 
     private String decodePassword(final Properties properties) {
-        final String password   = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.password"));
-        final String secretPass = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.secret"));
-        return decodePassword(password, secretPass);
+        final Object password   = properties.get("inugami.maven.plugin.analysis.writer.neo4j.password");
+        final Object secretPass = properties.get("inugami.maven.plugin.analysis.secret");
+        return SecurityUtils.decodeAes(password, secretPass);
     }
 
-    private String decodePassword(final String password, final String secret) {
-        final String result = password;
-        if (secret != null) {
-            try {
-                final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
-                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret.getBytes(), "AES"));
-                final byte[] value = cipher.doFinal(password.getBytes());
-                return new String(cipher.doFinal(Base64.getDecoder().decode(value)), StandardCharsets.UTF_8);
-            }
-            catch (final Exception e) {
-                throw new SecurityException(e.getMessage(), e);
-            }
-        }
-        return result;
-    }
+
 
     // =========================================================================
     // API

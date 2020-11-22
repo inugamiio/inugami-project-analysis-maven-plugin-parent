@@ -20,7 +20,7 @@ import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -33,10 +33,10 @@ public class Relationship implements JsonObject {
     private static final long serialVersionUID = 973646684487506001L;
 
     @EqualsAndHashCode.Include
-    private String                    from;
+    private String                              from;
     @EqualsAndHashCode.Include
-    private String                    to;
+    private String                              to;
     @EqualsAndHashCode.Include
-    private String                    type;
-    private Map<String, Serializable> properties;
+    private String                              type;
+    private LinkedHashMap<String, Serializable> properties;
 }

@@ -222,7 +222,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
         final Node.NodeBuilder node = Node.builder();
         node.type(ERROR_CODE);
 
-        final Map<String, Serializable> properties = new HashMap<>();
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
         for (final Method method : methods) {
             final String key   = method.getName();
             Serializable value = null;

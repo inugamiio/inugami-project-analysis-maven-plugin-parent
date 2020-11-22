@@ -31,7 +31,6 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.hasAnnotation;
@@ -72,7 +71,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
             entityName = clazz.getAnnotation(EntityDatabase.class).value() + "_" + entityName;
         }
 
-        final Map<String, Serializable> localAdditionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> localAdditionalInfo = new LinkedHashMap<>();
         localAdditionalInfo.put("payload", ReflectionService.renderType(clazz,null,null).convertToJson());
         final String entityLocalUid = "local@" + entityName;
         final Node localEntityNode = Node.builder()
@@ -83,7 +82,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
                                     .build();
 
 
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("payload", ReflectionService.renderType(clazz,null,null,false).convertToJson());
         final Node entityNode = Node.builder()
                                     .type("Entity")

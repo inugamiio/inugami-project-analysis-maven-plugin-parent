@@ -4,9 +4,9 @@
   "nodes" : [ {
     "name" : "project.bean.devices.<String>.countries[].<String>",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.NotEmpty",
       "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "constraintType" : "javax.validation.constraints.NotEmpty"
     },
     "type" : "Property",
     "uid" : "project.bean.devices.<String>.countries[].<String>"
@@ -27,9 +27,9 @@
   }, {
     "name" : "project.bean.devices.<String>.title",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.NotEmpty",
       "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "constraintType" : "javax.validation.constraints.NotEmpty"
     },
     "type" : "Property",
     "uid" : "project.bean.devices.<String>.title"
@@ -92,8 +92,8 @@
   }, {
     "name" : "project.bean.timeout",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.Min",
       "propertyType" : "Long",
+      "constraintType" : "javax.validation.constraints.Min",
       "constraintDetail" : "> 500"
     },
     "type" : "Property",
@@ -101,9 +101,9 @@
   }, {
     "name" : "project.bean.url",
     "properties" : {
-      "constraintType" : "javax.validation.constraints.NotEmpty",
       "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "constraintType" : "javax.validation.constraints.NotEmpty"
     },
     "type" : "Property",
     "uid" : "project.bean.url"

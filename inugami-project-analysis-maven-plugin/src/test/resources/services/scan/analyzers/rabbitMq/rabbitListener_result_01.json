@@ -4,16 +4,16 @@
   "nodes" : [ {
     "name" : "events.exchangeName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.exchangeName"
   }, {
     "name" : "events.exchangeName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.exchangeName"
@@ -52,80 +52,80 @@
   }, {
     "name" : "events.user.authenticated.routingKey",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.authenticated.routingKey"
   }, {
     "name" : "events.user.authenticated.routingKey",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.authenticated.routingKey"
   }, {
     "name" : "events.user.authenticated.typeId",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.authenticated.typeId"
   }, {
     "name" : "events.user.created.routingKey",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.created.routingKey"
   }, {
     "name" : "events.user.created.routingKey",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.created.routingKey"
   }, {
     "name" : "events.user.created.typeId",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.created.typeId"
   }, {
     "name" : "events.user.dlqName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.dlqName"
   }, {
     "name" : "events.user.dlqName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.dlqName"
   }, {
     "name" : "events.user.queueName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.queueName"
   }, {
     "name" : "events.user.queueName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.queueName"

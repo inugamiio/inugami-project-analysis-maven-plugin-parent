@@ -4,8 +4,8 @@
   "nodes" : [ {
     "name" : "events.exchangeName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.exchangeName"
@@ -19,16 +19,16 @@
   }, {
     "name" : "events.method.user.queueName",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.method.user.queueName"
   }, {
     "name" : "events.user.method.created.routingKey",
     "properties" : {
-      "propertyType" : "String",
-      "mandatory" : true
+      "mandatory" : true,
+      "propertyType" : "String"
     },
     "type" : "Property",
     "uid" : "events.user.method.created.routingKey"

@@ -4,12 +4,12 @@
   "nodes" : [ {
     "name" : "ERR-1",
     "properties" : {
-      "payload" : "[]",
-      "errorType" : "technical",
-      "errorCode" : "ERR-1",
       "message" : "invalid arguments",
+      "statusCode" : 500,
+      "errorCode" : "ERR-1",
       "messageDetail" : "given arguments aren't valid",
-      "statusCode" : 500
+      "errorType" : "technical",
+      "payload" : "[]"
     },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-1"

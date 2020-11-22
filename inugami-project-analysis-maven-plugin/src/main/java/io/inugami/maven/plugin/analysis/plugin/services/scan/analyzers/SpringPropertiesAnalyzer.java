@@ -263,7 +263,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                 if (stringNotEmpty(name)) {
 
                     final String                    valueFull      = (prefix == null ? "" : prefix + ".") + name;
-                    final Map<String, Serializable> additionalInfo = new HashMap<>();
+                    final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
 
                     additionalInfo.put(USE_FOR_CONDITIONAL_BEAN, Boolean.TRUE);
                     additionalInfo.put(MANDATORY, Boolean.FALSE);
@@ -321,7 +321,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         }
 
         if (property != null) {
-            final Map<String, Serializable> additionalInfo = new HashMap<>();
+            final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             if (defaultValue == null) {
                 additionalInfo.put(MANDATORY, Boolean.TRUE);
             }

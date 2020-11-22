@@ -53,7 +53,22 @@ public final class ConsoleTools {
 
         return result == null ? defaultValue : result.trim();
     }
+    public static String askPassword(final String question, final String defaultValue) {
+        String result = null;
+        try {
+            final ConsoleReader consoleReader = new ConsoleReader();
+            result = consoleReader.readLine(renderQuestion(question, defaultValue),'*');
+            consoleReader.close();
+            if (result != null && result.trim().isEmpty()) {
+                result = null;
+            }
+        }
+        catch (final IOException error) {
+            log.error(error.getMessage());
+        }
 
+        return result == null ? defaultValue : result.trim();
+    }
     private static String renderQuestion(final String question, final String defaultValue) {
         final JsonBuilder result = new JsonBuilder().write(question);
         if (defaultValue != null) {

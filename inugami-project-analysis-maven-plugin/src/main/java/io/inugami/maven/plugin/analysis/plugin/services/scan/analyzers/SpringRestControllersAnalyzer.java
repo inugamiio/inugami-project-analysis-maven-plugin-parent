@@ -36,9 +36,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
@@ -167,8 +166,8 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return result;
     }
 
-    private Map<String, Serializable> buildProperties(final RestEndpoint endpoint) {
-        final Map<String, Serializable> result = new HashMap<>();
+    private LinkedHashMap<String, Serializable> buildProperties(final RestEndpoint endpoint) {
+        final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
         result.put(VERB, cleanLines(endpoint.getVerb()));
         result.put(URI, cleanLines(endpoint.getUri()));
 

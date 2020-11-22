@@ -159,7 +159,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                .from(jmsNode.getUid())
                                .to(methodNode.getUid())
                                .type(BuilderTools.RELATION_USE_BY)
-                               .properties(Map.of("linkType", useByType))
+                               .properties(new LinkedHashMap<>(Map.of("linkType", useByType)))
                                .build());
 
         result.add(Relationship.builder()
@@ -201,7 +201,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
         final String eventPayload = buildEventPayload(event);
 
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         processIfNotEmpty(listener.destination(), value -> additionalInfo.put("destination", value));
         processIfNotEmpty(listener.containerFactory(), value -> additionalInfo.put("containerFactory", value));
         processIfNotEmpty(listener.subscription(), value -> additionalInfo.put("subscription", value));
@@ -268,7 +268,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
         final String eventPayload = event == null ? null : buildEventPayload(event);
 
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         processIfNotEmpty(sender.destination(), value -> additionalInfo.put("destination", value));
         processIfNotEmpty(eventPayload, value -> additionalInfo.put("event", eventPayload));
 

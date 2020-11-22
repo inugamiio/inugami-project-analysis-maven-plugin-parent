@@ -96,8 +96,8 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
         }
     }
 
-    private Map<String, Serializable> extractProperties(final InternalRelationship relationship) {
-        final Map<String, Serializable> result = new LinkedHashMap<>();
+    private LinkedHashMap<String, Serializable> extractProperties(final InternalRelationship relationship) {
+        final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
         if (relationship != null) {
             final Map<String, Object> properties = relationship.asMap();
             for (final Map.Entry<String, Object> entry : properties.entrySet()) {

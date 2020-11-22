@@ -8,8 +8,7 @@ import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPro
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.buildField;
@@ -44,8 +43,8 @@ public class CollectionTypeResolver implements BeanPropertyTypeResolver {
         if (ReflectionService.isBasicType(genericType)) {
             final String type    = springPropertiesAnalyzer.setShortName(genericType) ? genericType
                     .getSimpleName() : genericType.getName();
-            final String                    nodeUid        = uid + "[].<" + type + ">";
-            final Map<String, Serializable> additionalInfo = new HashMap<>();
+            final String                              nodeUid        = uid + "[].<" + type + ">";
+            final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             additionalInfo.put(PROPERTY_TYPE,type);
 
             final Node node = Node.builder()

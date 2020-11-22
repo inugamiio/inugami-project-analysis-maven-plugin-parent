@@ -27,7 +27,6 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,7 +60,7 @@ public class BuilderTools {
     }
 
     public static Node buildNodeVersion(final Gav gav) {
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("groupId", gav.getGroupId());
         additionalInfo.put("artifactId", gav.getArtifactId());
         additionalInfo.put("version", gav.getVersion());
@@ -81,7 +80,7 @@ public class BuilderTools {
     }
 
     public static Node buildNodeVersion(final MavenProject project) {
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("groupId", project.getGroupId());
         additionalInfo.put("artifactId", project.getArtifactId());
         additionalInfo.put("version", project.getVersion());
@@ -101,7 +100,7 @@ public class BuilderTools {
     }
 
     public static Node buildGavNodeArtifact(final Gav gav) {
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("groupId", gav.getGroupId());
         additionalInfo.put("artifactId", gav.getArtifactId());
         additionalInfo.put("version", gav.getVersion());
@@ -116,7 +115,7 @@ public class BuilderTools {
     }
 
     public static Node buildArtifactNode(final MavenProject project) {
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("groupId", project.getGroupId());
         additionalInfo.put("artifactId", project.getArtifactId());
         additionalInfo.put("version", project.getVersion());
@@ -139,7 +138,7 @@ public class BuilderTools {
     }
 
     public static Node buildMethodNode(final Class<?> clazz, final Method method) {
-        final Map<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put("class", clazz.getName());
         additionalInfo.put("method", method.getName());
         processIfNotNull(method.getReturnType(), (value) -> additionalInfo.put("returnType", value.getName()));

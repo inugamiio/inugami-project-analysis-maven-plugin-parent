@@ -32,7 +32,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 public class Unpublish implements ProjectInformation {
@@ -158,7 +157,7 @@ public class Unpublish implements ProjectInformation {
         builder.name(uid);
         builder.uid(uid);
 
-        final Map<String, Serializable> properties = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
 
 
         final String levelStr = ifNull(configuration.get(LEVEL),

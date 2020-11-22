@@ -32,7 +32,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Publish implements ProjectInformation {
 
@@ -141,7 +140,7 @@ public class Publish implements ProjectInformation {
         builder.name(uid);
         builder.uid(uid);
 
-        final Map<String, Serializable> properties = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
 
 
         final String levelStr = ifNull(configuration.get(LEVEL),
@@ -172,8 +171,8 @@ public class Publish implements ProjectInformation {
                                          .build();
     }
 
-    private Map<String, Serializable> buildDeployProperties() {
-        final Map<String, Serializable> result = new LinkedHashMap<>();
+    private LinkedHashMap<String, Serializable> buildDeployProperties() {
+        final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
         final LocalDateTime             now    = LocalDateTime.now();
         result.put("date", DateTimeFormatter.ISO_DATE_TIME.format(now));
         result.put("timestamp", now.toEpochSecond(
