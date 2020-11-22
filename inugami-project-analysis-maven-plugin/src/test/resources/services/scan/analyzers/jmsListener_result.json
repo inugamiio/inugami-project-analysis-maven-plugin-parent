@@ -9,7 +9,6 @@
     "name" : "create.user.queue",
     "properties" : {
       "destination" : "${my.activeMq.onUserCreated.queue}",
-      "containerFactory" : "myContainerFactory",
       "event" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
     },
     "type" : "Service",
@@ -18,6 +17,7 @@
     "name" : "create.user.queue",
     "properties" : {
       "destination" : "${my.activeMq.onUserCreated.queue}",
+      "containerFactory" : "myContainerFactory",
       "event" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
     },
     "type" : "Service",
@@ -136,11 +136,11 @@
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "create.user.queue",
-    "type" : "CONSUME"
+    "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "create.user.queue",
-    "type" : "EXPOSE"
+    "type" : "CONSUME"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>)",

@@ -6,6 +6,7 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.annotations.JmsEvent;
 import io.inugami.maven.plugin.analysis.annotations.JmsSender;
+import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import lombok.EqualsAndHashCode;
@@ -73,8 +74,12 @@ class JmsListenerAnalyzerTest {
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult)result.get(0);
         neo4jResult.getNodes().sort((value,ref)->value.getUid().compareTo(ref.getUid()));
 
-        neo4jResult.getRelationships().sort((value,ref)->String.join("->", value.getFrom(),value.getTo()).compareTo(String.join("->", ref.getFrom(),ref.getTo())));
+        neo4jResult.getRelationships().sort((value,ref)-> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
+    }
+
+    private int sortRelationship(final Relationship value, final Relationship ref) {
+        return String.join("-", value.getFrom(),value.getType(),value.getTo()).compareTo(String.join("-", ref.getFrom(),value.getType(),ref.getTo()));
     }
 
     @Test
@@ -87,7 +92,7 @@ class JmsListenerAnalyzerTest {
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult)result.get(0);
         neo4jResult.getNodes().sort((value,ref)->value.getUid().compareTo(ref.getUid()));
 
-        neo4jResult.getRelationships().sort((value,ref)->String.join("->", value.getFrom(),value.getTo()).compareTo(String.join("->", ref.getFrom(),ref.getTo())));
+        neo4jResult.getRelationships().sort((value,ref)-> sortRelationship(value, ref));
         assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
     }
 
