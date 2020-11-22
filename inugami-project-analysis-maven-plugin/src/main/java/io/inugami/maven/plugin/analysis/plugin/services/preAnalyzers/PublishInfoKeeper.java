@@ -8,7 +8,7 @@ import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.api.tools.ProjectInformationTools;
+import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.plugin.services.info.publish.Publish;
@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.maven.plugin.analysis.api.tools.ProjectInformationTools.getRelationship;
+import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getRelationship;
 
 @Slf4j
 public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator {
@@ -53,7 +53,7 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
     public void preAnalyze(final ScanConext context) {
         final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
         context.getConfiguration().put("useMavenProject", "true");
-        final Gav gav = ProjectInformationTools.buildGav(context.getProject(), context.getConfiguration());
+        final Gav gav = Neo4jUtils.buildGav(context.getProject(), context.getConfiguration());
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),
                                                       configure(QUERIES.get(0),
                                                                 gav,
@@ -74,8 +74,8 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
         final ScanNeo4jResult backup = context.getPostNeo4jResult();
 
         final Map<String, Object>  data                = record.asMap();
-        final String               version             = ProjectInformationTools.getNodeName(data.get("version"));
-        final String               env                 = ProjectInformationTools.getNodeName(data.get("env"));
+        final String               version             = Neo4jUtils.getNodeName(data.get("version"));
+        final String               env                 = Neo4jUtils.getNodeName(data.get("env"));
         final InternalRelationship deploy              = getRelationship(data.get("deploy"));
         final InternalRelationship haveArtifactVersion = getRelationship(data.get("haveArtifactVersion"));
 

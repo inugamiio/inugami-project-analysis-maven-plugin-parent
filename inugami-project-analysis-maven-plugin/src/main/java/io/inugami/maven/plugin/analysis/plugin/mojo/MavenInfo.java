@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.mojo;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
+import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import lombok.AccessLevel;
@@ -63,7 +64,9 @@ public class MavenInfo extends AbstractMojo {
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
-
+        configuration.put("project.basedir",project.getBasedir().getAbsolutePath());
+        configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
+                                                               .getAbsolutePath());
         configuration.put("interactive", isInteractive(configuration));
         ProjectInformation handler = null;
 

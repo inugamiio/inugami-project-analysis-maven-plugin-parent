@@ -21,6 +21,7 @@ import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.api.tools.ConsoleColors;
+import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectPostAnalyzer;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectPreAnalyzer;
@@ -194,14 +195,17 @@ public class CheckMojo extends AbstractMojo {
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
-
+        configuration.put("project.basedir", project.getBasedir().getAbsolutePath());
+        configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
+                                                               .getAbsolutePath());
+        configuration.put("interactive", "false");
         return ScanConext.builder()
                          .basedir(basedir)
                          .project(project)
                          .repoSystem(repoSystem)
                          .repoSession(repoSession)
                          .repositories(repositories)
-                         .classLoader(buildClassloader(listener,configuration))
+                         .classLoader(buildClassloader(listener, configuration))
                          .dependencies(listener.getArtifacts())
                          .directDependencies(extractDirectDependencies())
                          .pluginDescriptor(pluginDescriptor)
@@ -256,9 +260,10 @@ public class CheckMojo extends AbstractMojo {
             final JarClassLoader currentClassloader = new JarClassLoader(dependenciesClassLoader);
             currentClassloader.add(project.getBuild().getOutputDirectory());
 
-            final String additionalFolders =configuration.get("inugami.maven.plugin.analysis.additional.output.folders");
-            if(additionalFolders != null){
-                for(final String additionalPath : additionalFolders.split(";")){
+            final String additionalFolders = configuration
+                    .get("inugami.maven.plugin.analysis.additional.output.folders");
+            if (additionalFolders != null) {
+                for (final String additionalPath : additionalFolders.split(";")) {
                     currentClassloader.add(new File(additionalPath.trim()).getAbsoluteFile().toURI().toURL());
                 }
             }

@@ -16,13 +16,19 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools.rendering;
 
+import io.inugami.api.loggers.Loggers;
 import io.inugami.api.models.JsonBuilder;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.tools.ConsoleColors;
-import io.inugami.maven.plugin.analysis.api.tools.ProjectInformationTools;
+import io.inugami.commons.files.FilesUtils;
+import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.neo4j.driver.types.Node;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -30,16 +36,29 @@ import java.util.function.Consumer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jRenderingUtils {
 
-
+    // =========================================================================
+    // ATTRIBUTES
+    // =========================================================================
     public static final String COLUMN_SEP = " | ";
+    public static final String CSV_SEP    = ";";
 
     // =========================================================================
     // API
     // =========================================================================
-    public static String rendering(final Map<String, Collection<DataRow>> data) {
+    public static String rendering(final Map<String, Collection<DataRow>> data,
+                                   final ConfigHandler<String, String> configuration,
+                                   final String context) {
         String result = "no result";
         if (data != null && !data.isEmpty()) {
             result = processRendering(data);
+            try {
+                processExport(data, configuration, context);
+            }
+            catch (final Exception error) {
+                Loggers.DEBUG.error(error.getMessage(), error);
+            }
+
+
         }
         return result;
     }
@@ -167,6 +186,107 @@ public final class Neo4jRenderingUtils {
 
 
     // =========================================================================
+    // EXPORT
+    // =========================================================================
+    private static void processExport(final Map<String, Collection<DataRow>> data,
+                                      final ConfigHandler<String, String> configuration,
+                                      final String context) {
+
+        if (data == null || data.isEmpty() || !Boolean.parseBoolean(configuration.grabOrDefault("export", "false"))) {
+            return;
+        }
+
+        final String buildDir  = configuration.get("project.build.directory");
+        File         targetDir = null;
+        if (buildDir != null) {
+            targetDir = FilesUtils.buildFile(new File(buildDir), "inugami");
+            targetDir.mkdirs();
+        }
+
+        for (final Map.Entry<String, Collection<DataRow>> entry : data.entrySet()) {
+            writeCsvFile(entry.getKey(), entry.getValue(), context, targetDir);
+        }
+    }
+
+    private static void writeCsvFile(final String key, final Collection<DataRow> values, final String context,
+                                     final File targetDir) {
+        if (values == null || values.isEmpty()) {
+            return;
+        }
+        final List<DataRow> data = new ArrayList<>(values);
+        final String filePath = new StringBuilder().append(targetDir.getAbsolutePath())
+                                                   .append(File.separator)
+                                                   .append(context)
+                                                   .append("_")
+                                                   .append(key.replaceAll(" ", ""))
+                                                   .append(".csv")
+                                                   .toString();
+        final File file = new File(filePath);
+
+        final JsonBuilder csv     = new JsonBuilder();
+        final Set<String> headers = writeHeaders(data, csv);
+
+        final Iterator<DataRow> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            final DataRow row = iterator.next();
+            writeRow(row, headers, csv);
+            if (iterator.hasNext()) {
+                csv.line();
+            }
+        }
+        file.getParentFile().mkdirs();
+        try (final FileWriter writer = new FileWriter(file)) {
+            writer.write(csv.toString());
+            writer.flush();
+            Loggers.IO.info("write file : {}", file.getAbsolutePath());
+        }
+        catch (final IOException e) {
+            Loggers.DEBUG.error(e.getMessage(), e);
+        }
+    }
+
+
+    private static Set<String> writeHeaders(final Collection<DataRow> data, final JsonBuilder csv) {
+        final Map<String, Integer> columnsSize = computeColumnSize(data);
+
+        final Iterator<String> iterator = columnsSize.keySet().iterator();
+        while (iterator.hasNext()) {
+            final String header = iterator.next();
+            csv.valueQuot(header);
+            if (iterator.hasNext()) {
+                csv.write(CSV_SEP);
+            }
+        }
+        csv.line();
+        return columnsSize.keySet();
+    }
+
+    private static void writeRow(final DataRow row, final Set<String> headers,
+                                 final JsonBuilder csv) {
+        if (row.getProperties() != null) {
+            final Iterator<String> iterator = headers.iterator();
+            while (iterator.hasNext()) {
+                final String header = iterator.next();
+                csv.valueQuot(cleanCsvValue(row.getProperties().get(header)));
+                if (iterator.hasNext()) {
+                    csv.write(CSV_SEP);
+                }
+            }
+        }
+    }
+
+    private static String cleanCsvValue(final Serializable serializable) {
+        if (serializable == null) {
+            return "";
+        }
+
+        final String value = String.valueOf(serializable);
+        return value.replaceAll("\n", "")
+                    .replaceAll("\t", " ")
+                    .replaceAll("\"", "\\\"");
+    }
+
+    // =========================================================================
     // TOOLS
     // =========================================================================
     public static List<String> orderKeys(final Collection<String> values) {
@@ -182,18 +302,18 @@ public final class Neo4jRenderingUtils {
     // TOOLS
     // =========================================================================
     public static String getNodeName(final Object node) {
-        return ProjectInformationTools.getNodeName(node);
+        return Neo4jUtils.getNodeName(node);
     }
 
     public static Node getNode(final Object node) {
-        return ProjectInformationTools.getNode(node);
+        return Neo4jUtils.getNode(node);
     }
 
     public static String retrieve(final String key, final Node node) {
-        return ProjectInformationTools.retrieve(key, node);
+        return Neo4jUtils.retrieve(key, node);
     }
 
     public static <T> void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
-        ProjectInformationTools.ifPropertyNotNull(key, node, consumer);
+        Neo4jUtils.ifPropertyNotNull(key, node, consumer);
     }
 }

@@ -93,7 +93,6 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                                                                                                          envs));
 
 
-
         final Map<String, Collection<DataRow>> data = sortData(firstPass, envs, extractProjectEnvs(firstPass, gav));
 
         final String queryMissingService = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(1)),
@@ -105,11 +104,11 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                 dao.search(queryMissingService),
                 this::buildMissingService);
 
-        if(missingServices!=null && !missingServices.isEmpty()){
+        if (missingServices != null && !missingServices.isEmpty()) {
             data.putAll(missingServices);
         }
 
-        log.info("\n{}",  Neo4jRenderingUtils.rendering(data));
+        log.info("\n{}", Neo4jRenderingUtils.rendering(data,configuration,"versionEnv"));
 
 
         dao.shutdown();
@@ -119,9 +118,9 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // BUILDER
     // =========================================================================
-    private void buildModels(final Map<String, Collection<DataRow>> data,
-                             final Map<String, Object> record,
-                             final Map<String, Long> envs) {
+    public void buildModels(final Map<String, Collection<DataRow>> data,
+                            final Map<String, Object> record,
+                            final Map<String, Long> envs) {
 
         log.debug("record : {}", record);
         Collection<DataRow> lines = data.get(ENVIRONMENTS);
@@ -156,12 +155,12 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     }
 
 
-    private void buildLine(final String artifactNodeName,
-                           final String envNodeName,
-                           final String relationshipName,
-                           final Map<String, Collection<DataRow>> data,
-                           final Map<String, Object> record,
-                           final Map<String, Long> envs) {
+    public void buildLine(final String artifactNodeName,
+                          final String envNodeName,
+                          final String relationshipName,
+                          final Map<String, Collection<DataRow>> data,
+                          final Map<String, Object> record,
+                          final Map<String, Long> envs) {
         buildLine(artifactNodeName,
                   envNodeName,
                   relationshipName,
@@ -171,13 +170,13 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                   envs);
     }
 
-    private void buildLine(final String artifactNodeName,
-                           final String envNodeName,
-                           final String relationshipName,
-                           final Map<String, Collection<DataRow>> data,
-                           final Map<String, Object> record,
-                           final String color,
-                           final Map<String, Long> envs) {
+    public void buildLine(final String artifactNodeName,
+                          final String envNodeName,
+                          final String relationshipName,
+                          final Map<String, Collection<DataRow>> data,
+                          final Map<String, Object> record,
+                          final String color,
+                          final Map<String, Long> envs) {
         final List<DataRow> lines        = (List<DataRow>) data.get(ENVIRONMENTS);
         final String        artifactName = buildArtifactName(record.get(artifactNodeName));
         if (artifactName == null) {
@@ -288,9 +287,9 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // SORT
     // =========================================================================
-    private Map<String, Collection<DataRow>> sortData(final Map<String, Collection<DataRow>> firstPass,
-                                                      final Map<String, Long> envs,
-                                                      final List<String> projectEnv) {
+    public Map<String, Collection<DataRow>> sortData(final Map<String, Collection<DataRow>> firstPass,
+                                                     final Map<String, Long> envs,
+                                                     final List<String> projectEnv) {
         final Map<String, Collection<DataRow>> result = new LinkedHashMap<>();
 
         if (envs.isEmpty() || firstPass == null || firstPass.isEmpty()) {
@@ -312,7 +311,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
                     final Serializable envValue = props.get(env);
                     if (envValue == null) {
                         properties.put(env, EMPTY);
-                        if (projectEnv.contains(env)) {
+                        if (projectEnv != null && projectEnv.contains(env)) {
                             newRow.setRowColor(ConsoleColors.RED);
                         }
                     }
@@ -364,7 +363,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private String buildArtifactName(final Object nodeRaw) {
+    public String buildArtifactName(final Object nodeRaw) {
         String result = null;
         if (nodeRaw instanceof Node) {
             final Map<String, Object> properties = ((Node) nodeRaw).asMap();
@@ -376,7 +375,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         return result;
     }
 
-    private String renderDeployVersion(final Object nodeRaw, final Object relationshipRaw) {
+    public String renderDeployVersion(final Object nodeRaw, final Object relationshipRaw) {
         String version = "";
         String date    = null;
         String dateUtc = null;
@@ -427,4 +426,8 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     private String asString(final Object value) {
         return value == null ? null : String.valueOf(value);
     }
+
+
+
+
 }

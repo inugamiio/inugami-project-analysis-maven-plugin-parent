@@ -20,7 +20,7 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.NamedSpi;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.Node;
-import io.inugami.maven.plugin.analysis.api.tools.ProjectInformationTools;
+import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
@@ -32,10 +32,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public interface ProjectInformation extends NamedSpi {
-    String GROUP_ID    = ProjectInformationTools.GROUP_ID;
-    String ARTIFACT_ID = ProjectInformationTools.ARTIFACT_ID;
-    String TYPE        = ProjectInformationTools.TYPE;
-    String VERSION     = ProjectInformationTools.VERSION;
+    String GROUP_ID    = Neo4jUtils.GROUP_ID;
+    String ARTIFACT_ID = Neo4jUtils.ARTIFACT_ID;
+    String TYPE        = Neo4jUtils.TYPE;
+    String VERSION     = Neo4jUtils.VERSION;
 
     void process(MavenProject project, ConfigHandler<String, String> configuration);
 
@@ -43,27 +43,27 @@ public interface ProjectInformation extends NamedSpi {
     }
 
     default Gav convertMavenProjectToGav(final MavenProject project) {
-        return ProjectInformationTools.convertMavenProjectToGav(project);
+        return Neo4jUtils.convertMavenProjectToGav(project);
     }
 
     default String ifNull(final String value, final Supplier<String> handler) {
-        return ProjectInformationTools.ifNull(value, handler);
+        return Neo4jUtils.ifNull(value, handler);
     }
 
 
     default Node buildArtifactVersion(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        return ProjectInformationTools.buildArtifactVersion(project, configuration);
+        return Neo4jUtils.buildArtifactVersion(project, configuration);
     }
 
     default Gav buildGav(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        return ProjectInformationTools.buildGav(project, configuration);
+        return Neo4jUtils.buildGav(project, configuration);
     }
 
 
     default Map<String, Collection<DataRow>> extractDataFromResultSet(final List<Record> resultSet,
                                                                       final BiConsumer<Map<String, Collection<DataRow>>, Map<String, Object>> consumer) {
 
-        return ProjectInformationTools.extractDataFromResultSet(resultSet, consumer);
+        return Neo4jUtils.extractDataFromResultSet(resultSet, consumer);
     }
 
 

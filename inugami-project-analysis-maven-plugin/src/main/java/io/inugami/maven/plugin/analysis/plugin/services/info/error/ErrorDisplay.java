@@ -91,7 +91,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
         if (resultSet != null || !resultSet.isEmpty()) {
             buildModels(data, resultSet);
         }
-        log.info("\n{}", rendering(data));
+        log.info("\n{}", rendering(data,configuration,"errorCodes"));
 
         dao.shutdown();
     }

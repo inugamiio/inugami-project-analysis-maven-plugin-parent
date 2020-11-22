@@ -11,7 +11,9 @@ public interface QueryConfigurator {
         return false;
     }
 
-    ConfigHandler<String, String> configure(String queryPath, Gav gav, ConfigHandler<String, String> configuration);
+    default ConfigHandler<String, String> configure(final String queryPath, final Gav gav, final ConfigHandler<String, String> configuration){
+        return configuration;
+    }
 
     default Map<String, String> gavToMap(final Gav gav) {
         if (gav == null) {

@@ -26,7 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Slf4j
@@ -44,19 +47,20 @@ public class Neo4jDao {
     public Neo4jDao(final Properties properties) {
         final String boltUri  = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.url"));
         final String login    = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.user"));
-        final String password = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.password"));
+        final String password = decodePassword(properties);
+
 
         encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
         driver   = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
     }
+
 
     public Neo4jDao(final ConfigHandler<String, String> configuration) {
         encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
         driver   = GraphDatabase.driver(configuration.grab("inugami.maven.plugin.analysis.writer.neo4j.url"),
                                         AuthTokens.basic(configuration
                                                                  .grab("inugami.maven.plugin.analysis.writer.neo4j.user"),
-                                                         configuration
-                                                                 .grab("inugami.maven.plugin.analysis.writer.neo4j.password")));
+                                                         decodePassword(configuration)));
     }
 
     public Neo4jDao(final String boltUri, final String login, final String password) {
@@ -68,6 +72,34 @@ public class Neo4jDao {
     public void shutdown() {
         driver.session().close();
         driver.close();
+    }
+
+    private String decodePassword(final ConfigHandler<String, String> config) {
+        final String password   = config.grab("inugami.maven.plugin.analysis.writer.neo4j.password");
+        final String secretPass = config.grabOrDefault("inugami.maven.plugin.analysis.writer.neo4j.secret", null);
+        return decodePassword(password, secretPass);
+    }
+
+    private String decodePassword(final Properties properties) {
+        final String password   = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.password"));
+        final String secretPass = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.secret"));
+        return decodePassword(password, secretPass);
+    }
+
+    private String decodePassword(final String password, final String secret) {
+        final String result = password;
+        if (secret != null) {
+            try {
+                final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret.getBytes(), "AES"));
+                final byte[] value = cipher.doFinal(password.getBytes());
+                return new String(cipher.doFinal(Base64.getDecoder().decode(value)), StandardCharsets.UTF_8);
+            }
+            catch (final Exception e) {
+                throw new SecurityException(e.getMessage(), e);
+            }
+        }
+        return result;
     }
 
     // =========================================================================
@@ -165,7 +197,6 @@ public class Neo4jDao {
             log.info("delete relationships done");
         }
     }
-
 
 
     public void processScripts(final List<String> scripts, final ConfigHandler<String, String> configuration) {
@@ -353,7 +384,7 @@ public class Neo4jDao {
         final JsonBuilder query = new JsonBuilder();
 
         query.write(" MATCH (f)-[r:");
-        if(relationship.getType()!=null){
+        if (relationship.getType() != null) {
             query.write(relationship.getType());
         }
         query.write("]->(to) where ");

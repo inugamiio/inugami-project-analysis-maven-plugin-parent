@@ -8,3 +8,4 @@ io.inugami.maven.plugin.analysis.plugin.services.info.imports.ImportData
 io.inugami.maven.plugin.analysis.plugin.services.info.publish.Publish
 io.inugami.maven.plugin.analysis.plugin.services.info.publish.Unpublish
 io.inugami.maven.plugin.analysis.plugin.services.info.env.VersionEnv
+io.inugami.maven.plugin.analysis.plugin.services.info.env.EnvInfo

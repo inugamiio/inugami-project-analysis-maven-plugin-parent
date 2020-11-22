@@ -74,7 +74,7 @@ public class SpecificsQuery implements ProjectInformation {
                 result = "no result";
             }
             else {
-                result = renderResultSet(resultSet, skipRegex);
+                result = renderResultSet(resultSet, skipRegex,configuration);
             }
             log.info("\n{}", result);
         }
@@ -113,7 +113,7 @@ public class SpecificsQuery implements ProjectInformation {
     // =========================================================================
     // RENDERING
     // =========================================================================
-    private String renderResultSet(final List<Record> resultSet, final Pattern skipRegex) {
+    private String renderResultSet(final List<Record> resultSet, final Pattern skipRegex,final ConfigHandler<String, String> configuration) {
         final Map<String, Collection<DataRow>> data          = new LinkedHashMap<>();
         final Collection<DataRow>              nodes         = new HashSet<>();
         final Collection<DataRow>              relationships = new HashSet<>();
@@ -137,7 +137,7 @@ public class SpecificsQuery implements ProjectInformation {
 
         data.put("nodes", nodes);
         data.put("relationships", relationships);
-        return Neo4jRenderingUtils.rendering(data);
+        return Neo4jRenderingUtils.rendering(data,configuration,"specificQuery");
     }
 
 
