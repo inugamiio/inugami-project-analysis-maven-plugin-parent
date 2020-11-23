@@ -6,20 +6,30 @@
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 </dependency>
 ----
 
 == Quick start :
+
+This maven plugin use Neo4J database to store information and resolve them.
+If you haven't a Neo4J you can for test or on your local environment run a Neo4J with docker.
+
+----
+include::docker/docker-compose.yml[]
+----
+
+
+
 
 In your project pom.xml (or settings) we need to add some properties :
 
 ----
 <properties>
     <inugami.maven.plugin.analysis.project.base.name>your.base.package</inugami.maven.plugin.analysis.project.base.name>
-            <inugami.maven.plugin.analysis.writer.neo4j.url>bolt://localhost:7687</inugami.maven.plugin.analysis.writer.neo4j.url>
-        <inugami.maven.plugin.analysis.writer.neo4j.user>neo4j</inugami.maven.plugin.analysis.writer.neo4j.user>
-            <inugami.maven.plugin.analysis.writer.neo4j.password>password</inugami.maven.plugin.analysis.writer.neo4j.password>
+    <inugami.maven.plugin.analysis.writer.neo4j.url>bolt://localhost:7687</inugami.maven.plugin.analysis.writer.neo4j.url>
+    <inugami.maven.plugin.analysis.writer.neo4j.user>neo4j</inugami.maven.plugin.analysis.writer.neo4j.user>
+    <inugami.maven.plugin.analysis.writer.neo4j.password>password</inugami.maven.plugin.analysis.writer.neo4j.password>
 </properties>
 ----
 
@@ -28,7 +38,7 @@ In your project build definition :
 <plugin>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <extensions>true</extensions>
     <executions>
         <execution>
@@ -65,6 +75,125 @@ mvn info
 
 == Neo4j data structure :
 image::doc/nodes.png[]
+
+
+== Retrieve information :
+
+=== restServices
+
+----
+mvn info -Daction=restServices
+----
+
+----
+====================================
+CONSUMED REST ENDPOINTS
+====================================
+[GET] /lifecycles/lifecycles
+	uid:bc1f3a97f9551adb324c04afcec51a88754ddf38a6c585c80455b5d6ffd2c5f883f2ecb60038002406593a17e05919d8d6e034a257c3301777dad454097fb962
+	Method:io.inugami.demo.project.consumer.feign.LifecycleFeignClient.getLifecycles
+	response payload:
+		[
+		  {
+		    "serialVersionUID":"long",
+		    "name":"String",
+		    "title":"String",
+		    "states":[
+		      {
+		        "name":"String",
+		        "title":"String",
+		        "ref":"String",
+		        "role":"String",
+		        "next":["<<State>>"]
+		      }
+		    ],
+		    "statesNames":["<<State>>"],
+		    "globaleStates":["<<State>>"]
+		  }
+		]
+	Consume by:
+		- io.inugami.demo:project-consumer:0.0.1-SNAPSHOT:jar
+----
+
+=== queryDisplay
+----
+mvn info -Daction=queryDisplay
+
+
+No selected define. Queries available :
+	-Dquery=search_services_rest
+		description :Allow to search all rest services consume or expose by current project and these dependencies who expose/consume them
+
+	-Dquery=search_error_codes
+		description :Allow to search all error codes
+
+	-Dquery=search_consumers
+		description :Allow to search all consumed rest services
+----
+
+----
+mvn info -Daction=queryDisplay -Dquery=search_error_codes
+
+[INFO] selected query :
+Match (version:Version) where version.groupId= "io.inugami.demo" and version.artifactId="project-consumer" and version.version="0.0.1-SNAPSHOT"
+OPTIONAL MATCH (version)-[:PROJECT_DEPENDENCY*0..10]->(dependency:Version)-[:HAS_ERROR_CODE]->(error:ErrorCode)
+return dependency,
+       error
+----
+
+
+
+=== properties
+----
+mvn info -Daction=properties
+----
+
+=== queueInfo
+----
+mvn info -Daction=queueInfo
+----
+
+=== errorDisplay
+----
+mvn info -Daction=errorDisplay
+----
+
+=== specificsQuery
+----
+mvn info -Daction=specificsQuery
+----
+
+=== importData
+----
+mvn info -Daction=importData
+----
+
+=== Deployment management
+==== publish
+----
+mvn info -Daction=publish
+----
+
+==== unpublish
+----
+mvn info -Daction=unpublish
+----
+
+==== versionEnv
+----
+mvn info -Daction=versionEnv
+----
+
+==== envInfo
+----
+mvn info -Daction=envInfo
+----
+
+=== encodePassword
+----
+mvn info -Daction=encodePassword
+----
+
 
 == Analyzers :
 
@@ -170,37 +299,4 @@ This specific annotation is present in inugami-project-analysis-maven-plugin-ann
 
 
 
-== Extents with custom analyzers :
-This plugin allow to append plugin by including basic JAR dependencies. All plugin features are
-define by SPI interfaces.
-
-
-=== ProjectScanner
-
-----
-include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectScanner.java[lines=17..30]
-----
-
-
-=== ClassAnalyzer
-
-----
-include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ClassAnalyzer.java[lines=17..35]
-----
-
-=== ProjectPreAnalyzer
-
-----
-include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectPreAnalyzer.java[lines=17..32]
-----
-
-=== ProjectPostAnalyzer
-----
-include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ProjectPostAnalyzer.java[lines=17..33]
-----
-
-=== ResultWriter
-----
-include::inugami-project-analysis-maven-plugin-api-mvn/src/main/java/io/inugami/maven/plugin/analysis/api/actions/ResultWriter.java[lines=17..34]
-----
 
