@@ -224,26 +224,28 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final Node   service = Neo4jRenderingUtils.getNode(record.get("service"));
         final String type    = Neo4jRenderingUtils.getNodeName(record.get("serviceType"));
 
-        final DataRow row = new DataRow();
-        row.setRowColor(ConsoleColors.RED);
-        row.setUid(Neo4jRenderingUtils.getNodeName(record.get("service")));
+        if(service != null){
+            final DataRow row = new DataRow();
+            row.setRowColor(ConsoleColors.RED);
+            row.setUid(Neo4jRenderingUtils.getNodeName(record.get("service")));
 
-        switch (type == null ? "" : type) {
-            case "Rest":
-                row.setProperties(buildRestProperties(service, type));
-                break;
-            case "JMS":
-                row.setProperties(buildJmsProperties(service, type));
-                break;
-            case "rabbitMq":
-                row.setProperties(buildRabbitProperties(service, type));
-                break;
-            default:
-                row.setProperties(buildOtherProperties(service, type));
-                break;
+            switch (type == null ? "" : type) {
+                case "Rest":
+                    row.setProperties(buildRestProperties(service, type));
+                    break;
+                case "JMS":
+                    row.setProperties(buildJmsProperties(service, type));
+                    break;
+                case "rabbitMq":
+                    row.setProperties(buildRabbitProperties(service, type));
+                    break;
+                default:
+                    row.setProperties(buildOtherProperties(service, type));
+                    break;
+            }
+
+            currentData.add(row);
         }
-
-        currentData.add(row);
     }
 
     private Map<String, Serializable> buildRestProperties(final Node service, final String type) {
