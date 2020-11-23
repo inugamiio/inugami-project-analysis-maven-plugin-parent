@@ -160,8 +160,20 @@ mvn info -Daction=errorDisplay
 
 === specificsQuery
 ----
-mvn info -Daction=specificsQuery
+mvn info -Daction=specificsQuery -Dexport=true
 ----
+
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dexport
+|boolean
+|false
+|Allow to export result as CSV file
+
+|===
 
 === importData
 ----
@@ -174,20 +186,106 @@ mvn info -Daction=importData
 mvn info -Daction=publish
 ----
 
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Denv
+|String
+| null
+|Destination environment
+
+|-DenvLevel
+|int
+| 0
+|For sort environment it's necessary to add a weight on this one
+
+|-DenvType
+|String
+| null
+|The environment type (like DEV, INT, PREP, PROD..)
+
+
+|-DautoUnpublish
+|boolean
+|false
+|Allow remove relationship between artifact and environment node
+
+
+|-DautoUnpublish
+|boolean
+|false
+|Allow remove relationship between artifact and environment node
+
+|-DjustThisVersion
+|boolean
+|false
+|If you want to clean all versions relationship between artifact and environment node
+
+|-DpreviousEnv
+|boolean
+|false
+|For cleaning previous staging environment
+|===
+
+
 ==== unpublish
 ----
 mvn info -Daction=unpublish
 ----
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dexport
+|boolean
+|false
+|Allow to export result as CSV file
+
+|-DuseMavenProject
+|boolean
+|false
+|Allow to use current project GAV and not ask for this information
+|===
+
 
 ==== versionEnv
 ----
 mvn info -Daction=versionEnv
 ----
 
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dexport
+|boolean
+|false
+|Allow to export result as CSV file
+
+|-DuseMavenProject
+|boolean
+|false
+|Allow to use current project GAV and not ask for this information
+|===
+
+
 ==== envInfo
 ----
 mvn info -Daction=envInfo
 ----
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dexport
+|boolean
+|false
+|Allow to export result as CSV file
+|===
 
 === encodePassword
 ----
