@@ -35,6 +35,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
+import org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import java.io.File;
@@ -78,11 +79,8 @@ public class MavenInfo extends AbstractMojo {
                                                                .getAbsolutePath());
         configuration.put("interactive", isInteractive(configuration));
 
-        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(PropertiesInitialization.class);
-        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
-            propsInitializer.initialize(configuration, project, settings, secDispatcher);
-        }
+
+        initProperties(configuration);
 
 
         ProjectInformation handler = null;
@@ -110,6 +108,24 @@ public class MavenInfo extends AbstractMojo {
         }
         else {
             displayHelp();
+        }
+    }
+
+    private void initProperties(final ConfigHandler<String, String> configuration) {
+        if (secDispatcher instanceof DefaultSecDispatcher) {
+            final String securityPath = configuration.getOrDefault("settings.security",
+                                                                   new File(System.getProperty("user.home")
+                                                                                    + File.separator
+                                                                                    + ".m2/settings-security.xml")
+                                                                           .getAbsolutePath());
+
+            ((DefaultSecDispatcher)secDispatcher).setConfigurationFile(securityPath);
+        }
+
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
+            propsInitializer.initialize(configuration, project, settings, secDispatcher);
         }
     }
 

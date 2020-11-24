@@ -26,7 +26,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
-/**
+/*
  * Allow to configure Neo4J from servers definition in maven settings.xml
  * <pre>
  *     <server>

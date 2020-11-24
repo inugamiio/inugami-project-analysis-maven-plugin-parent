@@ -48,14 +48,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
-import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.impl.ArtifactResolver;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
-import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 import org.xeustechnologies.jcl.JarClassLoader;
 
 import java.io.File;
@@ -207,13 +205,7 @@ public class CheckMojo extends AbstractMojo {
         configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
                                                                .getAbsolutePath());
         configuration.put("interactive", "false");
-        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(PropertiesInitialization.class);
-        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
-            propsInitializer.initialize(configuration, project, settings, secDispatcher);
-        }
-
-        overrideServerCredentials(configuration);
+        initProperties(configuration);
 
         return ScanConext.builder()
                          .basedir(basedir)
@@ -240,6 +232,24 @@ public class CheckMojo extends AbstractMojo {
             }
         }
         return result;
+    }
+
+    private void initProperties(final ConfigHandler<String, String> configuration) {
+        if (secDispatcher instanceof DefaultSecDispatcher) {
+            final String securityPath = configuration.getOrDefault("settings.security",
+                                                                   new File(System.getProperty("user.home")
+                                                                                    + File.separator
+                                                                                    + ".m2/settings-security.xml")
+                                                                           .getAbsolutePath());
+
+            ((DefaultSecDispatcher) secDispatcher).setConfigurationFile(securityPath);
+        }
+
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
+            propsInitializer.initialize(configuration, project, settings, secDispatcher);
+        }
     }
 
     private Set<Gav> extractDirectDependencies() {
@@ -337,33 +347,6 @@ public class CheckMojo extends AbstractMojo {
     private void appendIfNotNull(final Collection<String> values, final Consumer<Collection<String>> consumer) {
         if (values != null) {
             consumer.accept(values);
-        }
-    }
-
-    private void overrideServerCredentials(
-            final ConfigHandler<String, String> configuration) throws MojoExecutionException {
-        final Server neo4J = settings.getServer("neo4j");
-        if (neo4J != null) {
-            final Xpp3Dom config = neo4J.getConfiguration() instanceof Xpp3Dom ? (Xpp3Dom) neo4J.getConfiguration()
-                                                                               : null;
-            try {
-                final Xpp3Dom url = config.getChild("url");
-                if (url != null) {
-                    configuration.put("inugami.maven.plugin.analysis.writer.neo4j.url", url.getValue());
-                }
-                if (neo4J.getUsername() != null && neo4J.getUsername().startsWith("{")) {
-                    configuration.put("inugami.maven.plugin.analysis.writer.neo4j.user",
-                                      secDispatcher.decrypt(neo4J.getUsername()));
-                }
-
-
-                configuration.put("inugami.maven.plugin.analysis.writer.neo4j.password",
-                                  secDispatcher.decrypt(neo4J.getPassword()));
-
-            }
-            catch (final SecDispatcherException e) {
-                throw new MojoExecutionException(e.getMessage());
-            }
         }
     }
 }
