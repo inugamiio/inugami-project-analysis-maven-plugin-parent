@@ -16,7 +16,37 @@ This maven plugin use Neo4J database to store information and resolve them.
 If you haven't a Neo4J you can for test or on your local environment run a Neo4J with docker.
 
 ----
-include::docker/docker-compose.yml[]
+version: "3"
+services:
+  neo4j:
+    image: neo4j:4.1.1
+    ports:
+      - "7474:7474"
+      - "7473:7473"
+      - "7687:7687"
+    expose:
+      - 7474
+      - 7473
+      - 7687
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - EXTENSION_SCRIPT=/var/lib/neo4j/import/neo4j-bootstrap.sh
+      - NEO4J_dbms_unmanaged__extension__classes=semantics.extension=/rdf
+      - NEO4J_dbms_security_procedures_whitelist=apoc.coll.*,apoc.load.*,semantics.*
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*,semantics.*
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+    volumes:
+      - ./import:/var/lib/neo4j/import
+      - ./conf:/var/lib/neo4j/conf
+      - ./logs:/var/lib/neo4j/logs
+      - ./plugins:/var/lib/neo4j/plugins
+    networks:
+      - neo4j-network
+networks:
+  neo4j-network:
+    driver: bridge
 ----
 
 
