@@ -22,6 +22,7 @@ import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
+import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.Settings;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -53,6 +57,11 @@ public class MavenInfo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
+    @Parameter(defaultValue = "${settings}", readonly = true, required = true)
+    private Settings settings;
+
+    @Component
+    private SecDispatcher secDispatcher;
 
     // =========================================================================
     // API
@@ -61,7 +70,6 @@ public class MavenInfo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         log.info("Retrieve information for project : {}:{}:{}:", project.getGroupId(), project.getArtifactId(),
                  project.getVersion());
-
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
@@ -69,6 +77,14 @@ public class MavenInfo extends AbstractMojo {
         configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
                                                                .getAbsolutePath());
         configuration.put("interactive", isInteractive(configuration));
+
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
+            propsInitializer.initialize(configuration, project, settings, secDispatcher);
+        }
+
+
         ProjectInformation handler = null;
 
         final String action = configuration.get("action");
@@ -96,6 +112,7 @@ public class MavenInfo extends AbstractMojo {
             displayHelp();
         }
     }
+
 
     private String isInteractive(final ConfigHandler<String, String> configuration) {
         final Boolean result = configuration.containsKey("i") || configuration.containsKey("interactive");
@@ -126,4 +143,5 @@ public class MavenInfo extends AbstractMojo {
         }
         return result;
     }
+
 }

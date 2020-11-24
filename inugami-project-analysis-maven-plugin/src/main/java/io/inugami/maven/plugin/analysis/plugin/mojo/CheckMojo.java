@@ -23,10 +23,7 @@ import io.inugami.api.spi.SpiLoader;
 import io.inugami.api.tools.ConsoleColors;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
-import io.inugami.maven.plugin.analysis.api.actions.ProjectPostAnalyzer;
-import io.inugami.maven.plugin.analysis.api.actions.ProjectPreAnalyzer;
-import io.inugami.maven.plugin.analysis.api.actions.ProjectScanner;
-import io.inugami.maven.plugin.analysis.api.actions.ResultWriter;
+import io.inugami.maven.plugin.analysis.api.actions.*;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
@@ -51,9 +48,14 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
+import org.apache.maven.settings.Server;
+import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.impl.ArtifactResolver;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 import org.xeustechnologies.jcl.JarClassLoader;
 
 import java.io.File;
@@ -103,6 +105,12 @@ public class CheckMojo extends AbstractMojo {
 
     @Component
     private PluginDescriptor pluginDescriptor;
+
+    @Parameter(defaultValue = "${settings}", readonly = true, required = true)
+    private Settings settings;
+
+    @Component
+    private SecDispatcher secDispatcher;
 
     // =========================================================================
     // API
@@ -199,6 +207,14 @@ public class CheckMojo extends AbstractMojo {
         configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
                                                                .getAbsolutePath());
         configuration.put("interactive", "false");
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
+            propsInitializer.initialize(configuration, project, settings, secDispatcher);
+        }
+
+        overrideServerCredentials(configuration);
+
         return ScanConext.builder()
                          .basedir(basedir)
                          .project(project)
@@ -324,4 +340,30 @@ public class CheckMojo extends AbstractMojo {
         }
     }
 
+    private void overrideServerCredentials(
+            final ConfigHandler<String, String> configuration) throws MojoExecutionException {
+        final Server neo4J = settings.getServer("neo4j");
+        if (neo4J != null) {
+            final Xpp3Dom config = neo4J.getConfiguration() instanceof Xpp3Dom ? (Xpp3Dom) neo4J.getConfiguration()
+                                                                               : null;
+            try {
+                final Xpp3Dom url = config.getChild("url");
+                if (url != null) {
+                    configuration.put("inugami.maven.plugin.analysis.writer.neo4j.url", url.getValue());
+                }
+                if (neo4J.getUsername() != null && neo4J.getUsername().startsWith("{")) {
+                    configuration.put("inugami.maven.plugin.analysis.writer.neo4j.user",
+                                      secDispatcher.decrypt(neo4J.getUsername()));
+                }
+
+
+                configuration.put("inugami.maven.plugin.analysis.writer.neo4j.password",
+                                  secDispatcher.decrypt(neo4J.getPassword()));
+
+            }
+            catch (final SecDispatcherException e) {
+                throw new MojoExecutionException(e.getMessage());
+            }
+        }
+    }
 }
