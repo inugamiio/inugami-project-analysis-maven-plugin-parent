@@ -1,7 +1,9 @@
 = Inugami Project analysis maven plugin
 :toc:
+:source-highlighter: pygments
 
 == Last Release:
+[source,xml]
 ----
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
@@ -15,6 +17,8 @@
 This maven plugin use Neo4J database to store information and resolve them.
 If you haven't a Neo4J you can for test or on your local environment run a Neo4J with docker.
 
+.docker-compose.yml
+[source,yaml]
 ----
 version: "3"
 services:
@@ -54,6 +58,7 @@ networks:
 
 In your project pom.xml (or settings) we need to add some properties :
 
+[source,xml]
 ----
 <properties>
     <inugami.maven.plugin.analysis.project.base.name>your.base.package</inugami.maven.plugin.analysis.project.base.name>
@@ -64,6 +69,7 @@ In your project pom.xml (or settings) we need to add some properties :
 ----
 
 In your project build definition :
+[source,xml]
 ----
 <plugin>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
@@ -91,12 +97,14 @@ In your project build definition :
 
 First you need to analyse your project to send into Neo4j data :
 
+[source,bash]
 ----
 mvn analyze
 ----
 
 After this analyse you can see in Neo4j your project informations or execute maven phase  info
 
+[source,bash]
 ----
 mvn info
 ----
@@ -111,6 +119,7 @@ image::doc/nodes.png[]
 
 === restServices
 
+[source,bash]
 ----
 mvn info -Daction=restServices
 ----
@@ -146,6 +155,8 @@ CONSUMED REST ENDPOINTS
 ----
 
 === queryDisplay
+
+[source,bash]
 ----
 mvn info -Daction=queryDisplay
 
@@ -161,6 +172,8 @@ No selected define. Queries available :
 		description :Allow to search all consumed rest services
 ----
 
+
+[source,bash]
 ----
 mvn info -Daction=queryDisplay -Dquery=search_error_codes
 
@@ -174,21 +187,29 @@ return dependency,
 
 
 === properties
+
+[source,bash]
 ----
 mvn info -Daction=properties
 ----
 
 === queueInfo
+
+[source,bash]
 ----
 mvn info -Daction=queueInfo
 ----
 
 === errorDisplay
+
+[source,bash]
 ----
 mvn info -Daction=errorDisplay
 ----
 
 === specificsQuery
+
+[source,bash]
 ----
 mvn info -Daction=specificsQuery -Dexport=true
 ----
@@ -206,12 +227,16 @@ mvn info -Daction=specificsQuery -Dexport=true
 |===
 
 === importData
+
+[source,bash]
 ----
 mvn info -Daction=importData
 ----
 
 === Deployment management
 ==== publish
+
+[source,bash]
 ----
 mvn info -Daction=publish
 ----
@@ -260,6 +285,8 @@ mvn info -Daction=publish
 
 
 ==== unpublish
+
+[source,bash]
 ----
 mvn info -Daction=unpublish
 ----
@@ -281,6 +308,8 @@ mvn info -Daction=unpublish
 
 
 ==== versionEnv
+
+[source,bash]
 ----
 mvn info -Daction=versionEnv
 ----
@@ -303,6 +332,8 @@ mvn info -Daction=versionEnv
 
 
 ==== envInfo
+
+[source,bash]
 ----
 mvn info -Daction=envInfo
 ----
@@ -318,6 +349,8 @@ mvn info -Daction=envInfo
 |===
 
 === encodePassword
+
+[source,bash]
 ----
 mvn info -Daction=encodePassword
 ----
@@ -407,6 +440,8 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 Spring doesn't include annotation for ActiveMQ senders. Sending message is execute by calling JmsTemplate.
 To retrieve this information, Inugami project have specific annotation to flag your methods who send JMS events :
 
+
+[source,java]
 ----
 @JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
 public void sendCreateUser(final String someParameter, @JmsSenderBody final User user) {
@@ -417,6 +452,7 @@ public void sendCreateUser(final String someParameter, @JmsSenderBody final User
 The destination have the same sens than Spring @JmsListener destination.
 
 This specific annotation is present in inugami-project-analysis-maven-plugin-annotations :
+[source,xml]
 ----
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
