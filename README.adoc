@@ -258,7 +258,7 @@ This interface is contains into inugami_api artifact :
 </dependencies>
 ----
 
-This interface can be use over enum types or on class static fields.
+This interface can be use over enum types or on static class fields.
 [source,java]
 ----
 public enum IssuesError implements ErrorCode {
