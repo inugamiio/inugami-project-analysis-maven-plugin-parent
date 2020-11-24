@@ -26,6 +26,19 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
+/**
+ * Allow to configure Neo4J from servers definition in maven settings.xml
+ * <pre>
+ *     <server>
+ *         <id>neo4j</id>
+ *         <username>neo4j</username>
+ *         <password>{Yt5nGluOZ0sHzEiL7Le2IHFjtuTonkfx4yVEG3CYzZ8=}</password>
+ *         <configuration>
+ *           <url>bolt://localhost:7687</url>
+ *         </configuration>
+ *     </server>
+ * </pre>
+ */
 public class Neo4JServerPropertiesInitializer implements PropertiesInitialization {
 
 
