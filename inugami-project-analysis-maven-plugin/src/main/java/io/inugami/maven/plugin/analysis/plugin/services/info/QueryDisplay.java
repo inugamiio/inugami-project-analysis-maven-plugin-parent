@@ -16,12 +16,12 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.info;
 
-import io.inugami.api.exceptions.FatalException;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
+import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
 import io.inugami.maven.plugin.analysis.api.models.QueryDefinition;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
@@ -56,7 +56,7 @@ public class QueryDisplay implements ProjectInformation {
                 }
                 help.line();
             }
-            throw new FatalException(help.toString());
+            throw new ConfigurationException(help.toString());
         }
         else {
             final QueryDefinition queryDef = QueriesLoader.getQueryByName(queryName);

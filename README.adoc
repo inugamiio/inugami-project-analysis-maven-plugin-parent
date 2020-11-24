@@ -102,14 +102,18 @@ First you need to analyse your project to send into Neo4j data :
 mvn analyze
 ----
 
-After this analyse you can see in Neo4j your project informations or execute maven phase  info
+image::doc/analyze-01.png[]
+image::doc/analyze-02.png[]
+
+After this analyse you can see in Neo4j your project information or execute maven phase  info
 
 [source,bash]
 ----
 mvn info
 ----
+image::doc/info.png[]
 
-
+This phase require to specify an action to display information
 
 == Neo4j data structure :
 image::doc/nodes.png[]
@@ -123,55 +127,23 @@ image::doc/nodes.png[]
 ----
 mvn info -Daction=restServices
 ----
-
-----
-====================================
-CONSUMED REST ENDPOINTS
-====================================
-[GET] /lifecycles/lifecycles
-	uid:bc1f3a97f9551adb324c04afcec51a88754ddf38a6c585c80455b5d6ffd2c5f883f2ecb60038002406593a17e05919d8d6e034a257c3301777dad454097fb962
-	Method:io.inugami.demo.project.consumer.feign.LifecycleFeignClient.getLifecycles
-	response payload:
-		[
-		  {
-		    "serialVersionUID":"long",
-		    "name":"String",
-		    "title":"String",
-		    "states":[
-		      {
-		        "name":"String",
-		        "title":"String",
-		        "ref":"String",
-		        "role":"String",
-		        "next":["<<State>>"]
-		      }
-		    ],
-		    "statesNames":["<<State>>"],
-		    "globaleStates":["<<State>>"]
-		  }
-		]
-	Consume by:
-		- io.inugami.demo:project-consumer:0.0.1-SNAPSHOT:jar
-----
+image::doc/restServices-01.png[]
 
 === queryDisplay
+Query display allow to generate a Neo4J cypher query from current projet.
 
 [source,bash]
 ----
 mvn info -Daction=queryDisplay
-
-
-No selected define. Queries available :
-	-Dquery=search_services_rest
-		description :Allow to search all rest services consume or expose by current project and these dependencies who expose/consume them
-
-	-Dquery=search_error_codes
-		description :Allow to search all error codes
-
-	-Dquery=search_consumers
-		description :Allow to search all consumed rest services
 ----
+image::doc/queryDisplay-01.png[]
 
+Different queries are available, so it's require to specify which one you want to use.
+
+----
+mvn info -Daction=queryDisplay -Dquery=search_services_rest
+----
+image::doc/queryDisplay-02.png[]
 
 [source,bash]
 ----

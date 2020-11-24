@@ -140,28 +140,30 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
     private void mapResultSet(final Map<String, List<PropertyDto>> properties, final Node artifact,
                               final Node property) {
-        final String artifactName = artifact.get("name").asString();
+        if(artifact!=null){
+            final String artifactName = artifact.get("name").asString();
 
-        List<PropertyDto> artifactProperties = properties.get(artifactName);
-        if (artifactProperties == null) {
-            artifactProperties = new ArrayList<>();
-            properties.put(artifactName, artifactProperties);
+            List<PropertyDto> artifactProperties = properties.get(artifactName);
+            if (artifactProperties == null) {
+                artifactProperties = new ArrayList<>();
+                properties.put(artifactName, artifactProperties);
 
+            }
+
+            //@formatter:off
+            artifactProperties.add(PropertyDto.builder()
+                                              .name(property.get("name").asString())
+                                              .type(property.get("propertyType").asString())
+                                              .defaultValue(notNull(property.get("defaultValue")) ? property.get("defaultValue").asString() : null)
+                                              .mandatory(notNull(property.get("mandatory")) ?property.get("mandatory").asBoolean() : false)
+                                              .constraintType(notNull(property.get("constraintType")) ? property.get("constraintType").asString() : null)
+                                              .constraintDetail(notNull(property.get("constraintDetail")) ? property.get("constraintDetail").asString() : null)
+
+                                              .useForConditionalBean(notNull(property.get("useForConditionalBean")) ?property.get("useForConditionalBean").asBoolean() : false)
+                                              .matchIfMissing(notNull(property.get("matchIfMissing")) ?property.get("matchIfMissing").asBoolean() : false)
+                                              .build());
+            //@formatter:on
         }
-
-        //@formatter:off
-        artifactProperties.add(PropertyDto.builder()
-                                          .name(property.get("name").asString())
-                                          .type(property.get("propertyType").asString())
-                                          .defaultValue(notNull(property.get("defaultValue")) ? property.get("defaultValue").asString() : null)
-                                          .mandatory(notNull(property.get("mandatory")) ?property.get("mandatory").asBoolean() : false)
-                                          .constraintType(notNull(property.get("constraintType")) ? property.get("constraintType").asString() : null)
-                                          .constraintDetail(notNull(property.get("constraintDetail")) ? property.get("constraintDetail").asString() : null)
-
-                                          .useForConditionalBean(notNull(property.get("useForConditionalBean")) ?property.get("useForConditionalBean").asBoolean() : false)
-                                          .matchIfMissing(notNull(property.get("matchIfMissing")) ?property.get("matchIfMissing").asBoolean() : false)
-                                          .build());
-        //@formatter:on
     }
 
     private void renderProperty(final PropertyDto property, final JsonBuilder writer, final int propertyColSize,

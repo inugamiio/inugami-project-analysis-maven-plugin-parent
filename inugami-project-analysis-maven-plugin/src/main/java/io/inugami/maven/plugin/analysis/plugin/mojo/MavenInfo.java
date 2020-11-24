@@ -22,6 +22,7 @@ import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
+import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class MavenInfo extends AbstractMojo {
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
-        configuration.put("project.basedir",project.getBasedir().getAbsolutePath());
+        configuration.put("project.basedir", project.getBasedir().getAbsolutePath());
         configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
                                                                .getAbsolutePath());
         configuration.put("interactive", isInteractive(configuration));
@@ -76,8 +77,16 @@ public class MavenInfo extends AbstractMojo {
             handler = SpiLoader.INSTANCE.loadSpiService(String.valueOf(action), ProjectInformation.class, true);
             try {
                 handler.process(project, configuration);
-            }catch (final Exception e){
-                log.error(e.getMessage(),e);
+            }
+            catch (final Exception e) {
+                if (e instanceof ConfigurationException) {
+                    log.error(e.getMessage());
+                }
+                else {
+                    log.error(e.getMessage(), e);
+                }
+
+                throw e;
             }
             finally {
                 handler.shutdown();
