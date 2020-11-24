@@ -457,7 +457,7 @@ This specific annotation is present in inugami-project-analysis-maven-plugin-ann
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
-    <version>${project.version}</version>
+    <version>${io.inugami.maven.plugin.analysis.version}</version>
 </dependency>
 ----
 
