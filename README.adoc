@@ -121,13 +121,30 @@ image::doc/nodes.png[]
 
 == Retrieve information :
 
-=== restServices
+After analyze calling, all information are present into Neo4J. We are able to create some query in Neo4J to retrieve
+information. But in some commons use case is easier to invoke the plugin to display result.
 
+Also all additional properties can be define in pom.xml properties or in common line invocation (with -D prefix).
+
+=== restServices
+One of nightmare in microservice architecture is to known interconnections between services.
+What's append if I change my service ?  Who consume some service and which version is use ?
+To help in this resolution, the inugami analysis plugin will analyze all Springboot Rest endpoint and feign client
+to detect interdependencies between projects.
+
+REST endpoints can be define in current project or in a transitive dependency. The plugin retrieve
+transitive dependencies over 10 sub levels.
 [source,bash]
 ----
 mvn info -Daction=restServices
 ----
+The color code is the same as Swagger, all GET endpoints are blue, green for POST, and red for DELETE.
+
 image::doc/restServices-01.png[]
+
+In case where some projects consume an endpoint these will be describe in the result :
+
+image::doc/restServices-02.png[]
 
 === queryDisplay
 Query display allow to generate a Neo4J cypher query from current projet.
@@ -143,53 +160,185 @@ Different queries are available, so it's require to specify which one you want t
 ----
 mvn info -Daction=queryDisplay -Dquery=search_services_rest
 ----
-image::doc/queryDisplay-02.png[]
+
 
 [source,bash]
 ----
 mvn info -Daction=queryDisplay -Dquery=search_error_codes
-
-[INFO] selected query :
-Match (version:Version) where version.groupId= "io.inugami.demo" and version.artifactId="project-consumer" and version.version="0.0.1-SNAPSHOT"
-OPTIONAL MATCH (version)-[:PROJECT_DEPENDENCY*0..10]->(dependency:Version)-[:HAS_ERROR_CODE]->(error:ErrorCode)
-return dependency,
-       error
 ----
 
-
+image::doc/queryDisplay-02.png[]
 
 === properties
+Properties action is able to display project properties. This action retrieve also dependencies properties.
+Currently these properties are extract from Spring properties (@Value, bean properties, conditionals beans,
+properties usages on JMS or RabbitMQ listeners)
+
+
+If property have no default value, it will be display in red.
+In yellow we have properties who enable some beans.
+If property have bean validator constraints, these will be display too.
 
 [source,bash]
 ----
 mvn info -Daction=properties
 ----
+image::doc/properties.png[]
 
 === queueInfo
+Queue information have the same approach than restServices but for JMS and RabbitMQ.
+This one is able to detect producer and listeners. It able to trace event payload and all
+information on queue binding.
 
+Like restServices, the queueInfo retrieve information over 10 levels of transitives dependencies.
 [source,bash]
 ----
 mvn info -Daction=queueInfo
 ----
 
-=== errorDisplay
+image::doc/queue.png[]
 
+=== errorDisplay
+Error management is the key for make better application. But it's require to communicate these with others teams.
+Write some wiki page to describe all errors isn't the best way. It take lot of time and quickly some desynchronizations appear.
+This errors list must be generate from source code.
 [source,bash]
 ----
 mvn info -Daction=errorDisplay
 ----
 
+
+Per default Inugami plugin use the Inugami error interface to detect error code :
+
+[source,java]
+----
+package io.inugami.api.exceptions;
+import java.util.function.BiConsumer;
+
+public interface ErrorCode {
+    public ErrorCode getCurrentErrorCode();
+
+    default int getStatusCode() {
+        return getCurrentErrorCode() == null ? 500 : getCurrentErrorCode().getStatusCode();
+    }
+
+    default String getErrorCode() {
+        return getCurrentErrorCode() == null ? "undefine" : getCurrentErrorCode().getErrorCode();
+    }
+
+    default String getMessage() {
+        return getCurrentErrorCode() == null ? "error" : getCurrentErrorCode().getMessage();
+    }
+
+    default String getMessageDetail() {
+        return getCurrentErrorCode() == null ? null : getCurrentErrorCode().getMessageDetail();
+    }
+
+    default String getErrorType() {
+        return getCurrentErrorCode() == null ? "technical" : getCurrentErrorCode().getErrorType();
+    }
+
+    default String getPayload() {
+        return getCurrentErrorCode() == null ? null : getCurrentErrorCode().getPayload();
+    }
+
+    default BiConsumer<String, Exception> getErrorHandler() {
+        return getCurrentErrorCode() == null ? null : getCurrentErrorCode().getErrorHandler();
+    }
+}
+----
+
+This interface is contains into inugami_api artifact :
+[source,xml]
+----
+<dependencies>
+    <groupId>io.inugami</groupId>
+    <artifactId>inugami_api</artifactId>
+    <version>2.0.0</version>
+</dependencies>
+----
+
+This interface can be use over enum types or on class static fields.
+[source,java]
+----
+public enum IssuesError implements ErrorCode {
+
+    ISSUES_1(newBuilder()
+            .setStatusCode(400)
+            .setMessage("issues request invalid")
+            .setErrorType("input")),
+
+    ISSUES_1_1(newBuilder()
+            .setStatusCode(400)
+            .setMessage("issue uid is mandatory")
+            .setFonctionnalError());
+
+    private final ErrorCode errorCode;
+
+    private IssuesError(final ErrorCodeBuilder errorBuilder) {
+        errorCode = errorBuilder.setErrorCode(this.name()).build();
+    }
+
+    @Override
+    public ErrorCode getCurrentErrorCode() {
+        return errorCode;
+    }
+}
+----
+
+But you can define your error code interface. In this cas it's require to add a property in your pom.xml
+[source,java]
+----
+<properties>
+   <inugami.maven.plugin.analysis.analyzer.errorCode.interface>io.inugami.demo.spring.boot.training.api.exceptions.ErrorCode</inugami.maven.plugin.analysis.analyzer.errorCode.interface>
+</properties>
+----
+
+In this case the plugin will retrieve all values define in your interface.
+
+image::doc/errorCode.png[]
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dinugami.maven.plugin.analysis.analyzer.errorCode.interface
+|String
+|io.inugami.api.exceptions.ErrorCode
+|The error code interface to use
+
+|-Dexport
+| boolean
+| false
+| allow to export result as CSV files
+|===
+
 === specificsQuery
+The plugin is able to retrieve information from Neo4J and display them.
+If you need to execute a specific cypher query is possible to use this plugin to do that.
 
 [source,bash]
 ----
 mvn info -Daction=specificsQuery -Dexport=true
 ----
 
+image::doc/specificQuery.png[]
 
 .Additional configuration
 |===
 |Property | type | default value | description
+
+
+|-Dinugami.query.path
+|String
+|null
+|Path to cypher query, if isn't define the plugin will ask for this one in prompt.
+
+|-Dinugami.skip.properties
+|String (Regex Pattern)
+|null
+|for not display some nodes properties
+
 
 |-Dexport
 |boolean
@@ -199,38 +348,113 @@ mvn info -Daction=specificsQuery -Dexport=true
 |===
 
 === importData
+For import some data into Neo4J is possible to call the importData action.
+This action is able to execute a cypher query or to import a JSON model.
 
+For both it's require to specify the property *inugami.query.path* to define the import script path
 [source,bash]
 ----
 mvn info -Daction=importData
 ----
 
-=== Deployment management
-==== publish
+For cypher query is just a basic .cql script. This one must juste have for extension *.cql*
 
-[source,bash]
+For the JSON model, is the internal plugin model as JSON :
+[source,json]
 ----
-mvn info -Daction=publish
+{
+  "nodes": [
+    {
+      "type": "String",
+      "uid": "String",
+      "name": "String",
+      "properties": {
+        "<String>": "Serializable",
+        "<String>": 42
+      }
+    }
+  ],
+  "nodesToDeletes": ["String"],
+  "createScripts" : ["String(Cypher)"],
+  "relationships": [
+    {
+      "from": "String",
+      "to": "String",
+      "type": "String",
+      "properties": {
+        "<String>": "Serializable"
+      }
+    }
+  ],
+  "relationshipsToDeletes": [
+    {
+      "from": "String",
+      "to": "String",
+      "type": "String",
+      "properties": {
+        "<String>": "Serializable"
+      }
+    }
+  ],
+  "deleteScripts": ["String(Cypher)"]
+}
 ----
 
 .Additional configuration
 |===
 |Property | type | default value | description
 
+
+|-Dinugami.query.path
+|String
+|null
+|Path to cypher or JSON import script query, if isn't define the plugin will ask for this one in prompt.
+
+
+|===
+=== Deployment management
+
+Deployment process on microservices is very complicate. It's very important to know which microservice is on which
+environment.
+
+==== publish
+To be able to detect which artifact is on an environment is necessary to add information into Neo4J.
+To do that is more easier to use the publish action.
+
+[source,bash]
+----
+mvn info -Daction=publish
+----
+
+image::doc/publish-01.png[]
+
+image::doc/publish-02.png[]
+
+On *DEPLOY* we can see that the plugin have add the deployment date (on ISO date and timestamp, both are on system time zone and on UTC)
+.Additional configuration
+|===
+|Property | type | default value | description
+
+
+|-DuseMavenProject
+|Boolean
+| null
+|Allow to use current project GAV, if null the plugin will ask for this one in prompt.
+
 |-Denv
 |String
 | null
-|Destination environment
+|Destination environment, if null the plugin will ask for this one in prompt.
 
 |-DenvLevel
 |int
 | 0
-|For sort environment it's necessary to add a weight on this one
+|For sort environment it's necessary to add a weight on this one, if null the plugin will ask for this one in prompt.
 
 |-DenvType
 |String
 | null
-|The environment type (like DEV, INT, PREP, PROD..)
+|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will ask for this one in prompt.
 
 
 |-DautoUnpublish
@@ -238,11 +462,6 @@ mvn info -Daction=publish
 |false
 |Allow remove relationship between artifact and environment node
 
-
-|-DautoUnpublish
-|boolean
-|false
-|Allow remove relationship between artifact and environment node
 
 |-DjustThisVersion
 |boolean
@@ -252,11 +471,14 @@ mvn info -Daction=publish
 |-DpreviousEnv
 |boolean
 |false
-|For cleaning previous staging environment
+|For cleaning previous staging environment, if autoUnpublish is enable and this value isn't define the plugin will ask for it.
 |===
 
 
 ==== unpublish
+
+It's very close than publish but in this action we will remove deployments relationship on a specific version and a
+environment.
 
 [source,bash]
 ----
@@ -267,25 +489,49 @@ mvn info -Daction=unpublish
 |===
 |Property | type | default value | description
 
-|-Dexport
-|boolean
-|false
-|Allow to export result as CSV file
-
 |-DuseMavenProject
 |boolean
 |false
 |Allow to use current project GAV and not ask for this information
+
+|-Denv
+|String
+| null
+|Destination environment, if null the plugin will ask for this one in prompt.
+
+|-DenvLevel
+|int
+| 0
+|For sort environment it's necessary to add a weight on this one, if null the plugin will ask for this one in prompt.
+
+|-DenvType
+|String
+| null
+|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will ask for this one in prompt.
+
+|-DjustThisVersion
+|boolean
+|false
+|If you want to clean all versions relationship between artifact and environment node
+
 |===
 
 
 ==== versionEnv
+The action versionEnv is able to verify if your project have all dependencies available on all environments.
 
 [source,bash]
 ----
 mvn info -Daction=versionEnv
 ----
 
+In this example, the project *project-consumer* use a REST endpoint produce by *spring-boot-training-lifecycle*.
+But this one isn't deploy on PREP_2. The service project *project-consumer* can't works correctly on this
+environment.
+
+Also this project use a REST endpoint `[GET]/comments/comments` but no producer have been detected
+
+image::doc/versionEnv.png[]
 
 .Additional configuration
 |===
@@ -304,11 +550,15 @@ mvn info -Daction=versionEnv
 
 
 ==== envInfo
+This action is quick representation of environment deployment status. It's able to retrieve which artifacts are present
+on which environments.
 
 [source,bash]
 ----
 mvn info -Daction=envInfo
 ----
+
+image::doc/envInfo.png[]
 
 .Additional configuration
 |===
@@ -321,12 +571,25 @@ mvn info -Daction=envInfo
 |===
 
 === encodePassword
+This action is just a small tool to encode password or sensible value in AES.
+
 
 [source,bash]
 ----
 mvn info -Daction=encodePassword
 ----
 
+image::doc/password.png[]
+
+.Additional configuration
+|===
+|Property | type | default value | description
+
+|-Dinugami.maven.plugin.analysis.secret
+|String (16 chars)
+|null
+|AES passphrase
+|===
 
 == Analyzers :
 
