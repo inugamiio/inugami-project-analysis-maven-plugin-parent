@@ -44,7 +44,8 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
 
     private static final List<String> QUERIES = List.of(
             "META-INF/queries/search_consumers.cql",
-            "META-INF/queries/search_produce.cql"
+            "META-INF/queries/search_produce.cql",
+            "META-INF/queries/search_services_rest.cql"
                                                        );
 
     // =========================================================================
