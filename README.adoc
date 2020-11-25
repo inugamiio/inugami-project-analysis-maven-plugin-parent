@@ -268,7 +268,7 @@ All specific annotations are contained into an inugami artifact :
 This artifact contains only annotations, nothing else.
 
 === errorDisplay
-Error management essential to make better application. Interteam communication is a must.
+Error management is essential to make better applications. Interteam communication is a must.
 Writing wiki is not our way, it's time-consuming and quickly outdate.
 Inugami generates errors directly from code.
 [source,bash]
@@ -738,7 +738,6 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |errorCode
 |Allow to override the default error code "field". The method defined in error code interface resolves this field. Accessor prefix is ignored
 |===
-
 
 
 
