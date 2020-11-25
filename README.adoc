@@ -740,31 +740,5 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 |===
 
 
-==== Sender tracking
-Spring doesn't include annotation for ActiveMQ senders. Sending message is execute by calling JmsTemplate.
-To retrieve this information, Inugami project have specific annotation to flag your methods who send JMS events :
-
-
-[source,java]
-----
-@JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
-public void sendCreateUser(final String someParameter, @JmsSenderBody final User user) {
-    // implementation
-}
-----
-
-The destination have the same sens than Spring @JmsListener destination.
-
-This specific annotation is present in inugami-project-analysis-maven-plugin-annotations :
-[source,xml]
-----
-<dependency>
-    <groupId>io.inugami.maven.plugin.analysis</groupId>
-    <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
-    <version>${io.inugami.maven.plugin.analysis.version}</version>
-</dependency>
-----
-
-
 
 
