@@ -68,6 +68,24 @@ In your project pom.xml (or settings) we need to add some properties :
 </properties>
 ----
 
+You can also define Neo4J configuration into your maven settings :
+
+[source,xml]
+----
+<servers>
+    <servers>
+        <id>neo4j</id>
+        <username>neo4j</username>
+        <password>{Yt5nGluOZ0sHzEiL7Le2IHFjtuTonkfx4yVEG3CYzZ8=}</password>
+        <configuration>
+            <url>bolt://localhost:7687</url>
+        </configuration>
+    </servers>
+</servers>
+----
+In this case, your maven settings will overrides your pom.xml properties.
+
+
 In your project build definition :
 [source,xml]
 ----
