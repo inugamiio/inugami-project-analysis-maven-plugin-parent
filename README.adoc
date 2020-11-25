@@ -426,7 +426,7 @@ For both it's required to specify the property *inugami.query.path* to define th
 mvn info -Daction=importData
 ----
 
-For cypher query is just a basic .cql script. This one must juste have for extension *.cql*
+For cypher query is just a basic .cql script. This one must juste have for extension *.cql*. Neo4j has great documentation on cypher language : https://neo4j.com/docs/cypher-manual/current/
 
 For the JSON model, is the internal plugin model as JSON :
 [source,json]
