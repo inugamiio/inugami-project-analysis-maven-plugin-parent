@@ -216,6 +216,57 @@ mvn info -Daction=queueInfo
 
 image::doc/queue.png[]
 
+To track correctly all JMS senders and RabbitMQ sender it's require to add annotations in your source code.
+
+For JMS :
+
+[source,java]
+----
+@JmsSender(destination = "${my.activeMq.onUserCreated.queue}", id = "create.user.queue")
+public void sendCreateUser(final String someParameter, @JmsEvent final User user) {
+    // process sending event
+}
+----
+
+For RabbitMQ :
+
+[source,bash]
+----
+@RabbitMqSender(echangeName = "${events.exchangeName}",
+                queue = "${events.method.user.queueName}",
+                routingKey = "${events.user.method.created.routingKey}"
+)
+public void fireEvent(@RabbitMqEvent  final UserCreatedEvent event) {
+    // process sending event
+}
+----
+
+If you use multi handler on RabbitLister you need to add annotation to specify which routing key is use :
+
+[source,java]
+----
+
+@RabbitMqHandlerInfo(routingKey = "${events.user.authenticated.routingKey}",
+typeId = "${events.user.authenticated.typeId}")
+@RabbitHandler
+public void onAuthenticated(final UserAuthenticatedEvent event) {
+    // process listen
+}
+----
+
+All specifics annotations are contains into an inugami artifact :
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
+    <version>${io.inugami.maven.plugin.analysis.version}</version>
+</dependency>
+----
+
+This artifact contains only annotations, nothing else.
+
 === errorDisplay
 Error management is the key for make better application. But it's require to communicate these with others teams.
 Write some wiki page to describe all errors isn't the best way. It take lot of time and quickly some desynchronizations appear.
