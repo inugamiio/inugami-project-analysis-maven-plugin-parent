@@ -15,7 +15,7 @@
 == Quick start :
 
 This maven plugin use Neo4J database to store information and resolve them.
-If you haven't a Neo4J you can for test or on your local environment run a Neo4J with docker.
+If you don't have Neo4J you can test on your local environment or run a Neo4J with docker.
 
 .docker-compose.yml
 [source,yaml]
@@ -83,7 +83,7 @@ You can also define Neo4J configuration into your maven settings :
     </servers>
 </servers>
 ----
-In this case, your maven settings will overrides your pom.xml properties.
+In this case, your maven settings will override your pom.xml properties.
 
 
 In your project build definition :
@@ -113,7 +113,7 @@ In your project build definition :
 </plugin>
 ----
 
-First you need to analyse your project to send into Neo4j data :
+First you need to analyse your project to send data into NEO4J:
 
 [source,bash]
 ----
@@ -123,7 +123,7 @@ mvn analyze
 image::doc/analyze-01.png[]
 image::doc/analyze-02.png[]
 
-After this analyse you can see in Neo4j your project information or execute maven phase  info
+After this analyse you can see in Neo4j your project information or just execute maven phase info
 
 [source,bash]
 ----
@@ -131,7 +131,7 @@ mvn info
 ----
 image::doc/info.png[]
 
-This phase require to specify an action to display information
+This phase requires to specify an action to display information
 
 == Neo4j data structure :
 image::doc/nodes.png[]
@@ -139,18 +139,18 @@ image::doc/nodes.png[]
 
 == Retrieve information :
 
-After analyze calling, all information are present into Neo4J. We are able to create some query in Neo4J to retrieve
-information. But in some commons use case is easier to invoke the plugin to display result.
+After analyze, all information is present into Neo4J. We can now query Neo4J to retrieve
+information. Attention : in some commons use cases it's easier to invoke the plugin to display result.
 
-Also all additional properties can be define in pom.xml properties or in common line invocation (with -D prefix).
+All additional properties can be defined in properties section of pom.xml or via command line invocation (with -D prefix).
 
 === restServices
-One of nightmare in microservice architecture is to known interconnections between services.
-What's append if I change my service ?  Who consume some service and which version is use ?
-To help in this resolution, the inugami analysis plugin will analyze all Springboot Rest endpoint and feign client
+One of common problems in microservice architecture is to known interconnections between services.
+What's happen if I change my service ? Who consume a service and which version is currently in use ?
+To address this issue, the inugami analysis plugin will analyze all Springboot Rest endpoint and feign clients
 to detect interdependencies between projects.
 
-REST endpoints can be define in current project or in a transitive dependency. The plugin retrieve
+REST endpoints can be defined in current project or as a transitive dependency. The plugin retrieve
 transitive dependencies over 10 sub levels.
 [source,bash]
 ----
@@ -160,12 +160,12 @@ The color code is the same as Swagger, all GET endpoints are blue, green for POS
 
 image::doc/restServices-01.png[]
 
-In case where some projects consume an endpoint these will be describe in the result :
+In case where some projects consume an endpoint these will be described in the result :
 
 image::doc/restServices-02.png[]
 
 === queryDisplay
-Query display allow to generate a Neo4J cypher query from current projet.
+Query display allows the generation of a Neo4J cypher query from the current projet.
 
 [source,bash]
 ----
@@ -173,7 +173,7 @@ mvn info -Daction=queryDisplay
 ----
 image::doc/queryDisplay-01.png[]
 
-Different queries are available, so it's require to specify which one you want to use.
+Different queries are available, so it's required to specify the one in use.
 
 ----
 mvn info -Daction=queryDisplay -Dquery=search_services_rest
@@ -188,14 +188,14 @@ mvn info -Daction=queryDisplay -Dquery=search_error_codes
 image::doc/queryDisplay-02.png[]
 
 === properties
-Properties action is able to display project properties. This action retrieve also dependencies properties.
-Currently these properties are extract from Spring properties (@Value, bean properties, conditionals beans,
+Properties action displays project properties. This action retrieves also dependencies properties.
+At this moment these properties are extracted from Spring properties (@Value, bean properties, conditionals beans,
 properties usages on JMS or RabbitMQ listeners)
 
 
-If property have no default value, it will be display in red.
-In yellow we have properties who enable some beans.
-If property have bean validator constraints, these will be display too.
+If a property has no default value, it will be displayed in red.
+In yellow, we have properties who enable some beans.
+If a property have bean validator constraints, these will be displayed too.
 
 [source,bash]
 ----
@@ -204,11 +204,11 @@ mvn info -Daction=properties
 image::doc/properties.png[]
 
 === queueInfo
-Queue information have the same approach than restServices but for JMS and RabbitMQ.
-This one is able to detect producer and listeners. It able to trace event payload and all
+Queue information have the same approach as restServices but for JMS and RabbitMQ.
+It's able to detect producers and listeners, tracing event payload and all
 information on queue binding.
 
-Like restServices, the queueInfo retrieve information over 10 levels of transitives dependencies.
+Like restServices, the queueInfo retrieves information over 10 levels of transitive dependencies.
 [source,bash]
 ----
 mvn info -Daction=queueInfo
@@ -216,7 +216,7 @@ mvn info -Daction=queueInfo
 
 image::doc/queue.png[]
 
-To track correctly all JMS senders and RabbitMQ sender it's require to add annotations in your source code.
+To track all JMS senders and RabbitMQ sender it's required to add annotations in your source code.
 
 For JMS :
 
@@ -241,7 +241,7 @@ public void fireEvent(@RabbitMqEvent  final UserCreatedEvent event) {
 }
 ----
 
-If you use multi handler on RabbitLister you need to add annotation to specify which routing key is use :
+If you use multi-handler on RabbitLister you need to add an annotation specifying which routing key is in use :
 
 [source,java]
 ----
@@ -254,7 +254,7 @@ public void onAuthenticated(final UserAuthenticatedEvent event) {
 }
 ----
 
-All specifics annotations are contains into an inugami artifact :
+All specific annotations are contained into an inugami artifact :
 
 [source,xml]
 ----
@@ -268,9 +268,9 @@ All specifics annotations are contains into an inugami artifact :
 This artifact contains only annotations, nothing else.
 
 === errorDisplay
-Error management is the key for make better application. But it's require to communicate these with others teams.
-Write some wiki page to describe all errors isn't the best way. It take lot of time and quickly some desynchronizations appear.
-This errors list must be generate from source code.
+Error management is essential to make better applications. Interteam communication is a must.
+Writing wiki is not our way, it's time-consuming and quickly outdate.
+Inugami generates errors directly from code.
 [source,bash]
 ----
 mvn info -Daction=errorDisplay
@@ -317,7 +317,7 @@ public interface ErrorCode {
 }
 ----
 
-This interface is contains into inugami_api artifact :
+This interface is present in inugami_api artifact :
 [source,xml]
 ----
 <dependencies>
@@ -327,7 +327,7 @@ This interface is contains into inugami_api artifact :
 </dependencies>
 ----
 
-This interface can be use over enum types or on static class fields.
+This interface can be used over enum types or on static class fields.
 [source,java]
 ----
 public enum IssuesError implements ErrorCode {
@@ -355,7 +355,7 @@ public enum IssuesError implements ErrorCode {
 }
 ----
 
-But you can define your error code interface. In this cas it's require to add a property in your pom.xml
+You can define your error code interface, to do so just add a property in your pom.xml
 [source,java]
 ----
 <properties>
@@ -363,7 +363,7 @@ But you can define your error code interface. In this cas it's require to add a 
 </properties>
 ----
 
-In this case the plugin will retrieve all values define in your interface.
+In this case the plugin will retrieve all values defined in your interface.
 
 image::doc/errorCode.png[]
 
@@ -379,7 +379,7 @@ image::doc/errorCode.png[]
 |-Dexport
 | boolean
 | false
-| allow to export result as CSV files
+| allow exporting results as CSV files
 |===
 
 === specificsQuery
@@ -417,10 +417,10 @@ image::doc/specificQuery.png[]
 |===
 
 === importData
-For import some data into Neo4J is possible to call the importData action.
+To import some data into Neo4J it's possible to call the importData action.
 This action is able to execute a cypher query or to import a JSON model.
 
-For both it's require to specify the property *inugami.query.path* to define the import script path
+For both it's required to specify the property *inugami.query.path* to define the import script path
 [source,bash]
 ----
 mvn info -Daction=importData
@@ -477,18 +477,18 @@ For the JSON model, is the internal plugin model as JSON :
 |-Dinugami.query.path
 |String
 |null
-|Path to cypher or JSON import script query, if isn't define the plugin will ask for this one in prompt.
+|Path to cypher or JSON import script query, if it's not defined the plugin will prompt for a value.
 
 
 |===
 === Deployment management
 
-Deployment process on microservices is very complicate. It's very important to know which microservice is on which
+Microservices complicate the deployment process. It's very important to know which microservice is on which
 environment.
 
 ==== publish
-To be able to detect which artifact is on an environment is necessary to add information into Neo4J.
-To do that is more easier to use the publish action.
+You need to pass some additional information to Neo4J to detect which artifact is on wich environment.
+The easiest way is to use the "publish action".
 
 [source,bash]
 ----
@@ -499,7 +499,7 @@ image::doc/publish-01.png[]
 
 image::doc/publish-02.png[]
 
-On *DEPLOY* we can see that the plugin have add the deployment date (on ISO date and timestamp, both are on system time zone and on UTC)
+On *DEPLOY* we can see that the plugin has added the deployment date (on ISO date and timestamp, both are on system time zone and on UTC)
 .Additional configuration
 |===
 |Property | type | default value | description
@@ -508,45 +508,45 @@ On *DEPLOY* we can see that the plugin have add the deployment date (on ISO date
 |-DuseMavenProject
 |Boolean
 | null
-|Allow to use current project GAV, if null the plugin will ask for this one in prompt.
+|Allow using current project GAV, if null the plugin will prompt for a value.
 
 |-Denv
 |String
 | null
-|Destination environment, if null the plugin will ask for this one in prompt.
+|Destination environment, if null the plugin will prompt for a value.
 
 |-DenvLevel
 |int
 | 0
-|For sort environment it's necessary to add a weight on this one, if null the plugin will ask for this one in prompt.
+|To sort environments it's necessary to add weight, if null the plugin will prompt for a value.
 
 |-DenvType
 |String
 | null
-|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will ask for this one in prompt.
+|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will prompt for a value.
 
 
 |-DautoUnpublish
 |boolean
 |false
-|Allow remove relationship between artifact and environment node
+|Allow remove relationship between an artifact and an environment node
 
 
 |-DjustThisVersion
 |boolean
 |false
-|If you want to clean all versions relationship between artifact and environment node
+|If you want to clean all version relationship between an artifact and an environment node
 
 |-DpreviousEnv
 |boolean
 |false
-|For cleaning previous staging environment, if autoUnpublish is enable and this value isn't define the plugin will ask for it.
+|For cleaning previous staging environment, this value will be prompted if not defined on an enabled autoPublish.
 |===
 
 
 ==== unpublish
 
-It's very close than publish but in this action we will remove deployments relationship on a specific version and a
+It's very closer than publish but in this action we will remove deployments relationship on a specific version and an
 environment.
 
 [source,bash]
@@ -561,27 +561,27 @@ mvn info -Daction=unpublish
 |-DuseMavenProject
 |boolean
 |false
-|Allow to use current project GAV and not ask for this information
+|Allow using current project GAV and not ask for this information
 
 |-Denv
 |String
 | null
-|Destination environment, if null the plugin will ask for this one in prompt.
+|Destination environment, if null the plugin will prompt for a value.
 
 |-DenvLevel
 |int
 | 0
-|For sort environment it's necessary to add a weight on this one, if null the plugin will ask for this one in prompt.
+|To sort environments it's necessary to add weight, if null the plugin will prompt for a value.
 
 |-DenvType
 |String
 | null
-|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will ask for this one in prompt.
+|The environment type (like DEV, INT, PREP, PROD..), if null the plugin will prompt for a value.
 
 |-DjustThisVersion
 |boolean
 |false
-|If you want to clean all versions relationship between artifact and environment node
+|If you want to clean all version relationship between an artifact and an environment node
 
 |===
 
@@ -594,11 +594,11 @@ The action versionEnv is able to verify if your project have all dependencies av
 mvn info -Daction=versionEnv
 ----
 
-In this example, the project *project-consumer* use a REST endpoint produce by *spring-boot-training-lifecycle*.
-But this one isn't deploy on PREP_2. The service project *project-consumer* can't works correctly on this
+In this example, the project *project-consumer* is using a REST endpoint produced by *spring-boot-training-lifecycle*.
+PREP_2 is not deployed. The service project *project-consumer* can't work correctly on this
 environment.
 
-Also this project use a REST endpoint `[GET]/comments/comments` but no producer have been detected
+Also, this project use a REST endpoint `[GET]/comments/comments` but no producer have been detected
 
 image::doc/versionEnv.png[]
 
@@ -609,17 +609,17 @@ image::doc/versionEnv.png[]
 |-Dexport
 |boolean
 |false
-|Allow to export result as CSV file
+|Allow exporting result as CSV file
 
 |-DuseMavenProject
 |boolean
 |false
-|Allow to use current project GAV and not ask for this information
+|Allow using current project GAV and not ask for this information
 |===
 
 
 ==== envInfo
-This action is quick representation of environment deployment status. It's able to retrieve which artifacts are present
+This action is a quick representation of an environment deployment status. It's able to retrieve which artifacts are present
 on which environments.
 
 [source,bash]
@@ -640,7 +640,7 @@ image::doc/envInfo.png[]
 |===
 
 === encodePassword
-This action is just a small tool to encode password or sensible value in AES.
+This action is just a small tool to encode a password or sensible value in AES.
 
 
 [source,bash]
@@ -685,11 +685,11 @@ To resolve project REST endpoint exposition, this analyzer scan all SpringBoot R
 |inugami.maven.plugin.analysis.analyzer.restControllers.enable
 |boolean
 |true
-|Allow to disable feign client analyzer
+|Allow disabling feign client analyzer
 |===
 
 === Spring properties
-Most part of issues on project come from wrong properties configuration.
+Bad properties configuration is the source of most problems on a spring project.
 This analyzer scan all properties injected by @Value annotation or Bean configuration definition.
 
 .Properties
@@ -699,11 +699,11 @@ This analyzer scan all properties injected by @Value annotation or Bean configur
 |inugami.maven.plugin.analysis.analyzer.properties.enable
 |boolean
 |true
-|Allow to disable feign client analyzer
+|Allow disabling feign client analyzer
 |===
 
 === ActiveMQ
-For resolve activeMQ consumers and listeners, this analyzer is able to scan all Spring @JmsListener annotation.
+To resolve activeMQ consumers and listeners, this analyzer is scanning all Spring @JmsListener annotation.
 
 .Properties
 |===
@@ -712,12 +712,12 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 |inugami.maven.plugin.analysis.analyzer.jms.enable
 |boolean
 |true
-|Allow to disable feign client analyzer
+|Allow disabling feign client analyzer
 |===
 
 
 === Error code
-For resolve activeMQ consumers and listeners, this analyzer is able to scan all Spring @JmsListener annotation.
+To resolve activeMQ consumers and listeners, this analyzer is scanning all Spring @JmsListener annotation.
 
 .Properties
 |===
@@ -726,7 +726,7 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 |inugami.maven.plugin.analysis.analyzer.errorCode.enable
 |boolean
 |true
-|Allow to disable error codeanalyzer
+|Allow disabling error code analyzer
 
 |inugami.maven.plugin.analysis.analyzer.errorCode.interface
 |String
@@ -736,9 +736,8 @@ For resolve activeMQ consumers and listeners, this analyzer is able to scan all 
 |inugami.maven.plugin.analysis.analyzer.errorCode.fieldName
 |String
 |errorCode
-|Allow to override the default error code "field". This field is resolve with method define in error code interface. Accessor prefix is ignore
+|Allow to override the default error code "field". The method defined in error code interface resolves this field. Accessor prefix is ignored
 |===
-
 
 
 
