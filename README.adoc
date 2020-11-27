@@ -673,6 +673,11 @@ Feign clients analyzer scan all feign client interface to resolve project consum
 |boolean
 |true
 |Allow to disable feign client analyzer
+
+|inugami.maven.plugin.analysis.analyzer.restControllers.strict
+|boolean
+|true
+|if this mode isn't enable, only mandatory fields in models have been used for identify REST endpoint
 |===
 
 === SpringBoot RestControllers
@@ -686,6 +691,11 @@ To resolve project REST endpoint exposition, this analyzer scan all SpringBoot R
 |boolean
 |true
 |Allow disabling feign client analyzer
+
+|inugami.maven.plugin.analysis.analyzer.restControllers.strict
+|boolean
+|true
+|if this mode isn't enable, only mandatory fields in models have been used for identify REST endpoint
 |===
 
 === Spring properties
