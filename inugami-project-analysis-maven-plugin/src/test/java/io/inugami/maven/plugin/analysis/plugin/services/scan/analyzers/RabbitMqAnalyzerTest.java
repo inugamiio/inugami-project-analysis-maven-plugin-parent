@@ -205,7 +205,7 @@ class RabbitMqAnalyzerTest {
                         queue = "${events.method.user.queueName}",
                         routingKey = "${events.user.method.created.routingKey}"
         )
-        public void fireEvent(final UserCreatedEvent event) {
+        public void fireEvent(@RabbitMqEvent  final UserCreatedEvent event) {
 
         }
     }

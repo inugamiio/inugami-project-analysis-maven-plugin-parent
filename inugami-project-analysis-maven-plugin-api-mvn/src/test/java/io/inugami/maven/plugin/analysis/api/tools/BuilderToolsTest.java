@@ -25,7 +25,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
+import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.extractTag;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -54,19 +58,20 @@ class BuilderToolsTest {
 
     @Test
     void buildNodeVersion_withGav_shouldCreateNode() {
-        final Node nodeGav = buildNodeVersion(gav);
+        final Node nodeGav     = buildNodeVersion(gav);
         final Node nodeProject = buildNodeVersion(mavenProject);
         assertThat(nodeGav.getUid()).isEqualTo(nodeProject.getUid());
         assertThat(nodeGav.getUid()).isEqualTo("io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar");
     }
 
     @Test
-    void buildGavNodeArtifact_withGav_shouldBuildNode(){
-        final Node nodeGav = buildGavNodeArtifact(gav);
+    void buildGavNodeArtifact_withGav_shouldBuildNode() {
+        final Node nodeGav     = buildGavNodeArtifact(gav);
         final Node nodeProject = buildArtifactNode(mavenProject);
         assertThat(nodeGav.getUid()).isEqualTo(nodeProject.getUid());
         assertThat(nodeGav.getUid()).isEqualTo("io.inugami.test:basic-artifact:jar");
     }
+
     @Test
     void testExtractMajorVersion() {
         assertThat(extractMajorVersion("3.17.1")).isEqualTo(3);
@@ -91,6 +96,40 @@ class BuilderToolsTest {
         assertThat(extractTag("3.17.1")).isEqualTo("");
         assertThat(extractTag("2.2.4.RELEASE")).isEqualTo("RELEASE");
         assertThat(extractTag("2.2.4.RC3")).isEqualTo("RC3");
+    }
+
+    @Test
+    void testBuildMoreInformation() {
+        final String json = "{\n" +
+                "  \"projectType\": \"microservice\",\n" +
+                "  \"jdk\": \"11\",\n" +
+                "  \"like\": 3,\n" +
+                "  \"forPrd\": true,\n" +
+                "  \"sub\": {\n" +
+                "    \"keyA\": true\n" +
+                "  },\n" +
+                "  \"children\": [\n" +
+                "    {\n" +
+                "      \"name\": \"aaa\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"name\": \"bbb\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+
+        final Map<String, Serializable> result = BuilderTools.buildMoreInformation(json);
+        assertThat(result).isNotEmpty();
+        assertThat(result.size()).isEqualTo(7);
+
+        assertThat(result.get("projectType")).isEqualTo("microservice");
+        assertThat(result.get("jdk")).isEqualTo("11");
+        assertThat(result.get("like")).isEqualTo(3);
+        assertThat(result.get("forPrd")).isEqualTo(Boolean.TRUE);
+        assertThat(result.get("sub_keyA")).isEqualTo(Boolean.TRUE);
+        assertThat(result.get("children_0_name")).isEqualTo("aaa");
+        assertThat(result.get("children_1_name")).isEqualTo("bbb");
 
     }
 }

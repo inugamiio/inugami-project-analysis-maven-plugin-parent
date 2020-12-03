@@ -16,9 +16,18 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
+import io.inugami.api.exceptions.UncheckedException;
+import io.inugami.api.loggers.Loggers;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
 import java.io.Serializable;
@@ -27,12 +36,14 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.isBasicType;
 
+@Slf4j
 public class BuilderTools {
 
     // =========================================================================
@@ -50,6 +61,7 @@ public class BuilderTools {
 
     public static final String RELATION_HAS_METHOD = "HAS_METHOD";
     public static final String RELATION_USE_BY     = "USE_BY";
+    public static final String SEP                 = "_";
 
     // =========================================================================
     // API
@@ -97,6 +109,92 @@ public class BuilderTools {
                    .name(project.getVersion())
                    .properties(additionalInfo)
                    .build();
+    }
+
+    public static Node buildNodeVersionFull(final MavenProject project, final ConfigHandler<String, String> config) {
+        final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
+        additionalInfo.put("groupId", project.getGroupId());
+        additionalInfo.put("artifactId", project.getArtifactId());
+        additionalInfo.put("version", project.getVersion());
+        additionalInfo.put("packaging", project.getPackaging());
+        additionalInfo.put("major", extractMajorVersion(project.getVersion()));
+        additionalInfo.put("minor", extractMinorVersion(project.getVersion()));
+        additionalInfo.put("patch", extractPatchVersion(project.getVersion()));
+        additionalInfo.put("tag", extractTag(project.getVersion()));
+
+        processIfNotNull(project.getDescription(), value -> additionalInfo.put("description", value));
+        processIfNotNull(project.getUrl(), value -> additionalInfo.put("url", value));
+        if (project.getScm() != null) {
+            processIfNotNull(project.getScm().getUrl(), value -> additionalInfo.put("scm", value));
+        }
+
+        final String otherInfo = config.grabOrDefault("inugami.maven.plugin.analysis.additional.info", null);
+        if (otherInfo != null) {
+            additionalInfo.putAll(buildMoreInformation(otherInfo));
+        }
+        return Node.builder()
+                   .type("Version")
+                   .uid(String.join(":", project.getGroupId(), project.getArtifactId(), project.getVersion(),
+                                    project.getPackaging()))
+                   .name(project.getVersion())
+                   .properties(additionalInfo)
+                   .build();
+    }
+
+    protected static Map<String, Serializable> buildMoreInformation(final String json) {
+        final LinkedHashMap<String, Serializable> result       = new LinkedHashMap<>();
+        final ObjectMapper                        objectMapper = ObjectMapperBuilder.build();
+
+        try {
+            final JsonNode tree = objectMapper.readTree(json);
+
+            result.putAll(flattenJson(tree, null));
+        }
+        catch (final JsonProcessingException e) {
+            Loggers.CONFIG.error("invalid inugami.maven.plugin.analysis.additional.info format : \n{}", json);
+            throw new UncheckedException(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    public static Map<String, Serializable> flattenJson(final JsonNode tree, final String parentPath) {
+        final Map<String, Serializable> result = new LinkedHashMap<>();
+        if (tree != null) {
+            switch (tree.getNodeType()) {
+                case STRING:
+                    processIfNotNull(parentPath, path -> result.put(path, tree.textValue()));
+                    break;
+                case ARRAY:
+                    for (int i = 0; i < tree.size(); i++) {
+                        String path = (parentPath == null ? "" : parentPath + SEP) + i;
+                        if (tree.get(i).getNodeType() != JsonNodeType.OBJECT && tree.get(i).getNodeType() != JsonNodeType.ARRAY) {
+                            path = path + SEP;
+                        }
+                        result.putAll(flattenJson(tree.get(i), path));
+                    }
+                    break;
+                case BOOLEAN:
+                    processIfNotNull(parentPath, path -> result.put(path, tree.booleanValue()));
+                    break;
+                case NUMBER:
+                    processIfNotNull(parentPath, path -> result.put(path, tree.numberValue()));
+                    break;
+                case OBJECT:
+                    final Iterator<Map.Entry<String, JsonNode>> iterator = tree.fields();
+                    while (iterator.hasNext()) {
+                        final Map.Entry<String, JsonNode> field = iterator.next();
+                        final String                      path  = (parentPath == null ? "" : parentPath + SEP);
+                        result.putAll(flattenJson(field.getValue(), path + field.getKey()));
+                    }
+                    break;
+                case POJO:
+                    log.info("{}", tree);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
     }
 
     public static Node buildGavNodeArtifact(final Gav gav) {
