@@ -102,11 +102,9 @@ public class GitLogScan implements ProjectScanner {
             final Node versionNode = buildNodeVersion(context.getProject());
             result.addNode(versionNode);
 
-            final List<Node> issues = buildIssues(gitLogs, context);
+            final ScanNeo4jResult issues = buildIssues(gitLogs, versionNode, context);
+            ScanNeo4jResult.merge(issues, result);
 
-            if (issues != null && !issues.isEmpty()) {
-                result.addRelationship(buildIssueRelationship(issues, versionNode));
-            }
             final Node scm = buildScmNode(gitLogs, versionNode.getUid());
             result.addNodeToDelete(scm.getUid());
             result.addNode(scm);
@@ -346,7 +344,7 @@ public class GitLogScan implements ProjectScanner {
     }
 
 
-    private List<Node> buildIssues(final List<GitLog> gitLogs, final ScanConext context) {
+    private ScanNeo4jResult buildIssues(final List<GitLog> gitLogs, final Node versionNode, final ScanConext context) {
         final List<IssueTackerProvider> providers = SpiLoader.INSTANCE
                 .loadSpiServicesByPriority(IssueTackerProvider.class);
 
@@ -372,19 +370,31 @@ public class GitLogScan implements ProjectScanner {
             }
         }
 
-        final List<Node> result = new ArrayList<>();
+        final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (!issues.isEmpty()) {
             for (final Map.Entry<IssueTackerProvider, Set<String>> entry : issues.entrySet()) {
                 final IssueTackerProvider provider = entry.getKey();
-                final List<Node>          nodes    = provider.buildNodes(entry.getValue());
-                if (nodes != null) {
-                    result.addAll(nodes);
+                try {
+                    final ScanNeo4jResult providerResult = provider.buildNodes(entry.getValue(), versionNode.getUid());
+                    ScanNeo4jResult.merge(providerResult, result);
+                }
+                catch (final Exception error) {
+                    log.error(error.getMessage(), error);
+                }
+            }
+            for (final IssueTackerProvider provider : issues.keySet()) {
+                try {
+                    provider.shutdown();
+                }
+                catch (final Exception error) {
+                    log.error(error.getMessage(), error);
                 }
             }
         }
 
         return result;
     }
+
 
     private List<Relationship> buildIssueRelationship(final List<Node> issues, final Node versionNode) {
         final List<Relationship> result = new ArrayList<>();

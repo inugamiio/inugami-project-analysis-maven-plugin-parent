@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.mojo;
 
+import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
@@ -24,6 +25,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -112,6 +114,12 @@ public class MavenInfo extends AbstractMojo {
     }
 
     private void initProperties(final ConfigHandler<String, String> configuration) {
+        if (project.getIssueManagement() != null) {
+            Asserts.notEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
+            Asserts.notEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
+            configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
+            configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
+        }
         if (secDispatcher instanceof DefaultSecDispatcher) {
             final String securityPath = configuration.getOrDefault("settings.security",
                                                                    new File(System.getProperty("user.home")
@@ -119,7 +127,7 @@ public class MavenInfo extends AbstractMojo {
                                                                                     + ".m2/settings-security.xml")
                                                                            .getAbsolutePath());
 
-            ((DefaultSecDispatcher)secDispatcher).setConfigurationFile(securityPath);
+            ((DefaultSecDispatcher) secDispatcher).setConfigurationFile(securityPath);
         }
 
         final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE

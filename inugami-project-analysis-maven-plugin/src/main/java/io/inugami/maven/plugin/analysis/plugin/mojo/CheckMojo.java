@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.mojo;
 
+import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.loggers.Loggers;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
@@ -26,6 +27,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.*;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
@@ -235,6 +237,13 @@ public class CheckMojo extends AbstractMojo {
     }
 
     private void initProperties(final ConfigHandler<String, String> configuration) {
+
+        if (project.getIssueManagement() != null) {
+            Asserts.notEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
+            Asserts.notEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
+            configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
+            configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
+        }
         if (secDispatcher instanceof DefaultSecDispatcher) {
             final String securityPath = configuration.getOrDefault("settings.security",
                                                                    new File(System.getProperty("user.home")

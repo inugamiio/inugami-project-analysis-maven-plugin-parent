@@ -16,22 +16,36 @@
  */
 package io.inugami.maven.plugin.analysis.api.scan.issue.tracker;
 
-import io.inugami.maven.plugin.analysis.api.models.Node;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
+import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 
-import java.util.List;
 import java.util.Set;
 
 public interface IssueTackerProvider {
 
+    String SYSTEM ="project.issue.management.system";
+    String URL ="project.issue.management.url";
+
     default boolean enable(final ScanConext context) {
-        final String toggle = context.getConfiguration().grabOrDefault(getFeatureName(), "false");
-        return Boolean.parseBoolean(toggle);
+        return enable(context.getConfiguration());
     }
 
-    String getFeatureName();
+    default boolean enable(final ConfigHandler<String, String> configuration) {
+        final String  system = configuration.grab(SYSTEM, null);
+        return system==null?false:system.equals(getSystemName());
+    }
+
+    default void postConstruct(final ConfigHandler<String, String> configuration) {
+
+    }
+    default void shutdown() {
+
+    }
+
+    String getSystemName();
 
     Set<String> extractTicketNumber(final String commitMessage);
 
-    List<Node> buildNodes(Set<String> tickets);
+    ScanNeo4jResult buildNodes(Set<String> tickets, String versionUid);
 }

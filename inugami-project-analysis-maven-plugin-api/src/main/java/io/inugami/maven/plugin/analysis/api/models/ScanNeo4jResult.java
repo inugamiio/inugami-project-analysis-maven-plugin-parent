@@ -129,4 +129,17 @@ public class ScanNeo4jResult implements JsonObject {
             consumer.accept(values.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         }
     }
+
+    public static void merge(final ScanNeo4jResult providerResult, final ScanNeo4jResult result) {
+        if(providerResult!=null && result!=null){
+            //@formatter:off
+            processIfNotNull(providerResult.getNodes(),                  values->result.addNode(values));
+            processIfNotNull(providerResult.getRelationships(),          values->result.addRelationship(values));
+            processIfNotNull(providerResult.getNodesToDeletes(),         values->result.addNodeToDelete(values));
+            processIfNotNull(providerResult.getRelationshipsToDeletes(), values->result.addRelationshipToDelete(values));
+            processIfNotNull(providerResult.getCreateScripts(),          values->result.addCreateScript(values));
+            processIfNotNull(providerResult.getDeleteScripts(),          values->result.addDeleteScript(values));
+            //@formatter:on
+        }
+    }
 }
