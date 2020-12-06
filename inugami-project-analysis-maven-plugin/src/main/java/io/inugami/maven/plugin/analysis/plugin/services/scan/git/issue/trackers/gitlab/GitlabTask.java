@@ -95,7 +95,6 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
                                                                Map.entry("Content-Type", "application/json"));
         final ObjectMapper        objectMapper = ObjectMapperBuilder.build();
         Node                      node         = null;
-        final List<Node>          nodeLinks    = null;
         switch (ticketType) {
             case MERGE_REQUEST:
                 node = processMergeRequest(headers, objectMapper);
