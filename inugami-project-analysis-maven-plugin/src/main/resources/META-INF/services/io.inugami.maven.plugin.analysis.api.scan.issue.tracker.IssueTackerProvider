@@ -1,0 +1,3 @@
+io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.GitLabIssueTrackerProvider
+io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.GitHubIssueTrackerProvider
+io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.JiraIssueTrackerProvider
