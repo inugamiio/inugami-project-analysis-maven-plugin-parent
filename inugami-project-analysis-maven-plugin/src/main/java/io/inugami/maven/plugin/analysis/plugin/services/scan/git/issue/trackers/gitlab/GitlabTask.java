@@ -279,7 +279,7 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
         }
 
         if (httpResult == null || httpResult.getStatusCode() != 200) {
-            log.error("can't call : {}", fullUrl.toString());
+            log.error("can't call : {}", fullUrl);
         }
         else {
             try {
