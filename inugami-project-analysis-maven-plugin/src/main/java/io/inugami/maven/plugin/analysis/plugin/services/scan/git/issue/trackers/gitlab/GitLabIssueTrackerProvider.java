@@ -17,10 +17,12 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.gitlab;
 
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.commons.threads.RunAndCloseService;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -32,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
+import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
 @Slf4j
 public class GitLabIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
@@ -44,14 +47,19 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
     public static final String TIMEOUT      = FEATURE_NAME + ".timeout";
     public static final String GITLAB       = "gitlab";
 
-    private static final String  GRP_FEATURE = "feature";
-    private static final String  GRP_PR      = "pr";
-    private static final Pattern REGEX       = Pattern.compile("(?<feature>[#][0-9]+)|(?<pr>[!][0-9]+)");
+    private static final String GRP_FEATURE     = "feature";
+    private static final String GRP_REF_FEATURE = "refFeature";
+    private static final String GRP_PR          = "pr";
+
+    private static final Pattern REGEX = Pattern
+            .compile("(?<feature>[#][0-9]+)|(?<pr>[!][0-9]+)|(?:[\\/](?<refFeature>[0-9]+)[\\s-_])");
 
     private String url;
+    private String urlPr;
     private long   timeout;
     private int    nbThreads;
     private String token;
+    private String projectSha;
 
     // =========================================================================
     // ACTIVATION
@@ -76,10 +84,12 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url       = configuration.grab(IssueTackerProvider.URL);
-        token     = configuration.grab(SERVER_TOKEN);
-        timeout   = configuration.grabLong(TIMEOUT, 30000L);
-        nbThreads = configuration.grabInt(NB_THREADS, 10);
+        url        = configuration.grab(IssueTackerProvider.URL);
+        urlPr      = configuration.grabOrDefault(PR_URL, url);
+        token      = configuration.grab(SERVER_TOKEN);
+        timeout    = configuration.grabLong(TIMEOUT, 30000L);
+        nbThreads  = configuration.grabInt(NB_THREADS, 10);
+        projectSha = new EncryptionUtils().encodeSha1(url);
     }
 
 
@@ -89,13 +99,18 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
     @Override
     public Set<String> extractTicketNumber(final String commitMessage) {
         final Set<String> result = new LinkedHashSet<>();
-        if (commitMessage != null && (commitMessage.contains("#") || commitMessage.contains("!"))) {
+        if (commitMessage != null && (commitMessage.contains("#") ||
+                commitMessage.contains("!") ||
+                commitMessage.contains("/"))) {
+
             final Matcher matcher = REGEX.matcher(commitMessage);
             while (matcher.find()) {
-                final String feature = matcher.group(GRP_FEATURE);
-                final String pr      = matcher.group(GRP_PR);
+                final String feature    = matcher.group(GRP_FEATURE);
+                final String refFeature = matcher.group(GRP_REF_FEATURE);
+                final String pr         = matcher.group(GRP_PR);
 
                 processIfNotNull(feature, value -> result.add(value));
+                processIfNotNull(refFeature, value -> result.add("#" + value));
                 processIfNotNull(pr, value -> result.add(value));
             }
 
@@ -107,24 +122,27 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
     public ScanNeo4jResult buildNodes(final Set<String> tickets, final String versionUid) {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
 
-        final List<ScanNeo4jResult>           extraInfo = new ArrayList<>();
-        final List<Callable<ScanNeo4jResult>> tasks     = new ArrayList<>();
+        final List<Callable<ScanNeo4jResult>> tasks = new ArrayList<>();
         if (tickets != null && !tickets.isEmpty()) {
             for (final String ticket : tickets) {
                 final String ticketId = ticket.trim();
                 if (ticketId.startsWith("!")) {
                     tasks.add(new GitlabTask(ticketId.substring(1),
-                                             GitlabTask.TicketType.MERGE_REQUEST,
+                                             IssueTrackerCommons.TicketType.MERGE_REQUEST,
                                              token,
                                              url,
-                                             versionUid));
+                                             urlPr,
+                                             versionUid,
+                                             projectSha));
                 }
                 else {
                     tasks.add(new GitlabTask(ticketId.substring(1),
-                                             GitlabTask.TicketType.ISSUE,
+                                             IssueTrackerCommons.TicketType.ISSUE,
                                              token,
                                              url,
-                                             versionUid));
+                                             urlPr,
+                                             versionUid,
+                                             projectSha));
                 }
             }
         }
