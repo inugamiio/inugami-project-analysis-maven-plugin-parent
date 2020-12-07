@@ -750,4 +750,51 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |===
 
 
+=== Git SCM (1.4.3-SNAPSHOT)
+Git scm analyzer allow to extract all commit since last project tag. If your project haven't tag yet, this analyzer
+retrieve all commit since repository creation.
 
+
+==== Issue Management
+the Git scm analyzer will extract issues and merge request from commit message. On each it will call your issue
+management to retrieve more information on tickets.
+
+To enable this behavior it's require to add `issueManagement` with link to SCM API in your pom.xml :
+
+*For GitLab :*
+[source,xml]
+----
+<issueManagement>
+    <system>gitlab</system>
+    <url>https://gitlab.com/api/v4/projects/123457890</url>
+</issueManagement>
+----
+
+*For GitHub :*
+[source,xml]
+----
+<issueManagement>
+    <system>github</system>
+    <url>https://api.github.com/repos/inugamiio/inugami-project-analysis-maven-plugin-parent</url>
+</issueManagement>
+----
+
+All issue management need credentials to grant access on REST API. To configure these you will add server tag in your
+maven settings.xml :
+
+[source,xml]
+----
+<servers>
+    <server>
+      <id>gitlab</id>
+      <privateKey>{MIAuTFbZUxsHC0aBub3Frxr1d/kik/yafcVYW6KDzqU=}</privateKey>
+    </server>
+
+    <server>
+      <id>github</id>
+      <privateKey>{s5Ydy14rYAwHekKyJxAYAFnFO6igA9/lykiQCT+ct8U=}</privateKey>
+    </server>
+</servers>
+----
+
+It's possible to encrypt your password with maven standard encryption mechanism (https://maven.apache.org/guides/mini/guide-encryption.html)
