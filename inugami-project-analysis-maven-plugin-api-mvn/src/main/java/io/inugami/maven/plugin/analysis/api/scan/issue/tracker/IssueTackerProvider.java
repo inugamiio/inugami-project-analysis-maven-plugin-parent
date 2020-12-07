@@ -32,7 +32,7 @@ public interface IssueTackerProvider {
     }
 
     default boolean enable(final ConfigHandler<String, String> configuration) {
-        final String  system = configuration.grab(SYSTEM, null);
+        final String  system = configuration.grabOrDefault(SYSTEM, null);
         return system==null?false:system.equals(getSystemName());
     }
 

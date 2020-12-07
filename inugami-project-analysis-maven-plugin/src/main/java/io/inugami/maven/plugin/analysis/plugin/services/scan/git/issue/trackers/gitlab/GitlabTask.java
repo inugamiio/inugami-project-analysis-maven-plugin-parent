@@ -48,6 +48,7 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
     public static final String UUID              = "id";
     public static final String FIELD_PROJECT_ID  = "project_id";
     public static final String HAS_ISSUE_LINK = "HAS_ISSUE_LINK";
+    public static final String TICKET_HAVE_VERSION = "TICKET_HAVE_VERSION";
 
     // =========================================================================
     // ENUM
@@ -111,6 +112,11 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
                                                .from(versionUid)
                                                .to(node.getUid())
                                                .type(HAVE_TICKET)
+                                               .build());
+            result.addRelationship(Relationship.builder()
+                                               .from(node.getUid())
+                                               .to(versionUid)
+                                               .type(TICKET_HAVE_VERSION)
                                                .build());
         }
         return result;
@@ -197,6 +203,7 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
             while (iterator.hasNext()) {
                 final JsonNode link          = iterator.next();
                 final Node     linkNeo4JNode = buildIssueNode(link, resultNeo4J);
+                resultNeo4J.addNode(linkNeo4JNode);
                 if(linkNeo4JNode!=null){
                     resultNeo4J.addRelationship(Relationship.builder()
                                                             .from(uid)

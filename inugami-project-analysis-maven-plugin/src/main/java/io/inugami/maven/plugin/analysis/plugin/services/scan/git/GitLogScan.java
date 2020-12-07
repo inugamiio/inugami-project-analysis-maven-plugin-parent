@@ -370,10 +370,16 @@ public class GitLogScan implements ProjectScanner {
             }
         }
 
+        return getNeo4jResult(versionNode, context, issues);
+    }
+
+    private synchronized ScanNeo4jResult getNeo4jResult(final Node versionNode, final ScanConext context,
+                                           final Map<IssueTackerProvider, Set<String>> issues) {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (!issues.isEmpty()) {
             for (final Map.Entry<IssueTackerProvider, Set<String>> entry : issues.entrySet()) {
                 final IssueTackerProvider provider = entry.getKey();
+                provider.postConstruct(context.getConfiguration());
                 try {
                     final ScanNeo4jResult providerResult = provider.buildNodes(entry.getValue(), versionNode.getUid());
                     ScanNeo4jResult.merge(providerResult, result);

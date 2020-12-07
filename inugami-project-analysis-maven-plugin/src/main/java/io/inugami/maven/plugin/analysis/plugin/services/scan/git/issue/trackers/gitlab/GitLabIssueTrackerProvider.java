@@ -16,9 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.gitlab;
 
-import io.inugami.api.exceptions.TechnicalException;
 import io.inugami.api.processors.ConfigHandler;
-import io.inugami.commons.threads.ThreadsExecutorService;
+import io.inugami.commons.threads.RunAndCloseService;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
@@ -27,10 +26,7 @@ import org.apache.maven.settings.Server;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,10 +48,10 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
     private static final String  GRP_PR      = "pr";
     private static final Pattern REGEX       = Pattern.compile("(?<feature>[#][0-9]+)|(?<pr>[!][0-9]+)");
 
-    private String                 url;
-    private ThreadsExecutorService threadsExecutorService;
-    private long                   timeout;
-    private String                 token;
+    private String url;
+    private long   timeout;
+    private int    nbThreads;
+    private String token;
 
     // =========================================================================
     // ACTIVATION
@@ -80,19 +76,12 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url                    = configuration.grab(IssueTackerProvider.URL);
-        token                  = configuration.grab(SERVER_TOKEN);
-        timeout                = configuration.grabLong(TIMEOUT, 30000L);
-        threadsExecutorService = new ThreadsExecutorService(GITLAB,
-                                                            configuration.grabInt(NB_THREADS, 10),
-                                                            false,
-                                                            configuration.grabLong(TIMEOUT, 30000L));
+        url       = configuration.grab(IssueTackerProvider.URL);
+        token     = configuration.grab(SERVER_TOKEN);
+        timeout   = configuration.grabLong(TIMEOUT, 30000L);
+        nbThreads = configuration.grabInt(NB_THREADS, 10);
     }
 
-    @Override
-    public void shutdown() {
-        threadsExecutorService.shutdown();
-    }
 
     // =========================================================================
     // API
@@ -140,19 +129,15 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
             }
         }
 
-        List<ScanNeo4jResult> resultSet = null;
-        if (!tasks.isEmpty()) {
-            try {
-                resultSet = threadsExecutorService.runAndGrab(tasks, timeout);
-            }
-            catch (final TechnicalException error) {
-                log.error(error.getMessage(), error);
-            }
+        return retrieveNodeInformation(result, tasks);
+    }
 
-        }
+    private ScanNeo4jResult retrieveNodeInformation(final ScanNeo4jResult result,
+                                                    final List<Callable<ScanNeo4jResult>> tasks) {
+        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(GITLAB, timeout, nbThreads, tasks).run();
 
-        if (resultSet != null) {
-            for (final ScanNeo4jResult itemResult : resultSet) {
+        for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
+            if (itemResult != null) {
                 ScanNeo4jResult.merge(itemResult, result);
             }
         }
