@@ -756,10 +756,12 @@ retrieve all commit since repository creation.
 
 After analyze, new nodes types appear :
 
+- Scm, who contains all commit details
 - MergeRequest, to retrace all merges requests on version. If you use feature branch, the specified issue will be retrieve too  (for example with branch name `feature/123_my_feature`, issue *123* will be extracted).
 - Issue
 - Issue label
 
+image::doc/git_scm.png[]
 
 image::doc/github_issues.png[]
 
