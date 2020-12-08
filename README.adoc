@@ -754,6 +754,16 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 Git scm analyzer allow to extract all commit since last project tag. If your project haven't tag yet, this analyzer
 retrieve all commit since repository creation.
 
+After analyze, new nodes types appear :
+
+- MergeRequest
+- Issue
+- Issue label
+
+
+image::doc/github_issues.png[]
+
+image::doc/github_merge_request.png[]
 
 ==== Issue Management
 the Git scm analyzer will extract issues and merge request from commit message. On each it will call your issue
@@ -798,3 +808,18 @@ maven settings.xml :
 ----
 
 It's possible to encrypt your password with maven standard encryption mechanism (https://maven.apache.org/guides/mini/guide-encryption.html)
+
+
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.issue.tracker.pr.url
+|String
+|${issueManagement.url}
+|If you use another repository to manage your project backlog, `issueManagement.url` must be configure on it. But to trace
+merge request you should define `inugami.maven.plugin.analysis.issue.tracker.pr.url` with the issue management of your
+source code repository
+
+|===
