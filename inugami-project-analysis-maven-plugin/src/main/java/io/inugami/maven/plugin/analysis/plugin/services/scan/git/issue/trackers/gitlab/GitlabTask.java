@@ -43,13 +43,12 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String FIELD_TITLE      = "title";
+
     public static final String FIELD_WEB_URL    = "web_url";
     public static final String FIELD_DIFF_REFS  = "diff_refs";
     public static final String FIELD_START_SHA  = "start_sha";
     public static final String FIELD_LABELS     = "labels";
     public static final String FIELD_PROJECT_ID = "project_id";
-
 
     private final String                         id;
     private final IssueTrackerCommons.TicketType ticketType;
@@ -230,16 +229,6 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
         return result;
     }
 
-    private String extract(final String key, final JsonNode json) {
-        String result = null;
-        if (json != null) {
-            final JsonNode node = json.get(key);
-            if (node != null && !node.isNull()) {
-                result = node.asText();
-            }
-        }
-        return result;
-    }
 
     // =========================================================================
     // TOOLS

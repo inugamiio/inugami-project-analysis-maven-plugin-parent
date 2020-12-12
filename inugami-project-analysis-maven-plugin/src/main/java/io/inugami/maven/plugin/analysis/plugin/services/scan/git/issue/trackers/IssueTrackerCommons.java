@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,4 +57,21 @@ public final class IssueTrackerCommons {
     public static final String PR_URL              = "inugami.maven.plugin.analysis.issue.tracker.pr.url";
     public static final String FIELD_IID           = "iid";
     public static final String UUID                = "id";
+    public static final String FIELD_TITLE         = "title";
+
+    public static String extract(final String key, final JsonNode json) {
+        String result = null;
+        if (json != null) {
+            final JsonNode node = json.get(key);
+            if (node != null && !node.isNull()) {
+                result = node.asText();
+            }
+        }
+        return result;
+    }
+
+    public static boolean isNotNull(final JsonNode jsonNode) {
+        return jsonNode != null && !jsonNode.isNull();
+    }
+
 }

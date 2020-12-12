@@ -791,6 +791,17 @@ To enable this behavior it's require to add `issueManagement` with link to SCM A
 </issueManagement>
 ----
 
+
+*For Jira :*
+[source,xml]
+----
+<issueManagement>
+    <system>jira</system>
+    <url>https://jira.url</url>
+</issueManagement>
+----
+
+
 All issue management need credentials to grant access on REST API. To configure these you will add server tag in your
 maven settings.xml :
 
@@ -805,6 +816,12 @@ maven settings.xml :
     <server>
       <id>github</id>
       <privateKey>{s5Ydy14rYAwHekKyJxAYAFnFO6igA9/lykiQCT+ct8U=}</privateKey>
+    </server>
+
+    <server>
+      <id>jira</id>
+      <username>{1Jur5y14rYAwHekKyJxAYAFnFO6igA9/lyki+ct8U=}</username>
+      <password>{s5Ydy14rYAwHekKyJxAYAFnFO6igA9/lykiQCT+ct8U=}</password>
     </server>
 </servers>
 ----
@@ -825,3 +842,64 @@ merge request you should define `inugami.maven.plugin.analysis.issue.tracker.pr.
 source code repository
 
 |===
+
+
+===== Jira custom fields
+Jira allow to define custom fields on your issues. To extract these you can create
+a SPI implementation of interface `i.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
+
+[source,java]
+----
+public interface JiraCustomFieldsAppender {
+    void append(String issueId,
+                JsonNode json,
+                LinkedHashMap<String, Serializable> issueProperties,
+                ScanNeo4jResult neo4jResult);
+}
+----
+
+.Parameters
+|===
+|Property | type |  description
+
+|issueId
+|String
+|Current issue uid
+
+|json
+|com.fasterxml.jackson.databind.JsonNode
+|Tree representation of current Json response. For more information on Jira Rest API see https://docs.atlassian.com/software/jira/docs/api/REST/8.13.2/#api/2/issue-getIssue
+
+|issueProperties
+|LinkedHashMap<String, Serializable>
+|Current properties
+
+|neo4jResult
+|io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult
+|Allow to create another nodes or relationships
+|===
+
+Your implementation can be in classpath or linked on plugin dependencies.
+All implementation must be declare into `src/resources/META-INF/services/io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
+
+Example :
+
+src/resources/META-INF/services/io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender :
+[source]
+----
+io.app.JiraCustomFieldExtractor
+----
+
+[source,java]
+----
+package io.app;
+
+public class JiraCustomFieldExtractor implements JiraCustomFieldsAppender {
+    public void append(String issueId,
+                JsonNode json,
+                LinkedHashMap<String, Serializable> issueProperties,
+                ScanNeo4jResult neo4jResult){
+        // implementation
+    }
+}
+----

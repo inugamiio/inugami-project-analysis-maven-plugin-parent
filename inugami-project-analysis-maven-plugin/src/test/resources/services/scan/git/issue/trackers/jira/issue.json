@@ -1,0 +1,85 @@
+{
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "Story",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_Story"
+  }, {
+    "name" : "connectors",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_connectors"
+  }, {
+    "name" : "Story",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_Story"
+  }, {
+    "name" : "INU-3",
+    "properties" : {
+      "issueType" : "Story",
+      "title" : "write documentation",
+      "url" : "http://localhost/browse/INU-3"
+    },
+    "type" : "Issue",
+    "uid" : "issue_Inugami_INU-3"
+  }, {
+    "name" : "Sub-task",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_Sub-task"
+  }, {
+    "name" : "INU-4",
+    "properties" : {
+      "description" : "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
+      "issueType" : "Sub-task",
+      "title" : "add http connector",
+      "url" : "http://localhost/browse/INU-4"
+    },
+    "type" : "Issue",
+    "uid" : "issue_Inugami_INU-4"
+  }, {
+    "name" : "INU-2",
+    "properties" : {
+      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac. Curabitur leo est, malesuada vitae orci nec, lacinia mollis neque. Ut dictum augue ac diam scelerisque fringilla. Duis posuere nulla sed ipsum aliquet placerat. Sed interdum quis enim eget suscipit. Vivamus ullamcorper lacus ac eros accumsan, eget auctor ipsum posuere. Maecenas sagittis risus in ullamcorper imperdiet.",
+      "issueType" : "Story",
+      "title" : "Add task to retrieve Jira information",
+      "url" : "http://localhost/browse/INU-2"
+    },
+    "type" : "Issue",
+    "uid" : "issue_Inugami_INU-2"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "issue_Inugami_INU-2",
+    "to" : "issue_label_Story",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "issue_Inugami_INU-2",
+    "to" : "issue_label_connectors",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "issue_Inugami_INU-3",
+    "to" : "issue_label_Story",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "issue_Inugami_INU-2",
+    "to" : "issue_Inugami_INU-3",
+    "type" : "HAS_ISSUE_LINK"
+  }, {
+    "from" : "issue_Inugami_INU-4",
+    "to" : "issue_label_Sub-task",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "issue_Inugami_INU-2",
+    "to" : "issue_Inugami_INU-4",
+    "type" : "HAS_ISSUE_LINK"
+  }, {
+    "from" : "io.inugami:project-consumer:1.0.0-SNAPSHOT",
+    "to" : "issue_Inugami_INU-2",
+    "type" : "HAVE_TICKET"
+  }, {
+    "from" : "issue_Inugami_INU-2",
+    "to" : "io.inugami:project-consumer:1.0.0-SNAPSHOT",
+    "type" : "TICKET_HAVE_VERSION"
+  } ],
+  "relationshipsToDeletes" : [ ]
+}
