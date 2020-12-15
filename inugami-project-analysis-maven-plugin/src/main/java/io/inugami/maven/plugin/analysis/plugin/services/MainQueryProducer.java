@@ -100,12 +100,25 @@ public class MainQueryProducer implements QueryProducer {
                                .description("Allow to retrieve artifact publishing information")
                                .build(),
 
-
                 QueryDefinition.builder()
                                .path("META-INF/queries/search_env_info.cql")
                                .name("search_env_info")
                                .type("cql")
                                .description("Allow to retrieve deployed artifacts on environments")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_release_note_simple.cql")
+                               .name("search_release_note_simple")
+                               .type("cql")
+                               .description("Allow to retrieve release note information")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path("META-INF/queries/search_release_note_full.cql")
+                               .name("search_release_note_full")
+                               .type("cql")
+                               .description("Allow to retrieve all release note information")
                                .build()
                       );
     }

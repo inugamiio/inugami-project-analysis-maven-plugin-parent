@@ -153,4 +153,8 @@ public final class Neo4jUtils {
             }
         }
     }
+
+    public static boolean isNotNull(final Value value){
+        return value !=null && !value.isNull();
+    }
 }

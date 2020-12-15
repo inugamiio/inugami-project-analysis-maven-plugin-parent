@@ -767,6 +767,10 @@ image::doc/github_issues.png[]
 
 image::doc/github_merge_request.png[]
 
+To display the release note you can invoke task `mvn info -Daction=releaseNote`
+
+image::doc/release_note_light.png[]
+
 ==== Issue Management
 the Git scm analyzer will extract issues and merge request from commit message. On each it will call your issue
 management to retrieve more information on tickets.
