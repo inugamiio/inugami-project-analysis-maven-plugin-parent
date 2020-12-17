@@ -1,13 +1,11 @@
-= io.inugami.plugins:inugami-plugin-dashboard-demo:2.0.0-SNAPSHOT
-
-_(2020-12-18T00:47:23.047004)_
+= io.inugami.plugins:inugami-plugin-dashboard-demo:2.0.0-SNAPSHOT _(2020-12-18T00:56:51.088601)_
+:toc:
 
 :description: Simple Inugami plugin
 
 :url-project: https://github.com/inugamiio/inugami-plugin-dashboard-demo
 
 :keywords: release-note
-:toc:
 
 == Authors
 - InugamiCi (patrickguillerm@inugami.io)

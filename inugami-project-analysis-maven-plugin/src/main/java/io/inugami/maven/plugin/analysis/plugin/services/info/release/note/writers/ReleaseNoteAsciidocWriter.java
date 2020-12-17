@@ -168,11 +168,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
               .write(":")
               .write(project.getArtifactId())
               .write(":")
-              .write(project.getVersion())
-              .line();
+              .write(project.getVersion());
+        writer.write(" _(").write(LocalDateTime.now()).write(")_").line();
+        writer.write(":toc:").line();
 
-        writer.line();
-        writer.write("_(").write(LocalDateTime.now()).write(")_").line();
         if(project.getDescription()!=null){
             writer.line();
             writer.write(":description: ").write(project.getDescription());
@@ -186,7 +185,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         writer.line();
 
         writer.write(":keywords: release-note").line();
-        writer.write(":toc:").line();
+
         writer.line();
         return writer.toString();
     }
