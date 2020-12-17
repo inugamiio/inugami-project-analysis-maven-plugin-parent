@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models;
+package io.inugami.maven.plugin.analysis.api.services.info.release.note;
 
-import lombok.*;
+import io.inugami.api.processors.ConfigHandler;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 
-@Builder
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
-public class Author {
-    private String name;
-    private String email;
+public interface ReleaseNoteWriter {
+
+    boolean accept(final ConfigHandler<String, String> configuration);
+
+    void process(final ReleaseNoteResult releaseNote, final InfoContext context);
+
 }

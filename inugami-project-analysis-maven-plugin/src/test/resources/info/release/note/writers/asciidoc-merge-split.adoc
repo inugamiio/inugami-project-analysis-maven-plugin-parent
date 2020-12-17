@@ -1,0 +1,20 @@
+[cols="2,1,3,4", options="header"]
+|===
+|Date | Id | Title | Url
+
+|2019-04-12T15:39:58Z
+|pr_1
+|define basic dashboard layout
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/1
+
+|2019-04-12T15:46:07Z
+|pr_3
+|Development
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/3
+
+|2019-04-17T18:26:18Z
+|pr_4
+|implement svg generic map component example
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/4
+
+|===

@@ -22,11 +22,11 @@ import io.inugami.api.spi.SpiLoader;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.models.QueryDefinition;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class QueryDisplay implements ProjectInformation {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final String queryName = configuration.get("query");
+    public void process(final InfoContext context) {
+        final String queryName = context.getConfiguration().get("query");
 
         if (queryName == null) {
             final JsonBuilder help = new JsonBuilder();
@@ -68,10 +68,11 @@ public class QueryDisplay implements ProjectInformation {
                                                                 .findFirst()
                                                                 .orElse(null);
 
-            ConfigHandler<String, String> currentConfiguration = configuration;
+            ConfigHandler<String, String> currentConfiguration = context.getConfiguration();
             if (configurator != null) {
                 currentConfiguration = configurator
-                        .configure(queryDef.getPath(), convertMavenProjectToGav(project), configuration);
+                        .configure(queryDef.getPath(), convertMavenProjectToGav(context.getProject()),
+                                   context.getConfiguration());
             }
             final String query = TemplateRendering.render(queryDef, currentConfiguration);
 

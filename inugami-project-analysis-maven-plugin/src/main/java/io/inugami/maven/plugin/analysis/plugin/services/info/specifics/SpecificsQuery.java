@@ -19,13 +19,14 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.specifics;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
+import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.types.Node;
@@ -47,20 +48,20 @@ public class SpecificsQuery implements ProjectInformation {
     // PROCESS
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao = new Neo4jDao(configuration);
+    public void process(final InfoContext context) {
+        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
 
-        final boolean interactive  = configuration.grabBoolean("interactive");
-        final Gav     gav          = loadCurrentGav(convertMavenProjectToGav(project), interactive);
-        final File    templatePath = loadQuery(configuration, interactive);
-        final String  skipPattern  = configuration.get(SKIP_PROPERTIES);
+        final boolean interactive  = context.getConfiguration().grabBoolean(Constants.INTERACTIVE);
+        final Gav     gav          = loadCurrentGav(convertMavenProjectToGav(context.getProject()), interactive);
+        final File    templatePath = loadQuery(context.getConfiguration(), interactive);
+        final String  skipPattern  = context.getConfiguration().get(SKIP_PROPERTIES);
         final Pattern skipRegex    = skipPattern == null ? null : Pattern.compile(skipPattern);
 
         if (templatePath == null) {
             log.info("no query define");
         }
         else {
-            final Map<String, String> properties = new LinkedHashMap<>(configuration);
+            final Map<String, String> properties = new LinkedHashMap<>(context.getConfiguration());
             properties.put("artifactId", gav.getArtifactId());
             properties.put("groupId", gav.getGroupId());
             properties.put("version", gav.getVersion());
@@ -74,7 +75,7 @@ public class SpecificsQuery implements ProjectInformation {
                 result = "no result";
             }
             else {
-                result = renderResultSet(resultSet, skipRegex,configuration);
+                result = renderResultSet(resultSet, skipRegex,context.getConfiguration());
             }
             log.info("\n{}", result);
         }

@@ -1,0 +1,16 @@
+== Issues
+[cols="2,1,3,4", options="header"]
+|===
+|Date | Issue | Title | Url
+
+|2019-03-27T09:42:13Z
+|issue_8
+|Front technical_issue waitting_for_release
+|https://github.com/inugamiio/inugami/issues/8
+
+|2019-07-05T08:07:49Z
+|issue_104
+|Back Feature technical_issue
+|https://github.com/inugamiio/inugami/issues/104
+
+|===

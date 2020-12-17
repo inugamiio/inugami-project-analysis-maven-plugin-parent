@@ -28,6 +28,7 @@ import io.inugami.maven.plugin.analysis.api.actions.*;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
@@ -37,6 +38,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.model.Dependency;
@@ -106,8 +108,11 @@ public class CheckMojo extends AbstractMojo {
     @Component
     private PluginDescriptor pluginDescriptor;
 
+    @Component
+    private ArtifactHandler  artifactHandler;
+
     @Parameter(defaultValue = "${settings}", readonly = true, required = true)
-    private Settings settings;
+    private Settings         settings;
 
     @Component
     private SecDispatcher secDispatcher;
@@ -203,10 +208,10 @@ public class CheckMojo extends AbstractMojo {
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap();
         configuration.putAll(extractProperties(project.getProperties()));
         configuration.putAll(extractProperties(System.getProperties()));
-        configuration.put("project.basedir", project.getBasedir().getAbsolutePath());
-        configuration.put("project.build.directory", FilesUtils.buildFile(project.getBasedir(), "target")
-                                                               .getAbsolutePath());
-        configuration.put("interactive", "false");
+        configuration.put(Constants.PROJECT_BASE_DIR, project.getBasedir().getAbsolutePath());
+        configuration.put(Constants.PROJECT_BUILD_DIR, FilesUtils.buildFile(project.getBasedir(), "target")
+                                                                 .getAbsolutePath());
+        configuration.put(Constants.INTERACTIVE, "false");
         initProperties(configuration);
 
         return ScanConext.builder()
@@ -220,6 +225,9 @@ public class CheckMojo extends AbstractMojo {
                          .directDependencies(extractDirectDependencies())
                          .pluginDescriptor(pluginDescriptor)
                          .configuration(configuration)
+                         .secDispatcher(secDispatcher)
+                         .artifactHandler(artifactHandler)
+                         .settings(settings)
                          .build();
     }
 

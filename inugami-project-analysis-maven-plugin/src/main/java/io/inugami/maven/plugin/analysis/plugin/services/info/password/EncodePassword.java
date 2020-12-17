@@ -17,12 +17,11 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.password;
 
 import io.inugami.api.exceptions.Asserts;
-import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.api.tools.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 
 @Slf4j
 public class EncodePassword implements ProjectInformation {
@@ -32,10 +31,10 @@ public class EncodePassword implements ProjectInformation {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
+    public void process(final InfoContext context) {
         final String password = ConsoleTools.askPassword("Password : ", null);
 
-        String secret = configuration.grabOrDefault("inugami.maven.plugin.analysis.secret", null);
+        String secret = context.getConfiguration().grabOrDefault("inugami.maven.plugin.analysis.secret", null);
         if (secret == null) {
             secret = ConsoleTools.askPassword("Secret passphrase (16 chars) : ", null);
         }

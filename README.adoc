@@ -771,6 +771,8 @@ To display the release note you can invoke task `mvn info -Daction=releaseNote`
 
 image::doc/release_note_light.png[]
 
+You can see on this example generated release-note as asciidoc : link:doc/release-note-example.adoc
+
 ==== Issue Management
 the Git scm analyzer will extract issues and merge request from commit message. On each it will call your issue
 management to retrieve more information on tickets.

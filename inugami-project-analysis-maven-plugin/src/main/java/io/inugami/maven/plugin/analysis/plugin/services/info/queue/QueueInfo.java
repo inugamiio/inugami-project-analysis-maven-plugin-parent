@@ -23,6 +23,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
@@ -31,7 +32,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 
@@ -76,10 +76,10 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao              dao  = new Neo4jDao(configuration);
-        final Gav                   gav  = convertMavenProjectToGav(project);
-        final List<ArtifactService> data = searchService(gav, dao, configuration);
+    public void process(final InfoContext context) {
+        final Neo4jDao              dao  = new Neo4jDao(context.getConfiguration());
+        final Gav                   gav  = convertMavenProjectToGav(context.getProject());
+        final List<ArtifactService> data = searchService(gav, dao, context.getConfiguration());
 
         if (data != null) {
             render(gav, data);

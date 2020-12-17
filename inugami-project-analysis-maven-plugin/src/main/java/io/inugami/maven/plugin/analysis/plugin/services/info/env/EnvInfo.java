@@ -16,16 +16,15 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.info.env;
 
-import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 
 import java.util.*;
 
@@ -52,14 +51,14 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao = new Neo4jDao(configuration);
+    public void process(final InfoContext context) {
+        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
 
 
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),
                                                       configure(QUERIES.get(0),
                                                                 null,
-                                                                configuration));
+                                                                context.getConfiguration()));
         log.info("query:\n{}", query);
         final Map<String, Long> envs = new LinkedHashMap<>();
         final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
@@ -69,7 +68,7 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
 
         final Map<String, Collection<DataRow>> data = VERSION_ENV.sortData(firstPass, envs, null);
 
-        log.info("\n{}", Neo4jRenderingUtils.rendering(data, configuration, "env"));
+        log.info("\n{}", Neo4jRenderingUtils.rendering(data, context.getConfiguration(), "env"));
         dao.shutdown();
     }
 

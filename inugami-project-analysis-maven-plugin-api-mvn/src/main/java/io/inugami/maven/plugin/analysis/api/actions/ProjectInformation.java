@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.api.actions;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.NamedSpi;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
@@ -37,7 +38,7 @@ public interface ProjectInformation extends NamedSpi {
     String TYPE        = Neo4jUtils.TYPE;
     String VERSION     = Neo4jUtils.VERSION;
 
-    void process(MavenProject project, ConfigHandler<String, String> configuration);
+    void process(InfoContext context);
 
     default void shutdown() {
     }

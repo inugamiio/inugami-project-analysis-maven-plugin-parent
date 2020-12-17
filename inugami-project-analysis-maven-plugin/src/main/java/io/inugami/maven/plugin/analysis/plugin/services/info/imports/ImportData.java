@@ -26,12 +26,12 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.Neo4jWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -49,16 +49,16 @@ public class ImportData implements ProjectInformation {
     // PROCESS
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
+    public void process(final InfoContext context) {
 
 
-        final boolean interactive  = configuration.grabBoolean("interactive");
-        final Gav     gav          = convertMavenProjectToGav(project);
-        final File    templatePath = loadQuery(configuration, interactive);
+        final boolean interactive  = context.getConfiguration().grabBoolean("interactive");
+        final Gav     gav          = convertMavenProjectToGav(context.getProject());
+        final File    templatePath = loadQuery(context.getConfiguration(), interactive);
         FilesUtils.assertCanRead(templatePath);
         final boolean cypherScript = templatePath.getName().endsWith(".cql");
 
-        final Map<String, String> properties = new LinkedHashMap<>(configuration);
+        final Map<String, String> properties = new LinkedHashMap<>(context.getConfiguration());
         properties.put("artifactId", gav.getArtifactId());
         properties.put("groupId", gav.getGroupId());
         properties.put("version", gav.getVersion());
@@ -78,7 +78,7 @@ public class ImportData implements ProjectInformation {
             log.warn("no data to import");
         }
         else {
-            final Neo4jWriter neo4jWriter = new Neo4jWriter().init(configuration);
+            final Neo4jWriter neo4jWriter = new Neo4jWriter().init(context.getConfiguration());
             neo4jWriter.appendData(data);
             neo4jWriter.write();
             neo4jWriter.shutdown(null);

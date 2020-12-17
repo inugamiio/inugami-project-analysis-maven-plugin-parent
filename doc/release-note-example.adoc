@@ -1,0 +1,386 @@
+= io.inugami.plugins:inugami-plugin-dashboard-demo:2.0.0-SNAPSHOT
+
+_(2020-12-18T00:47:23.047004)_
+
+:description: Simple Inugami plugin
+
+:url-project: https://github.com/inugamiio/inugami-plugin-dashboard-demo
+
+:keywords: release-note
+:toc:
+
+== Authors
+- InugamiCi (patrickguillerm@inugami.io)
+- Patrick Guillerm (patrickguillerm@inugami.io)
+
+== Issues
+[cols="2,1,3,4", options="header"]
+|===
+|Date | Issue | Title | Url
+
+|2019-03-27T09:42:13Z
+|issue_8
+|Front technical_issue waitting_for_release
+|https://github.com/inugamiio/inugami/issues/8
+
+|2019-07-05T08:07:49Z
+|issue_104
+|Back Feature technical_issue
+|https://github.com/inugamiio/inugami/issues/104
+
+|===
+
+== Merge requests
+[cols="2,1,3,4", options="header"]
+|===
+|Date | Id | Title | Url
+
+|2019-04-12T15:39:58Z
+|pr_1
+|define basic dashboard layout
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/1
+
+|2019-04-12T15:40:52Z
+|pr_2
+|Development
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/2
+
+|2019-04-12T15:46:07Z
+|pr_3
+|Development
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/3
+
+|2019-04-17T18:26:18Z
+|pr_4
+|implement svg generic map component example
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/4
+
+|2019-04-17T18:28:39Z
+|pr_5
+|Prepare release
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/5
+
+|2019-06-02T12:17:33Z
+|pr_6
+|Dev/issues 25 generic svg map
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/6
+
+|2019-06-02T12:25:21Z
+|pr_7
+|Dev/issues 25 generic svg map
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/7
+
+|2019-07-10T12:03:21Z
+|pr_8
+|Dev/8 upgrade angular8
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/8
+
+|2019-07-10T12:05:36Z
+|pr_9
+|fix
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/9
+
+|2019-07-23T19:15:19Z
+|pr_10
+|Dev/104 create kafka provider
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/10
+
+|2019-07-23T19:16:20Z
+|pr_11
+|Development
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/11
+
+|2020-06-30T09:32:14Z
+|pr_12
+|add mutation tests
+|https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/12
+
+|===
+
+== Commit
+[cols="2,1,1,4", options="header"]
+|===
+|Date | SHA | Author | Message
+
+|2020-10-31T14:03:43
+|e636be118db974543bfc1630772ebc47d0cc0e0b
+|Patrick Guillerm
+|prepare release
+
+|2020-10-31T13:58:12
+|0150b50af2444810487dbbae906d2248aab7e372
+|Patrick Guillerm
+|prepare to deploy on sonatype repository
+
+|2020-09-17T21:13:52
+|21192a2e8c596794bcc996aa8c1173df7af23a0d
+|Patrick Guillerm
+|Merge branch 'master' into development
+
+|2020-09-17T21:13:03
+|215d03a5d9586e038aa0f4d14b6e416be2d258c0
+|Patrick Guillerm
+|change groupId for io.inugami
+
+|2020-06-30T09:32:14
+|e1c3f0edae4db1514b059f763710d92c70aaf7c1
+|Patrick Guillerm
+|Merge pull request #12 from inugamiio/development  add mutation tests
+
+|2020-06-30T09:29:55
+|3b5cccdb69c651bfcb42c8ed27ba4101ea464380
+|Patrick Guillerm
+|add mutation tests
+
+|2019-07-23T19:19:28
+|5d77140f171efd2704e868f515ded7cdc8e82188
+|InugamiCi
+|[maven-release-plugin] prepare for next development iteration
+
+|2019-07-23T19:19:21
+|16f846aab972e5b7188cf4232cda4255caf92843
+|InugamiCi
+|[maven-release-plugin] prepare release v1.2.0
+
+|2019-07-23T19:16:20
+|fae62f793c1b71597a18c95fa83e4cee10c17f20
+|Patrick Guillerm
+|Merge pull request #11 from inugamiio/development  Development
+
+|2019-07-23T19:16:11
+|24133ed1b100e0a61bbda19a90653ec415a87fe1
+|Patrick Guillerm
+|Merge branch 'master' into development
+
+|2019-07-23T19:15:18
+|ece5d3cb827e1cf62dd4354abeae068e2d3d5cf0
+|Patrick Guillerm
+|Merge pull request #10 from inugamiio/dev/104_create_kafka_provider  Dev/104 create kafka provider
+
+|2019-07-23T19:14:25
+|43ab092735707fed64c42e80ad32cc5db25ddd18
+|Patrick Guillerm
+|update kafka plugin version to 1.0.0
+
+|2019-07-14T13:11:48
+|496c9d8889c74bee05ba2962a443f1234e3e441e
+|Patrick Guillerm
+|add kafka plugin dependency
+
+|2019-07-14T13:11:32
+|a2bfc9bdea520824b145909d6327cdfaedf6f7af
+|Patrick Guillerm
+|fix after core refactoring
+
+|2019-07-10T12:48:45
+|c23d92198896aa3ba47b503bb0c0b9b33aefb1c7
+|Patrick Guillerm
+|Merge branch 'development' of git@github.com:inugamiio/inugami-plugin-dashboard-demo.git into development  Conflicts: 	pom.xml
+
+|2019-07-10T12:48:05
+|c859a0b286d27df9c71d7f1cd31fa16fe10d9ac2
+|Patrick Guillerm
+|fix for java11
+
+|2019-07-10T12:05:35
+|90b98ff50bef32002858d60a01b180e14df0e40e
+|Patrick Guillerm
+|Merge pull request #9 from inugamiio/dev/8_upgrade_angular8  fix
+
+|2019-07-10T12:04:59
+|8272f878c3d7331691b0c58c828ab8b4f3e2f435
+|Patrick Guillerm
+|fix
+
+|2019-07-10T12:03:20
+|916016ad06bcbdad8ff78016034306fb04d21d9a
+|Patrick Guillerm
+|Merge pull request #8 from inugamiio/dev/8_upgrade_angular8  Dev/8 upgrade angular8
+
+|2019-07-09T07:02:06
+|90d885538be36ee711717ccbf2598e27c87a5f7a
+|Patrick Guillerm
+|Update README.md
+
+|2019-07-09T07:01:58
+|f8f2ee57ee29475808d8f0a3e7b45948a0928e75
+|Patrick Guillerm
+|update documentation
+
+|2019-07-09T07:00:22
+|cce53b81c315cbc56912c03a17bfea2e7ec02fa4
+|Patrick Guillerm
+|Update README.md
+
+|2019-07-09T06:59:52
+|4e3ab2d63ae8ff158f3bc18fbccef51f52abbdcf
+|Patrick Guillerm
+|update documentation
+
+|2019-07-09T06:56:49
+|7c86b322deda671a5db24e8c075848bf968081fd
+|Patrick Guillerm
+|add information panel
+
+|2019-07-07T18:52:44
+|71d56d1daef1b2e474a6ef6b5b2cbb41a6a6fcaa
+|Patrick Guillerm
+|fix importation of new angular 8 Http client
+
+|2019-07-07T18:47:30
+|076820e7b55eb8a7f95d7cf500b51cce2b34efb0
+|Patrick Guillerm
+|update health map
+
+|2019-07-07T18:45:27
+|2e444c0381b4897924df77896e95bb9bb046c0c2
+|Patrick Guillerm
+|simulate error
+
+|2019-06-02T12:31:49
+|30ea79fd8584fa9c1f91d0d626a0de53b0a9cc37
+|Patrick Guillerm
+|update screenshot
+
+|2019-06-02T12:25:20
+|2b09d067944103387ac323feb07d34d215c0386d
+|Patrick Guillerm
+|Merge pull request #7 from inugamiio/dev/issues-25_generic-svg-map  Dev/issues 25 generic svg map
+
+|2019-06-02T12:17:32
+|bf2a8e0e8a8c0f283d03c56bb59f515a3f01e615
+|Patrick Guillerm
+|Merge pull request #6 from inugamiio/dev/issues-25_generic-svg-map  Dev/issues 25 generic svg map
+
+|2019-06-02T12:16:37
+|33bfa1785e07c7f50c9f9974fe84a16df02d9d59
+|Patrick Guillerm
+|integrate new inugami menu
+
+|2019-04-24T08:57:25
+|b26290f5f6f31072e786c6aa79d5cdb5086e351f
+|Patrick Guillerm
+|front refactoring
+
+|2019-04-24T08:56:58
+|6604553bca502519f3e11b6e8b7afedb8ef57083
+|Patrick Guillerm
+|add REST service with mock data
+
+|2019-04-24T08:51:06
+|cb7a9c1bcdf5ae760d9cc75d54643f06b7d053c7
+|Patrick Guillerm
+|add security annotations
+
+|2019-04-24T08:50:45
+|b3eca94be97c47f10ebd2fc7cfec4c7da18f7c5a
+|Patrick Guillerm
+|enable CDI context
+
+|2019-04-17T18:35:06
+|51377a608874f703d2e20cca6aa78c4ed3769ed1
+|Patrick Guillerm
+|Update link
+
+|2019-04-17T18:33:28
+|907ac1a08f76821ebaabc314ff6d74429fbbd4f3
+|Patrick Guillerm
+|Update readme with link to movie screenshot
+
+|2019-04-17T18:28:38
+|9879cd500488bbe67594f02c7220f842ed4e89c8
+|Patrick Guillerm
+|Merge pull request #5 from inugamiio/development  Prepare release
+
+|2019-04-17T18:26:17
+|c0920bc396aad63d64d2edd5a0a88910850042e8
+|Patrick Guillerm
+|Merge pull request #4 from inugamiio/dev/issues-25_generic-svg-map  implement svg generic map component example
+
+|2019-04-15T15:35:53
+|69db50109de7ed572eca8b5eecc03417189df437
+|Patrick Guillerm
+|add event handler
+
+|2019-04-15T13:17:18
+|db807ad8355eb842108091d40df474262854c81c
+|Patrick Guillerm
+|implement svg generic map component example
+
+|2019-04-12T15:46:06
+|c9a07e0c386c0dcf26978c2f3bfbb555e412881b
+|Patrick Guillerm
+|Merge pull request #3 from inugamiio/development  Development
+
+|2019-04-12T15:45:17
+|f2b4da2b32bb7c90c85195636e05c62a7f6a8547
+|Patrick Guillerm
+|Update README.md
+
+|2019-04-12T15:43:04
+|1e5233fe65d24c2705e3488d6d22fca74e052190
+|Patrick Guillerm
+|create readme
+
+|2019-04-12T15:40:52
+|e2da71c0c53d3f407d342b2b69743f971ed106c1
+|Patrick Guillerm
+|Merge pull request #2 from inugamiio/development  Development
+
+|2019-04-12T15:39:57
+|37b1c0296896cb53db29ff42943d81ed056055cb
+|Patrick Guillerm
+|Merge pull request #1 from inugamiio/dev/issues-25_generic-svg-map  define basic dashboard layout
+
+|2019-04-12T15:39:20
+|45e794e51d0b68bc46f5bff3564fc8c4f0d4a241
+|Patrick Guillerm
+|define basic dashboard layout
+
+|2019-04-03T09:36:59
+|55cdba6199f044ba5aab543f010da9d6a5f063cd
+|Patrick Guillerm
+|add information on super.inugami.server.home property
+
+|2019-03-24T22:00:52
+|dd6cd6c49e9b40ecde2b521a14c6d2964911aa90
+|Patrick Guillerm
+|update inugami version to 1.0.0
+
+|2019-01-27T14:11:57
+|ddcba8d62e751ee9c730ef012de53a5d1f9af53c
+|Patrick Guillerm
+|PGU - add example with bar chart and processor on event
+
+|2019-01-27T12:22:40
+|cbfd08d571412cdfff2aebd73b33ac70914459d8
+|Patrick Guillerm
+|PGU - spell check
+
+|2019-01-26T23:06:31
+|b54a7731c6aef2890eeb3de466b65e5bc25705a7
+|Patrick Guillerm
+|PGU - add dashboard screenshot
+
+|2019-01-26T23:06:13
+|7ea1b46bffed4dec25980ead657f030a5d4c8250
+|Patrick Guillerm
+|PGU - connect dashboard to backend with SSE socket and add curve chart component on dashboard
+
+|2019-01-26T23:05:01
+|df0c4585e296aa0ceca7cc3bebafc2d86a8fac2a
+|Patrick Guillerm
+|PGU - add MockFromImage provider for mock graphite data on build it from image representation
+
+|2019-01-26T13:39:43
+|b8a0dd56ecd2ed941ea2477516222959847709a8
+|Patrick Guillerm
+|PGU - import basic inugami plugin structure
+
+|2019-01-14T08:48:31
+|7bb5851db7160bd64fc74f47e5ae67222b80af95
+|Patrick Guillerm
+|Initial commit
+
+|===
+

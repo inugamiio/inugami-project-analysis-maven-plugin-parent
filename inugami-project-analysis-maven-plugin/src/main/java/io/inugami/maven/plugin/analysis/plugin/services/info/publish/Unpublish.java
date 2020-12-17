@@ -21,6 +21,7 @@ import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
@@ -52,11 +53,11 @@ public class Unpublish implements ProjectInformation {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
+    public void process(final InfoContext context) {
 
-        final ScanNeo4jResult data = buildData(configuration, project);
+        final ScanNeo4jResult data = buildData(context.getConfiguration(), context.getProject());
 
-        final Neo4jWriter neo4jWriter = new Neo4jWriter().init(configuration);
+        final Neo4jWriter neo4jWriter = new Neo4jWriter().init(context.getConfiguration());
         neo4jWriter.appendData(data);
         neo4jWriter.write();
         neo4jWriter.shutdown(null);

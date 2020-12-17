@@ -23,6 +23,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.models.neo4j.RestEndpointConvertor;
 import io.inugami.maven.plugin.analysis.api.models.neo4j.VersionConvertor;
 import io.inugami.maven.plugin.analysis.api.models.neo4j.VersionNode;
@@ -32,7 +33,6 @@ import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
 
@@ -74,13 +74,13 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao = new Neo4jDao(configuration);
-        final Gav      gav = convertMavenProjectToGav(project);
+    public void process(final InfoContext context) {
+        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
+        final Gav      gav = convertMavenProjectToGav(context.getProject());
         final DependencyRest consumeDependencies = searchConsumedService(gav, dao,
-                                                                         configuration);
+                                                                         context.getConfiguration());
         final DependencyRest exposedDependencies = searchExposedService(gav, dao,
-                                                                        configuration);
+                                                                        context.getConfiguration());
 
         renderDependencies(gav, consumeDependencies, exposedDependencies);
 

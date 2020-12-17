@@ -1,0 +1,2 @@
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.ReleaseNoteJsonWriter
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.ReleaseNoteAsciidocWriter

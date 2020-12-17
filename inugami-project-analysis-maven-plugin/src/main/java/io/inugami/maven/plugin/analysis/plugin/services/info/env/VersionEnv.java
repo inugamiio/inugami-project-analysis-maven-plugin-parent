@@ -22,13 +22,13 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.driver.types.Node;
 
@@ -77,14 +77,14 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao = new Neo4jDao(configuration);
+    public void process(final InfoContext context) {
+        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
 
-        final Gav gav = buildGav(project, configuration);
+        final Gav gav = buildGav(context.getProject(), context.getConfiguration());
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),
                                                       configure(QUERIES.get(0),
                                                                 gav,
-                                                                configuration));
+                                                                context.getConfiguration()));
         log.info("query:\n{}", query);
         final Map<String, Long> envs = new LinkedHashMap<>();
         final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
@@ -98,7 +98,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final String queryMissingService = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(1)),
                                                                     configure(QUERIES.get(1),
                                                                               gav,
-                                                                              configuration));
+                                                                              context.getConfiguration()));
 
         final Map<String, Collection<DataRow>> missingServices = extractDataFromResultSet(
                 dao.search(queryMissingService),
@@ -108,7 +108,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
             data.putAll(missingServices);
         }
 
-        log.info("\n{}", Neo4jRenderingUtils.rendering(data,configuration,"versionEnv"));
+        log.info("\n{}", Neo4jRenderingUtils.rendering(data,context.getConfiguration(),"versionEnv"));
 
 
         dao.shutdown();

@@ -14,40 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models;
+package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
 import lombok.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-public class Issue {
-    @EqualsAndHashCode.Include
-    String name;
-    @EqualsAndHashCode.Include
-    String url;
-    String      title;
-    String      date;
-    Set<String> labels = new LinkedHashSet<>();
-
-    public Issue addLabel(final String... values) {
-        if (values != null) {
-            if(labels==null){
-                labels = new LinkedHashSet<>();
-            }
-            for (final String label : values) {
-                if (label != null) {
-                    this.labels.add(label);
-                }
-            }
-
-        }
-        return this;
-    }
+public class Author {
+    private String name;
+    private String email;
 }

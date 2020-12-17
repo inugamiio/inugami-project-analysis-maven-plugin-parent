@@ -14,24 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models;
+package io.inugami.maven.plugin.analysis.api.utils;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@Builder
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
-@Getter
-public class MergeRequests {
-    String uid;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class Constants {
 
-    @EqualsAndHashCode.Include
-    String name;
-    @EqualsAndHashCode.Include
-    String url;
+    public static final String PROJECT_BASE_DIR  = "project.basedir";
+    public static final String PROJECT_BUILD_DIR = "project.build.directory";
+    public static final String INTERACTIVE = "interactive";
 
-    String title;
-    String date;
 }

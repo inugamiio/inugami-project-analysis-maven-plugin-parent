@@ -19,10 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.publish;
 import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
-import io.inugami.maven.plugin.analysis.api.models.Gav;
-import io.inugami.maven.plugin.analysis.api.models.Node;
-import io.inugami.maven.plugin.analysis.api.models.Relationship;
-import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.models.*;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.Neo4jWriter;
 import org.apache.maven.project.MavenProject;
@@ -50,11 +47,11 @@ public class Publish implements ProjectInformation {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
+    public void process(final InfoContext context) {
 
-        final ScanNeo4jResult data = buildData(configuration, project);
+        final ScanNeo4jResult data = buildData(context.getConfiguration(), context.getProject());
 
-        final Neo4jWriter neo4jWriter = new Neo4jWriter().init(configuration);
+        final Neo4jWriter neo4jWriter = new Neo4jWriter().init(context.getConfiguration());
         neo4jWriter.appendData(data);
         neo4jWriter.write();
         neo4jWriter.shutdown(null);

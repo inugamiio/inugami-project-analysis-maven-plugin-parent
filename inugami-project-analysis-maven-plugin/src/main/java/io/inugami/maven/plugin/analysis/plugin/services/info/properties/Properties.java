@@ -7,6 +7,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
@@ -14,7 +15,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.types.Node;
@@ -56,14 +56,14 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao       = new Neo4jDao(configuration);
-        final Gav      gav       = convertMavenProjectToGav(project);
+    public void process(final InfoContext context) {
+        final Neo4jDao dao       = new Neo4jDao(context.getConfiguration());
+        final Gav      gav       = convertMavenProjectToGav(context.getProject());
         final String   queryPath = QUERIES.get(0);
         final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
                                                       configure(queryPath,
                                                                 gav,
-                                                                configuration));
+                                                                context.getConfiguration()));
         log.info("query:\n{}", query);
         final List<Record> resultSet = dao.search(query);
 

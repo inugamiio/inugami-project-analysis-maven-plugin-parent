@@ -20,24 +20,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.api.spi.SpiLoader;
 import io.inugami.api.tools.ConsoleColors;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteWriter;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Issue;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.*;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.Replacement;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ReplacementConfig;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -104,10 +110,11 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     // API
     // =========================================================================
     @Override
-    public void process(final MavenProject project, final ConfigHandler<String, String> configuration) {
-        final Neo4jDao dao       = new Neo4jDao(configuration);
-        final String   queryPath = selectQuery(configuration);
-        final Gav      gav       = convertMavenProjectToGav(project);
+    public void process(final InfoContext context) {
+        final ConfigHandler<String, String> configuration = context.getConfiguration();
+        final Neo4jDao                      dao           = new Neo4jDao(configuration);
+        final String                        queryPath     = selectQuery(configuration);
+        final Gav                           gav           = convertMavenProjectToGav(context.getProject());
 
         final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
                                                       configure(queryPath,
@@ -119,11 +126,11 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         final ReleaseNoteResult releaseNoteResult = new ReleaseNoteResult();
         final List<Replacement> replacements      = buildReplacements(configuration);
         convertToReleaseNote(releaseNoteResult, resultSet, replacements);
-        final String json = convertToJson(releaseNoteResult);
+
         if (log.isDebugEnabled()) {
-            log.info("release note:\n{}", json);
+            log.info("release note:\n{}", convertToJson(releaseNoteResult));
         }
-        writeJson(json, project.getBasedir());
+        writeReleaseNote(releaseNoteResult, context);
 
         final JsonBuilder writer = new JsonBuilder();
         rendering(releaseNoteResult, writer, configuration);
@@ -253,8 +260,21 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // WRITE JSON
     // =========================================================================
-    private void writeJson(final String json, final File basedir) {
+    private void writeReleaseNote(final ReleaseNoteResult releaseNoteResult,
+                                  final InfoContext context) {
+        final List<ReleaseNoteWriter> writers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ReleaseNoteWriter.class);
 
+        for (final ReleaseNoteWriter writer : writers) {
+            if (writer.accept(context.getConfiguration())) {
+                try {
+                    writer.process(releaseNoteResult, context);
+                }
+                catch (final Exception error) {
+                    log.error(error.getMessage(), error);
+                }
+
+            }
+        }
     }
 
     // =========================================================================
