@@ -109,7 +109,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final boolean notSplitFile = !Boolean.parseBoolean(config.grabOrDefault(SPLIT_FILE, "false"));
         final Writer  writer       = buildWriter(baseDocFolder, version, notSplitFile);
 
-        final String project = renderProject(context.getProject());
+        final String project = renderProject(context.getProject(),notSplitFile);
         final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile);
         final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile);
         final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile);
@@ -161,30 +161,35 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
 
-    private String renderProject(final MavenProject project) {
+    private String renderProject(final MavenProject project, final boolean notSplitFile) {
         final JsonBuilder writer = new JsonBuilder();
-        writer.write("= ")
-              .write(project.getGroupId())
+        if(notSplitFile) {
+            writer.write("= ");
+        }
+        writer.write(project.getGroupId())
               .write(":")
               .write(project.getArtifactId())
               .write(":")
               .write(project.getVersion());
         writer.write(" _(").write(LocalDateTime.now()).write(")_").line();
-        writer.write(":toc:").line();
+        if(notSplitFile){
+            writer.write(":toc:").line();
 
-        if(project.getDescription()!=null){
+            if(project.getDescription()!=null){
+                writer.line();
+                writer.write(":description: ").write(project.getDescription());
+                writer.line();
+            }
+            if(project.getUrl()!=null){
+                writer.line();
+                writer.write(":url-project: ").write(project.getUrl());
+                writer.line();
+            }
             writer.line();
-            writer.write(":description: ").write(project.getDescription());
-            writer.line();
-        }
-        if(project.getUrl()!=null){
-            writer.line();
-            writer.write(":url-project: ").write(project.getUrl());
-            writer.line();
-        }
-        writer.line();
 
-        writer.write(":keywords: release-note").line();
+            writer.write(":keywords: release-note").line();
+        }
+
 
         writer.line();
         return writer.toString();
