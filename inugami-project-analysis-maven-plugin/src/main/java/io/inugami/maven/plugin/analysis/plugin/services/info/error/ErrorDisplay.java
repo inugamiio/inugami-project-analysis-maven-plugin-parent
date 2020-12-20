@@ -26,7 +26,7 @@ import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
@@ -77,9 +77,9 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final InfoContext context) {
-        final Neo4jDao dao       = new Neo4jDao(context.getConfiguration());
-        final Gav      gav       = convertMavenProjectToGav(context.getProject());
-        final String   queryPath = QUERIES.get(0);
+        final DefaultNeo4jDao dao       = new DefaultNeo4jDao(context.getConfiguration());
+        final Gav             gav       = convertMavenProjectToGav(context.getProject());
+        final String          queryPath = QUERIES.get(0);
         final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
                                                       configure(queryPath,
                                                                 gav,

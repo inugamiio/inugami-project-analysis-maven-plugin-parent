@@ -23,7 +23,7 @@ import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -52,7 +52,7 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final InfoContext context) {
-        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
+        final DefaultNeo4jDao dao = new DefaultNeo4jDao(context.getConfiguration());
 
 
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),

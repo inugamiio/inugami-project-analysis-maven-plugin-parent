@@ -21,7 +21,7 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ResultWriter;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ public class Neo4jWriter implements ResultWriter {
     // ATTRIBUTES
     // =========================================================================
     private final ScanNeo4jResult               data = ScanNeo4jResult.builder().build();
-    private       Neo4jDao                      dao  = null;
+    private       DefaultNeo4jDao               dao  = null;
     private       ConfigHandler<String, String> configuration;
 
     // =========================================================================
@@ -42,17 +42,17 @@ public class Neo4jWriter implements ResultWriter {
     // =========================================================================
     @Override
     public void init(final ScanConext context) {
-        dao = new Neo4jDao(context.getProject().getProperties());
+        dao = new DefaultNeo4jDao(context.getProject().getProperties());
     }
 
     public Neo4jWriter init(final ConfigHandler<String, String> configuration) {
-        dao = new Neo4jDao(configuration);
+        dao = new DefaultNeo4jDao(configuration);
         this.configuration = configuration;
         return this;
     }
 
     protected void initializeNeo4jDriver(final String url, final String userName, final String password) {
-        dao = new Neo4jDao(url, userName, password);
+        dao = new DefaultNeo4jDao(url, userName, password);
     }
 
     @Override

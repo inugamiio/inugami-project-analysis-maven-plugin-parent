@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers;
+package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteWriter;
@@ -26,6 +27,8 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Au
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Issue;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
+import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
@@ -34,9 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,7 +110,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final boolean notSplitFile = !Boolean.parseBoolean(config.grabOrDefault(SPLIT_FILE, "false"));
         final Writer  writer       = buildWriter(baseDocFolder, version, notSplitFile);
 
-        final String project = renderProject(context.getProject(),notSplitFile);
+        final String project = renderProject(context.getProject(), notSplitFile);
         final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile);
         final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile);
         final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile);
@@ -121,11 +122,36 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         write(pr, writer, "merge-requests", version, baseDocFolder);
         write(commit, writer, "commit", version, baseDocFolder);
 
-        if(writer!=null){
+        final List<AsciidocInfoWriter> infoWriters = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(AsciidocInfoWriter.class);
+
+        for (final AsciidocInfoWriter writerInfo : infoWriters) {
+            final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
+            if (content != null) {
+                if (content.size() == 1) {
+                    write(content.get(new ArrayList<>(content.keySet()).get(0)),
+                          writer,
+                          writerInfo.getParagraphName(),
+                          version,
+                          baseDocFolder);
+                }
+                else {
+                    for (final Map.Entry<String, String> entry : content.entrySet()) {
+                        write(entry.getValue(),
+                              writer,
+                              String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
+                              version,
+                              baseDocFolder);
+                    }
+                }
+            }
+
+        }
+
+        if (writer != null) {
             writer.close();
         }
     }
-
 
 
     private void write(final String content,
@@ -140,7 +166,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         else {
             final File file = FilesUtils.buildFile(baseDocFolder,
                                                    version,
-                                                   String.join(DELIMITER, RELEASE_NOTE, context+ADOC));
+                                                   String.join(DELIMITER, RELEASE_NOTE, context + ADOC));
             FilesUtils.write(content, file);
         }
     }
@@ -150,7 +176,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         Writer writer = null;
         if (notSplitFile) {
             final File file = FilesUtils
-                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, ""+version+ADOC));
+                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, "" + version + ADOC));
             if (file.exists()) {
                 file.delete();
             }
@@ -163,7 +189,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     private String renderProject(final MavenProject project, final boolean notSplitFile) {
         final JsonBuilder writer = new JsonBuilder();
-        if(notSplitFile) {
+        if (notSplitFile) {
             writer.write("= ");
         }
         writer.write(project.getGroupId())
@@ -172,15 +198,15 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
               .write(":")
               .write(project.getVersion());
         writer.write(" _(").write(LocalDateTime.now()).write(")_").line();
-        if(notSplitFile){
+        if (notSplitFile) {
             writer.write(":toc:").line();
 
-            if(project.getDescription()!=null){
+            if (project.getDescription() != null) {
                 writer.line();
                 writer.write(":description: ").write(project.getDescription());
                 writer.line();
             }
-            if(project.getUrl()!=null){
+            if (project.getUrl() != null) {
                 writer.line();
                 writer.write(":url-project: ").write(project.getUrl());
                 writer.line();

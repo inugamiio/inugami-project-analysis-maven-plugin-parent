@@ -26,6 +26,7 @@ import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.InternalRelationship;
+import org.neo4j.driver.internal.value.NodeValue;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -125,6 +126,18 @@ public final class Neo4jUtils {
         return retrieve("name", node instanceof org.neo4j.driver.types.Node ? (org.neo4j.driver.types.Node) node : null);
     }
 
+    public static NodeValue extractNode(final String nodeName, final Record record) {
+        NodeValue result= null;
+        Value     node = null;
+        if(record != null){
+            node = record.get(nodeName);
+        }
+        if(node!= null && !node.isNull() && node instanceof  NodeValue){
+            result = (NodeValue)node;
+        }
+        return result;
+    }
+
     public static org.neo4j.driver.types.Node getNode(final Object node) {
         return node instanceof org.neo4j.driver.types.Node ? (org.neo4j.driver.types.Node) node : null;
     }
@@ -153,6 +166,15 @@ public final class Neo4jUtils {
             }
         }
     }
+
+    public static String retrieveString(final String key, final Map<String, Object> data) {
+        String result = null;
+        if (data != null && data.containsKey(key)) {
+            result = String.valueOf(data.get(key));
+        }
+        return result;
+    }
+
 
     public static boolean isNotNull(final Value value){
         return value !=null && !value.isNull();

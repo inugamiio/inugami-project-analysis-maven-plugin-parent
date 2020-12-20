@@ -12,7 +12,7 @@ import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.plugin.services.info.publish.Publish;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.InternalRelationship;
@@ -51,7 +51,7 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
     // =========================================================================
     @Override
     public void preAnalyze(final ScanConext context) {
-        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
+        final DefaultNeo4jDao dao = new DefaultNeo4jDao(context.getConfiguration());
         context.getConfiguration().put("useMavenProject", "true");
         final Gav gav = Neo4jUtils.buildGav(context.getProject(), context.getConfiguration());
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES.get(0)),

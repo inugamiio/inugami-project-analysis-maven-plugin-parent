@@ -31,7 +31,7 @@ import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
@@ -75,8 +75,8 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final InfoContext context) {
-        final Neo4jDao dao = new Neo4jDao(context.getConfiguration());
-        final Gav      gav = convertMavenProjectToGav(context.getProject());
+        final DefaultNeo4jDao dao = new DefaultNeo4jDao(context.getConfiguration());
+        final Gav             gav = convertMavenProjectToGav(context.getProject());
         final DependencyRest consumeDependencies = searchConsumedService(gav, dao,
                                                                          context.getConfiguration());
         final DependencyRest exposedDependencies = searchExposedService(gav, dao,
@@ -88,7 +88,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     }
 
 
-    private DependencyRest searchConsumedService(final Gav gav, final Neo4jDao dao,
+    private DependencyRest searchConsumedService(final Gav gav, final DefaultNeo4jDao dao,
                                                  final ConfigHandler<String, String> config) {
         //@formatter:off
         final DependencyRest  result = new DependencyRest();
@@ -119,7 +119,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
         return result;
     }
 
-    private DependencyRest searchExposedService(final Gav gav, final Neo4jDao dao,
+    private DependencyRest searchExposedService(final Gav gav, final DefaultNeo4jDao dao,
                                                 final ConfigHandler<String, String> config) {
 
         //@formatter:off

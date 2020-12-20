@@ -21,6 +21,7 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.maven.plugin.analysis.api.actions.Neo4jValueEncoder;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.tools.SecurityUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.DefaultNeo4jEncoder;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ import java.io.Serializable;
 import java.util.*;
 
 @Slf4j
-public class Neo4jDao {
+public class DefaultNeo4jDao implements Neo4jDao {
 
     // =========================================================================
     // ATTRIBUTES
@@ -42,12 +43,12 @@ public class Neo4jDao {
     // =========================================================================
     // CONSTRUCTORS
     // =========================================================================
-    protected Neo4jDao() {
+    protected DefaultNeo4jDao() {
         encoders = null;
         driver   = null;
     }
 
-    public Neo4jDao(final Properties properties) {
+    public DefaultNeo4jDao(final Properties properties) {
         final String boltUri  = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.url"));
         final String login    = String.valueOf(properties.get("inugami.maven.plugin.analysis.writer.neo4j.user"));
         final String password = decodePassword(properties);
@@ -58,7 +59,7 @@ public class Neo4jDao {
     }
 
 
-    public Neo4jDao(final ConfigHandler<String, String> configuration) {
+    public DefaultNeo4jDao(final ConfigHandler<String, String> configuration) {
         encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
         driver   = GraphDatabase.driver(configuration.grab("inugami.maven.plugin.analysis.writer.neo4j.url"),
                                         AuthTokens.basic(configuration
@@ -66,12 +67,13 @@ public class Neo4jDao {
                                                          decodePassword(configuration)));
     }
 
-    public Neo4jDao(final String boltUri, final String login, final String password) {
+    public DefaultNeo4jDao(final String boltUri, final String login, final String password) {
         encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
         driver   = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
     }
 
 
+    @Override
     public void shutdown() {
         driver.session().close();
         driver.close();
@@ -94,6 +96,7 @@ public class Neo4jDao {
     // =========================================================================
     // API
     // =========================================================================
+    @Override
     public void deleteNodes(final List<String> nodesToDeletes) {
         if (nodesToDeletes != null) {
             final int size = nodesToDeletes.size();
@@ -111,6 +114,7 @@ public class Neo4jDao {
     }
 
 
+    @Override
     public void deleteNode(final String uid) {
         final Session session = driver.session();
         final Node result = session.writeTransaction(new TransactionWork<Node>() {
@@ -131,6 +135,7 @@ public class Neo4jDao {
         });
     }
 
+    @Override
     public void saveNodes(final List<io.inugami.maven.plugin.analysis.api.models.Node> nodes) {
         if (nodes != null) {
             final int size = nodes.size();
@@ -157,6 +162,7 @@ public class Neo4jDao {
         }
     }
 
+    @Override
     public void saveRelationships(final List<Relationship> relationships) {
         if (relationships != null) {
             final int size = relationships.size();
@@ -172,6 +178,7 @@ public class Neo4jDao {
         }
     }
 
+    @Override
     public void deleteRelationship(final List<Relationship> relationshipsToDeletes) {
         if (relationshipsToDeletes != null) {
             final int size = relationshipsToDeletes.size();
@@ -187,7 +194,7 @@ public class Neo4jDao {
         }
     }
 
-
+    @Override
     public void processScripts(final List<String> scripts, final ConfigHandler<String, String> configuration) {
         if (scripts != null) {
             String    previous = null;
@@ -203,6 +210,7 @@ public class Neo4jDao {
     }
 
 
+    @Override
     public void processSave(final String cypherQuery) {
         final Session session = driver.session();
 
@@ -233,6 +241,7 @@ public class Neo4jDao {
         }
     }
 
+    @Override
     public Node getNode(final String name, final String type) {
         final Session             session    = driver.session();
         final Map<String, Object> parameters = Map.ofEntries(Map.entry("name", "Foobar"));
@@ -266,7 +275,7 @@ public class Neo4jDao {
         return result;
     }
 
-
+    @Override
     public List<Record> search(final String query) {
         final Session      session = driver.session();
         final List<Record> record  = new ArrayList<>();
@@ -302,18 +311,21 @@ public class Neo4jDao {
     // =========================================================================
     // QUERIES
     // =========================================================================
+    @Override
     public String searchQuery(final String name, final String type) {
         return new StringBuilder().append("MATCH (n:").append(type).append(") where n.name=\"")
                                   .append(name).append("\" return n")
                                   .toString();
     }
 
+    @Override
     public String buildDeleteNodeQuery(final String uid) {
         return new JsonBuilder().write("MATCH (n) where n.name=").valueQuot(uid)
                                 .write(" detach delete n")
                                 .toString();
     }
 
+    @Override
     public String buildCreateNodeQuery(final io.inugami.maven.plugin.analysis.api.models.Node node,
                                        final Map<String, Object> parameters) {
         final StringBuilder query  = new StringBuilder();
@@ -340,6 +352,7 @@ public class Neo4jDao {
     }
 
 
+    @Override
     public String buildRelationshipQuery(final Relationship relationship) {
         final StringBuilder query = new StringBuilder();
         query.append(" MATCH (f) WHERE f.name=\"").append(relationship.getFrom()).append("\"").append("\n");
@@ -369,7 +382,8 @@ public class Neo4jDao {
         return query.toString();
     }
 
-    private String buildRelationshipToDeleteQuery(final Relationship relationship) {
+    @Override
+    public String buildRelationshipToDeleteQuery(final Relationship relationship) {
         final JsonBuilder query = new JsonBuilder();
 
         query.write(" MATCH (f)-[r:");
@@ -384,6 +398,7 @@ public class Neo4jDao {
         return query.toString();
     }
 
+    @Override
     public String convertValue(final Object value) {
         String result = null;
         for (final Neo4jValueEncoder encoder : encoders) {

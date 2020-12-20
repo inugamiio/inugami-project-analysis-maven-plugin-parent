@@ -27,29 +27,21 @@ import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteExtractor;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteWriter;
-import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
-import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Issue;
-import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
-import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
-import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
-import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.*;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.Replacement;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ReplacementConfig;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.internal.value.NodeValue;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.isNotNull;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
+import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 
 @Slf4j
 public class ReleaseNote implements ProjectInformation, QueryConfigurator {
@@ -61,29 +53,10 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     public static final String MODE_FULL    = FEATURE_NAME + ".full";
     public static final String REPLACEMENTS = FEATURE_NAME + ".emails.replacements";
 
-    public static final  String       SCM              = "scm";
+
     private static final List<String> QUERIES          = List.of(
-            "META-INF/queries/search_release_note_simple.cql",
-            "META-INF/queries/search_release_note_full.cql"
-                                                                );
-    public static final  String       COMMIT           = "commit";
-    public static final  String       MERGE_REQUEST    = "mergeRequest";
-    public static final  String       TITLE            = "title";
-    public static final  String       MERGED_AT        = "merged_at";
-    public static final  String       URL              = "url";
-    public static final  String       SHORT_NAME       = "shortName";
-    public static final  String       LINE_DECO        = "-";
-    public static final  String       CREATED_AT       = "created_at";
-    public static final  String       ISSUE            = "issue";
-    public static final  String       ISSUE_LABEL      = "issueLabel";
-    public static final  String       ISSUE_LINK       = "issueLink";
-    public static final  String       ISSUE_LINK_LABEL = "issueLinkLabel";
-    public static final  String       ISSUES           = "Issues";
-    public static final  String       MERGE_REQUESTS   = "Merge request";
-    public static final  String       AUTHOR           = "author";
-    public static final  String       NAME             = "name";
-    public static final  String       EMAIL            = "email";
-    public static final  String       AUTHORS          = "Authors";
+            QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL
+                                                       );
 
 
     // =========================================================================
@@ -99,9 +72,9 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                                                    final ConfigHandler<String, String> configuration) {
         final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
         config.putAll(Map.ofEntries(
-                Map.entry("groupId", gav.getGroupId()),
-                Map.entry("artifactId", gav.getArtifactId()),
-                Map.entry("version", gav.getVersion())
+                Map.entry(GROUP_ID, gav.getGroupId()),
+                Map.entry(ARTIFACT_ID, gav.getArtifactId()),
+                Map.entry(VERSION, gav.getVersion())
                                    ));
         return config;
     }
@@ -112,20 +85,35 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     @Override
     public void process(final InfoContext context) {
         final ConfigHandler<String, String> configuration = context.getConfiguration();
-        final Neo4jDao                      dao           = new Neo4jDao(configuration);
-        final String                        queryPath     = selectQuery(configuration);
-        final Gav                           gav           = convertMavenProjectToGav(context.getProject());
 
-        final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
-                                                      configure(queryPath,
-                                                                gav,
-                                                                configuration));
+        final String previousVersion = configuration.grabOrDefault(PREVIOUS_VERSION, null);
 
-        log.info("query:\n{}", query);
-        final List<Record>      resultSet         = dao.search(query);
+        final DefaultNeo4jDao dao         = new DefaultNeo4jDao(configuration);
+        final String          queryPath   = selectQuery(configuration);
+        final Gav             gav         = convertMavenProjectToGav(context.getProject());
+        final Gav             previousGav = buildPreviousGav(gav, previousVersion);
+
+
         final ReleaseNoteResult releaseNoteResult = new ReleaseNoteResult();
         final List<Replacement> replacements      = buildReplacements(configuration);
-        convertToReleaseNote(releaseNoteResult, resultSet, replacements);
+
+
+        final List<ReleaseNoteExtractor> extractors = SpiLoader.INSTANCE
+                .loadSpiServicesByPriority(ReleaseNoteExtractor.class);
+        for (final ReleaseNoteExtractor extractor : extractors) {
+            try {
+                extractor.extractInformation(releaseNoteResult,
+                                             gav,
+                                             previousGav,
+                                             dao,
+                                             replacements,
+                                             context
+                                            );
+            }
+            catch (final Exception error) {
+                log.error(error.getMessage(), error);
+            }
+        }
 
         if (log.isDebugEnabled()) {
             log.info("release note:\n{}", convertToJson(releaseNoteResult));
@@ -140,121 +128,12 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         dao.shutdown();
     }
 
-
-    // =========================================================================
-    // CONVERT
-    // =========================================================================
-    private void convertToReleaseNote(
-            final ReleaseNoteResult releaseNote,
-            final List<Record> resultSet,
-            final List<Replacement> replacements) {
-
-        final Map<String, Serializable> cache = new HashMap<>();
-        if (resultSet != null && !resultSet.isEmpty()) {
-            for (final Record record : resultSet) {
-                convertReleaseNote(releaseNote, record, cache, replacements);
-            }
+    private Gav buildPreviousGav(final Gav gav, final String previousVersion) {
+        Gav result = null;
+        if (previousVersion != null) {
+            result = gav.toBuilder().version(previousVersion).build();
         }
-    }
-
-    private void convertReleaseNote(final ReleaseNoteResult releaseNote, final Record record,
-                                    final Map<String, Serializable> cache,
-                                    final List<Replacement> replacements) {
-        addScm(releaseNote, (NodeValue) record.get(SCM), cache, replacements);
-        addMergeRequest(releaseNote, (NodeValue) record.get(MERGE_REQUEST), cache);
-        addIssues(releaseNote, (NodeValue) record.get(ISSUE), (NodeValue) record.get(ISSUE_LABEL));
-        addIssues(releaseNote, (NodeValue) record.get(ISSUE_LINK), (NodeValue) record.get(ISSUE_LINK_LABEL));
-        addAuthors(releaseNote, (NodeValue) record.get(AUTHOR), cache, replacements);
-    }
-
-
-    private void addScm(final ReleaseNoteResult releaseNote, final NodeValue scm,
-                        final Map<String, Serializable> cache,
-                        final List<Replacement> replacements) {
-        final String cacheKey = skipNode(scm, cache, SCM);
-        if (cacheKey == null) {
-            return;
-        }
-
-        cache.put(cacheKey, Boolean.TRUE);
-        final Map<String, Object> data   = scm.asMap();
-        final String              commit = data.containsKey(COMMIT) ? String.valueOf(data.get(COMMIT)) : null;
-
-
-        if (commit != null) {
-            for (final String commitLine : commit.split("\n")) {
-                if (commitLine != null) {
-                    releaseNote.addCommit(replace(commitLine, replacements));
-                }
-            }
-
-        }
-    }
-
-
-    private void addMergeRequest(final ReleaseNoteResult releaseNote, final NodeValue node,
-                                 final Map<String, Serializable> cache) {
-        final String cacheKey = skipNode(node, cache, MERGE_REQUEST);
-        if (cacheKey == null) {
-            return;
-        }
-        cache.put(cacheKey, Boolean.TRUE);
-        final Map<String, Object> data = node.asMap();
-
-        releaseNote.addMergeRequest(MergeRequests.builder()
-                                                 .uid(retrieveString(SHORT_NAME, data))
-                                                 .title(retrieveString(TITLE, data))
-                                                 .date(retrieveString(MERGED_AT, data))
-                                                 .url(retrieveString(URL, data))
-                                                 .build());
-    }
-
-    private void addIssues(final ReleaseNoteResult releaseNote, final NodeValue nodeValue,
-                           final NodeValue labelNode) {
-        Issue savedIssue = null;
-        if (isNotNull(nodeValue)) {
-            final Map<String, Object> data = nodeValue.asMap();
-            final Issue issue = Issue.builder()
-                                     .name(retrieveString(SHORT_NAME, data))
-                                     .title(retrieveString(TITLE, data))
-                                     .date(retrieveString(CREATED_AT, data))
-                                     .url(retrieveString(URL, data))
-                                     .build();
-
-
-            if (releaseNote.getIssues().contains(issue)) {
-                savedIssue = releaseNote.getIssues().get(releaseNote.getIssues().indexOf(issue));
-            }
-            else {
-                releaseNote.addIssue(issue);
-                savedIssue = issue;
-            }
-        }
-
-        if (savedIssue != null && isNotNull(labelNode)) {
-            final Map<String, Object> data = labelNode.asMap();
-
-            final Object shortName = data.get(SHORT_NAME);
-            if (shortName != null) {
-                savedIssue.addLabel(String.valueOf(shortName).replaceAll(" ", "_"));
-            }
-
-        }
-    }
-
-    private void addAuthors(final ReleaseNoteResult releaseNote, final NodeValue node,
-                            final Map<String, Serializable> cache,
-                            final List<Replacement> replacements) {
-        final String cacheKey = skipNode(node, cache, AUTHOR);
-        if (cacheKey == null) {
-            return;
-        }
-        cache.put(cacheKey, Boolean.TRUE);
-        final Map<String, Object> data = node.asMap();
-        releaseNote.addAuthor(Author.builder()
-                                    .name(retrieveString(SHORT_NAME, data, replacements))
-                                    .email(retrieveString(EMAIL, data, replacements))
-                                    .build());
+        return result;
     }
 
     // =========================================================================
@@ -433,37 +312,6 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         }
     }
 
-    private String skipNode(final NodeValue scm, final Map<String, Serializable> cache, final String cachePrefix) {
-        if (!isNotNull(scm)) {
-            return null;
-        }
-        final String cacheKey = String.join("_", cachePrefix, String.valueOf(scm.asNode().id()));
-
-        if (cache.containsKey(cacheKey)) {
-            return null;
-        }
-        return cacheKey;
-    }
-
-    private String retrieveString(final String key, final Map<String, Object> data) {
-        String result = null;
-        if (data != null && data.containsKey(key)) {
-            result = String.valueOf(data.get(key));
-        }
-        return result;
-    }
-
-    private String retrieveString(final String key, final Map<String, Object> data,
-                                  final List<Replacement> replacements) {
-        String result = null;
-        if (data != null && data.containsKey(key)) {
-            result = String.valueOf(data.get(key));
-        }
-
-        result = replace(result, replacements);
-        return result;
-    }
-
 
     private List<Replacement> buildReplacements(final ConfigHandler<String, String> configuration) {
         final List<Replacement> result = new ArrayList<>();
@@ -488,17 +336,5 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         return result;
     }
 
-    private String replace(final String input, final List<Replacement> replacements) {
-        String result = input;
-        if (result != null && replacements != null) {
-            for (final Replacement replacement : replacements) {
-                final Matcher matcher = replacement.getPattern().matcher(result);
-                if (matcher.matches()) {
-                    result = matcher.replaceAll(replacement.getReplacement());
-                }
-            }
-        }
-        return result;
-    }
 
 }

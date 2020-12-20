@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers;
+package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc;
 
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Issue;

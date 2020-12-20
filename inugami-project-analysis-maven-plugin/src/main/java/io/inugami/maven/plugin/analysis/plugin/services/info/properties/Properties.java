@@ -10,7 +10,7 @@ import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -57,9 +57,9 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final InfoContext context) {
-        final Neo4jDao dao       = new Neo4jDao(context.getConfiguration());
-        final Gav      gav       = convertMavenProjectToGav(context.getProject());
-        final String   queryPath = QUERIES.get(0);
+        final DefaultNeo4jDao dao       = new DefaultNeo4jDao(context.getConfiguration());
+        final Gav             gav       = convertMavenProjectToGav(context.getProject());
+        final String          queryPath = QUERIES.get(0);
         final String query = TemplateRendering.render(QueriesLoader.getQuery(queryPath),
                                                       configure(queryPath,
                                                                 gav,

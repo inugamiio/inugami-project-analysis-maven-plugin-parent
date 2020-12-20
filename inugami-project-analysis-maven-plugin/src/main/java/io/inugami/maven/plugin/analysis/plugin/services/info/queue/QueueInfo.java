@@ -26,7 +26,7 @@ import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
-import io.inugami.maven.plugin.analysis.plugin.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -77,7 +77,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     @Override
     public void process(final InfoContext context) {
-        final Neo4jDao              dao  = new Neo4jDao(context.getConfiguration());
+        final DefaultNeo4jDao       dao  = new DefaultNeo4jDao(context.getConfiguration());
         final Gav                   gav  = convertMavenProjectToGav(context.getProject());
         final List<ArtifactService> data = searchService(gav, dao, context.getConfiguration());
 
@@ -92,7 +92,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // SEARCH
     // =========================================================================
-    private List<ArtifactService> searchService(final Gav gav, final Neo4jDao dao,
+    private List<ArtifactService> searchService(final Gav gav, final DefaultNeo4jDao dao,
                                                 final ConfigHandler<String, String> config) {
         final Map<String, ArtifactService> result = new LinkedHashMap<>();
 
@@ -106,7 +106,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
                      .collect(Collectors.toList());
     }
 
-    private void retrieveData(final String queryPath, final Gav gav, final Neo4jDao dao,
+    private void retrieveData(final String queryPath, final Gav gav, final DefaultNeo4jDao dao,
                               final ConfigHandler<String, String> config,
                               final Map<String, ArtifactService> result,
                               final boolean expose) {

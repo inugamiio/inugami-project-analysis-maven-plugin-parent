@@ -29,6 +29,7 @@ public class ReleaseNoteResult {
     Set<Author>         authors       = new LinkedHashSet<>();
     List<Issue>         issues        = new ArrayList<>();
     List<MergeRequests> mergeRequests = new ArrayList<>();
+    ErrorCodes          errorCodes    = new ErrorCodes();
 
 
     public ReleaseNoteResult addCommit(final String... commit) {

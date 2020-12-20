@@ -382,3 +382,116 @@
 
 |===
 
+
+== Error codes
+=== New error codes
+[cols="2,1,1,4,1", options="header"]
+|===
+|Error | Type | Status | Message | artifact
+
+|LIFECYCLE_6
+|technical
+|500
+|concurrent process launching
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|ISSUES_5_4_2
+|technical
+|500
+|error on saving change log on issue
+|io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+
+|ISSUES_7
+|fonctionnal
+|500
+|invalid issue request
+|io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+
+|ISSUES_8
+|technical
+|500
+|error on processing issue workflow
+|io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+
+|===
+
+=== Deleted error codes
+[cols="2,1,1,4,1", options="header"]
+|===
+|Error | Type | Status | Message | artifact
+
+|ISSUES_5_5
+|technical
+|500
+|error on saving change log on issue
+|io.inugami.demo:spring-boot-training-rest:0.0.1-SNAPSHOT:jar
+
+|===
+
+=== Error codes
+[cols="2,1,1,4,1", options="header"]
+|===
+|Error | Type | Status | Message | artifact
+
+|COMMONS_1_1
+|technical
+|500
+|Http request is mandatory
+|io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar
+
+|COMMONS_1_2
+|technical
+|500
+|request information is mandatory
+|io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_1_1
+|technical
+|500
+|can't load lifecycle xml null file path
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_1_2
+|technical
+|500
+|can't load lifecycle xml from malformed url
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_2_1
+|technical
+|500
+|can't load lifecycle xml null URL
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_2_2
+|technical
+|500
+|can't unmarshalling lifecycle xml
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_2_3
+|technical
+|500
+|can't read lifecycle xml
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_2_4
+|technical
+|500
+|lifecycle name is mandatory
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_3_1
+|technical
+|500
+|can't map null value to lifecycle
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+|LIFECYCLE_1_4_1
+|technical
+|500
+|no lifecycle define!
+|io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+
+
+|===
