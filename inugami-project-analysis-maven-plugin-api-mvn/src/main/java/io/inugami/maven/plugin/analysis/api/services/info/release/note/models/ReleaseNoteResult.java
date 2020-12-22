@@ -18,18 +18,15 @@ package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class ReleaseNoteResult {
-    Set<String>         commit        = new LinkedHashSet<>();
-    Set<Author>         authors       = new LinkedHashSet<>();
-    List<Issue>         issues        = new ArrayList<>();
-    List<MergeRequests> mergeRequests = new ArrayList<>();
-    ErrorCodes          errorCodes    = new ErrorCodes();
+    Set<String>               commit        = new LinkedHashSet<>();
+    Set<Author>               authors       = new LinkedHashSet<>();
+    List<Issue>               issues        = new ArrayList<>();
+    List<MergeRequests>       mergeRequests = new ArrayList<>();
+    Map<String, Differential> differentials = new LinkedHashMap<>();
 
 
     public ReleaseNoteResult addCommit(final String... commit) {
@@ -58,6 +55,13 @@ public class ReleaseNoteResult {
     public ReleaseNoteResult addMergeRequest(final MergeRequests value) {
         if (value != null) {
             mergeRequests.add(value);
+        }
+        return this;
+    }
+
+    public ReleaseNoteResult addDifferential(final String name, final Differential differential) {
+        if (name != null && differential != null) {
+            differentials.put(name, differential);
         }
         return this;
     }

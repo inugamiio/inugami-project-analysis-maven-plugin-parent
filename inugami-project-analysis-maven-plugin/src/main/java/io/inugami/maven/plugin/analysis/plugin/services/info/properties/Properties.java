@@ -22,6 +22,8 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.Function;
 
+import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
+
 @Slf4j
 public class Properties implements ProjectInformation, QueryConfigurator {
 
@@ -29,7 +31,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     // ATTRIBUTES
     // =========================================================================
     private static final List<String> QUERIES = List.of(
-            "META-INF/queries/search_properties.cql"
+            QUERIES_SEARCH_PROPERTIES_CQL
                                                        );
 
     // =========================================================================

@@ -16,15 +16,24 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note;
 
+import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.processors.ConfigHandler;
+import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
+import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
+import org.neo4j.driver.Record;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
+
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 
 public interface ReleaseNoteExtractor {
 
@@ -36,7 +45,6 @@ public interface ReleaseNoteExtractor {
                             final InfoContext context);
 
 
-
     // =========================================================================
     // TOOLS
     // =========================================================================
@@ -45,7 +53,7 @@ public interface ReleaseNoteExtractor {
         if (data != null && data.containsKey(key)) {
             result = String.valueOf(data.get(key));
         }
-        return result ;
+        return result;
     }
 
     default String retrieveString(final String key, final Map<String, Object> data,
@@ -66,6 +74,28 @@ public interface ReleaseNoteExtractor {
                     result = matcher.replaceAll(replacement.getReplacement());
                 }
             }
+        }
+        return result;
+    }
+
+
+    default List<JsonObject> search(final String queryName,
+                                    final Gav gav,
+                                    final ConfigHandler<String, String> configuration,
+                                    final Neo4jDao dao,
+                                    final Function<List<Record>, List<JsonObject>> transformer) {
+        List<JsonObject>                    result = null;
+        final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
+        config.putAll(Map.ofEntries(
+                Map.entry(GROUP_ID, gav.getGroupId()),
+                Map.entry(ARTIFACT_ID, gav.getArtifactId()),
+                Map.entry(VERSION, gav.getVersion())
+                                   ));
+        final String query = TemplateRendering.render(QueriesLoader.getQuery(queryName),
+                                                      config);
+        final List<Record> resultSet = dao.search(query);
+        if (resultSet != null && transformer != null) {
+            result = transformer.apply(resultSet);
         }
         return result;
     }

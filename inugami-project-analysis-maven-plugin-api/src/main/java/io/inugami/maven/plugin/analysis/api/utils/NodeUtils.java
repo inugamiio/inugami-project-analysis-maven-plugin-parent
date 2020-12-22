@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.api.utils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,6 +38,12 @@ public class NodeUtils {
     public static void processIfNotEmpty(final String value, final Consumer<String> consumer) {
         if (value != null && !value.isEmpty() && consumer != null) {
             consumer.accept(value);
+        }
+    }
+
+    public static <T> void processIfNotEmpty(final Collection<T> values, final Consumer<Collection<T>> consumer) {
+        if (values != null && !values.isEmpty() && consumer != null) {
+            consumer.accept(values);
         }
     }
 

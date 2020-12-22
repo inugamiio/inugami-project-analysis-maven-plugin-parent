@@ -16,17 +16,19 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteExtractor;
-import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ErrorCodeDTO;
+import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ErrorCodeDTO;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
 
@@ -37,6 +39,10 @@ import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ERRORS_CQL;
 
 public class ErrorCodeExtractor implements ReleaseNoteExtractor {
+    // =========================================================================
+    // ATTRIBUTES
+    // =========================================================================
+    public static final String ERROR_CODES = "errorCodes";
 
     // =========================================================================
     // API
@@ -47,30 +53,14 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
                                    final Gav previousVersion, final Neo4jDao dao, final List<Replacement> replacements,
                                    final InfoContext context) {
 
-        final Set<ErrorCodeDTO> currentErrorCodes = searchErrorCode(currentVersion, context.getConfiguration(), dao);
-        final Set<ErrorCodeDTO> previousErrorCodes = previousVersion == null ? null : searchErrorCode(previousVersion,
+        final Set<JsonObject> currentErrorCodes = searchErrorCode(currentVersion, context.getConfiguration(), dao);
+        final Set<JsonObject> previousErrorCodes = previousVersion == null ? null : searchErrorCode(previousVersion,
                                                                                                       context.getConfiguration(),
                                                                                                       dao);
 
-        List<ErrorCodeDTO> newErrorCodes     = null;
-        List<ErrorCodeDTO> deletedErrorCodes = null;
-        List<ErrorCodeDTO> sameErrorCodes    = null;
 
-        if (currentErrorCodes != null) {
-            if (previousErrorCodes == null) {
-                sameErrorCodes    = new ArrayList<>(currentErrorCodes);
-                newErrorCodes     = new ArrayList<>();
-                deletedErrorCodes = new ArrayList<>();
-            }
-            else {
-                newErrorCodes     = resolveNewErrorCodes(currentErrorCodes, previousErrorCodes);
-                deletedErrorCodes = resolveDeletedErrorCodes(currentErrorCodes, previousErrorCodes);
-                sameErrorCodes    = resolveSameErrorCodes(currentErrorCodes, newErrorCodes);
-            }
-        }
-        releaseNoteResult.getErrorCodes().addNewErrorCodes(newErrorCodes);
-        releaseNoteResult.getErrorCodes().addDeletedErrorCodes(deletedErrorCodes);
-        releaseNoteResult.getErrorCodes().addErrorCodes(sameErrorCodes);
+
+        releaseNoteResult.addDifferential(ERROR_CODES, Differential.buildDifferential(currentErrorCodes,previousErrorCodes));
     }
 
 
@@ -109,9 +99,9 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
         return result;
     }
 
-    private Set<ErrorCodeDTO> searchErrorCode(final Gav gav, final ConfigHandler<String, String> configuration,
+    private Set<JsonObject> searchErrorCode(final Gav gav, final ConfigHandler<String, String> configuration,
                                               final Neo4jDao dao) {
-        Set<ErrorCodeDTO>                   result = null;
+        Set<JsonObject>                   result = null;
         final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
         config.putAll(Map.ofEntries(
                 Map.entry(GROUP_ID, gav.getGroupId()),
@@ -127,8 +117,8 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
         return result;
     }
 
-    private Set<ErrorCodeDTO> convertToModel(final List<Record> resultSet) {
-        final Set<ErrorCodeDTO> result = new LinkedHashSet<>();
+    private Set<JsonObject> convertToModel(final List<Record> resultSet) {
+        final Set<JsonObject> result = new LinkedHashSet<>();
         for (final Record record : resultSet) {
             final NodeValue error    = extractNode("error", record);
             final NodeValue artifact = extractNode("dependency", record);

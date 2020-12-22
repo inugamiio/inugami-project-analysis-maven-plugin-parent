@@ -19,12 +19,12 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.write
 import edu.emory.mathcs.backport.java.util.Collections;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ErrorCodeExtractor;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ErrorCodeDTO;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.DependenciesExtractor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,72 +32,81 @@ import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
+public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
+
+    // =========================================================================
+    // ATTRIBUTES
+    // =========================================================================
+    @Override
+    public String getParagraphName() {
+        return DependenciesExtractor.TYPE_PROJECT;
+    }
+
+    protected String getParagraphBaseName(){
+        return "project_dependencies";
+    }
+    protected String getParagraphBaseTitle(){
+        return "Project dependencies";
+    }
 
     // =========================================================================
     // API
     // =========================================================================
     @Override
-    public String getParagraphName() {
-        return "error_codes";
-    }
-
-    @Override
     public LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote, final boolean notSplitFile,
                                                    final InfoContext context) {
-
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
-        result.put("error_base", renderBase());
-        if (releaseNote != null && releaseNote.getDifferentials().containsKey(ErrorCodeExtractor.ERROR_CODES)) {
-            final Differential differential = releaseNote.getDifferentials().get(ErrorCodeExtractor.ERROR_CODES);
+        result.put(getParagraphBaseName(), renderBase());
+        if (releaseNote != null && releaseNote.getDifferentials().containsKey(getParagraphName())) {
+            final Differential differential = releaseNote.getDifferentials().get(getParagraphName());
             //@formatter:off
-            processIfNotNull(differential.getNewValues(),     values-> result.put("new_errors", renderingErrors(values,"New error codes", notSplitFile)));
-            processIfNotNull(differential.getDeletedValues(), values-> result.put("deleted_errors", renderingErrors(values,"Deleted error codes", notSplitFile)));
-            processIfNotNull(differential.getSameValues(),    values-> result.put("errors", renderingErrors(values,"Error codes", notSplitFile)));
+            processIfNotNull(differential.getNewValues(),     values-> result.put(getParagraphBaseName()+"_new_dependencies", renderingDependencies(values,"New dependencies", notSplitFile)));
+            processIfNotNull(differential.getDeletedValues(), values-> result.put(getParagraphBaseName()+"_deleted_dependencies", renderingDependencies(values,"Deleted dependencies", notSplitFile)));
+            processIfNotNull(differential.getSameValues(),    values-> result.put(getParagraphBaseName()+"_dependencies", renderingDependencies(values,"Dependencies", notSplitFile)));
             //@formatter:on
         }
         return result;
     }
 
+
+    // =========================================================================
+    // RENDERING
+    // =========================================================================
     private String renderBase() {
         final JsonBuilder writer = new JsonBuilder();
-        writer.write("== Error codes").line();
+        writer.write("== ").write(getParagraphBaseTitle()).line();
         return writer.toString();
     }
 
-    private String renderingErrors(final List<JsonObject> values, final String title, final boolean notSplitFile) {
+    public static String renderingDependencies(final List<JsonObject> values, final String title,
+                                               final boolean notSplitFile) {
         final JsonBuilder writer = new JsonBuilder();
+
+        final List<Gav> data = new ArrayList<>();
+        for (final JsonObject value : values) {
+            if (value instanceof Gav) {
+                data.add((Gav) value);
+            }
+        }
+        Collections.sort(data);
 
         if (notSplitFile) {
             writer.write("=== ").write(title).line();
         }
 
-        writer.write("[cols=\"2,1,1,4,1\", options=\"header\"]").line();
+        writer.write("[cols=\"3,3,1\", options=\"header\"]").line();
         writer.write("|===").line();
-        writer.write("|Error | Type | Status | Message | artifact").line();
+        writer.write("|GroupId | ArtifactId | Version").line();
         writer.line();
 
-        final List<ErrorCodeDTO> data = new ArrayList<>();
-        for (final JsonObject value : values) {
-            if (value instanceof ErrorCodeDTO) {
-                data.add((ErrorCodeDTO) value);
-            }
+        for (final Gav dependency : data) {
+            writer.write("|").write(dependency.getGroupId()).line();
+            writer.write("|").write(dependency.getArtifactId()).line();
+            writer.write("|").write(dependency.getVersion()).line().line();
         }
-        Collections.sort(data);
-
-        for (final ErrorCodeDTO error : data) {
-            writer.write("|").write(error.getErrorCode()).line();
-            writer.write("|").write(error.getType()).line();
-            writer.write("|").write(error.getStatusCode()).line();
-            writer.write("|").write(error.getMessage()).line();
-            writer.write("|").write(error.getArtifact()).line();
-            writer.line();
-        }
-
         writer.write("|===").line();
         writer.line();
         return writer.toString();
     }
-
 
 }

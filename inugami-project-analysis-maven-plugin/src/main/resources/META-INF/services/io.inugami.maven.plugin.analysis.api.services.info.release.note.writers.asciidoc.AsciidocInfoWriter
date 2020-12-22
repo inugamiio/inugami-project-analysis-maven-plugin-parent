@@ -1,1 +1,4 @@
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.ErrorCodeAsciidocWriter
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.PropertiesAsciidocWriter
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.DependenciesProjectAsciidocWriter
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.DependenciesAsciidocWriter

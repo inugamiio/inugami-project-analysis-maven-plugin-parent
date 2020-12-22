@@ -1,5 +1,6 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,14 +14,16 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder(toBuilder = true)
-public class Gav {
+public class Gav implements JsonObject, Comparable<Gav> {
+
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final String groupId;
-    private final String artifactId;
-    private final String version;
+    private static final long   serialVersionUID = -1609343378801778104L;
+    private final        String groupId;
+    private final        String artifactId;
+    private final        String version;
 
     @EqualsAndHashCode.Include
     private final String   hash;
@@ -31,15 +34,24 @@ public class Gav {
     // =========================================================================
     // CONSTRUCTORS
     // =========================================================================
-    public Gav(final String groupId, final String artifactId, final String version, final String hash, final String type,
+    public Gav(final String groupId, final String artifactId, final String version, final String hash,
+               final String type,
                final Set<Gav> dependencies, final Gav parent) {
         this.groupId      = groupId;
         this.artifactId   = artifactId;
         this.version      = version;
         this.type         = type;
         this.dependencies = dependencies == null ? new LinkedHashSet<>() : dependencies;
-        this.hash         = String.join(":", List.of(groupId, artifactId, version, type));
+        this.hash         = String.join(":", List.of(String.valueOf(groupId),
+                                                     String.valueOf(artifactId),
+                                                     String.valueOf(version),
+                                                     String.valueOf(type)));
         this.parent       = parent;
+    }
+
+    @Override
+    public int compareTo(final Gav other) {
+        return hash.compareTo(String.valueOf(other == null ? null : other.getHash()));
     }
 
     public Gav addDependency(final Gav gav) {
@@ -59,8 +71,10 @@ public class Gav {
     }
 
     public void addDependencies(final List<Gav> values) {
-        if(values!=null){
+        if (values != null) {
             dependencies.addAll(values);
         }
     }
+
+
 }

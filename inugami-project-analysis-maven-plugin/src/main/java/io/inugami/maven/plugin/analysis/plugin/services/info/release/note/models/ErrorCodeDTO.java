@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
+package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
 
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.UNDERSCORE;
@@ -26,7 +27,8 @@ import static io.inugami.maven.plugin.analysis.api.utils.Constants.UNDERSCORE;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class ErrorCodeDTO implements Comparable<ErrorCodeDTO>{
+public class ErrorCodeDTO implements Comparable<ErrorCodeDTO>, JsonObject {
+    private static final long serialVersionUID = -5469719611823975510L;
     @EqualsAndHashCode.Include
     String  errorCode;
     Integer statusCode;
