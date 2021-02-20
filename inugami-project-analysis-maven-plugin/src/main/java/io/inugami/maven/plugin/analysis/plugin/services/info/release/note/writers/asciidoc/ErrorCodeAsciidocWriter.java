@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
-
 public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
 
     // =========================================================================
@@ -51,9 +49,9 @@ public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(ErrorCodeExtractor.ERROR_CODES)) {
             final Differential differential = releaseNote.getDifferentials().get(ErrorCodeExtractor.ERROR_CODES);
             //@formatter:off
-            processIfNotNull(differential.getNewValues(),     values-> result.put("new_errors", renderingErrors(values,"New error codes", notSplitFile)));
-            processIfNotNull(differential.getDeletedValues(), values-> result.put("deleted_errors", renderingErrors(values,"Deleted error codes", notSplitFile)));
-            processIfNotNull(differential.getSameValues(),    values-> result.put("errors", renderingErrors(values,"Error codes", notSplitFile)));
+            result.put("new_errors", renderingErrors(notNull(differential.getNewValues()),"New error codes", notSplitFile));
+            result.put("deleted_errors", renderingErrors(notNull(differential.getDeletedValues()),"Deleted error codes", notSplitFile));
+            result.put("errors", renderingErrors(notNull(differential.getSameValues()),"Error codes", notSplitFile));
             //@formatter:on
         }
         return result;

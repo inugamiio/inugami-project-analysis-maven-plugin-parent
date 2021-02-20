@@ -37,7 +37,15 @@ class ReleaseNoteIT {
         config.put(PREVIOUS_VERSION, "0.0.1-SNAPSHOT");
 
 
-
+        config.put(ReleaseNote.REPLACEMENTS, "[\n" +
+                "    {\"from\":\"(.*)(@gmail.com)\",\"to\":\"$1@inugami.io\"},\n" +
+                "    {\"from\":\"(.*)(Wiedza CI)(.*)\",\"to\":\"$1InugamiCi$3\"},\n" +
+                "    {\"from\":\"(.*)(smartwavesa.com)(.*)\",\"to\":\"$1inugami.io$3\"},\n" +
+                "    {\"from\":\"(.*)(jhaller)(.*)\",\"to\":\"$1joefoobar$3\"},\n" +
+                "    {\"from\":\"(.*)(Julien HALLER)(.*)\",\"to\":\"$1Joe Foobar$3\"},\n" +
+                "    {\"from\":\"(.*)(Yannick Marrec)(.*)\",\"to\":\"$1John Smith$3\"},\n" +
+                "    {\"from\":\"(.*)(smartwavesa.com)(.*)\",\"to\":\"$1inugami.io$3\"}\n" +
+                "]");
 
         final ReleaseNote                   display       = new ReleaseNote();
 

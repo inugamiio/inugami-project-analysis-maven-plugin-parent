@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
-
 public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
 
     // =========================================================================
@@ -60,9 +58,9 @@ public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(getParagraphName())) {
             final Differential differential = releaseNote.getDifferentials().get(getParagraphName());
             //@formatter:off
-            processIfNotNull(differential.getNewValues(),     values-> result.put(getParagraphBaseName()+"_new_dependencies", renderingDependencies(values,"New dependencies", notSplitFile)));
-            processIfNotNull(differential.getDeletedValues(), values-> result.put(getParagraphBaseName()+"_deleted_dependencies", renderingDependencies(values,"Deleted dependencies", notSplitFile)));
-            processIfNotNull(differential.getSameValues(),    values-> result.put(getParagraphBaseName()+"_dependencies", renderingDependencies(values,"Dependencies", notSplitFile)));
+            result.put(getParagraphBaseName()+"_new_dependencies", renderingDependencies(notNull(differential.getNewValues()),"New dependencies", notSplitFile));
+            result.put(getParagraphBaseName()+"_deleted_dependencies", renderingDependencies(notNull(differential.getDeletedValues()),"Deleted dependencies", notSplitFile));
+            result.put(getParagraphBaseName()+"_dependencies", renderingDependencies(notNull(differential.getSameValues()),"Dependencies", notSplitFile));
             //@formatter:on
         }
         return result;

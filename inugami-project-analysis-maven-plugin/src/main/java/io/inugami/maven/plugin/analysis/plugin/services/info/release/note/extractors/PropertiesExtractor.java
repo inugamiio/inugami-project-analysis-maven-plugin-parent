@@ -32,9 +32,7 @@ import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.types.Node;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
@@ -131,11 +129,5 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
         return result;
     }
 
-    // =========================================================================
-    // TOOLS
-    // =========================================================================
-    private Set<JsonObject> newSet(final List<JsonObject> currentErrorCodes) {
-        return currentErrorCodes == null ? null : new LinkedHashSet<>(currentErrorCodes);
-    }
 
 }

@@ -28,8 +28,10 @@ import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import org.neo4j.driver.Record;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 
@@ -100,4 +102,8 @@ public interface ReleaseNoteExtractor {
         return result;
     }
 
+
+    default Set<JsonObject> newSet(final List<JsonObject> values) {
+        return values == null ? null : new LinkedHashSet<>(values);
+    }
 }

@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
-
 public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
 
 
@@ -56,9 +54,9 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(PropertiesExtractor.TYPE)) {
             final Differential differential = releaseNote.getDifferentials().get(PropertiesExtractor.TYPE);
             //@formatter:off
-            processIfNotNull(differential.getNewValues(),     values-> result.put("new_properties", renderingProperties(values,"New properties", notSplitFile)));
-            processIfNotNull(differential.getDeletedValues(), values-> result.put("deleted_properties", renderingProperties(values,"Deleted properties", notSplitFile)));
-            processIfNotNull(differential.getSameValues(),    values-> result.put("properties", renderingProperties(values,"Properties", notSplitFile)));
+            result.put("new_properties", renderingProperties(notNull(differential.getNewValues()),"New properties", notSplitFile));
+            result.put("deleted_properties", renderingProperties(notNull(differential.getDeletedValues()),"Deleted properties", notSplitFile));
+            result.put("properties", renderingProperties(notNull(differential.getSameValues()),"Properties", notSplitFile));
             //@formatter:on
         }
         return result;

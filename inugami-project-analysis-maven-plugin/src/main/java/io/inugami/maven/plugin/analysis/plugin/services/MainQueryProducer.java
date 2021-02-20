@@ -38,6 +38,8 @@ public class MainQueryProducer implements QueryProducer {
     public static final String QUERIES_SEARCH_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies.cql";
     public static final String QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies_project.cql";
 
+    public static final String QUERIES_SEARCH_ALL_EXPOSED_SERVICES = "META-INF/queries/search_all_exposed_services.cql";
+    public static final String QUERIES_SEARCH_ALL_CONSUMED_SERVICES = "META-INF/queries/search_all_consumed_services.cql";
     // =========================================================================
     // API
     // =========================================================================
@@ -141,10 +143,21 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_project_dependencies")
                                .type("cql")
                                .description("Allow to retrieve project dependencies")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_ALL_EXPOSED_SERVICES)
+                               .name("search_all_exposed_services")
+                               .type("cql")
+                               .description("Allow to retrieve all project exposed services")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_ALL_CONSUMED_SERVICES)
+                               .name("search_all_consumed_services")
+                               .type("cql")
+                               .description("Allow to retrieve all project consumed services")
                                .build()
-
-
-
                       );
     }
 

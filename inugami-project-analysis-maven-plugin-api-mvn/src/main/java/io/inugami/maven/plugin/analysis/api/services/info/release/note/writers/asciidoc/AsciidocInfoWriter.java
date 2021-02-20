@@ -16,10 +16,14 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
 
 public interface AsciidocInfoWriter {
     String getParagraphName();
@@ -27,4 +31,8 @@ public interface AsciidocInfoWriter {
     LinkedHashMap<String,String> rendering(final ReleaseNoteResult releaseNote,
                                            final boolean notSplitFile,
                                            final InfoContext context);
+
+    default List<JsonObject> notNull(final List<JsonObject> values){
+        return Optional.ofNullable(values).orElse(new ArrayList<>());
+    }
 }

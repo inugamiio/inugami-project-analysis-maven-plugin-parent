@@ -123,7 +123,15 @@ public final class Neo4jUtils {
 
 
     public static String getNodeName(final Object node) {
-        return retrieve("name", node instanceof org.neo4j.driver.types.Node ? (org.neo4j.driver.types.Node) node : null);
+        String result = null;
+        if(node == null){
+            result = null;
+        }else if(node instanceof org.neo4j.driver.types.Node ){
+            result = retrieve("name",  (org.neo4j.driver.types.Node) node );
+        }else if(node instanceof NodeValue){
+            result = String.valueOf(((NodeValue)node).get("name"));
+        }
+        return result==null?null:result.replaceAll("\"","");
     }
 
     public static NodeValue extractNode(final String nodeName, final Record record) {

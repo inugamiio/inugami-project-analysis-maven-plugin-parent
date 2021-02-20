@@ -2,3 +2,4 @@ io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.Ba
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ErrorCodeExtractor
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.PropertiesExtractor
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.DependenciesExtractor
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ServiceExtractor

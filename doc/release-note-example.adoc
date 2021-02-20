@@ -1541,3 +1541,644 @@
 
 |===
 
+
+== Services
+=== Exposed services
+==== New exposed services
+===== REST services
+====== GET /issues/issues/status/{status}
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "title":"String",
+    "description":"String",
+    "lifecycle":"String",
+    "previousKnownState":"String",
+    "changeLogs":[
+      {
+        "uid":"Long",
+        "status":"String",
+        "comment":"String",
+        "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      }
+    ],
+    "status":"<<ChangeLog>>",
+    "createBy":"String",
+    "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssue
+
+====== GET /issues/hello
+[horizontal]
+Response payload::
+[source,javascript]
+----
+String
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.sayHello
+
+==== Deleted exposed services
+===== REST services
+====== GET /issues/issues/status/{status}
+[horizontal]
+Response payload::
+[source,javascript]
+----
+Object
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.1-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssue
+
+==== Same exposed services
+===== JMS services
+====== create.user.queue
+[horizontal]
+Queue:: ${my.activeMq.onUserCreated.queue}
+Payload::
+[source,javascript]
+----
+{
+  "uid":"String",
+  "userName":"String"
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+
+===== REST services
+====== POST /security/security/authenticate
+[horizontal]
+Consume content-type:: application/json
+Content-type:: application/json
+Payload::
+[source,javascript]
+----
+{
+  "login":"String",
+  "password":"String"
+}
+----
+Response payload::
+[source,javascript]
+----
+{
+  "login":"String",
+  "password":"String",
+  "firstName":"String",
+  "lastName":"String",
+  "roles":[
+        "String"
+  ]
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.authenticate
+
+====== GET /lifecycles/lifecycles/{lifecycle}/next-states/{state}
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "name":"String",
+    "title":"String",
+    "ref":"String",
+    "role":"String",
+    "next":[
+      {
+        "name":"String",
+        "title":"String",
+        "ref":"String",
+        "role":"String",
+        "next":["<<State>>"]
+      }
+    ]
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecyclesFromState
+
+====== DELETE /security/security/logout
+[horizontal]
+headers:: Authorization
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.logout
+
+====== GET /security/security/handcheck
+[horizontal]
+headers:: Authorization
+Response payload::
+[source,javascript]
+----
+{
+  "login":"String",
+  "password":"String",
+  "firstName":"String",
+  "lastName":"String",
+  "roles":[
+        "String"
+  ]
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.handcheck
+
+====== POST /states/states/change-state
+[horizontal]
+Payload::
+[source,javascript]
+----
+{
+  "lifecycle":"String",
+  "nextState":"String",
+  "uid":"Long",
+  "comment":"String",
+  "currentState":"String",
+  "previousKnownState":"String"
+}
+----
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "name":"String",
+    "title":"String",
+    "ref":"String",
+    "role":"String",
+    "next":[
+      {
+        "name":"String",
+        "title":"String",
+        "ref":"String",
+        "role":"String",
+        "next":["<<State>>"]
+      }
+    ]
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.StatesRest.changeState
+
+====== GET /lifecycles/lifecycles/{lifecycle}
+[horizontal]
+Response payload::
+[source,javascript]
+----
+{
+  "serialVersionUID":"long",
+  "name":"String",
+  "title":"String",
+  "states":[
+    {
+      "name":"String",
+      "title":"String",
+      "ref":"String",
+      "role":"String",
+      "next":["<<State>>"]
+    }
+  ],
+  "statesNames":["<<State>>"],
+  "globaleStates":["<<State>>"]
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycle
+
+====== POST /issues/issues/{uid}/change_logs
+[horizontal]
+Consume content-type:: application/json
+Content-type:: application/json
+Payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "status":"String",
+    "comment":"String",
+    "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Response payload::
+[source,javascript]
+----
+{
+  "uid":"Long",
+  "title":"String",
+  "description":"String",
+  "lifecycle":"String",
+  "previousKnownState":"String",
+  "changeLogs":[
+    {
+      "uid":"Long",
+      "status":"String",
+      "comment":"String",
+      "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    }
+  ],
+  "status":"<<ChangeLog>>",
+  "createBy":"String",
+  "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.addIssueChangeLog
+
+====== POST /issues/issues
+[horizontal]
+Consume content-type:: application/json
+Content-type:: application/json
+Payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "title":"String",
+    "description":"String",
+    "lifecycle":"String",
+    "previousKnownState":"String",
+    "changeLogs":[
+      {
+        "uid":"Long",
+        "status":"String",
+        "comment":"String",
+        "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      }
+    ],
+    "status":"<<ChangeLog>>",
+    "createBy":"String",
+    "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "title":"String",
+    "description":"String",
+    "lifecycle":"String",
+    "previousKnownState":"String",
+    "changeLogs":[
+      {
+        "uid":"Long",
+        "status":"String",
+        "comment":"String",
+        "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      }
+    ],
+    "status":"<<ChangeLog>>",
+    "createBy":"String",
+    "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssue
+
+====== GET /issues/issues
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "title":"String",
+    "description":"String",
+    "lifecycle":"String",
+    "previousKnownState":"String",
+    "changeLogs":[
+      {
+        "uid":"Long",
+        "status":"String",
+        "comment":"String",
+        "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      }
+    ],
+    "status":"<<ChangeLog>>",
+    "createBy":"String",
+    "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssues
+
+====== GET /lifecycles/lifecycles
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "serialVersionUID":"long",
+    "name":"String",
+    "title":"String",
+    "states":[
+      {
+        "name":"String",
+        "title":"String",
+        "ref":"String",
+        "role":"String",
+        "next":["<<State>>"]
+      }
+    ],
+    "statesNames":["<<State>>"],
+    "globaleStates":["<<State>>"]
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+* io.inugami.demo:project-consumer:0.0.1-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycles
+* io.inugami.demo.project.consumer.feign.LifecycleFeignClient.getLifecycles
+
+====== GET /issues/issues/author/{author}
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "uid":"Long",
+    "title":"String",
+    "description":"String",
+    "lifecycle":"String",
+    "previousKnownState":"String",
+    "changeLogs":[
+      {
+        "uid":"Long",
+        "status":"String",
+        "comment":"String",
+        "date":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+      }
+    ],
+    "status":"<<ChangeLog>>",
+    "createBy":"String",
+    "createdDate":"yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssuesByAuthor
+
+====== GET /lifecycles/lifecycles/{lifecycle}/next-states
+[horizontal]
+Response payload::
+[source,javascript]
+----
+[
+  {
+    "name":"String",
+    "title":"String",
+    "ref":"String",
+    "role":"String",
+    "next":[
+      {
+        "name":"String",
+        "title":"String",
+        "ref":"String",
+        "role":"String",
+        "next":["<<State>>"]
+      }
+    ]
+  }
+]
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Consumers::
+Mehtods::
+* io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycles
+
+=== Consumed services
+==== New consumed services
+==== Deleted consumed services
+==== Same consumed services
+===== JMS services
+====== create.user.queue
+[horizontal]
+Queue:: ${my.activeMq.onUserCreated.queue}
+Payload::
+[source,javascript]
+----
+{
+  "uid":"String",
+  "userName":"String"
+}
+----
+Producers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar
+Consumers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)
+
+====== onCreateComment
+[horizontal]
+Queue:: ${my.activeMq.onCreated.queue}
+Payload::
+[source,javascript]
+----
+{
+  "uid":"Long",
+  "content":"String",
+  "user":"User",
+  "created":"yyyy-MM-dd'T'HH:mm:ss.sssZ",
+  "responses":["<<CommentEvent>>"]
+}
+----
+Producers::
+Consumers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.CommentEvent>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.CommentEvent>)
+
+===== RabbitMq services
+====== events.exchangeName_events.user.authenticated.routingKey
+[horizontal]
+Payload::
+[source,javascript]
+----
+{
+  "userName":"String",
+  "date":"yyyy-MM-dd'T'HH:mm:ss.sssZ"
+}
+----
+Binding::
+[source,javascript]
+----
+[ {
+  "queue" : {
+    "name" : "${events.user.queueName}",
+    "durable" : "true",
+    "exclusive" : "",
+    "autoDelete" : "false",
+    "ignoreDeclarationExceptions" : "false",
+    "declare" : "true",
+    "arguments" : [ {
+      "name" : "x-dead-letter-exchange",
+      "value" : "",
+      "type" : "java.lang.String"
+    }, {
+      "name" : "x-dead-letter-routing-key",
+      "value" : "${events.user.dlqName}",
+      "type" : "java.lang.String"
+    } ],
+    "admins" : null
+  },
+  "key" : [ "${events.user.created.routingKey}", "${events.user.authenticated.routingKey}" ],
+  "exchange" : {
+    "name" : "${events.exchangeName}",
+    "type" : "topic",
+    "durable" : "true",
+    "autoDelete" : "false",
+    "internal" : "false",
+    "ignoreDeclarationExceptions" : "false",
+    "delayed" : "false",
+    "declare" : "true",
+    "arguments" : null,
+    "admins" : null
+  },
+  "declare" : "true",
+  "ignoreDeclarationExceptions" : "false",
+  "admins" : null
+} ]
+----
+Producers::
+Consumers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onAuthenticated(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserAuthenticatedEvent>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onAuthenticated(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserAuthenticatedEvent>)
+
+====== events.exchangeName_events.user.created.routingKey
+[horizontal]
+Payload::
+[source,javascript]
+----
+{
+  "uid":"String",
+  "userName":"String",
+  "created":"yyyy-MM-dd'T'HH:mm:ss.sssZ"
+}
+----
+Binding::
+[source,javascript]
+----
+[ {
+  "queue" : {
+    "name" : "${events.user.queueName}",
+    "durable" : "true",
+    "exclusive" : "",
+    "autoDelete" : "false",
+    "ignoreDeclarationExceptions" : "false",
+    "declare" : "true",
+    "arguments" : [ {
+      "name" : "x-dead-letter-exchange",
+      "value" : "",
+      "type" : "java.lang.String"
+    }, {
+      "name" : "x-dead-letter-routing-key",
+      "value" : "${events.user.dlqName}",
+      "type" : "java.lang.String"
+    } ],
+    "admins" : null
+  },
+  "key" : [ "${events.user.created.routingKey}", "${events.user.authenticated.routingKey}" ],
+  "exchange" : {
+    "name" : "${events.exchangeName}",
+    "type" : "topic",
+    "durable" : "true",
+    "autoDelete" : "false",
+    "internal" : "false",
+    "ignoreDeclarationExceptions" : "false",
+    "delayed" : "false",
+    "declare" : "true",
+    "arguments" : null,
+    "admins" : null
+  },
+  "declare" : "true",
+  "ignoreDeclarationExceptions" : "false",
+  "admins" : null
+} ]
+----
+Producers::
+Consumers::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar
+Mehtods::
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onUpdate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserCreatedEvent>)
+* io.inugami.demo:spring-boot-training-lifecycle:0.0.1-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onUpdate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserCreatedEvent>)
+
