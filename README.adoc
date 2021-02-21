@@ -750,7 +750,7 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |===
 
 
-=== Git SCM (1.4.3-SNAPSHOT)
+=== Git SCM
 Git scm analyzer allow to extract all commit since last project tag. If your project haven't tag yet, this analyzer
 retrieve all commit since repository creation.
 
@@ -767,7 +767,7 @@ image::doc/github_issues.png[]
 
 image::doc/github_merge_request.png[]
 
-To display the release note you can invoke task `mvn info -Daction=releaseNote`
+To display the release note you can invoke task `mvn info -Daction=releaseNote -PpreviousVersion={previousVersion}`
 
 image::doc/release_note_light.png[]
 
@@ -840,6 +840,12 @@ It's possible to encrypt your password with maven standard encryption mechanism 
 |===
 |Property | type | default value | description
 
+
+|inugami.maven.plugin.analysis.git
+|boolean
+|false
+|Allow to enable git scanning and retrieve information from issues manager
+
 |inugami.maven.plugin.analysis.issue.tracker.pr.url
 |String
 |${issueManagement.url}
@@ -909,3 +915,48 @@ public class JiraCustomFieldExtractor implements JiraCustomFieldsAppender {
     }
 }
 ----
+
+
+=== ReleaseNote
+Plugin main target is to generate a release note from current project.
+By default this release note will be generate as Json file.
+
+An ASCIIDOC implementation is present to generate a documentation more human friendly.
+
+To display the release note you can invoke task `mvn info -Daction=releaseNote -PpreviousVersion={previousVersion}`
+
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.display.release.note.full
+|boolean
+|false
+|Allow to append more information on your release note
+
+|previousVersion
+|String
+|null
+|To be able to compute the difference between two version; it's require to specify previous version.
+
+|interactive
+|boolean
+|true
+|If you doesn't need JSON release note; you can disable this feature with this parameter.
+
+|inugami.maven.plugin.analysis.display.release.note.asciidoc
+|boolean
+|false
+|Allow to generate release note as ASCIIDOC
+
+|inugami.maven.plugin.analysis.display.release.note.asciidoc.baseDir
+|String (path)
+|{builddir}/src/doc/releases
+|Allow to specify target folder
+
+|inugami.maven.plugin.analysis.display.release.note.asciidoc.splitFile
+|boolean
+|false
+|Allow to generate the release note with one document or multi document parts
+|===

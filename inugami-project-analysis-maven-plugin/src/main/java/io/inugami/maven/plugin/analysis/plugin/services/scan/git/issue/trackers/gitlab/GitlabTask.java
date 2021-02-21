@@ -24,6 +24,7 @@ import io.inugami.commons.connectors.HttpConnectorResult;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.utils.CacheUtils;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.RequiredArgsConstructor;
@@ -235,34 +236,44 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
     // =========================================================================
     private JsonNode callGitLab(final String fullUrl, final Map<String, String> headers,
                                 final ObjectMapper objectMapper) {
-        JsonNode                 result     = null;
-        HttpConnectorResult      httpResult = null;
-        final HttpBasicConnector http       = new HttpBasicConnector();
-        try {
-            log.info("calling {}", fullUrl);
+        JsonNode result = CacheUtils.get(fullUrl);
 
-            httpResult = http.get(fullUrl, headers);
-        }
-        catch (final Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        finally {
-            log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                      httpResult == null ? 0 : httpResult.getDelais());
-            http.close();
-        }
+        if (result == null) {
+            HttpConnectorResult      httpResult = null;
+            final HttpBasicConnector http       = new HttpBasicConnector();
+            try {
+                log.info("calling {}", fullUrl);
 
-        if (httpResult == null || httpResult.getStatusCode() != 200) {
-            log.error("can't call : {}", fullUrl);
+                httpResult = http.get(fullUrl, headers);
+            }
+            catch (final Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            finally {
+                log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
+                          httpResult == null ? 0 : httpResult.getDelais());
+                http.close();
+            }
+
+            if (httpResult == null || httpResult.getStatusCode() != 200) {
+                log.error("can't call : {}", fullUrl);
+            }
+            else {
+                try {
+                    result = objectMapper.readTree(new String(httpResult.getData()));
+                }
+                catch (final JsonProcessingException e) {
+                    log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
+                }
+            }
+            if (result != null) {
+                CacheUtils.put(fullUrl, result);
+            }
         }
         else {
-            try {
-                result = objectMapper.readTree(new String(httpResult.getData()));
-            }
-            catch (final JsonProcessingException e) {
-                log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
-            }
+            log.info("loading gitlab information from cache");
         }
+
         return result;
     }
 }

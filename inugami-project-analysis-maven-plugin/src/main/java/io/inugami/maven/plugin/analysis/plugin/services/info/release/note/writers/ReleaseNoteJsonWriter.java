@@ -57,6 +57,10 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
         final String json = convertToJson(releaseNote);
         final File file = FilesUtils.buildFile(context.getBuildDir(),
                                                "release-note-" + context.getProject().getVersion() + ".json");
+
+        if(!file.getParentFile().exists()){
+            file.getParentFile().mkdirs();
+        }
         if (json != null) {
             FilesUtils.write(json, file);
         }

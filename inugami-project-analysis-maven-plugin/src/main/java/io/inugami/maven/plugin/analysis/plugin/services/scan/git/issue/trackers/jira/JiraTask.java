@@ -26,6 +26,7 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender;
+import io.inugami.maven.plugin.analysis.api.utils.CacheUtils;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.RequiredArgsConstructor;
@@ -129,7 +130,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
             buildSubTasks(fields, uid, result);
         }
 
-        addCustomFields(uid, json, properties,result);
+        addCustomFields(uid, json, properties, result);
 
         return Node.builder()
                    .name(name)
@@ -148,7 +149,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                                  final ScanNeo4jResult result) {
         try {
             for (final JiraCustomFieldsAppender appender : customFieldsAppenders) {
-                appender.append(uid, json, properties,result);
+                appender.append(uid, json, properties, result);
             }
         }
         catch (final Exception e) {
@@ -342,35 +343,45 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
     }
 
     private JsonNode invokeHttp(final String fullUrl, final Map<String, String> headers) {
-        JsonNode                 result     = null;
-        HttpConnectorResult      httpResult = null;
-        final HttpBasicConnector http       = httpConnectorBuilder.buildHttpConnector();
-        try {
-            log.info("calling {}", fullUrl);
+        JsonNode result = CacheUtils.get(fullUrl);
 
-            httpResult = http.get(fullUrl, headers);
-        }
-        catch (final Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        finally {
-            log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                      httpResult == null ? 0 : httpResult.getDelais());
-            http.close();
-        }
+        if (result == null) {
+            HttpConnectorResult      httpResult = null;
+            final HttpBasicConnector http       = httpConnectorBuilder.buildHttpConnector();
+            try {
+                log.info("calling {}", fullUrl);
 
-        if (httpResult == null || httpResult.getStatusCode() != 200) {
-            log.error("can't call : {}", fullUrl);
+                httpResult = http.get(fullUrl, headers);
+            }
+            catch (final Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            finally {
+                log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
+                          httpResult == null ? 0 : httpResult.getDelais());
+                http.close();
+            }
+
+            if (httpResult == null || httpResult.getStatusCode() != 200) {
+                log.error("can't call : {}", fullUrl);
+            }
+            else {
+                try {
+                    final ObjectMapper objectMapper = ObjectMapperBuilder.build();
+                    result = objectMapper.readTree(new String(httpResult.getData()));
+                }
+                catch (final JsonProcessingException e) {
+                    log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
+                }
+            }
+            if (result != null) {
+                CacheUtils.put(fullUrl, result);
+            }
         }
         else {
-            try {
-                final ObjectMapper objectMapper = ObjectMapperBuilder.build();
-                result = objectMapper.readTree(new String(httpResult.getData()));
-            }
-            catch (final JsonProcessingException e) {
-                log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
-            }
+            log.info("loading jira information from cache");
         }
+
         return result;
     }
 }
