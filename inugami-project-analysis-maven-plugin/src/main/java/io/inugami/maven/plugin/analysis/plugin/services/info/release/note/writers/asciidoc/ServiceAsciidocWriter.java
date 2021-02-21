@@ -134,23 +134,22 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
 
         for(final ServiceDto service : services){
             writer.write("====== ").write(service.getVerb()).write(" ").write(service.getUri()).line();
-            writer.write("[horizontal]").line();
-            processIfNotNull(service.getHeaders(), value-> writer.write("headers:: ").write(value).line());
-            processIfNotNull(service.getConsumeContentType(), value-> writer.write("Consume content-type:: ").write(value).line());
-            processIfNotNull(service.getContentType(), value-> writer.write("Content-type:: ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.write("Payload:: ").write(renderPayload(value)).line());
-            processIfNotNull(service.getResponsePayload(), value-> writer.write("Response payload:: ").write(renderPayload(value)).line());
+            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getConsumeContentType(), value-> writer.line().write("*Consume content-type :* ").write(value).line());
+            processIfNotNull(service.getContentType(), value-> writer.line().write("*Content-type :* ").write(value).line());
+            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getResponsePayload(), value-> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
             processIfNotNull(service.getProducers(), values-> {
-                writer.write("Producers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Producers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getConsumers(), values-> {
-                writer.write("Consumers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Consumers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.write("Mehtods:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Mehtods :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -163,21 +162,20 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         writer.write("===== JMS services ").line();
         for(final ServiceDto service : services){
             writer.write("====== ").write(service.getShortName()).line();
-            writer.write("[horizontal]").line();
-            processIfNotNull(service.getUri(), value-> writer.write("Queue:: ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.write("headers:: ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.write("Payload:: ").write(renderPayload(value)).line());
+            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
             processIfNotNull(service.getProducers(), values-> {
-                writer.write("Producers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Producers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getConsumers(), values-> {
-                writer.write("Consumers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Consumers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.write("Mehtods:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Mehtods :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -189,22 +187,21 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         writer.write("===== RabbitMq services ").line();
         for(final ServiceDto service : services){
             writer.write("====== ").write(service.getShortName()).line();
-            writer.write("[horizontal]").line();
-            processIfNotNull(service.getUri(), value-> writer.write("Queue:: ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.write("headers:: ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.write("Payload:: ").write(renderPayload(value)).line());
-            processIfNotNull(service.getAdditionalInfo(), value-> writer.write("Binding:: ").write(renderPayload(value)).line());
+            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getAdditionalInfo(), value-> writer.line().write("*Binding :* ").write(renderPayload(value)).line());
             processIfNotNull(service.getProducers(), values-> {
-                writer.write("Producers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Producers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getConsumers(), values-> {
-                writer.write("Consumers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Consumers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.write("Mehtods:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Mehtods :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -216,25 +213,25 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         writer.write("===== Others services ").line();
         for(final ServiceDto service : services){
             writer.write("====== ").write(service.getShortName()).line();
-            writer.write("[horizontal]").line();
-            processIfNotNull(service.getUri(), value-> writer.write("Queue:: ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.write("headers:: ").write(value).line());
-            processIfNotNull(service.getConsumeContentType(), value-> writer.write("Consume content-type:: ").write(value).line());
-            processIfNotNull(service.getContentType(), value-> writer.write("Content-type:: ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.write("Payload:: ").write(renderPayload(value)).line());
-            processIfNotNull(service.getResponsePayload(), value-> writer.write("Response payload:: ").write(renderPayload(value)).line());
-            processIfNotNull(service.getAdditionalInfo(), value-> writer.write("Other information:: ").write(renderPayload(value)).line());
+
+            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value-> writer.line().write("*headers :* ").write(value).line());
+            processIfNotNull(service.getConsumeContentType(), value-> writer.line().write("*Consume content-type :* ").write(value).line());
+            processIfNotNull(service.getContentType(), value-> writer.line().write("*Content-type :* ").write(value).line());
+            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getResponsePayload(), value-> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getAdditionalInfo(), value-> writer.line().write("*Other information :* ").write(renderPayload(value)).line());
             processIfNotNull(service.getProducers(), values-> {
-                writer.write("Producers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Producers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getConsumers(), values-> {
-                writer.write("Consumers:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Consumers :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.write("Mehtods:: ").line();
-                values.forEach(value-> writer.write("* ").write(value).line());
+                writer.line().write("*Mehtods :* ").line();
+                values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
