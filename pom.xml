@@ -195,6 +195,12 @@
             </dependency>
             <dependency>
                 <groupId>io.inugami</groupId>
+                <artifactId>inugami_common</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami</groupId>
                 <artifactId>inugami_commons_test</artifactId>
                 <version>${io.inugami.version}</version>
             </dependency>
