@@ -13,7 +13,7 @@
                 </phases>
 
                 <default-phases>
-                    <deploy-plugin>org.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerInformation
+                    <deploy-plugin>io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerInformation
                     </deploy-plugin>
                 </default-phases>
             </configuration>
@@ -39,7 +39,7 @@
                 </phases>
 
                 <default-phases>
-                    <deploy-plugin>org.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerAnalyse
+                    <deploy-plugin>io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin:handlerAnalyse
                     </deploy-plugin>
                 </default-phases>
             </configuration>

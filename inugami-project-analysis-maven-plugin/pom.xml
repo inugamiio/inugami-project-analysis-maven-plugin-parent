@@ -232,7 +232,7 @@
             <version>2.3.0</version>
         </dependency>
         <dependency>
-            <groupId>org.inugami</groupId>
+            <groupId>io.inugami</groupId>
             <artifactId>inugami_commons</artifactId>
         </dependency>
     </dependencies>
