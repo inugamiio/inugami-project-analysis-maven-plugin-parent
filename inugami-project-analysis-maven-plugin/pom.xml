@@ -234,7 +234,6 @@
         <dependency>
             <groupId>org.inugami</groupId>
             <artifactId>inugami_commons</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
