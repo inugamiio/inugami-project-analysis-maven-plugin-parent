@@ -10,6 +10,22 @@
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
     <version>1.5.0</version>
+    <executions>
+        <execution>
+            <id>check</id>
+            <phase>analyze</phase>
+            <goals>
+                <goal>check</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>info</id>
+            <phase>info</phase>
+            <goals>
+                <goal>retrieveInformation</goal>
+            </goals>
+        </execution>
+    </executions>
 </dependency>
 ----
 
