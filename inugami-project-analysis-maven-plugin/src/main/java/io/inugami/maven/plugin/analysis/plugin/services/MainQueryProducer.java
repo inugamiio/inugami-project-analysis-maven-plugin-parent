@@ -35,6 +35,7 @@ public class MainQueryProducer implements QueryProducer {
     public static final String QUERIES_SEARCH_PUBLISH_ARTIFACT_INFO_CQL = "META-INF/queries/search_publish_artifact_info.cql";
     public static final String QUERIES_SEARCH_ENV_INFO_CQL = "META-INF/queries/search_env_info.cql";
     public static final String QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL = "META-INF/queries/search_release_note_simple.cql";
+    public static final String QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL = "META-INF/queries/search_release_note_full.cql";
     public static final String QUERIES_SEARCH_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies.cql";
     public static final String QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies_project.cql";
 
@@ -130,6 +131,14 @@ public class MainQueryProducer implements QueryProducer {
                                .type("cql")
                                .description("Allow to retrieve release note information")
                                .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL)
+                               .name("search_release_note_simple")
+                               .type("cql")
+                               .description("Allow to retrieve full release note information")
+                               .build(),
+
 
                 QueryDefinition.builder()
                                .path(QUERIES_SEARCH_DEPENDENCIES_CQL)
