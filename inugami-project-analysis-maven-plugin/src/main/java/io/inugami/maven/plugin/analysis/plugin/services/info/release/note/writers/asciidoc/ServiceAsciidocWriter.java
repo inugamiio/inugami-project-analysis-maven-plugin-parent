@@ -143,7 +143,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.line().write("*Mehtods :* ").line();
+                writer.line().write("*Methods :* ").line();
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
@@ -169,7 +169,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.line().write("*Mehtods :* ").line();
+                writer.line().write("*Methods :* ").line();
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
@@ -195,7 +195,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.line().write("*Mehtods :* ").line();
+                writer.line().write("*Methods :* ").line();
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
@@ -225,7 +225,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             processIfNotNull(service.getMethods(), values-> {
-                writer.line().write("*Mehtods :* ").line();
+                writer.line().write("*Methods :* ").line();
                 values.forEach(value-> writer.line().write("* ").write(value).line());
             });
             writer.line();
