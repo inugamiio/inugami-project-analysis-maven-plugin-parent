@@ -200,7 +200,18 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     protected String getBaseContext(final Class<?> clazz) {
-        return ifHasAnnotation(clazz, RestController.class, RestController::value);
+        String result = "";
+
+        RequestMapping annotation = clazz.getDeclaredAnnotation(RequestMapping.class);
+        if(annotation!=null){
+            if(annotation.value()!=null && annotation.value().length>0){
+                result = annotation.value()[0];
+            }
+            if(result.isEmpty() && annotation.path()!=null && annotation.path().length>0){
+                result = annotation.path()[0];
+            }
+        }
+        return result;
     }
 
     protected String getApiName(final Class<?> clazz) {

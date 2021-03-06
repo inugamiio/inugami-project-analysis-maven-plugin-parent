@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j;
 
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 class Neo4jWriterIT {
-
+    @Disabled
     @Test
     void processSave() {
         final Neo4jWriter writer = new Neo4jWriter();

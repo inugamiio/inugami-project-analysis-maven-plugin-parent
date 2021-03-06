@@ -71,7 +71,7 @@ class SpringRestControllersAnalyzerTest {
         final RestApi                       api      = analyzer.analyseClass(BasicRestController.class,true);
         assertThat(api).isNotNull();
         assertThat(api.getName()).isEqualTo("USERS");
-        assertThat(api.getBaseContext()).isEqualTo("/simpleRest");
+        assertThat(api.getBaseContext()).isEqualTo("/v1/api");
 
         assertThat(api.getEndpoints()).isNotNull();
         assertThat(api.getEndpoints().size()).isEqualTo(7);
@@ -96,6 +96,7 @@ class SpringRestControllersAnalyzerTest {
     // TEST CONTENT
     // =========================================================================
     @Api("USERS")
+    @RequestMapping("v1/api")
     @RestController("simpleRest")
     public static class BasicRestController {
         @GetMapping(path = "/users/headers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
