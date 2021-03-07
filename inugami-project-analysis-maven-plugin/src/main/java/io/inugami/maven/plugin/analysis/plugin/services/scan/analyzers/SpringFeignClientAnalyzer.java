@@ -30,7 +30,7 @@ import java.util.List;
 public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final  String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.feign";
     public static final  String FEATURE      = FEATURE_NAME + ".enable";
-    private static final String CONSUME      = "CONSUME";
+    public static final String CONSUME      = "CONSUME";
 
     // =========================================================================
     // API

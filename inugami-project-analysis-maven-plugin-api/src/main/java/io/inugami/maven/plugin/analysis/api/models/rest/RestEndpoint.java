@@ -26,17 +26,19 @@ import lombok.*;
 @Builder(toBuilder = true)
 public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
     private static final long serialVersionUID = -6556991122270585469L;
-    private final String nickname;
-    private final String uri;
-    private final String verb;
-    private final String headers;
-    private final String body;
-    private final String consume;
-    private final String produce;
-    private final String description;
-    private final String responseType;
-    private final String uid;
-    private final String method;
+    private final String      nickname;
+    private final String      uri;
+    private final String      verb;
+    private final String      headers;
+    private final String      body;
+    private final String      bodyRequireOnly;
+    private final String      consume;
+    private final String      produce;
+    private final String      description;
+    private final String      responseType;
+    private final String      responseTypeRequireOnly;
+    private final String      uid;
+    private final String      method;
 
     @Override
     public int compareTo(final RestEndpoint value) {

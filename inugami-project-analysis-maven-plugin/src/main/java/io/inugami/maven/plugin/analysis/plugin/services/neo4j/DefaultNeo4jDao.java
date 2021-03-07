@@ -92,7 +92,6 @@ public class DefaultNeo4jDao implements Neo4jDao {
     }
 
 
-
     // =========================================================================
     // API
     // =========================================================================
@@ -243,16 +242,21 @@ public class DefaultNeo4jDao implements Neo4jDao {
 
     @Override
     public Node getNode(final String name, final String type) {
-        final Session             session    = driver.session();
-        final Map<String, Object> parameters = Map.ofEntries(Map.entry("name", "Foobar"));
-        final String              query      = searchQuery(name, type);
-        Node                      result     = null;
+        return getNode(name, type, null);
+    }
+
+    @Override
+    public Node getNode(final String name, final String type, final Map<String, Object> parameters) {
+        final Session             session = driver.session();
+        final Map<String, Object> params  = parameters == null ? new HashMap<>() : parameters;
+        final String query  = searchQuery(name, type);
+        Node         result = null;
         try {
             result = session.readTransaction(new TransactionWork<Node>() {
                 @Override
                 public Node execute(final Transaction tx) {
 
-                    final Result statementResult = tx.run(searchQuery(name, type), parameters);
+                    final Result statementResult = tx.run(searchQuery(name, type), params);
                     Node         result          = null;
 
                     if (statementResult != null) {

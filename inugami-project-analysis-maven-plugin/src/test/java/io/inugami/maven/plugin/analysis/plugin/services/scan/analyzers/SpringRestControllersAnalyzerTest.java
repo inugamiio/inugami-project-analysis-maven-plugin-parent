@@ -35,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ class SpringRestControllersAnalyzerTest {
     @Test
     void analyze() {
         final SpringRestControllersAnalyzer analyzer = new SpringRestControllersAnalyzer();
-        final RestApi                       api      = analyzer.analyseClass(BasicRestController.class,true);
+        final RestApi                       api      = analyzer.analyseClass(BasicRestController.class);
         assertThat(api).isNotNull();
         assertThat(api.getName()).isEqualTo("USERS");
         assertThat(api.getBaseContext()).isEqualTo("/v1/api");
@@ -81,7 +82,7 @@ class SpringRestControllersAnalyzerTest {
         });
 
         for(int i=0;i<api.getEndpoints().size(); i++){
-            log.info("check api {}",i);
+            log.info("check api  : /services/scan/analyzers/api_{}.json",i);
             assertTextRelatif(api.getEndpoints().get(i), "/services/scan/analyzers/api_"+i+".json");
         }
 
@@ -145,6 +146,7 @@ class SpringRestControllersAnalyzerTest {
 
     @Getter
     public static class Dto extends ParentDto {
+        @NotNull
         private final String            name;
         private final List<Comment>     comments;
         private final Map<String, Data> data;
@@ -162,6 +164,7 @@ class SpringRestControllersAnalyzerTest {
     @AllArgsConstructor
     @Getter
     public static class Comment {
+        @NotNull
         private final String        title;
         private final String        description;
         private final List<Comment> comments;

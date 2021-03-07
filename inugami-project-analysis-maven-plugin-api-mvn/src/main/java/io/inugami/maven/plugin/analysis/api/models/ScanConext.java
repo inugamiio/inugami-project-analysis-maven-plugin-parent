@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
 import io.inugami.api.processors.ConfigHandler;
+import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +54,8 @@ public class ScanConext {
     private final SecDispatcher                 secDispatcher;
     private final ArtifactHandler               artifactHandler;
     private final Settings                      settings;
+    private final Neo4jDao                      neo4jDao;
+
 
     public <T> T getProperty(final String key) {
         T result = null;
