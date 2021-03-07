@@ -26,6 +26,7 @@ import java.util.Map;
 
 public interface Neo4jDao {
     void shutdown();
+    Node getNode(final String name, final String type,final Map<String, Object> parameters);
 
     Node getNode(final String name, final String type);
 
