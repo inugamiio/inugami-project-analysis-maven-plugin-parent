@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.inugami.maven.plugin.analysis.api.tools.BuilderToolsTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.056 sec - in io.inugami.maven.plugin.analysis.api.tools.BuilderToolsTest
