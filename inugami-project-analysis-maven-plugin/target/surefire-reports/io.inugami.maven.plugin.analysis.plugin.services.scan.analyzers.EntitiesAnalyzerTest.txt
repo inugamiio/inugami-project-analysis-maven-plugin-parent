@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzerTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.047 sec <<< FAILURE! - in io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzerTest
-analyze_withEntity_shouldFindIt()  Time elapsed: 0.038 sec  <<< ERROR!
-java.lang.RuntimeException: [5] "name" : "local@mainDatabase_app_user", != "name" : "1.0.0-SNAPSHOT",
-	at io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzerTest.analyze_withEntity_shouldFindIt(EntitiesAnalyzerTest.java:64)
-

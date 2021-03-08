@@ -1,6 +1,0 @@
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.BaseReleaseNoteExtractor
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ServiceExtractor
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ErrorCodeExtractor
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.PropertiesExtractor
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.EntitiesExtractor
-io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.DependenciesExtractor

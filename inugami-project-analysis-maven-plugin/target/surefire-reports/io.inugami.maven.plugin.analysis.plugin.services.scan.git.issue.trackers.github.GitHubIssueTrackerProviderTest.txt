@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.github.GitHubIssueTrackerProviderTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec - in io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.github.GitHubIssueTrackerProviderTest

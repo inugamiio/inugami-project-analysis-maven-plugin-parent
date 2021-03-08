@@ -1,7 +1,0 @@
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPropertiesAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer

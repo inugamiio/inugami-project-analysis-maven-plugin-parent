@@ -1,5 +1,0 @@
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.CyclicClassesResolver
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.CollectionTypeResolver
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.MapTypeResolver
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.ObjectTypeResolver
-io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.resolvers.SimpleTypeResolver

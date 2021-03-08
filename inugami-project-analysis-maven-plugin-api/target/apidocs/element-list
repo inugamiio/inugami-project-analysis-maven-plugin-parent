@@ -1,7 +1,0 @@
-io.inugami.maven.plugin.analysis.api.actions
-io.inugami.maven.plugin.analysis.api.exceptions
-io.inugami.maven.plugin.analysis.api.models
-io.inugami.maven.plugin.analysis.api.models.rest
-io.inugami.maven.plugin.analysis.api.utils
-io.inugami.maven.plugin.analysis.api.utils.reflection
-io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers

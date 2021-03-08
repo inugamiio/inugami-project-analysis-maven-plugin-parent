@@ -1,4 +1,0 @@
-io.inugami.maven.plugin.analysis.plugin.services.properties.Neo4JServerPropertiesInitializer
-io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.gitlab.GitLabIssueTrackerProvider
-io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.github.GitHubIssueTrackerProvider
-io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.jira.JiraIssueTrackerProvider
