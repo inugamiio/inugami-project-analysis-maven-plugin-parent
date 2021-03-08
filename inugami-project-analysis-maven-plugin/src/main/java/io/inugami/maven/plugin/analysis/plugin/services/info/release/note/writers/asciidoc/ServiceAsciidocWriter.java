@@ -249,15 +249,6 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         return writer.toString();
     }
 
-    private String renderPayload(final String value) {
-        final JsonBuilder writer = new JsonBuilder();
-        writer.line();
-        writer.write("[source,javascript]").line();
-        writer.write("----").line();
-        writer.write(value).line();
-        writer.write("----");
-        return writer.toString();
-    }
 
     // =========================================================================
     // TOOLS

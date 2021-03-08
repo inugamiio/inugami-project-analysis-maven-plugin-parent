@@ -41,6 +41,7 @@ public class MainQueryProducer implements QueryProducer {
 
     public static final String QUERIES_SEARCH_ALL_EXPOSED_SERVICES = "META-INF/queries/search_all_exposed_services.cql";
     public static final String QUERIES_SEARCH_ALL_CONSUMED_SERVICES = "META-INF/queries/search_all_consumed_services.cql";
+    public static final String QUERIES_SEARCH_ENTITIES = "META-INF/queries/search_entities.cql";
     // =========================================================================
     // API
     // =========================================================================
@@ -166,6 +167,13 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_all_consumed_services")
                                .type("cql")
                                .description("Allow to retrieve all project consumed services")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_ENTITIES)
+                               .name("search_entities")
+                               .type("cql")
+                               .description("Allow to retrieve all project entities")
                                .build()
                       );
     }

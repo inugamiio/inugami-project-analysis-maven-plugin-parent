@@ -20,6 +20,7 @@ class ReleaseNoteIT {
 
 
     public static void main(final String... args) {
+
         final String[]     sysReplacements = System.getProperty("replaceValues").split(";");
         final MavenProject project         = mock(MavenProject.class);
         when(project.getGroupId()).thenReturn("io.inugami.demo");
