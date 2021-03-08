@@ -1,0 +1,31 @@
+[ {
+  "name" : "ERR-1",
+  "properties" : {
+    "errorCode" : "ERR-1",
+    "errorType" : "technical",
+    "message" : "invalid arguments",
+    "messageDetail" : "given arguments aren't valid",
+    "payload" : "[]",
+    "statusCode" : 500
+  },
+  "type" : "ErrorCode",
+  "uid" : "errorCode_ERR-1"
+}, {
+  "name" : "technical",
+  "type" : "ErrorType",
+  "uid" : "errorType_technical"
+}, {
+  "name" : "1.0.0-SNAPSHOT",
+  "properties" : {
+    "artifactId" : "basic-artifact",
+    "groupId" : "io.inugami.test",
+    "major" : 1,
+    "minor" : 0,
+    "packaging" : "jar",
+    "patch" : 0,
+    "tag" : "SNAPSHOT",
+    "version" : "1.0.0-SNAPSHOT"
+  },
+  "type" : "Version",
+  "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+} ]

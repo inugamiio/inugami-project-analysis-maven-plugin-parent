@@ -1,0 +1,9 @@
+io/inugami/maven/plugin/analysis/annotations/RabbitMqHandlerInfo.class
+io/inugami/maven/plugin/analysis/annotations/Partner.class
+io/inugami/maven/plugin/analysis/annotations/RabbitMqSender.class
+io/inugami/maven/plugin/analysis/annotations/RabbitMqEvent.class
+io/inugami/maven/plugin/analysis/annotations/RabbitMqEvent$None.class
+io/inugami/maven/plugin/analysis/annotations/EntityDatabase.class
+io/inugami/maven/plugin/analysis/annotations/JmsEvent$None.class
+io/inugami/maven/plugin/analysis/annotations/JmsSender.class
+io/inugami/maven/plugin/analysis/annotations/JmsEvent.class

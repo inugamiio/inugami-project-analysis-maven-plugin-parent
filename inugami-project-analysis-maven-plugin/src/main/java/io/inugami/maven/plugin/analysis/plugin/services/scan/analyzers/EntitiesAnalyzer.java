@@ -17,12 +17,14 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.annotations.EntityDatabase;
 import io.inugami.maven.plugin.analysis.api.actions.ClassAnalyzer;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +45,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.jms";
     public static final String FEATURE = FEATURE_NAME+".enable";
+    public static final String LOCAL_ENTITY = "local@";
 
 
     // =========================================================================
@@ -72,22 +75,31 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
         }
 
         final LinkedHashMap<String, Serializable> localAdditionalInfo = new LinkedHashMap<>();
-        localAdditionalInfo.put("payload", ReflectionService.renderType(clazz,null,null).convertToJson());
-        final String entityLocalUid = "local@" + entityName;
+        final JsonNode payloadNode = ReflectionService.renderType(clazz, null, null,false);
+        final String payload = payloadNode==null?null:payloadNode.convertToJson();
+        if(payload!=null){
+            localAdditionalInfo.put("payload", payload);
+        }
+        final String entityLocalUid = LOCAL_ENTITY + entityName;
         final Node localEntityNode = Node.builder()
                                     .type("LocalEntity")
                                     .name(entityLocalUid)
-                                    .uid(entityLocalUid)
+                                    .uid(encodeSha1(entityLocalUid+":"+payload))
                                     .properties(localAdditionalInfo)
                                     .build();
 
 
         final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
-        additionalInfo.put("payload", ReflectionService.renderType(clazz,null,null,false).convertToJson());
+        final JsonNode payloadLightNode = ReflectionService.renderType(clazz, null, null,true);
+        final String payloadLight = payloadLightNode==null?null:payloadLightNode.convertToJson();
+        if(payloadLight!=null){
+            additionalInfo.put("payload", payloadLight);
+        }
+
         final Node entityNode = Node.builder()
                                     .type("Entity")
                                     .name(entityName)
-                                    .uid(entityName)
+                                    .uid(encodeSha1(entityName+":"+payload))
                                     .properties(additionalInfo)
                                     .build();
 
@@ -114,4 +126,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
         return List.of(result);
     }
 
+    private String encodeSha1(final String value) {
+        return value == null ? null : new EncryptionUtils().encodeSha1(value);
+    }
 }

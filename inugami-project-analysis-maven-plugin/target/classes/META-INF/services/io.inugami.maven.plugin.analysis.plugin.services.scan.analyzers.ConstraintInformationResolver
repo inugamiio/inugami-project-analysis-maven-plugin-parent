@@ -1,0 +1,7 @@
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.DecimalMaxInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.DecimalMinInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.DigitsInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.MinInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.MaxInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.PatternInfo
+io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.constraints.SizeInfo

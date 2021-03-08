@@ -1,0 +1,42 @@
+{
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "Epic",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_Epic"
+  }, {
+    "name" : "feature",
+    "type" : "IssueLabel",
+    "uid" : "issue_label_feature"
+  }, {
+    "name" : "INU-1",
+    "properties" : {
+      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac",
+      "issueType" : "Epic",
+      "title" : "Add jira connector on git analyzer",
+      "url" : "http://localhost/browse/INU-1"
+    },
+    "type" : "Issue",
+    "uid" : "issue_Inugami_INU-1"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "issue_Inugami_INU-1",
+    "to" : "issue_label_Epic",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "issue_Inugami_INU-1",
+    "to" : "issue_label_feature",
+    "type" : "HAS_LABEL"
+  }, {
+    "from" : "io.inugami:project-consumer:1.0.0-SNAPSHOT",
+    "to" : "issue_Inugami_INU-1",
+    "type" : "HAVE_TICKET"
+  }, {
+    "from" : "issue_Inugami_INU-1",
+    "to" : "io.inugami:project-consumer:1.0.0-SNAPSHOT",
+    "type" : "TICKET_HAVE_VERSION"
+  } ],
+  "relationshipsToDeletes" : [ ]
+}

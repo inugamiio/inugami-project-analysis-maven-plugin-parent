@@ -1,0 +1,54 @@
+/Users/patrickguillerm/dev/tools/jdk-13.0.1.jdk/Contents/Home/bin/javadoc
+-J-Xmx512m
+@options
+@argfile
+-encoding
+'UTF-8'
+-protected
+-quiet
+-source
+'11'
+-sourcepath
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok'
+-bottom
+'Copyright &#169; 2021. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'inugami-project-analysis-maven-plugin-annotations 1.5.1-SNAPSHOT API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'inugami-project-analysis-maven-plugin-annotations 1.5.1-SNAPSHOT API'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/RabbitMqSender.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/RabbitMqEvent.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/JmsEvent.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/JmsSender.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/Partner.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/RabbitMqHandlerInfo.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok/io/inugami/maven/plugin/analysis/annotations/EntityDatabase.java'
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/lombok = 1615239513554
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/constant-values.html = 1615239515754
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/member-search-index.zip = 1615239515813
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/overview-tree.html = 1615239515786
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/index.html = 1615239515823
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/package-search-index.js = 1615239515799
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/package-search-index.zip = 1615239515811
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/type-search-index.zip = 1615239515812
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/index-all.html = 1615239515814
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/allpackages-index.html = 1615239515822
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/deprecated-list.html = 1615239515790
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/member-search-index.js = 1615239515813
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/script.js = 1615239515827
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/stylesheet.css = 1615239515827
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/help-doc.html = 1615239515825
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/element-list = 1615239515741
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/allclasses-index.html = 1615239515820
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/type-search-index.js = 1615239515812
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/target/apidocs/search.js = 1615239515829

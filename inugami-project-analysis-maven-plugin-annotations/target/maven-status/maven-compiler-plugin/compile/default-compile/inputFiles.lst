@@ -1,0 +1,7 @@
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/RabbitMqSender.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/RabbitMqHandlerInfo.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/JmsSender.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/RabbitMqEvent.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/Partner.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/JmsEvent.java
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-annotations/src/main/java/io/inugami/maven/plugin/analysis/annotations/EntityDatabase.java

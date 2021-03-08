@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ======================================================================= 
+    = MAVEN
+    ======================================================================== -->
+    <prerequisites>
+        <maven>3.2.3</maven>
+    </prerequisites>
+
+    <!-- ======================================================================= 
+    = PARENT
+    ======================================================================== -->
+    <parent>
+        <groupId>io.inugami.maven.plugin.analysis</groupId>
+        <artifactId>inugami-project-analysis-maven-plugin-parent</artifactId>
+        <version>1.5.1-SNAPSHOT</version>
+    </parent>
+
+
+    <!-- ======================================================================= 
+    = PROJECT
+    ======================================================================== -->
+    <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
+
+
+</project>

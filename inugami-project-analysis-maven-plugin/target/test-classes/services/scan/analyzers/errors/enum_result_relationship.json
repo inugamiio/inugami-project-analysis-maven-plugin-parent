@@ -1,0 +1,9 @@
+[ {
+  "from" : "errorCode_ERR-1",
+  "to" : "errorType_technical",
+  "type" : "HAS_ERROR_TYPE"
+}, {
+  "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+  "to" : "errorCode_ERR-1",
+  "type" : "HAS_ERROR_CODE"
+} ]

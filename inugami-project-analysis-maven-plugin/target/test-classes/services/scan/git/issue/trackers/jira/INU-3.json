@@ -1,0 +1,189 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "10002",
+  "self": "http://localhost:8080/rest/api/2/issue/10002",
+  "key": "INU-3",
+  "fields": {
+    "issuetype": {
+      "self": "http://localhost:8080/rest/api/2/issuetype/10002",
+      "id": "10002",
+      "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+      "iconUrl": "http://localhost:8080/images/icons/issuetypes/story.svg",
+      "name": "Story",
+      "subtask": false
+    },
+    "components": [],
+    "timespent": null,
+    "timeoriginalestimate": null,
+    "description": null,
+    "project": {
+      "self": "http://localhost:8080/rest/api/2/project/10000",
+      "id": "10000",
+      "key": "INU",
+      "name": "Inugami",
+      "projectTypeKey": "software",
+      "avatarUrls": {
+        "48x48": "http://localhost:8080/secure/projectavatar?avatarId=10324",
+        "24x24": "http://localhost:8080/secure/projectavatar?size=small&avatarId=10324",
+        "16x16": "http://localhost:8080/secure/projectavatar?size=xsmall&avatarId=10324",
+        "32x32": "http://localhost:8080/secure/projectavatar?size=medium&avatarId=10324"
+      }
+    },
+    "fixVersions": [],
+    "aggregatetimespent": null,
+    "resolution": null,
+    "timetracking": {},
+    "archiveddate": null,
+    "customfield_10105": null,
+    "customfield_10106": null,
+    "attachment": [],
+    "aggregatetimeestimate": null,
+    "resolutiondate": null,
+    "workratio": -1,
+    "summary": "write documentation",
+    "lastViewed": "2020-12-12T12:03:23.638+0000",
+    "watches": {
+      "self": "http://localhost:8080/rest/api/2/issue/INU-3/watchers",
+      "watchCount": 1,
+      "isWatching": true
+    },
+    "creator": {
+      "self": "http://localhost:8080/rest/api/2/user?username=patrickguillerm",
+      "name": "patrickguillerm",
+      "key": "JIRAUSER10000",
+      "emailAddress": "patrickguillerm@inugami.io",
+      "avatarUrls": {
+        "48x48": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=48",
+        "24x24": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=24",
+        "16x16": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=16",
+        "32x32": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=32"
+      },
+      "displayName": "patrickguillerm@inugami.io",
+      "active": true,
+      "timeZone": "GMT"
+    },
+    "subtasks": [],
+    "created": "2020-12-12T12:03:23.447+0000",
+    "reporter": {
+      "self": "http://localhost:8080/rest/api/2/user?username=patrickguillerm",
+      "name": "patrickguillerm",
+      "key": "JIRAUSER10000",
+      "emailAddress": "patrickguillerm@inugami.io",
+      "avatarUrls": {
+        "48x48": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=48",
+        "24x24": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=24",
+        "16x16": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=16",
+        "32x32": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=32"
+      },
+      "displayName": "patrickguillerm@inugami.io",
+      "active": true,
+      "timeZone": "GMT"
+    },
+    "customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@42ca2002[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@26a8f678[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@53c0886f[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@323abf59[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@52ac6d9a[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@596c368b[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@e384e39[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@691fe8d0[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@586e98d4[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@608e353c[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@2c8be692[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@3a44c2bb[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+    "aggregateprogress": {
+      "progress": 0,
+      "total": 0
+    },
+    "priority": {
+      "self": "http://localhost:8080/rest/api/2/priority/3",
+      "iconUrl": "http://localhost:8080/images/icons/priorities/medium.svg",
+      "name": "Medium",
+      "id": "3"
+    },
+    "customfield_10100": "0|i0000f:",
+    "customfield_10101": "INU-1",
+    "labels": [],
+    "environment": null,
+    "timeestimate": null,
+    "aggregatetimeoriginalestimate": null,
+    "versions": [],
+    "duedate": null,
+    "progress": {
+      "progress": 0,
+      "total": 0
+    },
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "issuelinks": [
+      {
+        "id": "10004",
+        "self": "http://localhost:8080/rest/api/2/issueLink/10004",
+        "type": {
+          "id": "10000",
+          "name": "Blocks",
+          "inward": "is blocked by",
+          "outward": "blocks",
+          "self": "http://localhost:8080/rest/api/2/issueLinkType/10000"
+        },
+        "inwardIssue": {
+          "id": "10001",
+          "key": "INU-2",
+          "self": "http://localhost:8080/rest/api/2/issue/10001",
+          "fields": {
+            "summary": "Add task to retrieve Jira information",
+            "status": {
+              "self": "http://localhost:8080/rest/api/2/status/10000",
+              "description": "",
+              "iconUrl": "http://localhost:8080/",
+              "name": "To Do",
+              "id": "10000",
+              "statusCategory": {
+                "self": "http://localhost:8080/rest/api/2/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "To Do"
+              }
+            },
+            "priority": {
+              "self": "http://localhost:8080/rest/api/2/priority/3",
+              "iconUrl": "http://localhost:8080/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "http://localhost:8080/rest/api/2/issuetype/10002",
+              "id": "10002",
+              "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+              "iconUrl": "http://localhost:8080/images/icons/issuetypes/story.svg",
+              "name": "Story",
+              "subtask": false
+            }
+          }
+        }
+      }
+    ],
+    "votes": {
+      "self": "http://localhost:8080/rest/api/2/issue/INU-3/votes",
+      "votes": 0,
+      "hasVoted": false
+    },
+    "worklog": {
+      "startAt": 0,
+      "maxResults": 20,
+      "total": 0,
+      "worklogs": []
+    },
+    "assignee": null,
+    "archivedby": null,
+    "updated": "2020-12-12T12:03:38.880+0000",
+    "status": {
+      "self": "http://localhost:8080/rest/api/2/status/10000",
+      "description": "",
+      "iconUrl": "http://localhost:8080/",
+      "name": "To Do",
+      "id": "10000",
+      "statusCategory": {
+        "self": "http://localhost:8080/rest/api/2/statuscategory/2",
+        "id": 2,
+        "key": "new",
+        "colorName": "blue-gray",
+        "name": "To Do"
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+- Joe Foobar (joe.foobar@inugami.io)
+- John Smith (john.smith@inugami.io)

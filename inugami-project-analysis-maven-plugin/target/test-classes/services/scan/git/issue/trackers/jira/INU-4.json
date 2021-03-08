@@ -1,0 +1,176 @@
+{
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "id": "10003",
+  "self": "http://localhost:8080/rest/api/2/issue/10003",
+  "key": "INU-4",
+  "fields": {
+    "issuetype": {
+      "self": "http://localhost:8080/rest/api/2/issuetype/10000",
+      "id": "10000",
+      "description": "The sub-task of the issue",
+      "iconUrl": "http://localhost:8080/images/icons/issuetypes/subtask_alternate.png",
+      "name": "Sub-task",
+      "subtask": true
+    },
+    "parent": {
+      "id": "10001",
+      "key": "INU-2",
+      "self": "http://localhost:8080/rest/api/2/issue/10001",
+      "fields": {
+        "summary": "Add task to retrieve Jira information",
+        "status": {
+          "self": "http://localhost:8080/rest/api/2/status/10000",
+          "description": "",
+          "iconUrl": "http://localhost:8080/",
+          "name": "To Do",
+          "id": "10000",
+          "statusCategory": {
+            "self": "http://localhost:8080/rest/api/2/statuscategory/2",
+            "id": 2,
+            "key": "new",
+            "colorName": "blue-gray",
+            "name": "To Do"
+          }
+        },
+        "priority": {
+          "self": "http://localhost:8080/rest/api/2/priority/3",
+          "iconUrl": "http://localhost:8080/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "issuetype": {
+          "self": "http://localhost:8080/rest/api/2/issuetype/10002",
+          "id": "10002",
+          "description": "Created by Jira Software - do not edit or delete. Issue type for a user story.",
+          "iconUrl": "http://localhost:8080/images/icons/issuetypes/story.svg",
+          "name": "Story",
+          "subtask": false
+        }
+      }
+    },
+    "components": [],
+    "timespent": null,
+    "timeoriginalestimate": null,
+    "description": "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
+    "project": {
+      "self": "http://localhost:8080/rest/api/2/project/10000",
+      "id": "10000",
+      "key": "INU",
+      "name": "Inugami",
+      "projectTypeKey": "software",
+      "avatarUrls": {
+        "48x48": "http://localhost:8080/secure/projectavatar?avatarId=10324",
+        "24x24": "http://localhost:8080/secure/projectavatar?size=small&avatarId=10324",
+        "16x16": "http://localhost:8080/secure/projectavatar?size=xsmall&avatarId=10324",
+        "32x32": "http://localhost:8080/secure/projectavatar?size=medium&avatarId=10324"
+      }
+    },
+    "fixVersions": [],
+    "aggregatetimespent": null,
+    "resolution": null,
+    "timetracking": {},
+    "archiveddate": null,
+    "customfield_10105": null,
+    "attachment": [],
+    "aggregatetimeestimate": null,
+    "resolutiondate": null,
+    "workratio": -1,
+    "summary": "add http connector",
+    "lastViewed": "2020-12-12T12:07:56.362+0000",
+    "watches": {
+      "self": "http://localhost:8080/rest/api/2/issue/INU-4/watchers",
+      "watchCount": 1,
+      "isWatching": true
+    },
+    "creator": {
+      "self": "http://localhost:8080/rest/api/2/user?username=patrickguillerm",
+      "name": "patrickguillerm",
+      "key": "JIRAUSER10000",
+      "emailAddress": "patrickguillerm@inugami.io",
+      "avatarUrls": {
+        "48x48": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=48",
+        "24x24": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=24",
+        "16x16": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=16",
+        "32x32": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=32"
+      },
+      "displayName": "patrickguillerm@inugami.io",
+      "active": true,
+      "timeZone": "GMT"
+    },
+    "subtasks": [],
+    "created": "2020-12-12T12:04:16.674+0000",
+    "reporter": {
+      "self": "http://localhost:8080/rest/api/2/user?username=patrickguillerm",
+      "name": "patrickguillerm",
+      "key": "JIRAUSER10000",
+      "emailAddress": "patrickguillerm@inugami.io",
+      "avatarUrls": {
+        "48x48": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=48",
+        "24x24": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=24",
+        "16x16": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=16",
+        "32x32": "https://www.gravatar.com/avatar/c3064a6d9f22fc19213c7342feff628a?d=mm&s=32"
+      },
+      "displayName": "patrickguillerm@inugami.io",
+      "active": true,
+      "timeZone": "GMT"
+    },
+    "customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@360ead5c[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@51fef8e8[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@5a00ccfc[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@7c1f56ec[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@5e10c959[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@78a77d6c[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@241c39a8[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@22b2b3f1[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@7a30fcff[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@393fa2c8[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@7cab0d3e[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@4bb11461[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+    "aggregateprogress": {
+      "progress": 0,
+      "total": 0
+    },
+    "priority": {
+      "self": "http://localhost:8080/rest/api/2/priority/3",
+      "iconUrl": "http://localhost:8080/images/icons/priorities/medium.svg",
+      "name": "Medium",
+      "id": "3"
+    },
+    "customfield_10100": "0|i0000n:",
+    "customfield_10101": null,
+    "labels": [],
+    "environment": null,
+    "timeestimate": null,
+    "aggregatetimeoriginalestimate": null,
+    "versions": [],
+    "duedate": null,
+    "progress": {
+      "progress": 0,
+      "total": 0
+    },
+    "comment": {
+      "comments": [],
+      "maxResults": 0,
+      "total": 0,
+      "startAt": 0
+    },
+    "issuelinks": [],
+    "votes": {
+      "self": "http://localhost:8080/rest/api/2/issue/INU-4/votes",
+      "votes": 0,
+      "hasVoted": false
+    },
+    "worklog": {
+      "startAt": 0,
+      "maxResults": 20,
+      "total": 0,
+      "worklogs": []
+    },
+    "assignee": null,
+    "archivedby": null,
+    "updated": "2020-12-12T12:04:16.674+0000",
+    "status": {
+      "self": "http://localhost:8080/rest/api/2/status/10000",
+      "description": "",
+      "iconUrl": "http://localhost:8080/",
+      "name": "To Do",
+      "id": "10000",
+      "statusCategory": {
+        "self": "http://localhost:8080/rest/api/2/statuscategory/2",
+        "id": 2,
+        "key": "new",
+        "colorName": "blue-gray",
+        "name": "To Do"
+      }
+    }
+  }
+}

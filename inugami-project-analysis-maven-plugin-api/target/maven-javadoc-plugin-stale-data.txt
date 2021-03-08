@@ -1,0 +1,100 @@
+/Users/patrickguillerm/dev/tools/jdk-13.0.1.jdk/Contents/Home/bin/javadoc
+-J-Xmx512m
+@options
+@argfile
+-classpath
+'/Users/patrickguillerm/.m2/repository/io/inugami/inugami_api/2.0.0/inugami_api-2.0.0.jar:/Users/patrickguillerm/.m2/repository/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar:/Users/patrickguillerm/.m2/repository/com/thoughtworks/xstream/xstream/1.4.13/xstream-1.4.13.jar:/Users/patrickguillerm/.m2/repository/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar:/Users/patrickguillerm/.m2/repository/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar:/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-plugin-api/3.5.0/maven-plugin-api-3.5.0.jar:/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-model/3.5.0/maven-model-3.5.0.jar:/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24.jar:/Users/patrickguillerm/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar:/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-artifact/3.5.0/maven-artifact-3.5.0.jar:/Users/patrickguillerm/.m2/repository/org/eclipse/sisu/org.eclipse.sisu.plexus/0.3.3/org.eclipse.sisu.plexus-0.3.3.jar:/Users/patrickguillerm/.m2/repository/javax/enterprise/cdi-api/1.0/cdi-api-1.0.jar:/Users/patrickguillerm/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar:/Users/patrickguillerm/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar:/Users/patrickguillerm/.m2/repository/org/eclipse/sisu/org.eclipse.sisu.inject/0.3.3/org.eclipse.sisu.inject-0.3.3.jar:/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-component-annotations/1.5.5/plexus-component-annotations-1.5.5.jar:/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-classworlds/2.5.2/plexus-classworlds-2.5.2.jar:/Users/patrickguillerm/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar:/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.11.2/jackson-annotations-2.11.2.jar:/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.11.2/jackson-databind-2.11.2.jar:/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.11.2/jackson-core-2.11.2.jar:/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.11.2/jackson-datatype-jsr310-2.11.2.jar:/Users/patrickguillerm/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar:/Users/patrickguillerm/.m2/repository/org/ehcache/ehcache/3.3.1/ehcache-3.3.1.jar'
+-encoding
+'UTF-8'
+-protected
+-quiet
+-source
+'11'
+-sourcepath
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok'
+-bottom
+'Copyright &#169; 2021. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'inugami-project-analysis-maven-plugin-api 1.5.1-SNAPSHOT API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'inugami-project-analysis-maven-plugin-api 1.5.1-SNAPSHOT API'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/CacheUtils.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/ObjectMapperBuilder.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/NodeUtils.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/Constants.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/JsonNode.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/ClassCursor.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/fieldTransformers/DefaultFieldTransformer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/fieldTransformers/DateTimeFieldTransformer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/fieldTransformers/ListFieldTransformer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/fieldTransformers/MapFieldTransformer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/ReflectionService.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/FieldTransformer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/utils/reflection/UnknownJsonType.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/Gav.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/Node.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/QueryDefinition.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/ScanNeo4jResult.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/Relationship.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/rest/RestEndpoint.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/rest/RestApi.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/models/Neo4jResult.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/exceptions/ConfigurationException.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/actions/Neo4jValueEncoder.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/actions/QueryProducer.java'
+'/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok/io/inugami/maven/plugin/analysis/api/actions/QueryConfigurator.java'
+/Users/patrickguillerm/.m2/repository/io/inugami/inugami_api/2.0.0/inugami_api-2.0.0.jar = 1604432070849
+/Users/patrickguillerm/.m2/repository/org/slf4j/slf4j-api/1.7.21/slf4j-api-1.7.21.jar = 1565211008946
+/Users/patrickguillerm/.m2/repository/com/thoughtworks/xstream/xstream/1.4.13/xstream-1.4.13.jar = 1600368222965
+/Users/patrickguillerm/.m2/repository/xmlpull/xmlpull/1.1.3.1/xmlpull-1.1.3.1.jar = 1564094105538
+/Users/patrickguillerm/.m2/repository/xpp3/xpp3_min/1.1.4c/xpp3_min-1.1.4c.jar = 1564094106443
+/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-plugin-api/3.5.0/maven-plugin-api-3.5.0.jar = 1565211018063
+/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-model/3.5.0/maven-model-3.5.0.jar = 1565211017519
+/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-utils/3.0.24/plexus-utils-3.0.24.jar = 1565211020531
+/Users/patrickguillerm/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar = 1565211021098
+/Users/patrickguillerm/.m2/repository/org/apache/maven/maven-artifact/3.5.0/maven-artifact-3.5.0.jar = 1565211017980
+/Users/patrickguillerm/.m2/repository/org/eclipse/sisu/org.eclipse.sisu.plexus/0.3.3/org.eclipse.sisu.plexus-0.3.3.jar = 1565211019292
+/Users/patrickguillerm/.m2/repository/javax/enterprise/cdi-api/1.0/cdi-api-1.0.jar = 1565211019382
+/Users/patrickguillerm/.m2/repository/javax/annotation/jsr250-api/1.0/jsr250-api-1.0.jar = 1565211019438
+/Users/patrickguillerm/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar = 1564094104739
+/Users/patrickguillerm/.m2/repository/org/eclipse/sisu/org.eclipse.sisu.inject/0.3.3/org.eclipse.sisu.inject-0.3.3.jar = 1565211019757
+/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-component-annotations/1.5.5/plexus-component-annotations-1.5.5.jar = 1565211021263
+/Users/patrickguillerm/.m2/repository/org/codehaus/plexus/plexus-classworlds/2.5.2/plexus-classworlds-2.5.2.jar = 1565211020615
+/Users/patrickguillerm/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar = 1599251122287
+/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.11.2/jackson-annotations-2.11.2.jar = 1599686692677
+/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.11.2/jackson-databind-2.11.2.jar = 1599686726072
+/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.11.2/jackson-core-2.11.2.jar = 1599686725401
+/Users/patrickguillerm/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.11.2/jackson-datatype-jsr310-2.11.2.jar = 1601034468910
+/Users/patrickguillerm/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar = 1564094123396
+/Users/patrickguillerm/.m2/repository/org/ehcache/ehcache/3.3.1/ehcache-3.3.1.jar = 1564094123343
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/lombok = 1615239517703
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/constant-values.html = 1615239522958
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/member-search-index.zip = 1615239523112
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/overview-tree.html = 1615239523066
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/index.html = 1615239523073
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/package-search-index.js = 1615239523106
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/package-search-index.zip = 1615239523109
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/type-search-index.zip = 1615239523110
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/serialized-form.html = 1615239522971
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/index-all.html = 1615239523114
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/allpackages-index.html = 1615239523121
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/deprecated-list.html = 1615239523070
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/member-search-index.js = 1615239523111
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/script.js = 1615239523125
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/stylesheet.css = 1615239523124
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/overview-summary.html = 1615239523122
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/help-doc.html = 1615239523123
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/element-list = 1615239522930
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/allclasses-index.html = 1615239523119
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/type-search-index.js = 1615239523110
+/Users/patrickguillerm/dev/inugami/inugami-project-analysis-maven-plugin-parent/inugami-project-analysis-maven-plugin-api/target/apidocs/search.js = 1615239523125

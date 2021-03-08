@@ -1,0 +1,127 @@
+{
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "current.enable",
+    "properties" : {
+      "defaultValue" : "true",
+      "mandatory" : false,
+      "propertyType" : "Boolean",
+      "matchIfMissing" : false,
+      "useForConditionalBean" : true
+    },
+    "type" : "Property",
+    "uid" : "current.enable"
+  }, {
+    "name" : "current.name",
+    "properties" : {
+      "defaultValue" : "someBean.value",
+      "mandatory" : false,
+      "propertyType" : "String"
+    },
+    "type" : "Property",
+    "uid" : "current.name"
+  }, {
+    "name" : "current.provider",
+    "properties" : {
+      "mandatory" : true,
+      "propertyType" : "String",
+      "constraintType" : "javax.validation.constraints.NotNull"
+    },
+    "type" : "Property",
+    "uid" : "current.provider"
+  }, {
+    "name" : "current.sender",
+    "properties" : {
+      "mandatory" : true,
+      "propertyType" : "String"
+    },
+    "type" : "Property",
+    "uid" : "current.sender"
+  }, {
+    "name" : "current.timeout",
+    "properties" : {
+      "defaultValue" : "5000",
+      "mandatory" : true,
+      "propertyType" : "long",
+      "constraintType" : "javax.validation.constraints.NotEmpty"
+    },
+    "type" : "Property",
+    "uid" : "current.timeout"
+  }, {
+    "name" : "parent.timeout",
+    "properties" : {
+      "mandatory" : true,
+      "propertyType" : "long"
+    },
+    "type" : "Property",
+    "uid" : "parent.timeout"
+  }, {
+    "name" : "parent.value",
+    "properties" : {
+      "mandatory" : true,
+      "propertyType" : "String"
+    },
+    "type" : "Property",
+    "uid" : "parent.value"
+  }, {
+    "name" : "project.feature.enable",
+    "properties" : {
+      "mandatory" : false,
+      "matchIfMissing" : false,
+      "propertyType" : "boolean",
+      "useForConditionalBean" : true
+    },
+    "type" : "Property",
+    "uid" : "project.feature.enable"
+  }, {
+    "name" : "project.service.enable",
+    "properties" : {
+      "mandatory" : false,
+      "matchIfMissing" : false,
+      "propertyType" : "boolean",
+      "useForConditionalBean" : true
+    },
+    "type" : "Property",
+    "uid" : "project.service.enable"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.name",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.enable",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "parent.value",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.provider",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "current.sender",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "parent.timeout",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.feature.enable",
+    "type" : "USE_PROPERTY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "project.service.enable",
+    "type" : "USE_PROPERTY"
+  } ],
+  "relationshipsToDeletes" : [ ]
+}

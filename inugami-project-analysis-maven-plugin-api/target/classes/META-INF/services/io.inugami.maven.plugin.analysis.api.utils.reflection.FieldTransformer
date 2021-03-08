@@ -1,0 +1,3 @@
+io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.ListFieldTransformer
+io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.MapFieldTransformer
+io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DateTimeFieldTransformer
