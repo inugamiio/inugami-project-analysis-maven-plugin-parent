@@ -111,10 +111,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final Writer  writer       = buildWriter(baseDocFolder, version, notSplitFile);
 
         final String project = renderProject(context.getProject(), notSplitFile);
-        final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile);
-        final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile);
-        final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile);
-        final String issues  = renderIssues(releaseNote.getIssues(), notSplitFile);
+        final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile,context.getConfiguration());
+        final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile,context.getConfiguration());
+        final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile,context.getConfiguration());
+        final String issues  = renderIssues(releaseNote.getIssues(), notSplitFile,context.getConfiguration());
 
         write(project, writer, "project", version, baseDocFolder);
         write(authors, writer, "author", version, baseDocFolder);
@@ -126,26 +126,27 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                 .loadSpiServicesByPriority(AsciidocInfoWriter.class);
 
         for (final AsciidocInfoWriter writerInfo : infoWriters) {
-            final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
-            if (content != null) {
-                if (content.size() == 1) {
-                    write(content.get(new ArrayList<>(content.keySet()).get(0)),
-                          writer,
-                          writerInfo.getParagraphName(),
-                          version,
-                          baseDocFolder);
-                }
-                else {
-                    for (final Map.Entry<String, String> entry : content.entrySet()) {
-                        write(entry.getValue(),
+            if (writerInfo.isEnabled(context.getConfiguration())) {
+                final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
+                if (content != null) {
+                    if (content.size() == 1) {
+                        write(content.get(new ArrayList<>(content.keySet()).get(0)),
                               writer,
-                              String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
+                              writerInfo.getParagraphName(),
                               version,
                               baseDocFolder);
                     }
+                    else {
+                        for (final Map.Entry<String, String> entry : content.entrySet()) {
+                            write(entry.getValue(),
+                                  writer,
+                                  String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
+                                  version,
+                                  baseDocFolder);
+                        }
+                    }
                 }
             }
-
         }
 
         if (writer != null) {
@@ -159,15 +160,17 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                        final String context,
                        final String version,
                        final File baseDocFolder) throws IOException {
-        if (writer != null) {
-            writer.write(content);
-            writer.flush();
-        }
-        else {
-            final File file = FilesUtils.buildFile(baseDocFolder,
-                                                   version,
-                                                   String.join(DELIMITER, RELEASE_NOTE, context + ADOC));
-            FilesUtils.write(content, file);
+        if(content!=null){
+            if (writer != null) {
+                writer.write(content);
+                writer.flush();
+            }
+            else {
+                final File file = FilesUtils.buildFile(baseDocFolder,
+                                                       version,
+                                                       String.join(DELIMITER, RELEASE_NOTE, context + ADOC));
+                FilesUtils.write(content, file);
+            }
         }
     }
 
@@ -221,7 +224,11 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         return writer.toString();
     }
 
-    protected String renderAuthors(final Set<Author> authors, final boolean notSplitFile) {
+    protected String renderAuthors(final Set<Author> authors, final boolean notSplitFile,
+                                   final ConfigHandler<String, String> configuration) {
+        if(notEnabled("authors",configuration)){
+            return null;
+        }
         final JsonBuilder writer = new JsonBuilder();
         if (authors != null) {
             final List<Author> currentAuthors = new ArrayList<>(authors);
@@ -244,7 +251,12 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         return writer.toString();
     }
 
-    protected String renderCommit(final Set<String> commit, final boolean notSplitFile) {
+
+    protected String renderCommit(final Set<String> commit, final boolean notSplitFile,
+                                  final ConfigHandler<String, String> configuration) {
+        if(notEnabled("commit",configuration)){
+            return null;
+        }
         final JsonBuilder writer = new JsonBuilder();
         if (commit != null) {
             if (notSplitFile) {
@@ -272,7 +284,11 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
 
-    protected String renderMergeRequest(final List<MergeRequests> mergeRequests, final boolean notSplitFile) {
+    protected String renderMergeRequest(final List<MergeRequests> mergeRequests, final boolean notSplitFile,
+                                        final ConfigHandler<String, String> configuration) {
+        if(notEnabled("mergeRequest",configuration)){
+            return null;
+        }
         final JsonBuilder writer = new JsonBuilder();
         if (mergeRequests != null) {
             if (notSplitFile) {
@@ -302,7 +318,11 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
 
-    protected String renderIssues(final List<Issue> values, final boolean notSplitFile) {
+    protected String renderIssues(final List<Issue> values, final boolean notSplitFile,
+                                  final ConfigHandler<String, String> configuration) {
+        if(notEnabled("issues",configuration)){
+            return null;
+        }
         final JsonBuilder writer = new JsonBuilder();
         if (values != null) {
             if (notSplitFile) {
@@ -346,6 +366,12 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     // =========================================================================
     // TOOLS
     // =========================================================================
+    private boolean notEnabled(final String featureName, final ConfigHandler<String, String> configuration) {
+        final String featureFullName = "io.inugami.maven.plugin.analysis.asciidoc."+featureName+".enabled";
+        return !Boolean.parseBoolean(configuration.grabOrDefault(featureFullName,"true"));
+    }
+
+
     private String trim(final String value) {
         return value == "" ? null : value.trim();
     }

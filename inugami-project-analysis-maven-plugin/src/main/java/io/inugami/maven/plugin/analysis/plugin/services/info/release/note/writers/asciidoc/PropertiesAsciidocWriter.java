@@ -42,6 +42,11 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
         return PropertiesExtractor.TYPE;
     }
 
+    @Override
+    public String getfeatureName() {
+        return "io.inugami.maven.plugin.analysis.asciidoc.properties.enabled";
+    }
+
     // =========================================================================
     // OVERRIDES
     // =========================================================================
@@ -50,6 +55,7 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
                                                    final InfoContext context) {
 
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
+
         result.put("properties_base", renderBase());
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(PropertiesExtractor.TYPE)) {
             final Differential differential = releaseNote.getDifferentials().get(PropertiesExtractor.TYPE);
@@ -59,6 +65,7 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
             result.put("properties", renderingProperties(notNull(differential.getSameValues()),"Properties", notSplitFile));
             //@formatter:on
         }
+
         return result;
     }
 
