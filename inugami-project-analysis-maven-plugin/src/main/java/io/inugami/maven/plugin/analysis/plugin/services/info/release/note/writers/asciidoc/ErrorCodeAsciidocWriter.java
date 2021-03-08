@@ -41,10 +41,16 @@ public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
     }
 
     @Override
+    public String getfeatureName() {
+        return "io.inugami.maven.plugin.analysis.asciidoc.errorCode.enabled";
+    }
+
+    @Override
     public LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote, final boolean notSplitFile,
                                                    final InfoContext context) {
 
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
+
         result.put("error_base", renderBase());
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(ErrorCodeExtractor.ERROR_CODES)) {
             final Differential differential = releaseNote.getDifferentials().get(ErrorCodeExtractor.ERROR_CODES);
@@ -54,6 +60,7 @@ public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
             result.put("errors", renderingErrors(notNull(differential.getSameValues()),"Error codes", notSplitFile));
             //@formatter:on
         }
+
         return result;
     }
 

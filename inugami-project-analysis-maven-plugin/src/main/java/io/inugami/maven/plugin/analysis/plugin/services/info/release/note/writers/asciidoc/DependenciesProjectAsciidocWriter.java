@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.write
 import edu.emory.mathcs.backport.java.util.Collections;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
@@ -40,11 +41,17 @@ public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
         return DependenciesExtractor.TYPE_PROJECT;
     }
 
-    protected String getParagraphBaseName(){
+    protected String getParagraphBaseName() {
         return "project_dependencies";
     }
-    protected String getParagraphBaseTitle(){
+
+    protected String getParagraphBaseTitle() {
         return "Project dependencies";
+    }
+
+    @Override
+    public String getfeatureName() {
+        return "io.inugami.maven.plugin.analysis.asciidoc.dependenciesProjects.enabled";
     }
 
     // =========================================================================
@@ -54,6 +61,7 @@ public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
     public LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote, final boolean notSplitFile,
                                                    final InfoContext context) {
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
+
         result.put(getParagraphBaseName(), renderBase());
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(getParagraphName())) {
             final Differential differential = releaseNote.getDifferentials().get(getParagraphName());

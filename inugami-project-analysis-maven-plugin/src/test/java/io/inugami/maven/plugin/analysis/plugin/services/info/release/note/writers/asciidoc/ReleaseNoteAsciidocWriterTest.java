@@ -1,17 +1,33 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc;
 
+import io.inugami.configuration.services.ConfigHandlerHashMap;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Issue;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import static io.inugami.commons.test.UnitTestHelper.*;
+import static org.mockito.Mockito.lenient;
 
+@ExtendWith(MockitoExtension.class)
 public class ReleaseNoteAsciidocWriterTest {
+    @Mock
+    private InfoContext context;
+
+    @BeforeEach
+    public void setup() {
+        lenient().when(context.getConfiguration()).thenReturn(new ConfigHandlerHashMap());
+    }
+
 
     @Test
     public void renderAuthors_withValues_shouldRenderParagraph() {
@@ -26,9 +42,10 @@ public class ReleaseNoteAsciidocWriterTest {
                                                                     .build()));
 
 
-        assertTextRelatif(writer.renderAuthors(authors, false),
+        assertTextRelatif(writer.renderAuthors(authors, false, context.getConfiguration()),
                           "info/release/note/writers/asciidoc-authors-split.adoc");
-        assertTextRelatif(writer.renderAuthors(authors, true), "info/release/note/writers/asciidoc-authors.adoc");
+        assertTextRelatif(writer.renderAuthors(authors, true, context.getConfiguration()),
+                          "info/release/note/writers/asciidoc-authors.adoc");
     }
 
     @Test
@@ -49,9 +66,9 @@ public class ReleaseNoteAsciidocWriterTest {
 
 
         assertText(loadJsonReference("info/release/note/writers/asciidoc-commit-split.adoc"),
-                   writer.renderCommit(commit, false));
+                   writer.renderCommit(commit, false, context.getConfiguration()));
         assertText(loadJsonReference("info/release/note/writers/asciidoc-commit.adoc"),
-                   writer.renderCommit(commit, true));
+                   writer.renderCommit(commit, true, context.getConfiguration()));
     }
 
     @Test
@@ -81,9 +98,9 @@ public class ReleaseNoteAsciidocWriterTest {
                                                          );
 
         assertText(loadJsonReference("info/release/note/writers/asciidoc-merge-split.adoc"),
-                   writer.renderMergeRequest(mergeRequests, false));
+                   writer.renderMergeRequest(mergeRequests, false, context.getConfiguration()));
         assertText(loadJsonReference("info/release/note/writers/asciidoc-merge.adoc"),
-                   writer.renderMergeRequest(mergeRequests, true));
+                   writer.renderMergeRequest(mergeRequests, true, context.getConfiguration()));
     }
 
     @Test
@@ -108,8 +125,8 @@ public class ReleaseNoteAsciidocWriterTest {
                                           );
 
         assertText(loadJsonReference("info/release/note/writers/asciidoc-issues-split.adoc"),
-                   writer.renderIssues(issues, false));
+                   writer.renderIssues(issues, false, context.getConfiguration()));
         assertText(loadJsonReference("info/release/note/writers/asciidoc-issues.adoc"),
-                   writer.renderIssues(issues, true));
+                   writer.renderIssues(issues, true, context.getConfiguration()));
     }
 }
