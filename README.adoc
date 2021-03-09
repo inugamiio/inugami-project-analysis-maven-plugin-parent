@@ -2,6 +2,10 @@
 :toc:
 :source-highlighter: pygments
 
+Inugami project analysis maven plugin have for target to generate a release note on your project.
+Detect hidden dependencies on microservices is not easy. This plugin use Neo4J to resolve them.
+You can find a generated release note example here : link:doc/release-note-example.adoc[release-note]
+
 
 == Last Release:
 [source,xml]
@@ -9,7 +13,7 @@
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
     <executions>
         <execution>
             <id>check</id>
