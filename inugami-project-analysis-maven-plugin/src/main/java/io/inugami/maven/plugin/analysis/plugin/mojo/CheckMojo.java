@@ -28,11 +28,13 @@ import io.inugami.maven.plugin.analysis.api.actions.*;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
 import io.inugami.maven.plugin.analysis.plugin.services.WriterService;
+import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -138,6 +140,10 @@ public class CheckMojo extends AbstractMojo {
             log.error(error.getMessage(), error);
             log.info(ConsoleColors.renderState(ConsoleColors.State.ERROR, "scan complete with error"));
             throw new MojoFailureException(error.getMessage(), error);
+        }finally {
+            if(context.getNeo4jDao()!=null){
+                context.getNeo4jDao().shutdown();
+            }
         }
     }
 
@@ -214,6 +220,7 @@ public class CheckMojo extends AbstractMojo {
         configuration.put(Constants.INTERACTIVE, "false");
         initProperties(configuration);
 
+        Neo4jDao neo4jDao = new DefaultNeo4jDao(configuration);
         return ScanConext.builder()
                          .basedir(basedir)
                          .project(project)
@@ -228,6 +235,7 @@ public class CheckMojo extends AbstractMojo {
                          .secDispatcher(secDispatcher)
                          .artifactHandler(artifactHandler)
                          .settings(settings)
+                         .neo4jDao(neo4jDao)
                          .build();
     }
 

@@ -186,7 +186,7 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderReturnType(final Method method, final boolean strict) {
-        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor());
+        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor(),strict);
     }
 
     public static JsonNode renderType(final Class<?> type,
@@ -226,7 +226,7 @@ public final class ReflectionService {
                     builder.path("[]");
                     JsonNode structure = null;
                     if (currentClass != null) {
-                        structure = renderStructureJson(currentClass, path, cursorChildren);
+                        structure = renderStructureJson(currentClass, path, cursorChildren,strict);
                     }
 
                     if (structure != null) {

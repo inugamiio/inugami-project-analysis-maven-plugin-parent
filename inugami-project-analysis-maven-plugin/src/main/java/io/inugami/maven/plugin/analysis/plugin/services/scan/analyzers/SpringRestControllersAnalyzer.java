@@ -26,6 +26,7 @@ import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
+import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,6 @@ import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionSe
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
     public static final String FEATURE      = FEATURE_NAME + ".enable";
-    public static final String STRICT       = "inugami.maven.plugin.analysis.analyzer.restControllers.strict";
 
     public static final  String SEPARATOR                 = ",";
     public static final  String URI_SEP                   = "/";
@@ -74,6 +74,14 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
     private static final Class<? extends Annotation> restControllerAnnotation = null;
     private static final Boolean                     springContext            = null;
+    public static final  String                      IDENTIFIER               = "identifier";
+    public static final  String                      EMPTY                    = "";
+    public static final  String                      DOUBLE_URL_SEP           = "//";
+    public static final  String                      UNDERSCORE               = "_";
+    public static final  String                      QUOT                     = "\"";
+    public static final  String                      LINE                     = "\n";
+    public static final  String                      TAB                      = "\t";
+    public static final  String                      SIMPLE_QUOT              = "'";
 
     // =========================================================================
     // API
@@ -87,8 +95,10 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
         log.info("{} : {}", FEATURE_NAME, clazz);
-        final boolean strict  = context.getConfiguration().grabBoolean(STRICT, true);
-        final RestApi restApi = analyseClass(clazz, strict);
+
+        final RestApi restApi = analyseClass(clazz);
+
+        final List<String> existingNodes = new ArrayList<>();
 
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
@@ -96,15 +106,21 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
                 final Node node = convertEndpointToNeo4j(endpoint);
                 if (node != null) {
-                    result.addNode(node);
+                    if (existingNode(node, context.getNeo4jDao())) {
+                        existingNodes.add(node.getUid());
+                    }
+                    else {
+                        result.addNode(node);
+                    }
+
                 }
 
 
             }
         }
 
+        final Node node = buildNodeVersion(context.getProject());
         if (!result.getNodes().isEmpty()) {
-            final Node node        = buildNodeVersion(context.getProject());
             final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(REST).name(REST).build();
             for (final Node service : result.getNodes()) {
                 result.addRelationship(Relationship.builder()
@@ -122,7 +138,27 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
             result.addNode(node, serviceType);
         }
+
+        if (!existingNodes.isEmpty()) {
+            for (final String service : existingNodes) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(node.getUid())
+                                                   .to(service)
+                                                   .type(getRelationshipType())
+                                                   .build());
+            }
+        }
         return List.of(result);
+    }
+
+    private boolean existingNode(final Node node,
+                                 final Neo4jDao neo4jDao) {
+        boolean result = false;
+        if (node != null && !EXPOSE.equals(getRelationshipType()) && neo4jDao != null) {
+            final org.neo4j.driver.types.Node savedNode = neo4jDao.getNode(node.getUid(), node.getType());
+            result = savedNode != null;
+        }
+        return result;
     }
 
     protected String getRelationshipType() {
@@ -130,13 +166,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     private Node convertEndpointToNeo4j(final RestEndpoint endpoint) {
+        final String uid = buildServiceUid(endpoint);
         return Node.builder()
-                   .uid(buildServiceUid(endpoint))
+                   .uid(encodeSha1(uid))
                    .name(buildName(endpoint))
                    .type(SERVICE)
-                   .properties(buildProperties(endpoint))
-                   .build()
-                ;
+                   .properties(buildProperties(endpoint, uid))
+                   .build();
     }
 
 
@@ -146,15 +182,22 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         json.addField(URI).valueQuot(endpoint.getUri()).addSeparator();
 
         //@formatter:off
-        processIfNotNull(endpoint.getHeaders(),     (value)-> json.addField(HEADER).valueQuot(endpoint.getHeaders()).addSeparator());
-        processIfNotNull(endpoint.getConsume(),     (value)-> json.addField(ACCEPT).valueQuot(endpoint.getConsume()).addSeparator());
-        processIfNotNull(endpoint.getProduce(),     (value)-> json.addField(CONTENT_TYPE).valueQuot(endpoint.getProduce()).addSeparator());
-        processIfNotNull(endpoint.getBody(),        (value)-> json.addField(REQUEST_PAYLOAD).valueQuot(endpoint.getBody()).addSeparator());
-        processIfNotNull(endpoint.getResponseType(),(value)-> json.addField(RESPONSE_PAYLOAD).valueQuot(endpoint.getResponseType()).addSeparator());
-        processIfNotNull(endpoint.getMethod(),     (value)-> json.addField(METHOD).valueQuot(endpoint.getHeaders()).addSeparator());
+        processIfNotNull(endpoint.getHeaders(),     (value)-> json.addField(HEADER).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getConsume(),     (value)-> json.addField(ACCEPT).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getProduce(),     (value)-> json.addField(CONTENT_TYPE).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getBodyRequireOnly(),        (value)-> json.addField(REQUEST_PAYLOAD).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getResponseTypeRequireOnly(),(value)-> json.addField(RESPONSE_PAYLOAD).valueQuot(value).addSeparator());
         //@formatter:on
 
-        return new EncryptionUtils().encodeSha1(json.toString());
+        return json.toString()
+                   .replaceAll(LINE, EMPTY)
+                   .replaceAll(TAB, EMPTY)
+                   .replaceAll(DOUBLE_URL_SEP, URI_SEP)
+                   .replaceAll(QUOT, SIMPLE_QUOT);
+    }
+
+    private String encodeSha1(final String value) {
+        return value == null ? null : new EncryptionUtils().encodeSha1(value);
     }
 
     private String buildName(final RestEndpoint endpoint) {
@@ -166,20 +209,22 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return result;
     }
 
-    private LinkedHashMap<String, Serializable> buildProperties(final RestEndpoint endpoint) {
+    private LinkedHashMap<String, Serializable> buildProperties(final RestEndpoint endpoint,
+                                                                final String identifier) {
         final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
         result.put(VERB, cleanLines(endpoint.getVerb()));
         result.put(URI, cleanLines(endpoint.getUri()));
+        result.put(IDENTIFIER, identifier);
 
         //@formatter:off
-        processIfNotEmpty(endpoint.getNickname(),     (value)->result.put(NICKNAME, endpoint.getNickname()));
-         processIfNotEmpty(endpoint.getMethod(),      (value)->result.put(METHOD, value));
-        processIfNotEmpty(endpoint.getHeaders(),      (value)->result.put(HEADER, endpoint.getHeaders()));
-        processIfNotEmpty(endpoint.getConsume(),      (value)->result.put(ACCEPT, endpoint.getConsume()));
-        processIfNotEmpty(endpoint.getProduce(),      (value)->result.put(CONTENT_TYPE, endpoint.getProduce()));
-        processIfNotEmpty(endpoint.getBody(),         (value)->result.put(REQUEST_PAYLOAD, endpoint.getBody()));
-        processIfNotEmpty(endpoint.getResponseType(), (value)->result.put(RESPONSE_PAYLOAD, endpoint.getResponseType()));
-        processIfNotEmpty(endpoint.getDescription(),  (value)->result.put(DESCRIPTION, endpoint.getDescription()));
+        processIfNotEmpty(endpoint.getNickname(),     (value)->result.put(NICKNAME, value));
+        processIfNotEmpty(endpoint.getMethod(),      (value)->result.put(METHOD, value));
+        processIfNotEmpty(endpoint.getHeaders(),      (value)->result.put(HEADER, value));
+        processIfNotEmpty(endpoint.getConsume(),      (value)->result.put(ACCEPT, value));
+        processIfNotEmpty(endpoint.getProduce(),      (value)->result.put(CONTENT_TYPE, value));
+        processIfNotEmpty(endpoint.getBody(),         (value)->result.put(REQUEST_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getResponseType(), (value)->result.put(RESPONSE_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getDescription(),  (value)->result.put(DESCRIPTION, value));
         //@formatter:on
 
         return result;
@@ -188,26 +233,26 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // INTERNAL
     // =========================================================================
-    protected RestApi analyseClass(final Class<?> clazz, final boolean strict) {
+    protected RestApi analyseClass(final Class<?> clazz) {
         final String name        = getApiName(clazz);
         final String baseContext = getBaseContext(clazz);
         return RestApi.builder()
                       .name(name)
                       .baseContext(URI_SEP + baseContext)
-                      .endpoints(resolveEndpoints(clazz, baseContext, strict))
+                      .endpoints(resolveEndpoints(clazz, baseContext, true))
                       .build()
                       .orderEndPoint();
     }
 
     protected String getBaseContext(final Class<?> clazz) {
-        String result = "";
+        String result = EMPTY;
 
         RequestMapping annotation = clazz.getDeclaredAnnotation(RequestMapping.class);
-        if(annotation!=null){
-            if(annotation.value()!=null && annotation.value().length>0){
+        if (annotation != null) {
+            if (annotation.value() != null && annotation.value().length > 0) {
                 result = annotation.value()[0];
             }
-            if(result.isEmpty() && annotation.path()!=null && annotation.path().length>0){
+            if (result.isEmpty() && annotation.path() != null && annotation.path().length > 0) {
                 result = annotation.path()[0];
             }
         }
@@ -271,11 +316,14 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
         builder.method(String.join(".", clazz.getName(), method.getName()));
         builder.headers(extractHeader(method.getParameters()));
-        builder.body(extractBody(method.getParameters(), strict));
+        builder.body(extractBody(method.getParameters(), true));
+        builder.bodyRequireOnly(extractBody(method.getParameters(), false));
 
-        final JsonNode payload = renderReturnType(method, strict);
+        final JsonNode payload = renderReturnType(method, true);
         builder.responseType(payload == null ? null : payload.convertToJson());
 
+        final JsonNode payloadRequireOnly = renderReturnType(method, false);
+        builder.responseTypeRequireOnly(payloadRequireOnly == null ? null : payloadRequireOnly.convertToJson());
         return builder.build();
     }
 
@@ -303,12 +351,12 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
     private String renderUri(final String baseContext, final String[] paths) {
         final List<String> result  = new ArrayList<>();
-        final String       context = baseContext == null ? "" : URI_SEP + baseContext;
+        final String       context = baseContext == null ? EMPTY : URI_SEP + baseContext;
         result.add(context);
         for (final String path : paths) {
             result.add(path);
         }
-        return String.join("", result);
+        return String.join(EMPTY, result).replaceAll(DOUBLE_URL_SEP, URI_SEP);
     }
 
     private String renderVerb(final RequestMethod[] method) {
@@ -318,7 +366,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                 result.add(requestMethod.name());
             }
         }
-        return String.join("_", result);
+        return String.join(UNDERSCORE, result);
     }
 
 }

@@ -16,7 +16,9 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc;
 
+import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 
@@ -28,11 +30,28 @@ import java.util.Optional;
 public interface AsciidocInfoWriter {
     String getParagraphName();
 
-    LinkedHashMap<String,String> rendering(final ReleaseNoteResult releaseNote,
-                                           final boolean notSplitFile,
-                                           final InfoContext context);
+    LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote,
+                                            final boolean notSplitFile,
+                                            final InfoContext context);
 
-    default List<JsonObject> notNull(final List<JsonObject> values){
+    String getfeatureName();
+
+    default List<JsonObject> notNull(final List<JsonObject> values) {
         return Optional.ofNullable(values).orElse(new ArrayList<>());
+    }
+
+    default boolean isEnabled(final ConfigHandler<String, String> configuration) {
+        final String featureName = getfeatureName();
+        return featureName == null ? true : Boolean.parseBoolean(configuration.grabOrDefault(featureName,"true"));
+    }
+
+    default String renderPayload(final String value) {
+        final JsonBuilder writer = new JsonBuilder();
+        writer.line();
+        writer.write("[source,javascript]").line();
+        writer.write("----").line();
+        writer.write(value).line();
+        writer.write("----");
+        return writer.toString();
     }
 }

@@ -25,32 +25,32 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Re
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.utils.Constants;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.PropertyDTO;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.EntityDTO;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.types.Node;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
-import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
+import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ENTITIES;
+import static io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer.LOCAL_ENTITY;
 
-public class PropertiesExtractor implements ReleaseNoteExtractor {
+public class EntitiesExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String TYPE                     = "properties";
-    public static final String ARTIFACT                 = "artifact";
-    public static final String PROPERTY                 = "property";
-    public static final String USE_FOR_CONDITIONAL_BEAN = "useForConditionalBean";
-    public static final String MANDATORY                = "mandatory";
-    public static final String CONSTRAINT_DETAIL        = "constraintDetail";
-    public static final String CONSTRAINT_TYPE          = "constraintType";
-    public static final String PROPERTY_TYPE            = "propertyType";
-    public static final String DEFAULT_VALUE            = "defaultValue";
+    public static final  String ENTITY_TYPE         = "entities";
+    public static final  String NODE_LOCAL_ENTITY   = "localEntity";
+    public static final  String PAYLOAD             = "payload";
+    public static final  String SHORT_NAME          = "shortName";
+    private static final String NODE_DEPENDENCY_REF = "dependencyEntityRef";
+    private static final String NODE_DEPENDENCY     = "dependency";
 
 
     // =========================================================================
@@ -61,17 +61,17 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
                                    final Gav previousVersion, final Neo4jDao dao, final List<Replacement> replacements,
                                    final InfoContext context) {
 
-        final List<JsonObject> currentErrorCodes = search(QUERIES_SEARCH_PROPERTIES_CQL, currentVersion,
+        final List<JsonObject> currentErrorCodes = search(QUERIES_SEARCH_ENTITIES, currentVersion,
                                                           context.getConfiguration(), dao, this::convert);
 
         final List<JsonObject> previousErrorCodes = previousVersion == null ? null : search(
-                QUERIES_SEARCH_PROPERTIES_CQL,
+                QUERIES_SEARCH_ENTITIES,
                 previousVersion,
                 context.getConfiguration(),
                 dao,
                 this::convert);
 
-        releaseNoteResult.addDifferential(TYPE, Differential
+        releaseNoteResult.addDifferential(ENTITY_TYPE, Differential
                 .buildDifferential(newSet(currentErrorCodes), newSet(previousErrorCodes)));
     }
 
@@ -80,53 +80,59 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
     // OVERRIDES
     // =========================================================================
     private List<JsonObject> convert(final List<Record> resultSet) {
-        final List<JsonObject> result = new ArrayList<>();
+        final Map<String, EntityDTO> buffer = new LinkedHashMap<>();
 
         for (final Record record : resultSet) {
-            final NodeValue property = extractNode(PROPERTY, record);
-            if (isNotNull(property)) {
-                final Node propertyNode = property.asNode();
-                result.add(PropertyDTO.builder()
-                                      .artifact(buildArtifact(extractNode(ARTIFACT, record)))
-                                      .name(retrieve(Constants.NAME, propertyNode))
-                                      .defaultValue(retrieve(DEFAULT_VALUE, propertyNode))
-                                      .propertyType(retrieve(PROPERTY_TYPE, propertyNode))
-                                      .constraintType(retrieve(CONSTRAINT_TYPE, propertyNode))
-                                      .constraintDetail(retrieve(CONSTRAINT_DETAIL, propertyNode))
-                                      .mandatory(retrieveBoolean(property.get(MANDATORY)))
-                                      .useForConditionalBean(retrieveBoolean(property.get(USE_FOR_CONDITIONAL_BEAN)))
-                                      .build());
+            final NodeValue entityNode        = extractNode(NODE_LOCAL_ENTITY, record);
+            final NodeValue dependencyNode    = extractNode(NODE_DEPENDENCY, record);
+            final NodeValue dependencyRefNode = extractNode(NODE_DEPENDENCY_REF, record);
+            if (isNotNull(entityNode)) {
+                final Node   propertyNode = entityNode.asNode();
+                final String nodeName     = cleanName(retrieve(SHORT_NAME, propertyNode));
+                EntityDTO    entity       = null;
+                if (buffer.containsKey(nodeName)) {
+                    entity = buffer.get(nodeName);
+                }
+                else {
+                    entity = EntityDTO.builder()
+                                      .name(nodeName)
+                                      .payload(retrieve(PAYLOAD, propertyNode))
+                                      .build();
+                    buffer.put(nodeName, entity);
+                }
+                final String dependency    = dependencyNode == null ? null : buildArtifact(dependencyNode);
+                final String dependencyRef = dependencyRefNode == null ? null : buildArtifact(dependencyRefNode);
+
+                if (dependency != null) {
+                    entity.addProjectUsing(dependency);
+                }
+                if (dependencyRef != null) {
+                    entity.addProjectUsing(dependencyRef);
+                }
             }
 
 
         }
-        return result;
+        return buffer.entrySet()
+                     .stream()
+                     .map(Map.Entry::getValue)
+                     .collect(Collectors.toList());
     }
 
-    private boolean retrieveBoolean(final Value value) {
-        boolean result = false;
-        if (value != null && !value.isNull()) {
-            try {
-                result = value.asBoolean(false);
-            }
-            catch (final Exception e) {
-            }
-
-        }
-        return result;
+    private String cleanName(final String name) {
+        return name == null ? null : name.replaceFirst(LOCAL_ENTITY, "");
     }
 
     private String buildArtifact(final NodeValue artifact) {
         String result = null;
         if (artifact != null && !artifact.isNull()) {
             final Node node = artifact.asNode();
-            result = String.join(Constants.EMPTY,
+            result = String.join(Constants.GAV_SEPARATOR,
                                  retrieve(Constants.GROUP_ID, node),
-                                 retrieve(Constants.ARTIFACT_ID, node));
+                                 retrieve(Constants.ARTIFACT_ID, node),
+                                 retrieve(Constants.VERSION, node));
         }
 
         return result;
     }
-
-
 }

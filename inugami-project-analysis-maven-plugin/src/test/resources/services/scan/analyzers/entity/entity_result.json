@@ -2,6 +2,20 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
+    "name" : "local@mainDatabase_app_user",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\"\n}"
+    },
+    "type" : "LocalEntity",
+    "uid" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a"
+  }, {
+    "name" : "mainDatabase_app_user",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":\"Address\"\n}"
+    },
+    "type" : "Entity",
+    "uid" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a"
+  }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
       "artifactId" : "basic-artifact",
@@ -15,34 +29,20 @@
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
-  }, {
-    "name" : "local@mainDatabase_app_user",
-    "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":\"Address\"\n}"
-    },
-    "type" : "LocalEntity",
-    "uid" : "local@mainDatabase_app_user"
-  }, {
-    "name" : "mainDatabase_app_user",
-    "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\"\n}"
-    },
-    "type" : "Entity",
-    "uid" : "mainDatabase_app_user"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
+    "from" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a",
+    "to" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a",
+    "type" : "HAS_ENTITY_REFERENCE"
+  }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "local@mainDatabase_app_user",
+    "to" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a",
     "type" : "HAS_LOCAL_ENTITY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "mainDatabase_app_user",
+    "to" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a",
     "type" : "HAS_ENTITY"
-  }, {
-    "from" : "local@mainDatabase_app_user",
-    "to" : "mainDatabase_app_user",
-    "type" : "HAS_ENTITY_REFERENCE"
   } ],
   "relationshipsToDeletes" : [ ]
 }

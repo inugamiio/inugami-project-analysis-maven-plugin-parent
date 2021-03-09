@@ -27,6 +27,7 @@ public final class Constants {
     public static final String INTERACTIVE       = "interactive";
     public static final String PREVIOUS_VERSION  = "previousVersion";
 
+    public static final String GAV_SEPARATOR  = ":";
     public static final String EMPTY          = " ";
     public static final String UNDERSCORE     = "_";
     public static final String LINE_DECO      = "-";

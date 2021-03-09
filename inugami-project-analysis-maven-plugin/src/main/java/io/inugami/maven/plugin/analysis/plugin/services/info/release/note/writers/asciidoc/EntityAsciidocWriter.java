@@ -23,26 +23,29 @@ import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ErrorCodeExtractor;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.EntitiesExtractor;
+import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.EntityDTO;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ErrorCodeDTO;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
+
+public class EntityAsciidocWriter implements AsciidocInfoWriter {
 
     // =========================================================================
     // API
     // =========================================================================
     @Override
     public String getParagraphName() {
-        return "error_codes";
+        return "entity";
     }
 
     @Override
     public String getfeatureName() {
-        return "io.inugami.maven.plugin.analysis.asciidoc.errorCode.enabled";
+        return "io.inugami.maven.plugin.analysis.asciidoc.entity.enabled";
     }
 
     @Override
@@ -51,13 +54,13 @@ public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
 
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
 
-        result.put("error_base", renderBase());
-        if (releaseNote != null && releaseNote.getDifferentials().containsKey(ErrorCodeExtractor.ERROR_CODES)) {
-            final Differential differential = releaseNote.getDifferentials().get(ErrorCodeExtractor.ERROR_CODES);
+        result.put("entities_root", renderBase());
+        if (releaseNote != null && releaseNote.getDifferentials().containsKey(EntitiesExtractor.ENTITY_TYPE)) {
+            final Differential differential = releaseNote.getDifferentials().get(EntitiesExtractor.ENTITY_TYPE);
             //@formatter:off
-            result.put("new_errors", renderingErrors(notNull(differential.getNewValues()),"New error codes", notSplitFile));
-            result.put("deleted_errors", renderingErrors(notNull(differential.getDeletedValues()),"Deleted error codes", notSplitFile));
-            result.put("errors", renderingErrors(notNull(differential.getSameValues()),"Error codes", notSplitFile));
+            result.put("new_entities", processRendering(notNull(differential.getNewValues()),"New entities", notSplitFile));
+            result.put("deleted_entities", processRendering(notNull(differential.getDeletedValues()),"Deleted entities", notSplitFile));
+            result.put("entities", processRendering(notNull(differential.getSameValues()),"Entities", notSplitFile));
             //@formatter:on
         }
 
@@ -66,40 +69,37 @@ public class ErrorCodeAsciidocWriter implements AsciidocInfoWriter {
 
     private String renderBase() {
         final JsonBuilder writer = new JsonBuilder();
-        writer.write("== Error codes").line();
+        writer.write("== Entities").line();
         return writer.toString();
     }
 
-    private String renderingErrors(final List<JsonObject> values, final String title, final boolean notSplitFile) {
+    private String processRendering(final List<JsonObject> values, final String title, final boolean notSplitFile) {
         final JsonBuilder writer = new JsonBuilder();
 
         if (notSplitFile) {
             writer.write("=== ").write(title).line();
         }
 
-        writer.write("[cols=\"2,1,1,4,1\", options=\"header\"]").line();
-        writer.write("|===").line();
-        writer.write("|Error | Type | Status | Message | artifact").line();
-        writer.line();
-
-        final List<ErrorCodeDTO> data = new ArrayList<>();
+        final List<EntityDTO> data = new ArrayList<>();
         for (final JsonObject value : values) {
-            if (value instanceof ErrorCodeDTO) {
-                data.add((ErrorCodeDTO) value);
+            if (value instanceof EntityDTO) {
+                data.add((EntityDTO) value);
             }
         }
         Collections.sort(data);
 
-        for (final ErrorCodeDTO error : data) {
-            writer.write("|").write(error.getErrorCode()).line();
-            writer.write("|").write(error.getType()).line();
-            writer.write("|").write(error.getStatusCode()).line();
-            writer.write("|").write(error.getMessage()).line();
-            writer.write("|").write(error.getArtifact()).line();
+        for (final EntityDTO entity : data) {
+            writer.write("==== ").write(entity.getName()).line();
+            writer.write(renderPayload(entity.getPayload()));
+
+            if(entity.getProjectsUsing()!=null){
+                writer.line().write("*Projects using :* ").line();
+                entity.getProjectsUsing().forEach(value -> writer.line().write("* ").write(value).line());
+            }
+
             writer.line();
         }
 
-        writer.write("|===").line();
         writer.line();
         return writer.toString();
     }

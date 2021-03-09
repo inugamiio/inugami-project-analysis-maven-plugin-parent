@@ -25,6 +25,11 @@ public class DependenciesAsciidocWriter extends DependenciesProjectAsciidocWrite
     // ATTRIBUTES
     // =========================================================================
     @Override
+    public String getfeatureName(){
+        return "io.inugami.maven.plugin.analysis.asciidoc.dependencies.enabled";
+    }
+
+    @Override
     public String getParagraphName() {
         return DependenciesExtractor.TYPE;
     }

@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note;
 
+import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
@@ -25,5 +26,8 @@ public interface ReleaseNoteWriter {
     boolean accept(final ConfigHandler<String, String> configuration);
 
     void process(final ReleaseNoteResult releaseNote, final InfoContext context);
+
+
+
 
 }

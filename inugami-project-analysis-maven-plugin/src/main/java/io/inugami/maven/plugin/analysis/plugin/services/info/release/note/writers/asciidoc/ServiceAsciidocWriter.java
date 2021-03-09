@@ -41,11 +41,16 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         return "services";
     }
 
+    @Override
+    public String getfeatureName() {
+        return "io.inugami.maven.plugin.analysis.asciidoc.services.enabled";
+    }
 
     @Override
     public LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote, final boolean notSplitFile,
                                                    final InfoContext context) {
         final LinkedHashMap<String, String> result = new LinkedHashMap<>();
+
         result.put("services_base", renderBase());
 
         if (releaseNote != null) {
@@ -90,8 +95,8 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
 
     private String processServiceRendering(final List<JsonObject> values, final String title,
                                            final boolean notSplitFile) {
-        final JsonBuilder      writer   = new JsonBuilder();
-        final Map<String,List<ServiceDto>> services = convertToServiceDto(values);
+        final JsonBuilder                   writer   = new JsonBuilder();
+        final Map<String, List<ServiceDto>> services = convertToServiceDto(values);
         if (notSplitFile) {
             writer.write("==== ").write(title).line();
         }
@@ -100,7 +105,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         final List<String> types = new ArrayList<>(services.keySet());
         Collections.sort(types);
 
-        for(final String type : types){
+        for (final String type : types) {
             final List<ServiceDto> servicesByType = services.get(type);
             switch (type) {
 
@@ -122,29 +127,32 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
     }
 
 
-
     private String renderRestServices(final List<ServiceDto> services) {
-        final JsonBuilder      writer   = new JsonBuilder();
+        final JsonBuilder writer = new JsonBuilder();
         writer.write("===== REST services ").line();
 
-        for(final ServiceDto service : services){
+        for (final ServiceDto service : services) {
             writer.write("====== ").write(service.getVerb()).write(" ").write(service.getUri()).line();
-            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
-            processIfNotNull(service.getConsumeContentType(), value-> writer.line().write("*Consume content-type :* ").write(value).line());
-            processIfNotNull(service.getContentType(), value-> writer.line().write("*Content-type :* ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getResponsePayload(), value-> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getProducers(), values-> {
+            processIfNotNull(service.getHeaders(), value -> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getConsumeContentType(),
+                             value -> writer.line().write("*Consume content-type :* ").write(value).line());
+            processIfNotNull(service.getContentType(),
+                             value -> writer.line().write("*Content-type :* ").write(value).line());
+            processIfNotNull(service.getPayload(),
+                             value -> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getResponsePayload(),
+                             value -> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getProducers(), values -> {
                 writer.line().write("*Producers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getConsumers(), values-> {
+            processIfNotNull(service.getConsumers(), values -> {
                 writer.line().write("*Consumers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getMethods(), values-> {
+            processIfNotNull(service.getMethods(), values -> {
                 writer.line().write("*Methods :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -153,24 +161,25 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
 
 
     private String renderJmsService(final List<ServiceDto> services) {
-        final JsonBuilder      writer   = new JsonBuilder();
+        final JsonBuilder writer = new JsonBuilder();
         writer.write("===== JMS services ").line();
-        for(final ServiceDto service : services){
+        for (final ServiceDto service : services) {
             writer.write("====== ").write(service.getShortName()).line();
-            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getProducers(), values-> {
+            processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value -> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getPayload(),
+                             value -> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getProducers(), values -> {
                 writer.line().write("*Producers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getConsumers(), values-> {
+            processIfNotNull(service.getConsumers(), values -> {
                 writer.line().write("*Consumers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getMethods(), values-> {
+            processIfNotNull(service.getMethods(), values -> {
                 writer.line().write("*Methods :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -178,25 +187,27 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
     }
 
     private String renderRabbitMq(final List<ServiceDto> services) {
-        final JsonBuilder      writer   = new JsonBuilder();
+        final JsonBuilder writer = new JsonBuilder();
         writer.write("===== RabbitMq services ").line();
-        for(final ServiceDto service : services){
+        for (final ServiceDto service : services) {
             writer.write("====== ").write(service.getShortName()).line();
-            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.line().write("*Headers :* ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getAdditionalInfo(), value-> writer.line().write("*Binding :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getProducers(), values-> {
+            processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value -> writer.line().write("*Headers :* ").write(value).line());
+            processIfNotNull(service.getPayload(),
+                             value -> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getAdditionalInfo(),
+                             value -> writer.line().write("*Binding :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getProducers(), values -> {
                 writer.line().write("*Producers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getConsumers(), values-> {
+            processIfNotNull(service.getConsumers(), values -> {
                 writer.line().write("*Consumers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getMethods(), values-> {
+            processIfNotNull(service.getMethods(), values -> {
                 writer.line().write("*Methods :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
@@ -204,64 +215,60 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
     }
 
     private String renderDefaultService(final List<ServiceDto> services) {
-        final JsonBuilder      writer   = new JsonBuilder();
+        final JsonBuilder writer = new JsonBuilder();
         writer.write("===== Others services ").line();
-        for(final ServiceDto service : services){
+        for (final ServiceDto service : services) {
             writer.write("====== ").write(service.getShortName()).line();
 
-            processIfNotNull(service.getUri(), value-> writer.line().write("*Queue :* ").write(value).line());
-            processIfNotNull(service.getHeaders(), value-> writer.line().write("*headers :* ").write(value).line());
-            processIfNotNull(service.getConsumeContentType(), value-> writer.line().write("*Consume content-type :* ").write(value).line());
-            processIfNotNull(service.getContentType(), value-> writer.line().write("*Content-type :* ").write(value).line());
-            processIfNotNull(service.getPayload(), value-> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getResponsePayload(), value-> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getAdditionalInfo(), value-> writer.line().write("*Other information :* ").write(renderPayload(value)).line());
-            processIfNotNull(service.getProducers(), values-> {
+            processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
+            processIfNotNull(service.getHeaders(), value -> writer.line().write("*headers :* ").write(value).line());
+            processIfNotNull(service.getConsumeContentType(),
+                             value -> writer.line().write("*Consume content-type :* ").write(value).line());
+            processIfNotNull(service.getContentType(),
+                             value -> writer.line().write("*Content-type :* ").write(value).line());
+            processIfNotNull(service.getPayload(),
+                             value -> writer.line().write("*Payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getResponsePayload(),
+                             value -> writer.line().write("*Response payload :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getAdditionalInfo(),
+                             value -> writer.line().write("*Other information :* ").write(renderPayload(value)).line());
+            processIfNotNull(service.getProducers(), values -> {
                 writer.line().write("*Producers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getConsumers(), values-> {
+            processIfNotNull(service.getConsumers(), values -> {
                 writer.line().write("*Consumers :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
-            processIfNotNull(service.getMethods(), values-> {
+            processIfNotNull(service.getMethods(), values -> {
                 writer.line().write("*Methods :* ").line();
-                values.forEach(value-> writer.line().write("* ").write(value).line());
+                values.forEach(value -> writer.line().write("* ").write(value).line());
             });
             writer.line();
         }
         return writer.toString();
     }
 
-    private String renderPayload(final String value) {
-        final JsonBuilder      writer   = new JsonBuilder();
-        writer.line();
-        writer.write("[source,javascript]").line();
-        writer.write("----").line();
-        writer.write(value).line();
-        writer.write("----");
-        return writer.toString();
-    }
 
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private Map<String,List<ServiceDto>> convertToServiceDto(final List<JsonObject> values) {
-        final Map<String,List<ServiceDto>> result = new LinkedHashMap<>();
+    private Map<String, List<ServiceDto>> convertToServiceDto(final List<JsonObject> values) {
+        final Map<String, List<ServiceDto>> result = new LinkedHashMap<>();
         for (final JsonObject object : values) {
             if (object instanceof ServiceDto) {
-                final ServiceDto       service = (ServiceDto) object;
-                 List<ServiceDto> bucket  = result.get(service.getType());
-                 if(bucket==null){
-                     bucket = new ArrayList<>();
-                     result.put(service.getType(),  bucket);
-                 }
+                final ServiceDto service = (ServiceDto) object;
+                List<ServiceDto> bucket  = result.get(service.getType());
+                if (bucket == null) {
+                    bucket = new ArrayList<>();
+                    result.put(service.getType(), bucket);
+                }
                 bucket.add(service);
             }
         }
 
 
-        for(final Map.Entry<String,List<ServiceDto>> entry:result.entrySet()){
+        for (final Map.Entry<String, List<ServiceDto>> entry : result.entrySet()) {
             Collections.sort(entry.getValue());
         }
         return result;

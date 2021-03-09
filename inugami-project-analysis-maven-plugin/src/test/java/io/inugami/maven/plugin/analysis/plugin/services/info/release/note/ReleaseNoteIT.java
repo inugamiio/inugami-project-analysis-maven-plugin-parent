@@ -20,7 +20,9 @@ class ReleaseNoteIT {
 
 
     public static void main(final String... args) {
-        final MavenProject project = mock(MavenProject.class);
+
+        final String[]     sysReplacements = System.getProperty("replaceValues").split(";");
+        final MavenProject project         = mock(MavenProject.class);
         when(project.getGroupId()).thenReturn("io.inugami.demo");
         when(project.getArtifactId()).thenReturn("spring-boot-training-rest");
         when(project.getVersion()).thenReturn("0.0.2-SNAPSHOT");
@@ -34,17 +36,18 @@ class ReleaseNoteIT {
         config.put("inugami.maven.plugin.analysis.writer.neo4j.password", "password");
         config.put("inugami.maven.plugin.analysis.writer.neo4j.user", "neo4j");
         config.put(ReleaseNoteAsciidocWriter.FEATURE_NAME, "true");
-        config.put(PREVIOUS_VERSION, "0.0.1-SNAPSHOT");
-
+        //config.put(PREVIOUS_VERSION, "0.0.1-SNAPSHOT");
+        //config.put("io.inugami.maven.plugin.analysis.asciidoc.authors.enabled", "false");
+        //config.put("io.inugami.maven.plugin.analysis.asciidoc.errorCode.enabled", "false");
 
         config.put(ReleaseNote.REPLACEMENTS, "[\n" +
                 "    {\"from\":\"(.*)(@gmail.com)\",\"to\":\"$1@inugami.io\"},\n" +
-                "    {\"from\":\"(.*)(Wiedza CI)(.*)\",\"to\":\"$1InugamiCi$3\"},\n" +
-                "    {\"from\":\"(.*)(smartwavesa.com)(.*)\",\"to\":\"$1inugami.io$3\"},\n" +
-                "    {\"from\":\"(.*)(jhaller)(.*)\",\"to\":\"$1joefoobar$3\"},\n" +
-                "    {\"from\":\"(.*)(Julien HALLER)(.*)\",\"to\":\"$1Joe Foobar$3\"},\n" +
-                "    {\"from\":\"(.*)(Yannick Marrec)(.*)\",\"to\":\"$1John Smith$3\"},\n" +
-                "    {\"from\":\"(.*)(smartwavesa.com)(.*)\",\"to\":\"$1inugami.io$3\"}\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[0]+")(.*)\",\"to\":\"$1InugamiCi$3\"},\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[1]+")(.*)\",\"to\":\"$1inugami.io$3\"},\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[2]+")(.*)\",\"to\":\"$1joefoobar$3\"},\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[3]+")(.*)\",\"to\":\"$1Joe Foobar$3\"},\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[4]+")(.*)\",\"to\":\"$1John Smith$3\"},\n" +
+                "    {\"from\":\"(.*)("+sysReplacements[1]+")(.*)\",\"to\":\"$1inugami.io$3\"}\n" +
                 "]");
 
         final ReleaseNote                   display       = new ReleaseNote();
