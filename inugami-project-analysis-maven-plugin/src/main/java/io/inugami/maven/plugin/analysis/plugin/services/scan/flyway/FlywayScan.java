@@ -43,7 +43,7 @@ public class FlywayScan implements ProjectScanner {
     // ATTRIBUTES
     // =========================================================================
     public static final String FEATURE_NAME        = "inugami.maven.plugin.analysis.analyzer.flyway";
-    public static final String FEATURE_ENABLED     = FEATURE_NAME + ".enable";
+    public static final String FEATURE_ENABLED     = FEATURE_NAME + ".enabled";
     public static final String SCRIPTS_PATHS       = FEATURE_NAME + ".paths";
     public static final String DEFAULT_DB          = FEATURE_NAME + ".defaultDb";
     public static final String SCRIPT_TYPES        = FEATURE_NAME + ".scriptTypes";
