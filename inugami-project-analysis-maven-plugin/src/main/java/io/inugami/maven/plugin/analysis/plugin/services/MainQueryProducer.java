@@ -42,6 +42,7 @@ public class MainQueryProducer implements QueryProducer {
     public static final String QUERIES_SEARCH_ALL_EXPOSED_SERVICES = "META-INF/queries/search_all_exposed_services.cql";
     public static final String QUERIES_SEARCH_ALL_CONSUMED_SERVICES = "META-INF/queries/search_all_consumed_services.cql";
     public static final String QUERIES_SEARCH_ENTITIES = "META-INF/queries/search_entities.cql";
+    public static final String QUERIES_SEARCH_FLYWAY = "META-INF/queries/search_flyway.cql";
     // =========================================================================
     // API
     // =========================================================================
@@ -174,7 +175,14 @@ public class MainQueryProducer implements QueryProducer {
                                .name("search_entities")
                                .type("cql")
                                .description("Allow to retrieve all project entities")
-                               .build()
+                               .build(),
+
+                QueryDefinition.builder()
+                              .path(QUERIES_SEARCH_FLYWAY)
+                              .name("search_flyway")
+                              .type("cql")
+                              .description("Allow to retrieve all flyway scripts")
+                              .build()
                       );
     }
 
