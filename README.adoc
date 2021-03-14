@@ -771,6 +771,35 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |===
 
 
+=== Flyway
+this analyze allow to reference all flyway script. In release note you will see all them as differential.
+
+.Properties
+|===
+|Property | type | default value | description
+
+|inugami.maven.plugin.analysis.analyzer.flyway.enabled
+|boolean
+|false
+|Allow to enable or disable flyway analyzer
+
+|inugami.maven.plugin.analysis.analyzer.flyway.paths
+|String (path)
+|null
+|To define all root folders who contains flyway scripts. Semicolon is use for split each path
+
+|inugami.maven.plugin.analysis.analyzer.flyway.defaultDb
+|String
+|{{folder name}}
+|Allow force default Database name
+
+|inugami.maven.plugin.analysis.analyzer.flyway.scriptTypes
+|String
+|sql
+|Allow to define scripts type
+|===
+
+
 === Git SCM
 Git scm analyzer allow to extract all commit since last project tag. If your project haven't tag yet, this analyzer
 retrieve all commit since repository creation.

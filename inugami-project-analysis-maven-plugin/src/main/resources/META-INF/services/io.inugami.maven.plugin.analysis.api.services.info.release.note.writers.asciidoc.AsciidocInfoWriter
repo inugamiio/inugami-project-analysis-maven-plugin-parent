@@ -1,4 +1,5 @@
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.ErrorCodeAsciidocWriter
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.FlywayAsciidocWriter
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.PropertiesAsciidocWriter
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.EntityAsciidocWriter
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers.asciidoc.ServiceAsciidocWriter
