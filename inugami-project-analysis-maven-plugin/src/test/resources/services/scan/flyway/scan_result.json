@@ -1,22 +1,7 @@
-[ {
+{
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
-    "name" : "v1_0_1_init_issue_table.sql",
-    "properties" : {
-      "dbType" : "MySql"
-    },
-    "type" : "Flyway",
-    "uid" : "ea7f60af8b6e9345097fddd202b3dc02dc4624f69fa5fb071f61d232e4a5482eefbdbaa8434e4590b0466fb302f5789d7418d4add11ae31e77e0bc89e604e296"
-  }, {
-    "name" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56",
-    "properties" : {
-      "content" : "alter table issue\n    add column description varchar(255) null;",
-      "dbType" : "MySql"
-    },
-    "type" : "FlywayContent",
-    "uid" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56"
-  }, {
     "name" : "v1_0_0_init_issue_table.sql",
     "properties" : {
       "dbType" : "MySql"
@@ -31,12 +16,27 @@
     },
     "type" : "FlywayContent",
     "uid" : "c14ace5a1a549b588877cdbf6b5346309ef76796263f8ceea89fd50435a92872e1d75ec1f8e957dd88b061aa9e2ca345c13314e47f765c552df7769942349e7a"
+  }, {
+    "name" : "v1_0_1_init_issue_table.sql",
+    "properties" : {
+      "dbType" : "MySql"
+    },
+    "type" : "Flyway",
+    "uid" : "ea7f60af8b6e9345097fddd202b3dc02dc4624f69fa5fb071f61d232e4a5482eefbdbaa8434e4590b0466fb302f5789d7418d4add11ae31e77e0bc89e604e296"
+  }, {
+    "name" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56",
+    "properties" : {
+      "content" : "alter table issue\n    add column description varchar(255) null;",
+      "dbType" : "MySql"
+    },
+    "type" : "FlywayContent",
+    "uid" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "ea7f60af8b6e9345097fddd202b3dc02dc4624f69fa5fb071f61d232e4a5482eefbdbaa8434e4590b0466fb302f5789d7418d4add11ae31e77e0bc89e604e296",
-    "type" : "HAS_FLYWAY"
+    "from" : "94417ab084f823ff9c2b2dedfa6099c61b06110cc3fe5799db0671eff2bd3f6a2aad59a483abab9d0330cacf08f770366ea0224904f8f32a7028eb559d36bfb6",
+    "to" : "c14ace5a1a549b588877cdbf6b5346309ef76796263f8ceea89fd50435a92872e1d75ec1f8e957dd88b061aa9e2ca345c13314e47f765c552df7769942349e7a",
+    "type" : "HAS_FLYWAY_CONTENT"
   }, {
     "from" : "ea7f60af8b6e9345097fddd202b3dc02dc4624f69fa5fb071f61d232e4a5482eefbdbaa8434e4590b0466fb302f5789d7418d4add11ae31e77e0bc89e604e296",
     "to" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56",
@@ -46,9 +46,9 @@
     "to" : "94417ab084f823ff9c2b2dedfa6099c61b06110cc3fe5799db0671eff2bd3f6a2aad59a483abab9d0330cacf08f770366ea0224904f8f32a7028eb559d36bfb6",
     "type" : "HAS_FLYWAY"
   }, {
-    "from" : "94417ab084f823ff9c2b2dedfa6099c61b06110cc3fe5799db0671eff2bd3f6a2aad59a483abab9d0330cacf08f770366ea0224904f8f32a7028eb559d36bfb6",
-    "to" : "c14ace5a1a549b588877cdbf6b5346309ef76796263f8ceea89fd50435a92872e1d75ec1f8e957dd88b061aa9e2ca345c13314e47f765c552df7769942349e7a",
-    "type" : "HAS_FLYWAY_CONTENT"
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "ea7f60af8b6e9345097fddd202b3dc02dc4624f69fa5fb071f61d232e4a5482eefbdbaa8434e4590b0466fb302f5789d7418d4add11ae31e77e0bc89e604e296",
+    "type" : "HAS_FLYWAY"
   } ],
   "relationshipsToDeletes" : [ ]
-} ]
+}

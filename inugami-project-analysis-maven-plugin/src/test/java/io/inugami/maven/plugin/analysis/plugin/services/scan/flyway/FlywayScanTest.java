@@ -16,12 +16,13 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.flyway;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.test.UnitTestHelper;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
-import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringPropertiesAnalyzer;
+import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,7 +82,12 @@ public class FlywayScanTest {
         FlywayScan flywayScan = new  FlywayScan();
 
         final List<JsonObject> result = flywayScan.scan(context);
-        assertText(result,loadJsonReference("services/scan/flyway/scan_result.json"));
+        assertThat(result).size().isEqualTo(1);
+
+        ScanNeo4jResult nodes = (ScanNeo4jResult)result.get(0);
+        Collections.sort(nodes.getNodes());
+        Collections.sort(nodes.getRelationships());
+        assertText(nodes,loadJsonReference("services/scan/flyway/scan_result.json"));
     }
 
     @Test
