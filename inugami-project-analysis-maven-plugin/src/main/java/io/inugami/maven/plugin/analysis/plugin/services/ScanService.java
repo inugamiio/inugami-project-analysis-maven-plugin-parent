@@ -45,15 +45,17 @@ public class ScanService {
         if (projectScanners != null) {
 
             for (final ProjectScanner scan : projectScanners) {
-                Loggers.APPLICATION.info("start scan : {}", scan.getClass().getName());
-                try {
-                    final List<JsonObject> stepResult = scan.scan(context);
-                    if (stepResult != null) {
-                        result.addAll(stepResult);
+                if(scan.enable(context)){
+                    Loggers.APPLICATION.info("start scan : {}", scan.getClass().getName());
+                    try {
+                        final List<JsonObject> stepResult = scan.scan(context);
+                        if (stepResult != null) {
+                            result.addAll(stepResult);
+                        }
                     }
-                }
-                catch (final Exception error) {
-                    log.error(error.getMessage(), error);
+                    catch (final Exception error) {
+                        log.error(error.getMessage(), error);
+                    }
                 }
             }
         }
