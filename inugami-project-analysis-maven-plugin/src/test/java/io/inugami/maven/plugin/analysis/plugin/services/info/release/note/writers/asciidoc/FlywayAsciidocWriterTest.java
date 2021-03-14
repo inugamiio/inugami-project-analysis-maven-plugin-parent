@@ -66,6 +66,7 @@ public class FlywayAsciidocWriterTest {
 
 
         LinkedHashMap<String, String> result = writer.rendering(data, false, context);
-        assertText(result, loadJsonReference("info/release/note/writers/asciidoc/flyway-result.json"));
+        assertText(loadJsonReference("info/release/note/writers/asciidoc/flyway-result.adoc"),
+                   result.get("flyway_new").replaceAll("\\n","\n"));
     }
 }
