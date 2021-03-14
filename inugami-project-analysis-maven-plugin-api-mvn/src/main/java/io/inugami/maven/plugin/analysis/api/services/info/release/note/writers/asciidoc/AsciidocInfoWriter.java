@@ -54,4 +54,10 @@ public interface AsciidocInfoWriter {
         writer.write("----");
         return writer.toString();
     }
+
+    default String renderBase(final String title) {
+        final JsonBuilder writer = new JsonBuilder();
+        writer.write("== ").write(title).line();
+        return writer.toString();
+    }
 }
