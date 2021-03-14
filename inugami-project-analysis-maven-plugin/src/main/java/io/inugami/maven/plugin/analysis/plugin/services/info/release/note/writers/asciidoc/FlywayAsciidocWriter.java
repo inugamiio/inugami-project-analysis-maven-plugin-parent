@@ -107,8 +107,10 @@ public class FlywayAsciidocWriter implements AsciidocInfoWriter {
         writer.line().write("*Type :* ").write(flywayScript.getType()).line();
 
         processIfNotNull(flywayScript.getProjectsUsing(), values -> {
+            List<String> projects = new ArrayList<>(flywayScript.getProjectsUsing());
+            Collections.sort(projects);
             writer.line().write("*Projects using :* ").line();
-            flywayScript.getProjectsUsing().forEach(value -> writer.line().write("* ").write(value).line());
+            projects.forEach(value -> writer.line().write("* ").write(value).line());
         });
         return writer.toString();
     }
