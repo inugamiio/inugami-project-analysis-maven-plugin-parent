@@ -13,7 +13,7 @@ You can find a generated release note example here : link:doc/release-note-examp
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     <executions>
         <execution>
             <id>check</id>
