@@ -27,6 +27,7 @@ import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.tools.StringTools.orElse;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ServiceExtractor.*;
 
@@ -164,7 +165,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         final JsonBuilder writer = new JsonBuilder();
         writer.write("===== JMS services ").line();
         for (final ServiceDto service : services) {
-            writer.write("====== ").write(service.getShortName()).line();
+            writer.write("====== ").write(orElse(service.getShortName(), "unresolved")).line();
             processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
             processIfNotNull(service.getHeaders(), value -> writer.line().write("*Headers :* ").write(value).line());
             processIfNotNull(service.getPayload(),
@@ -190,7 +191,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         final JsonBuilder writer = new JsonBuilder();
         writer.write("===== RabbitMq services ").line();
         for (final ServiceDto service : services) {
-            writer.write("====== ").write(service.getShortName()).line();
+            writer.write("====== ").write(orElse(service.getShortName(), "unresolved")).line();
             processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
             processIfNotNull(service.getHeaders(), value -> writer.line().write("*Headers :* ").write(value).line());
             processIfNotNull(service.getPayload(),
@@ -218,7 +219,7 @@ public class ServiceAsciidocWriter implements AsciidocInfoWriter {
         final JsonBuilder writer = new JsonBuilder();
         writer.write("===== Others services ").line();
         for (final ServiceDto service : services) {
-            writer.write("====== ").write(service.getShortName()).line();
+            writer.write("====== ").write(orElse(service.getShortName(), "unresolved")).line();
 
             processIfNotNull(service.getUri(), value -> writer.line().write("*Queue :* ").write(value).line());
             processIfNotNull(service.getHeaders(), value -> writer.line().write("*headers :* ").write(value).line());

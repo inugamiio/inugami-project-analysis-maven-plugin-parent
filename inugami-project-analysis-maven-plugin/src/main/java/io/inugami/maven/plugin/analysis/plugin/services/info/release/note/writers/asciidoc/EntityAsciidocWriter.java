@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static io.inugami.maven.plugin.analysis.api.tools.StringTools.orElse;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
 public class EntityAsciidocWriter implements AsciidocInfoWriter {
@@ -89,8 +90,7 @@ public class EntityAsciidocWriter implements AsciidocInfoWriter {
         Collections.sort(data);
 
         for (final EntityDTO entity : data) {
-            String entityName = entity.getName()==null ? "unresolved" : entity.getName();
-            writer.write("==== ").write(entityName).line();
+            writer.write("==== ").write(orElse(entity.getName(), "unresolved")).line();
             writer.write(renderPayload(entity.getPayload()));
 
             if(entity.getProjectsUsing()!=null){
