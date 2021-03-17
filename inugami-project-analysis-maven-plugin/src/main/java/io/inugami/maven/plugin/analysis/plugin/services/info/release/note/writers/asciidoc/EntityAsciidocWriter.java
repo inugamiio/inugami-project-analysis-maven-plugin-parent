@@ -89,7 +89,8 @@ public class EntityAsciidocWriter implements AsciidocInfoWriter {
         Collections.sort(data);
 
         for (final EntityDTO entity : data) {
-            writer.write("==== ").write(entity.getName()).line();
+            String entityName = entity.getName()==null ? "unresolved" : entity.getName();
+            writer.write("==== ").write(entityName).line();
             writer.write(renderPayload(entity.getPayload()));
 
             if(entity.getProjectsUsing()!=null){

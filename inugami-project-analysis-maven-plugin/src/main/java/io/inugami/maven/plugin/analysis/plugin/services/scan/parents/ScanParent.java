@@ -38,6 +38,7 @@ public class ScanParent implements ProjectScanner {
     public List<JsonObject> scan(final ScanConext context) {
         final ScanNeo4jResult result  = ScanNeo4jResult.builder().build();
         final MavenProject    project = context.getProject();
+
         extractAllParent(null, context.getProject(), result);
         return List.of(result);
     }
@@ -45,6 +46,7 @@ public class ScanParent implements ProjectScanner {
     private void extractAllParent(final MavenProject childProject, final MavenProject currentProject,
                                   final ScanNeo4jResult result) {
         final Node node = buildNodeVersion(currentProject);
+
         if (isSnapshotNode(node)) {
             result.addNodeToDelete(node.getUid());
         }

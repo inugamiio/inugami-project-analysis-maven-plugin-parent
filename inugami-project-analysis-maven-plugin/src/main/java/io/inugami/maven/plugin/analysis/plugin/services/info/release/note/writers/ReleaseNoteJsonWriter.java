@@ -55,18 +55,23 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
     public void process(final ReleaseNoteResult releaseNote,
                         final InfoContext context) {
         final String json = convertToJson(releaseNote);
-        final File file = FilesUtils.buildFile(context.getBuildDir(),
+        final File file = FilesUtils.buildFile(context.getBasedir(),
                                                "release-note-" + context.getProject().getVersion() + ".json");
 
-        if(!file.getParentFile().exists()){
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         if (json != null) {
+            log.info("begin write file : {}", file.getAbsolutePath());
             FilesUtils.write(json, file);
         }
 
         if (Boolean.parseBoolean(context.getConfiguration().grabOrDefault(ATTACH, "true"))) {
             final MavenProject project = context.getProject();
+            log.info("attach json release note to artifact : {}:{}:{}", project.getGroupId(),
+                     project.getArtifactId(),
+                     project.getVersion());
+
             final DefaultArtifact artifact = new DefaultArtifact(project.getGroupId(),
                                                                  project.getArtifactId(),
                                                                  project.getVersion(),

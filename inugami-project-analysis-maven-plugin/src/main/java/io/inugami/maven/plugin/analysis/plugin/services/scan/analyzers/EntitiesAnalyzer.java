@@ -66,7 +66,7 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         final Node artifactNode = buildNodeVersion(context.getProject());
 
-        String entityName = clazz.getSimpleName();
+        String entityName = null;
         if (hasAnnotation(clazz, Table.class)) {
             entityName = clazz.getAnnotation(Table.class).name();
         }
@@ -74,6 +74,9 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
             entityName = clazz.getAnnotation(EntityDatabase.class).value() + "_" + entityName;
         }
 
+        if(entityName==null){
+            entityName = clazz.getSimpleName();
+        }
         final LinkedHashMap<String, Serializable> localAdditionalInfo = new LinkedHashMap<>();
         final JsonNode payloadNode = ReflectionService.renderType(clazz, null, null,false);
         final String payload = payloadNode==null?null:payloadNode.convertToJson();
