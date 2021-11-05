@@ -42,6 +42,9 @@ public class ScanDependencies implements ProjectScanner {
         final List<String> projectBaseNames = new ArrayList<>();
         final String projectBaseName = context.getConfiguration()
                                               .get("inugami.maven.plugin.analysis.project.base.name");
+
+
+
         if (projectBaseName != null) {
             for (final String element : projectBaseName.split(",")) {
                 projectBaseNames.add(element.trim());

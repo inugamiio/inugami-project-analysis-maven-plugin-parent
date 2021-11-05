@@ -157,6 +157,11 @@ This phase requires to specify an action to display information
 == Neo4j data structure :
 image::doc/nodes.png[]
 
+[source,cql]
+----
+CALL db.schema.visualization
+----
+
 
 == Retrieve information :
 

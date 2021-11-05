@@ -104,6 +104,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                 .loadSpiServicesByPriority(ReleaseNoteExtractor.class);
         for (final ReleaseNoteExtractor extractor : extractors) {
             try {
+                log.info("invoke extractor : {}", extractor.getClass().getName());
                 extractor.extractInformation(releaseNoteResult,
                                              gav,
                                              previousGav,
@@ -148,14 +149,21 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         for (final ReleaseNoteWriter writer : writers) {
             if (writer.accept(context.getConfiguration())) {
                 try {
+                    log.info(inColor("invoke writer : {}",ConsoleColors.BLUE_BOLD), writer.getClass().getName());
                     writer.process(releaseNoteResult, context);
                 }
                 catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
 
+            }else{
+                log.info(inColor("writer disabled : {}",ConsoleColors.YELLOW_BOLD), writer.getClass().getName());
             }
         }
+    }
+
+    private String inColor(final String message, final String color) {
+        return color+message+ConsoleColors.RESET;
     }
 
     // =========================================================================
