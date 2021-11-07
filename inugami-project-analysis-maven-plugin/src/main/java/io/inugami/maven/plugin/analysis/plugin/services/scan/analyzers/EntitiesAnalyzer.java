@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
+import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.annotations.EntityDatabase;
@@ -31,11 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.hasAnnotation;
+import static io.inugami.maven.plugin.analysis.functional.FunctionalUtils.applyIfNotEmpty;
 
 @Slf4j
 public class EntitiesAnalyzer implements ClassAnalyzer {
@@ -71,12 +74,21 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
             entityName = clazz.getAnnotation(Table.class).name();
         }
         if (hasAnnotation(clazz, EntityDatabase.class)) {
-            entityName = clazz.getAnnotation(EntityDatabase.class).value() + "_" + entityName;
+            List<String> buffer = new ArrayList<>();
+
+            final EntityDatabase annotation = clazz.getAnnotation(EntityDatabase.class);
+            applyIfNotEmpty(annotation.type(), buffer::add);
+            applyIfNotEmpty(annotation.value(), buffer::add);
+            buffer.add(entityName);
+            entityName = String.join("_", buffer);
         }
 
         if(entityName==null){
             entityName = clazz.getSimpleName();
         }
+        entityName = normalizeEntityName(entityName);
+
+
         final LinkedHashMap<String, Serializable> localAdditionalInfo = new LinkedHashMap<>();
         final JsonNode payloadNode = ReflectionService.renderType(clazz, null, null,false);
         final String payload = payloadNode==null?null:payloadNode.convertToJson();
@@ -127,6 +139,34 @@ public class EntitiesAnalyzer implements ClassAnalyzer {
                                            .type("HAS_ENTITY_REFERENCE")
                                            .build());
         return List.of(result);
+    }
+
+    protected String normalizeEntityName(final String entityName) {
+        final List<String> result = new ArrayList<>();
+        final JsonBuilder  buffer = new JsonBuilder();
+        final char[]       chars  = entityName.toCharArray();
+
+        for(int i=0; i<chars.length; i++){
+            if(i!=0 &&  (chars[i] == '_' || ((chars[i]>= ('A') &&chars[i]<= ('Z')) && (chars[i-1]>= ('a') &&chars[i-1]<= ('z')) ))){
+                final String subResult = buffer.toString();
+                if(!subResult.isEmpty()){
+                    result.add(subResult);
+                    buffer.clear();
+                }
+            }
+
+            if(chars[i] != '_'){
+                buffer.append(chars[i]);
+            }
+        }
+
+        final String subResult = buffer.toString();
+        if(!subResult.isEmpty()){
+            result.add(subResult);
+            buffer.clear();
+        }
+
+        return String.join("_",result).toUpperCase();
     }
 
     private String encodeSha1(final String value) {
