@@ -6,5 +6,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EntityDatabase {
-    String value();
+    String DEFAULT_TYPE = "SQL";
+
+    String value() default "";
+    String type() default DEFAULT_TYPE;
 }

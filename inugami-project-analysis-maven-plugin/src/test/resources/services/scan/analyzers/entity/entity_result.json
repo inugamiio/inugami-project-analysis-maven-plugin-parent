@@ -2,19 +2,19 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
-    "name" : "local@mainDatabase_app_user",
-    "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\"\n}"
-    },
-    "type" : "LocalEntity",
-    "uid" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a"
-  }, {
-    "name" : "mainDatabase_app_user",
+    "name" : "SQL_MAIN_DATABASE_APP_USER",
     "properties" : {
       "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":\"Address\"\n}"
     },
     "type" : "Entity",
-    "uid" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a"
+    "uid" : "2a8381254911b0fc1e6e985044e0af95b5525636e9be3678fd6e0dec10265484a2cae9e9273970f238ca4cab696b27a1b08ac354c8c17dd82fb54e2d23c62f79"
+  }, {
+    "name" : "local@SQL_MAIN_DATABASE_APP_USER",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\"\n}"
+    },
+    "type" : "LocalEntity",
+    "uid" : "ff791507200e6c2adc68a7383363e2bfbd819759cd29a9c05f9dfdfdec82e7da61e95c341a1a7ee73b6bb3ef95f5d08dc5bdfff5d057609330bbd33d891a34f3"
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
@@ -32,17 +32,17 @@
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
-    "from" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a",
-    "to" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a",
+    "from" : "ff791507200e6c2adc68a7383363e2bfbd819759cd29a9c05f9dfdfdec82e7da61e95c341a1a7ee73b6bb3ef95f5d08dc5bdfff5d057609330bbd33d891a34f3",
+    "to" : "2a8381254911b0fc1e6e985044e0af95b5525636e9be3678fd6e0dec10265484a2cae9e9273970f238ca4cab696b27a1b08ac354c8c17dd82fb54e2d23c62f79",
     "type" : "HAS_ENTITY_REFERENCE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "7dfc4f832b40c947030293327adecc87c6135541f944196bf8af9f955e089094c549cb4b621e6a58885b7e39ffa53dde7a654e014a261e843a3195b444ad827a",
-    "type" : "HAS_LOCAL_ENTITY"
+    "to" : "2a8381254911b0fc1e6e985044e0af95b5525636e9be3678fd6e0dec10265484a2cae9e9273970f238ca4cab696b27a1b08ac354c8c17dd82fb54e2d23c62f79",
+    "type" : "HAS_ENTITY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "ae5161b608d2a67724f3824fbbb4b35e4fc240c85e6ae31051e5f4507c196490e803334326ba09d710643bbcf21aa8072fdaad03540aba297ebd59f74a54d59a",
-    "type" : "HAS_ENTITY"
+    "to" : "ff791507200e6c2adc68a7383363e2bfbd819759cd29a9c05f9dfdfdec82e7da61e95c341a1a7ee73b6bb3ef95f5d08dc5bdfff5d057609330bbd33d891a34f3",
+    "type" : "HAS_LOCAL_ENTITY"
   } ],
   "relationshipsToDeletes" : [ ]
 }
