@@ -16,8 +16,11 @@
  */
 package io.inugami.maven.plugin.analysis.api.models.rest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
+
+import java.lang.reflect.Method;
 
 @EqualsAndHashCode
 @ToString
@@ -39,6 +42,9 @@ public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
     private final String      responseTypeRequireOnly;
     private final String      uid;
     private final String      method;
+
+    @JsonIgnore
+    private final transient Method javaMethod;
 
     @Override
     public int compareTo(final RestEndpoint value) {

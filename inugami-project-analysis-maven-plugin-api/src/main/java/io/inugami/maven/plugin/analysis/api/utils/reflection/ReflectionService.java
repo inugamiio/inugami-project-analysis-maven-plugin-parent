@@ -19,18 +19,23 @@ package io.inugami.maven.plugin.analysis.api.utils.reflection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.inugami.api.loggers.Loggers;
 import io.inugami.api.spi.SpiLoader;
+import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import io.inugami.commons.security.EncryptionUtils;
 
 import javax.validation.Constraint;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -178,7 +183,7 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderParameterType(final Parameter parameter, final boolean strict) {
-        return renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
+        return parameter==null?null:renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
     }
 
     public static JsonNode renderReturnType(final Method method) {
@@ -430,4 +435,57 @@ public final class ReflectionService {
     }
 
 
+    public static List<Node> extractInputDto(final Method method) {
+        Set<Node> result = new LinkedHashSet<>();
+        if(method!=null){
+            for(Parameter parameter : method.getParameters()){
+
+                final Class<?> paramClass  = parameter.getType();
+                final JsonNode payloadNode = renderType(paramClass, null, null, true);
+                final String   payload     = payloadNode == null ? null : payloadNode.convertToJson();
+
+                if(parameter == null || parameter.getName()==null || payload== null){
+                    continue;
+                }
+                final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
+                additionalInfo.put(PAYLOAD, payload);
+                result.add(Node.builder()
+                               .name(parameter.getName())
+                               .uid(encodeSha1(payload))
+                               .type(INPUT_DTO)
+                               .properties(additionalInfo)
+                               .build());
+            }
+        }
+        return new ArrayList<>(result);
+    }
+
+    public static Node extractOutputDto(final Method method) {
+        Node result = null;
+        final Class<?> returnType = method.getReturnType();
+        if(returnType != null){
+            String   payload     = null;
+            if(returnType== void.class || returnType == Void.class){
+                payload = "Void";
+            }else{
+                JsonNode payloadNode = renderType(returnType, null, null, true);
+                payload = payloadNode == null ? "null" : payloadNode.convertToJson();
+            }
+
+            final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
+            additionalInfo.put(PAYLOAD, payload);
+
+            result=  Node.builder()
+                         .name(payload)
+                         .uid(encodeSha1(payload))
+                         .type(OUTPUT_DTO)
+                         .properties(additionalInfo)
+                         .build();
+        }
+        return result;
+    }
+
+    public static String encodeSha1(final String value) {
+        return value == null ? null : new EncryptionUtils().encodeSha1(value);
+    }
 }
