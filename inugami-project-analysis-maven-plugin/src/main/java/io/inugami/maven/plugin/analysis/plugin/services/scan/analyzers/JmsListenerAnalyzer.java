@@ -27,6 +27,7 @@ import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.BuilderTools;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
@@ -43,6 +44,7 @@ import java.util.function.BiConsumer;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
@@ -110,6 +112,25 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                     result.addRelationship(
                             buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
                                                "consume"));
+
+                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
+                    result.addNode(inputDto);
+                    for(Node input : inputDto){
+                        result.addRelationship(Relationship.builder()
+                                                           .from(input.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+                    final Node outputDto = ReflectionService.extractOutputDto(method);
+                    if(outputDto!=null){
+                        result.addNode(outputDto);
+                        result.addRelationship(Relationship.builder()
+                                                           .from(outputDto.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
                 });
 
             }
@@ -122,6 +143,25 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                     result.addRelationship(
                             buildRelationships(node, EXPOSE, projectNode, serviceType, methodNode, properties,
                                                "produce"));
+
+                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
+                    result.addNode(inputDto);
+                    for(Node input : inputDto){
+                        result.addRelationship(Relationship.builder()
+                                                           .from(input.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+                    final Node outputDto = ReflectionService.extractOutputDto(method);
+                    if(outputDto!=null){
+                        result.addNode(outputDto);
+                        result.addRelationship(Relationship.builder()
+                                                           .from(outputDto.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
                 });
             }
 

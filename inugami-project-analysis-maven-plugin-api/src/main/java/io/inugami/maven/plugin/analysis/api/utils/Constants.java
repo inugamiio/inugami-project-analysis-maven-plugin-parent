@@ -41,5 +41,9 @@ public final class Constants {
     public static final String ARTIFACT_ID = "artifactId";
     public static final String VERSION     = "version";
 
+    public static final String HAS_INPUT_DTO = "HAS_INPUT_DTO";
+    public static final String INPUT_DTO = "INPUT_DTO";
+    public static final String  OUTPUT_DTO= "OUTPUT_DTO";
 
+    public static final String PAYLOAD = "payload";
 }

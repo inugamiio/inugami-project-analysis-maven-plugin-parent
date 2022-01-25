@@ -2,6 +2,20 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
+    "name" : "Void",
+    "properties" : {
+      "payload" : "Void"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf"
+  }, {
+    "name" : "event",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c"
+  }, {
     "name" : "events.method.exchangeName",
     "properties" : {
       "mandatory" : true,
@@ -80,6 +94,14 @@
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
+    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "to" : "events.method.exchangeName_events.user.method.created.routingKey",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c",
+    "to" : "events.method.exchangeName_events.user.method.created.routingKey",
+    "type" : "HAS_INPUT_DTO"
+  }, {
     "from" : "events.method.exchangeName_events.user.method.created.routingKey",
     "properties" : {
       "linkType" : "consume"

@@ -28,6 +28,7 @@ import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
@@ -113,6 +115,24 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                         result.addNode(node);
                     }
 
+                    final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
+                    result.addNode(inputDto);
+                    for(Node input : inputDto){
+                        result.addRelationship(Relationship.builder()
+                                                           .from(input.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+                    final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
+                    if(outputDto!=null){
+                        result.addNode(outputDto);
+                        result.addRelationship(Relationship.builder()
+                                                           .from(outputDto.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
                 }
 
 
@@ -315,6 +335,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         });
 
         builder.method(String.join(".", clazz.getName(), method.getName()));
+        builder.javaMethod(method);
         builder.headers(extractHeader(method.getParameters()));
         builder.body(extractBody(method.getParameters(), true));
         builder.bodyRequireOnly(extractBody(method.getParameters(), false));
