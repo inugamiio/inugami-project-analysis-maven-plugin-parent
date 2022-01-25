@@ -1,0 +1,32 @@
+<div class="properties-display" *ngIf="hasValues">
+    <h4>{{title}}</h4>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"><msg key="property"></msg></th>
+            <th scope="col"><msg key="type"></msg></th>
+            <th scope="col"><msg key="default.value"></msg></th>
+            <th scope="col"><msg key="details"></msg></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let property of innerValue; let i = index" [class]="getClass(property)">
+            <td [innerHTML]="property.name"></td>
+            <td>{{property.propertyType}}</td>
+            <td>{{property.defaultValue}}</td>
+            <td>
+                <div class="contraints">
+                    <span class="constraintType" *ngIf="property.constraintType">{{property.constraintType}}</span>
+                    <span class="constraintDetail" *ngIf="property.constraintDetail">{{property.constraintDetail}}</span>    
+                </div>
+                
+                <div class="details">
+                    <span class="icon artifact-icon" *ngIf="property.artifact" [title]="property.artifact"><i class="package-icon"></i></span>
+                    <span class="icon mandatory-icon" *ngIf="property.mandatory" [title]="mandatory"><i class="exclamation-icon"></i></span>
+                    <span class="icon conditional-icon" *ngIf="property.useForConditionalBean" [title]="conditionalBean"><i class="exchange-icon"></i></span>
+                </div>
+            </td>
+          </tr>          
+        </tbody>
+      </table>
+</div>

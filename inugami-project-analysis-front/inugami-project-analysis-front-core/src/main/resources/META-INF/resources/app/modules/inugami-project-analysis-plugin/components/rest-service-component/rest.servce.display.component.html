@@ -1,0 +1,79 @@
+<div class="rest-service-display" *ngIf="hasValues">
+    <div class="title">
+        <h4>{{title}}</h4>
+    </div>
+    <ul>
+        <li *ngFor="let service of innerValue; let i = index">
+                <article [class]="getServiceClass(service)">
+                    <header (click)="toggleDetail(i)">
+                        <span class="service-type" [innerHTML]="getServiceType(service)"></span>
+                        <span class="uri">
+                            <span *ngIf="service.uri ; else showName">{{service.uri}}</span>
+                            <ng-template #showName>
+                                <span *ngIf="service.name">{{service.name}}</span>
+                            </ng-template>
+                            
+                        </span>
+                        <span [class]="getDisplayDetailClass(i)"></span>
+                    </header>
+                    <div [class]="getDisplayDetail(i)">
+                        <div class="row" *ngIf="service.consumeContentType!= undefined && service.consumeContentType.length > 0">
+                            <div class="col-3">
+                                <label><msg key="content.type"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <span class="value">{{service.consumeContentType}}</span>
+                              </div>
+                        </div>
+                        <div class="row" *ngIf="service.payload">
+                            <div class="col-3">
+                                <label><msg key="payload"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <pre><code class="language-json" [innerHTML]="service.payload"></code></pre>
+                              </div>
+                        </div>
+                        <div class="row" *ngIf="service.responsePayload">
+                            <div class="col-3">
+                                <label><msg key="response"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <pre><code class="language-json" [innerHTML]="renderScript(service.responsePayload)"></code></pre>
+                              </div>
+                        </div>
+                        <div class="row" *ngIf="service.methods!=undefined && service.methods.length > 0">
+                            <div class="col-3">
+                                <label><msg key="method"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <ul class="methods">
+                                    <li *ngFor="let method of service.methods" [innerHTML]="renderMethodName(method)"></li>
+                                </ul>
+                              </div>
+                        </div>
+                        <div class="row" *ngIf="service.consumers!=undefined && service.consumers.length > 0">
+                            <div class="col-3">
+                                <label><msg key="consumers"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <ul>
+                                    <li *ngFor="let consumer of service.consumers">{{consumer}}</li>
+                                </ul>
+                              </div>
+                        </div>
+                        <div class="row" *ngIf="service.producers!=undefined && service.producers.length > 0">
+                            <div class="col-3">
+                                <label><msg key="producers"></msg></label>
+                              </div>
+                              <div class="col-9">
+                                <ul>
+                                    <li *ngFor="let producer of service.producers">{{producer}}</li>
+                                </ul>
+                              </div>
+                        </div>
+                    </div>
+                </article>
+        </li>
+        <div [class]="initHighlight()"></div>
+    </ul>
+</div>

@@ -1,0 +1,32 @@
+<div class="flyway-display" *ngIf="hasValues">
+    <h4>{{ title }}</h4>
+    <ul>
+      <li *ngFor="let flyway of innerValue" class="flyway">
+          <h5 [innerHTML]="flyway.name"></h5>
+          <div class="content">
+              <div class="row" *ngIf="flyway.content">
+                  <div class="col-3">
+                      <label><msg key="script"></msg></label>
+                    </div>
+                    <div class="col-9">
+                      <pre><code [class]="getLanguage(flyway.type)" [innerHTML]="renderScript(flyway.content)"></code></pre>
+                    </div>
+              </div>
+              <div class="row" *ngIf="flyway.projectsUsing">
+                  <div class="col-3">
+                      <label><msg key="projects.using"></msg></label>
+                    </div>
+                    <div class="col-9">
+                      <ul>
+                          <li *ngFor="let project of flyway.projectsUsing">
+                              <span class="project" [innerHTML]="project"></span>
+                          </li>
+                      </ul>
+                    </div>
+              </div>
+          </div>
+      </li>
+      <div [class]="initHighlight()"></div>
+    </ul>
+  </div>
+  
