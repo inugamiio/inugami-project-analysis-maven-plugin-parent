@@ -127,6 +127,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         for (final AsciidocInfoWriter writerInfo : infoWriters) {
             if (writerInfo.isEnabled(context.getConfiguration())) {
+                log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
                 final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
                 if (content != null) {
                     if (content.size() == 1) {
@@ -146,6 +147,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                         }
                     }
                 }
+            }else{
+                log.info("asciidoc writer disabled : {}", writerInfo.getClass().getName());
             }
         }
 

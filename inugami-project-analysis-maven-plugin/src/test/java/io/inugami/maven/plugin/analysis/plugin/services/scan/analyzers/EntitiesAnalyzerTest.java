@@ -64,6 +64,16 @@ class EntitiesAnalyzerTest {
         assertTextRelatif(neo4jResult, "services/scan/analyzers/entity/entity_result.json");
     }
 
+    @Test
+    public void normalizeEntityName_withEntity_shouldNormalizeName() {
+        final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
+
+        assertThat(analyzer.normalizeEntityName("SQL_MAIN_DATABASE_APP_USER")).isEqualTo("SQL_MAIN_DATABASE_APP_USER");
+        assertThat(analyzer.normalizeEntityName("my_entity")).isEqualTo("MY_ENTITY");
+        assertThat(analyzer.normalizeEntityName("MyEntity")).isEqualTo("MY_ENTITY");
+        assertThat(analyzer.normalizeEntityName("myEntity")).isEqualTo("MY_ENTITY");
+    }
+
     private ScanNeo4jResult extractResult(final List<JsonObject> result) {
         assertThat(result).isNotNull();
         AssertionsForInterfaceTypes.assertThat(result).size().isEqualTo(1);

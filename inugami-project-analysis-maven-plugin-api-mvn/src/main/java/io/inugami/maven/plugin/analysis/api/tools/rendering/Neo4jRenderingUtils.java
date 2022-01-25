@@ -218,7 +218,7 @@ public final class Neo4jRenderingUtils {
                                                    .append(File.separator)
                                                    .append(context)
                                                    .append("_")
-                                                   .append(key.replaceAll(" ", ""))
+                                                   .append(cleanFileName(key))
                                                    .append(".csv")
                                                    .toString();
         final File file = new File(filePath);
@@ -243,6 +243,10 @@ public final class Neo4jRenderingUtils {
         catch (final IOException e) {
             Loggers.DEBUG.error(e.getMessage(), e);
         }
+    }
+
+    private static String cleanFileName(final String value) {
+        return value.replaceAll(" ", "").replaceAll(":","_");
     }
 
 

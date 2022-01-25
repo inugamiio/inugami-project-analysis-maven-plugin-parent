@@ -27,6 +27,7 @@ import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.tools.StringTools.orElse;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
 public class FlywayAsciidocWriter implements AsciidocInfoWriter {
@@ -95,7 +96,7 @@ public class FlywayAsciidocWriter implements AsciidocInfoWriter {
     private String renderScript(final FlywayDTO flywayScript) {
         final JsonBuilder writer = new JsonBuilder();
 
-        writer.write("===== ").write(flywayScript.getName()).line();
+        writer.write("===== ").write(orElse(flywayScript.getName(), "unresolved")).line();
 
         writer.line();
         writer.write("[source,sql]").line();
