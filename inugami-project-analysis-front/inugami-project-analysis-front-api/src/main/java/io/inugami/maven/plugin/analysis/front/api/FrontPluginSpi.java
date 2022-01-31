@@ -17,31 +17,52 @@
 package io.inugami.maven.plugin.analysis.front.api;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FrontPluginSpi {
     String getPluginName();
+
+    default String getNgModuleName() {
+        return null;
+    }
+
+    default String getNgModuleFileName() {
+        return null;
+    }
+
+    default String getModuleFolder() {
+        return null;
+    }
 
     default String getRootClass() {
         return null;
     }
 
-    default String getTitle(){
+    default String getTitle() {
         return null;
     }
 
-    default String getLoadingImage(){
+    default String getLoadingImage() {
         return null;
     }
 
-    default String getFavIcon(){
+    default String getFavIcon() {
         return null;
     }
 
-    default List<String> getJavaScriptLink(){
+    default List<String> getJavaScriptLink() {
         return null;
     }
 
-    default List<String> getCssFiles(){
+    default List<String> getCssFiles() {
+        return null;
+    }
+
+    default List<String> getMessageProperties() {
+        return null;
+    }
+
+    default Map<String, String> getVendorModulesMap() {
         return null;
     }
 }

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RenderingConstants {
-    public static final String APP_COMPONENT     = "app-component";
+    public static final String APP_ROOT          = "app-root";
     public static final String HTML              = "html";
     public static final String BODY              = "body";
     public static final String HEAD              = "head";

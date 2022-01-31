@@ -27,12 +27,41 @@ public class CorePlugin implements FrontPluginSpi {
     }
 
     @Override
-    public List<String> getCssFiles(){
-        return List.of("css/inugami-project-analysis-front-core-plugin.css");
+    public String getNgModuleName() {
+        return "InugamiProjectAnalysisPluginModule";
     }
 
     @Override
-    public List<String> getJavaScriptLink(){
-        return List.of("js/inugami-project-analysis-front-core-plugin.js");
+    public String getNgModuleFileName() {
+        return "inugami-project-analysis-plugin.module";
+    }
+
+    @Override
+    public String getModuleFolder() {
+        return "inugami-project-analysis-plugin";
+    }
+
+
+    @Override
+    public List<String> getCssFiles() {
+        return List.of("css/agate.min.css",
+                       "css/inugami-project-analysis-front-core-plugin.css");
+    }
+
+    @Override
+    public List<String> getJavaScriptLink() {
+        return List.of("js/highlight.min.js",
+                       "js/inugami-project-analysis-front-core-plugin.js");
+    }
+
+    @Override
+    public List<String> getMessageProperties() {
+        return List.of("META-INF/inugami-project-analysis-front-plugins_en.properties",
+                       "META-INF/inugami-project-analysis-front-plugins_fr.properties");
+    }
+
+    @Override
+    public String getRootClass() {
+        return "inugami-project-analysis";
     }
 }
