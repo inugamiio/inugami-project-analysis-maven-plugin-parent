@@ -149,6 +149,7 @@ public class IndexRenderer {
         js.write("// GLOBALS VALUES").line();
         js.write(DECO).line();
         js.write("const CONTEXT_PATH=").valueQuot(contextPath).addEndLine();
+        js.write("document['CONTEXT_PATH']=CONTEXT_PATH").addEndLine();
         final String resourcePath = contextPath + PATH_SEP;
         js.write("const RESOURCES_PATH=").valueQuot(contextPath + "/js/").addEndLine();
         js.write("const APP_PATH=").valueQuot(resourcePath + "app").addEndLine();
