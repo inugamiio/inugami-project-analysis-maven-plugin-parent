@@ -3,6 +3,8 @@ import { ReleaseNoteComponent } from '../../components/release-note/release.note
 import { ReleaseNote } from '../../models/release.note';
 import { HttpService } from '../../../inugami-api/services/http/http.service';
 import { DependenciesCheckService } from '../../services/dependencies.check.service';
+import {CONFIG} from '../../../../env'
+
 @Component({
   template: `
 <ul *ngIf="releases" class="releases">
@@ -35,7 +37,7 @@ export class HomeView implements OnInit {
   * INITIALIZE
   **************************************************************************/
   ngOnInit() {
-    this.httpService.get('http://localhost/analysis/data/release-notes.json')
+    this.httpService.get(`${CONFIG.CONTEXT_PATH}/data/release-notes.json`)
       .then(response => {
         this.releases = response.body;
       })

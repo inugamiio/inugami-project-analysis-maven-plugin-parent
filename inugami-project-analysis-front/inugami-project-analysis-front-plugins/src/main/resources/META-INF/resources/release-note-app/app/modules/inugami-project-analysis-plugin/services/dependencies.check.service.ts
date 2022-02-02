@@ -10,6 +10,7 @@ import {
     Rule
 } from '../models/dependencies.check';
 import { isNotNull } from '../../inugami-api/services/utils';
+import {CONFIG} from '../../../env'
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +27,7 @@ export class DependenciesCheckService {
     * CONSTRUCTOR
     **************************************************************************/
     constructor(@Inject(HttpService) private httpService: HttpService) {
-        this.httpService.get('http://localhost/analysis/data/dependencies-check.json')
+        this.httpService.get(`${CONFIG.CONTEXT_PATH}/data/dependencies-check.json`)
             .then(response => {
                 this.dependenciesChecks = response.body;
 

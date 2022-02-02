@@ -16,31 +16,32 @@
  */
 package io.inugami.maven.plugin.analysis.front.springboot.configuration;
 
+import io.inugami.maven.plugin.analysis.front.core.servlet.DependenciesCheckServlet;
 import io.inugami.maven.plugin.analysis.front.core.servlet.InugamiServlet;
+import io.inugami.maven.plugin.analysis.front.core.servlet.PluginsModuleServlet;
+import io.inugami.maven.plugin.analysis.front.core.servlet.ReleaseNoteServlet;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 
 @EnableWebMvc
 @Configuration
-public class MvcConfiguration implements WebMvcConfigurer , WebApplicationInitializer {
+public class MvcConfiguration implements WebMvcConfigurer {
 
     @Value("${inugami.release.note.enabled:true}")
     private boolean mapping;
     @Value("${inugami.release.note.path:#{null}}")
     private String  path;
-
-    private String currentPath;
+    @Value("${inugami.release.note.artifactName:release-note}")
+    private String  artifactName;
+    private String  currentPath;
 
 
     @PostConstruct
@@ -59,7 +60,6 @@ public class MvcConfiguration implements WebMvcConfigurer , WebApplicationInitia
     // =========================================================================
     // API
     // =========================================================================
-
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         if (mapping) {
@@ -70,14 +70,39 @@ public class MvcConfiguration implements WebMvcConfigurer , WebApplicationInitia
         }
     }
 
-    @Override
-    public void onStartup(final ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-        ctx.register(WebMvcConfigurer.class);
-        ctx.setServletContext(servletContext);
+    @Bean
+    public ServletRegistrationBean indexHtmlBean() {
+        final String basePath = currentPath.substring(0, currentPath.length() - 1);
+        final ServletRegistrationBean bean = new ServletRegistrationBean(
+                new InugamiServlet(basePath), currentPath, currentPath + "index.html");
+        bean.setLoadOnStartup(1);
+        return bean;
+    }
 
-        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcherExample", new InugamiServlet(currentPath));
-        servlet.setLoadOnStartup(1);
-        servlet.addMapping(currentPath.substring(0, currentPath.length()-1));
+    @Bean
+    public ServletRegistrationBean pluginsModulesBean() {
+        final String basePath = currentPath.substring(0, currentPath.length() - 1);
+        final ServletRegistrationBean bean = new ServletRegistrationBean(
+                new PluginsModuleServlet(), currentPath + "app/modules/plugins.module.ts");
+        bean.setLoadOnStartup(1);
+        return bean;
+    }
+
+    @Bean
+    public ServletRegistrationBean releaseNoteDataBean() {
+        final String basePath = currentPath.substring(0, currentPath.length() - 1);
+        final ServletRegistrationBean bean = new ServletRegistrationBean(
+                new ReleaseNoteServlet(artifactName), currentPath + "data/release-notes.json");
+        bean.setLoadOnStartup(1);
+        return bean;
+    }
+
+    @Bean
+    public ServletRegistrationBean dependenciesCheckData() {
+        final String basePath = currentPath.substring(0, currentPath.length() - 1);
+        final ServletRegistrationBean bean = new ServletRegistrationBean(
+                new DependenciesCheckServlet(), currentPath + "data/dependencies-check.json");
+        bean.setLoadOnStartup(1);
+        return bean;
     }
 }

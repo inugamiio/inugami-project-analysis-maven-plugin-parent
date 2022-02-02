@@ -170,7 +170,7 @@ public class IndexRenderer {
         js.closeObject().line();
 
         js.write("System.config(config);").line();
-        js.write("var app = System.import('/analysis/app/main.ts')").line();
+        js.write("var app = System.import('" + contextPath + "/app/main.ts')").line();
         js.tab().write(".catch(console.error.bind(console));").line();
         js.tab().write("})(this);").line();
         js.line();

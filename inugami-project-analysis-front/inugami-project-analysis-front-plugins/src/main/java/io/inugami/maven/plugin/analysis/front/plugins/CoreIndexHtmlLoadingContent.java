@@ -38,7 +38,7 @@ public class CoreIndexHtmlLoadingContent implements IndexHtmlLoadingContentSpi {
         result.write(tag(H1, () -> buildPluginTitle(plugins)));
         result.write(tag(H2, () -> "loading ..."));
         result.write(openTag(DIV, HtmlAttribute.build("class", "icon-loading")));
-        result.write(loadSvg("META-INF/resources/images/inugami-logo.svg", 256, 256));
+        result.write(loadSvg("META-INF/resources/release-note-app/images/inugami-logo.svg", 256, 256));
         result.line();
         result.write(closeTag(DIV));
 
