@@ -16,10 +16,12 @@
  */
 package io.inugami.maven.plugin.analysis.front.springboot.configuration;
 
+import io.inugami.maven.plugin.analysis.front.api.services.DependenciesCheckService;
 import io.inugami.maven.plugin.analysis.front.core.servlet.DependenciesCheckServlet;
 import io.inugami.maven.plugin.analysis.front.core.servlet.InugamiServlet;
 import io.inugami.maven.plugin.analysis.front.core.servlet.PluginsModuleServlet;
 import io.inugami.maven.plugin.analysis.front.core.servlet.ReleaseNoteServlet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +45,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
     private String  artifactName;
     private String  currentPath;
 
+    @Autowired(required = false)
+    private DependenciesCheckService dependenciesCheckService;
 
     @PostConstruct
     public void init() {
@@ -101,7 +105,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
     public ServletRegistrationBean dependenciesCheckData() {
         final String basePath = currentPath.substring(0, currentPath.length() - 1);
         final ServletRegistrationBean bean = new ServletRegistrationBean(
-                new DependenciesCheckServlet(), currentPath + "data/dependencies-check.json");
+                new DependenciesCheckServlet(dependenciesCheckService), currentPath + "data/dependencies-check.json");
         bean.setLoadOnStartup(1);
         return bean;
     }

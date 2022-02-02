@@ -16,6 +16,12 @@
  */
 package io.inugami.maven.plugin.analysis.front.core.servlet;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.inugami.api.spi.SpiLoader;
+import io.inugami.maven.plugin.analysis.front.api.models.DependenciesCheck;
+import io.inugami.maven.plugin.analysis.front.api.services.DependenciesCheckService;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +29,39 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+import static io.inugami.maven.plugin.analysis.front.core.tools.JsonMarshallerUtils.OBJECT_MAPPER;
+
+@Slf4j
 public class DependenciesCheckServlet extends HttpServlet {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private static final int    SUCCCESS               = 200;
-    private static final String UTF_8                  = "UTF-8";
-    private static final long   serialVersionUID       = -4097614303888347284L;
-    public static final  String APPLICATION_TYPESCRIPT = "application/x-typescript";
+    private static final int                      SUCCCESS               = 200;
+    private static final int                      ERROR                  = 500;
+    private static final String                   UTF_8                  = "UTF-8";
+    private static final long                     serialVersionUID       = -4097614303888347284L;
+    public static final  String                   APPLICATION_TYPESCRIPT = "application/x-typescript";
+    public static final  String                   DEFUALT_RESPONSE       = "{}";
+    private final        DependenciesCheckService dependenciesCheckService;
+
+
+    // =========================================================================
+    // CONSTRUCTOR
+    // =========================================================================
+
+    public DependenciesCheckServlet(
+            final DependenciesCheckService dependenciesCheckService) {
+
+        if (dependenciesCheckService == null) {
+            this.dependenciesCheckService = new SpiLoader().loadSpiSingleServicesByPriority(
+                    DependenciesCheckService.class);
+        }
+        else {
+            this.dependenciesCheckService = dependenciesCheckService;
+        }
+    }
+
 
     // =========================================================================
     // API
@@ -41,86 +71,38 @@ public class DependenciesCheckServlet extends HttpServlet {
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
 
-        resp.getWriter().print("{\n" +
-                                       "  \"deprecated\": [\n" +
-                                       "    {\n" +
-                                       "      \"groupId\": \"io.inugami.maven.plugin.analysis\",\n" +
-                                       "      \"comment\": \"Please update to inugami maven plugin version 1.5.2 or higher\",\n" +
-                                       "      \"link\":\"https://search.maven.org/artifact/io.inugami.maven.plugin.analysis/inugami-project-analysis-maven-plugin-parent/1.5.2/pom\",\n" +
-                                       "      \"rules\": {\n" +
-                                       "        \"major\": {\n" +
-                                       "            \"version\": 1,\n" +
-                                       "            \"ruleType\": \"=\"\n" +
-                                       "        },\n" +
-                                       "        \"minor\": {\n" +
-                                       "          \"version\": 5,\n" +
-                                       "          \"ruleType\": \"<\"\n" +
-                                       "        }\n" +
-                                       "      }\n" +
-                                       "    },\n" +
-                                       "    {\n" +
-                                       "      \"groupId\": \"com.fasterxml.jackson.core\",\n" +
-                                       "      \"rules\": {\n" +
-                                       "        \"minor\": {\n" +
-                                       "          \"version\": 13,\n" +
-                                       "          \"ruleType\": \"<=\"\n" +
-                                       "        }\n" +
-                                       "      }\n" +
-                                       "    },\n" +
-                                       "    {\n" +
-                                       "      \"groupId\": \"org.apache.logging.log4j\",\n" +
-                                       "      \"link\":\"https://search.maven.org/search?q=g:org.apache.logging.log4j\",\n" +
-                                       "      \"rules\": {\n" +
-                                       "        \"major\": {\n" +
-                                       "          \"version\": 2,\n" +
-                                       "          \"ruleType\": \"=\"\n" +
-                                       "        },\n" +
-                                       "        \"minor\": {\n" +
-                                       "          \"version\": 17,\n" +
-                                       "          \"ruleType\": \"<\"\n" +
-                                       "        }\n" +
-                                       "      }\n" +
-                                       "    }\n" +
-                                       "  ],\n" +
-                                       "  \"securityIssue\": [\n" +
-                                       "    {\n" +
-                                       "      \"groupId\": \"org.apache.logging.log4j\",\n" +
-                                       "      \"comment\": \"CVE-2021-44832 : Log4j2 contains major security issue\",\n" +
-                                       "      \"link\":\"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44832\",\n" +
-                                       "      \"level\" : \"critical\",\n" +
-                                       "      \"rules\": {\n" +
-                                       "        \"major\": {\n" +
-                                       "          \"version\": 2,\n" +
-                                       "          \"ruleType\": \"=\"\n" +
-                                       "        },\n" +
-                                       "        \"minor\": {\n" +
-                                       "          \"version\": 17,\n" +
-                                       "          \"ruleType\": \"<\"\n" +
-                                       "        }\n" +
-                                       "      }\n" +
-                                       "    }\n" +
-                                       "  ],\n" +
-                                       "  \"ban\": [\n" +
-                                       "    {\n" +
-                                       "      \"groupId\": \"org.apache.logging.log4j\",\n" +
-                                       "      \"comment\": \"banished because of CVE-2021-44832\",\n" +
-                                       "      \"link\":\"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44832\",\n" +
-                                       "      \"level\" : \"critical\",\n" +
-                                       "      \"rules\": {\n" +
-                                       "        \"major\": {\n" +
-                                       "          \"version\": 2,\n" +
-                                       "          \"ruleType\": \"=\"\n" +
-                                       "        },\n" +
-                                       "        \"minor\": {\n" +
-                                       "          \"version\": 17,\n" +
-                                       "          \"ruleType\": \"<\"\n" +
-                                       "        }\n" +
-                                       "      }\n" +
-                                       "    }\n" +
-                                       "  ]\n" +
-                                       "}\n");
-        resp.setStatus(SUCCCESS);
+        int    status = SUCCCESS;
+        String json   = null;
+
+        try {
+            json = retrieveData();
+        }
+        catch (final Exception error) {
+            status = ERROR;
+            json   = DEFUALT_RESPONSE;
+        }
+
+
+        resp.getWriter().print(json);
+        resp.setStatus(status);
         resp.setContentType(MediaType.APPLICATION_JSON);
         resp.setCharacterEncoding(UTF_8);
+    }
+
+    private String retrieveData() throws JsonProcessingException {
+        String            result = DEFUALT_RESPONSE;
+        DependenciesCheck data   = null;
+        if (dependenciesCheckService != null) {
+            data = dependenciesCheckService.getDependenciesCheckData();
+
+            try {
+                result = OBJECT_MAPPER.writeValueAsString(data);
+            }
+            catch (final JsonProcessingException e) {
+                log.error(e.getMessage(), e);
+                throw e;
+            }
+        }
+        return result;
     }
 }

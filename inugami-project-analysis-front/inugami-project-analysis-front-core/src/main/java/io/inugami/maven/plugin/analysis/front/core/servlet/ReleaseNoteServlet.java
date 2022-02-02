@@ -16,13 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.front.core.servlet;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.inugami.api.models.JsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static io.inugami.maven.plugin.analysis.front.core.tools.JsonMarshallerUtils.OBJECT_MAPPER;
+
 @Slf4j
 @RequiredArgsConstructor
 public class ReleaseNoteServlet extends HttpServlet {
@@ -46,11 +43,10 @@ public class ReleaseNoteServlet extends HttpServlet {
     // ATTRIBUTES
     // =========================================================================
 
-    private static final int          SUCCCESS               = 200;
-    private static final String       UTF_8                  = "UTF-8";
-    private static final long         serialVersionUID       = -4097614303888347284L;
-    private static final ObjectMapper OBJECT_MAPPER          = buildObjectMapper();
-    public static final  String       APPLICATION_TYPESCRIPT = "application/x-typescript";
+    private static final int    SUCCCESS               = 200;
+    private static final String UTF_8                  = "UTF-8";
+    private static final long   serialVersionUID       = -4097614303888347284L;
+    public static final  String APPLICATION_TYPESCRIPT = "application/x-typescript";
 
 
     private final String artifactName;
@@ -150,13 +146,7 @@ public class ReleaseNoteServlet extends HttpServlet {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    public static ObjectMapper buildObjectMapper() {
-        return new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
-                                 .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
-                                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                                 .registerModule(new JavaTimeModule())
-                                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    }
+
 
     private void close(final InputStream input) {
         try {
