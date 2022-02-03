@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @Getter
+@AllArgsConstructor
 public class GavInfo {
 
     private final String        groupId;

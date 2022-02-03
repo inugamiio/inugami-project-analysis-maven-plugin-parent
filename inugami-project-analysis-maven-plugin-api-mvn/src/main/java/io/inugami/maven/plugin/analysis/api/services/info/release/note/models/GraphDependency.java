@@ -24,7 +24,7 @@ import java.util.List;
 @ToString
 @Getter
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class GraphDependency {
     @EqualsAndHashCode.Include
     private final String hash;

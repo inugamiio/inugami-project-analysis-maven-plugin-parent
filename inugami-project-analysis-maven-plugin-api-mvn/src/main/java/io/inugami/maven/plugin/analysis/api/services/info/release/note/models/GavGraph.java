@@ -22,7 +22,7 @@ import lombok.*;
 @ToString
 @Getter
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class GavGraph {
     @EqualsAndHashCode.Include
     private final String  artifactId;
