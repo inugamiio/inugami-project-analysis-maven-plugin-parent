@@ -66,7 +66,7 @@ public interface PropertiesInitialization {
     default String getDecryptedValue(final String value,
                                      final SecDispatcher secDispatcher) throws SecDispatcherException {
         String result = value;
-        if (value != null && value.startsWith("{")) {
+        if (value != null && value.startsWith("{", 0)) {
             result = secDispatcher.decrypt(value);
         }
         return result;

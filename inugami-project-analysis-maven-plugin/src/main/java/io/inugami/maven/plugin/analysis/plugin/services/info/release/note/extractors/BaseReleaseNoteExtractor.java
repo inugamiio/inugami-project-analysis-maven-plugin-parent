@@ -32,6 +32,7 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,19 +48,19 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String       SCM              = "scm";
-    public static final  String       MERGE_REQUEST    = "mergeRequest";
-    public static final  String       ISSUE            = "issue";
-    public static final  String       ISSUE_LABEL      = "issueLabel";
-    public static final  String       ISSUE_LINK       = "issueLink";
-    public static final  String       ISSUE_LINK_LABEL = "issueLinkLabel";
-    public static final  String       AUTHOR           = "author";
-    public static final  String       COMMIT           = "commit";
-    public static final  String       TITLE            = "title";
-    public static final  String       MERGED_AT        = "merged_at";
-    public static final  String       URL              = "url";
-    public static final  String       SHORT_NAME       = "shortName";
-    public static final  String       CREATED_AT       = "created_at";
+    public static final String SCM              = "scm";
+    public static final String MERGE_REQUEST    = "mergeRequest";
+    public static final String ISSUE            = "issue";
+    public static final String ISSUE_LABEL      = "issueLabel";
+    public static final String ISSUE_LINK       = "issueLink";
+    public static final String ISSUE_LINK_LABEL = "issueLinkLabel";
+    public static final String AUTHOR           = "author";
+    public static final String COMMIT           = "commit";
+    public static final String TITLE            = "title";
+    public static final String MERGED_AT        = "merged_at";
+    public static final String URL              = "url";
+    public static final String SHORT_NAME       = "shortName";
+    public static final String CREATED_AT       = "created_at";
 
     // =========================================================================
     // API
@@ -83,6 +84,14 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
         log.info("query:\n{}", query);
         final List<Record> resultSet = dao.search(query);
+
+
+        releaseNoteResult.setGav(GavInfo.builder()
+                                        .groupId(currentVersion.getGroupId())
+                                        .artifactId(currentVersion.getArtifactId())
+                                        .version(currentVersion.getVersion())
+                                        .scanDate(LocalDateTime.now())
+                                        .build());
         convertToReleaseNote(releaseNoteResult, resultSet, replacements);
     }
 

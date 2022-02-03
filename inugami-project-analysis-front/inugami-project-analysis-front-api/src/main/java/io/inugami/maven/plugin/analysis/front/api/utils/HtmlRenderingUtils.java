@@ -126,7 +126,7 @@ public class HtmlRenderingUtils {
     }
 
     public static String buildPath(final String contextPath, final String resources) {
-        return contextPath + (resources.startsWith(PATH_SEP) ? resources : PATH_SEP + resources);
+        return contextPath + (resources.startsWith(PATH_SEP, 0) ? resources : PATH_SEP + resources);
     }
 
     public static String loadResource(final String resourcePath) {

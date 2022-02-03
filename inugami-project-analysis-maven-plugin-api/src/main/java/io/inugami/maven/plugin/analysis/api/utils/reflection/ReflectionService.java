@@ -264,7 +264,7 @@ public final class ReflectionService {
 
     public static boolean isBasicType(final Class<?> currentClass) {
         return currentClass == null ? true :
-               PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang");
+               PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang", 0);
     }
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,

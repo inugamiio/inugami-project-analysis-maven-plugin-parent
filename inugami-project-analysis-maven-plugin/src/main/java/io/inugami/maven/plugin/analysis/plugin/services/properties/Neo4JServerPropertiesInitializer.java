@@ -70,7 +70,7 @@ public class Neo4JServerPropertiesInitializer implements PropertiesInitializatio
         if (url != null) {
             configuration.put("inugami.maven.plugin.analysis.writer.neo4j.url", url.getValue());
         }
-        if (neo4J.getUsername() != null && neo4J.getUsername().startsWith("{")) {
+        if (neo4J.getUsername() != null && neo4J.getUsername().startsWith("{", 0)) {
             configuration.put("inugami.maven.plugin.analysis.writer.neo4j.user",
                               secDispatcher.decrypt(neo4J.getUsername()));
         }
