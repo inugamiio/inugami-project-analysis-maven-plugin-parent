@@ -5,12 +5,16 @@ import { svg } from './svg.rendering.service';
 export const DEFAULT_FONT_SIZE = 12;
 export const TWO_PI = 2 * Math.PI;
 export const TWO_PI_RATIO = (2 * Math.PI) / 360;
+export const DEGRE_CONVERTOR = 180/Math.PI;
 
 export const math = {
     convertToRadian: (angle: number) => {
         return angle * TWO_PI_RATIO;
     },
 
+    convertToDegre : (rad:number)=>{
+        return rad * DEGRE_CONVERTOR;
+    },
     /**
      * Allow to rotate a point by radian angle
      * @param x     : number : X position
@@ -134,6 +138,13 @@ export const math = {
         var refX = 0;
         var refY = 0;
 
+
+        if(nodeHeight !=null){
+            nodeHeight = parseInt(nodeHeight, 10);
+        }
+        if(nodeWidth !=null){
+            nodeWidth = parseInt(nodeWidth, 10);
+        }
         if (isNotNull(svgCanva)) {
             var canvaPos = math._getNode(svgCanva).getBoundingClientRect();
             refX = canvaPos.x;
@@ -203,6 +214,11 @@ export const math = {
             result = Math.round(result);
         }
         return result;
-    }
+    },
 
+    vectorAngle : (from:Position, to:Position)=>{
+        let A = (to.x - from.x);
+        let B = (to.y - from.y);
+       return math.convertToDegre(Math.acos(A / Math.sqrt(Math.pow(A,2)+Math.pow(B,2))));
+    }
 };

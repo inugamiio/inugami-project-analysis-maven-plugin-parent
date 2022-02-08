@@ -16,14 +16,16 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
+
+import java.util.List;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@Setter
 @Getter
-@Builder
-@AllArgsConstructor
-public class GavGraph {
+public class GavGraph implements JsonObject {
     @EqualsAndHashCode.Include
     private final String  artifactId;
     @EqualsAndHashCode.Include
@@ -33,5 +35,18 @@ public class GavGraph {
     @EqualsAndHashCode.Include
     private final String  version;
     private final String  hash;
-    private final boolean currentProject;
+    private       boolean currentProject;
+
+    @Builder
+    public GavGraph(final String artifactId, final String groupId, final String type, final String version) {
+        this.artifactId     = artifactId;
+        this.groupId        = groupId;
+        this.type           = type;
+        this.version        = version;
+        this.currentProject = currentProject;
+        this.hash           = String.join(":", List.of(String.valueOf(groupId),
+                                                       String.valueOf(artifactId),
+                                                       String.valueOf(version),
+                                                       String.valueOf(type)));
+    }
 }

@@ -4,6 +4,7 @@ import { isNotNull, isNull } from './utils';
 import { svg } from './svg.rendering.service';
 import { Position } from '../models/svg.models';
 
+export const mousePosition : Position = {x:0, y:0};
 
 class HandlerEvent<T>{
     observable: Observable<T> = null;
@@ -45,3 +46,11 @@ export const event = {
 
     onMouseMove: localObservers.onMouseMove.observable
 };
+
+
+const mouseTracker = event.onMouseMove.subscribe({
+    next: (mousePos) => {
+        mousePosition.x =  mousePos.x;
+        mousePosition.y =  mousePos.y;
+    }
+});

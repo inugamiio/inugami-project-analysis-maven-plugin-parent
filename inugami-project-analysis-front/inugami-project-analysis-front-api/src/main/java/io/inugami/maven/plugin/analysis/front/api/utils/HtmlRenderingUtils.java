@@ -181,7 +181,7 @@ public class HtmlRenderingUtils {
         }
 
 
-        return String.join(">\n", buffer) + ">";
+        return (String.join(">", buffer) + ">").replaceAll("\n\n", "\n");
     }
 
     private static String replaceSize(final String line, final int width, final int height) {

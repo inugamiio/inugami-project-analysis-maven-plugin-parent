@@ -22,10 +22,12 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.InternalRelationship;
+import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.types.Relationship;
 
@@ -36,6 +38,7 @@ import java.util.function.Supplier;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jUtils {
     // =========================================================================
@@ -158,7 +161,16 @@ public final class Neo4jUtils {
             if (node instanceof Relationship) {
                 result.add((Relationship) node);
             }
-
+            else if (node instanceof ListValue) {
+                final List<Object> nodes = ((ListValue) node).asList();
+                Optional.ofNullable(nodes)
+                        .orElse(new ArrayList<>())
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .filter(o -> o instanceof Relationship)
+                        .map(o -> (Relationship) o)
+                        .forEach(result::add);
+            }
         }
         return result;
     }

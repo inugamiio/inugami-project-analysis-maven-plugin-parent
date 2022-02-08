@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
+import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Graph {
+public class Graph implements JsonObject {
     @EqualsAndHashCode.Include
     private final String                hash;
     private       List<GraphDependency> dependencies;
