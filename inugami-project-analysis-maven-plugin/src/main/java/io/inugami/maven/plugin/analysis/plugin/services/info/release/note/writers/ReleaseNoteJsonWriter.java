@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.writers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
@@ -28,6 +29,9 @@ import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 @Slf4j
@@ -37,8 +41,13 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.display.release.note.json";
-    public static final String ATTACH       = FEATURE_NAME + "attach";
+    public static final  String FEATURE_NAME   = "inugami.maven.plugin.analysis.display.release.note.json";
+    public static final  String CONF_FOLDER    = FEATURE_NAME + ".folder";
+    private static final String DEFAULT_FOLDER = String.join(File.separator,
+                                                             "src", "main", "resources",
+                                                             "META-INF", "releases");
+
+    public static final String ATTACH = FEATURE_NAME + "attach";
 
     // =========================================================================
     // ACCEPT
@@ -54,9 +63,14 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
     @Override
     public void process(final ReleaseNoteResult releaseNote,
                         final InfoContext context) {
-        final String json = convertToJson(releaseNote);
-        final File file = FilesUtils.buildFile(context.getBasedir(),
-                                               "release-note-" + context.getProject().getVersion() + ".json");
+
+        final String destinationFolder = context.getConfiguration().grabOrDefault(CONF_FOLDER, DEFAULT_FOLDER);
+        final String json              = convertToJson(releaseNote);
+        final String fileName = String.join("-",
+                                            context.getProject().getArtifactId(),
+                                            context.getProject().getVersion()) + ".json";
+
+        final File file = FilesUtils.buildFile(context.getBasedir(), destinationFolder, fileName);
 
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
@@ -65,6 +79,8 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
             log.info("begin write file : {}", file.getAbsolutePath());
             FilesUtils.write(json, file);
         }
+
+        writeIndexFile(file.getAbsoluteFile().getParentFile(), context.getProject().getArtifactId());
 
         if (Boolean.parseBoolean(context.getConfiguration().grabOrDefault(ATTACH, "true"))) {
             final MavenProject project = context.getProject();
@@ -84,6 +100,33 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
         }
     }
 
+    private void writeIndexFile(final File parentFile, final String artifactId) {
+        final List<String> files        = extractReleaseNoteFiles(parentFile, artifactId);
+        final List<String> filesOrdered = sortReleasesNotes(files);
+        final String       json         = new JsonBuilder().writeListString(filesOrdered).toString();
+
+        final File indexFile = FilesUtils.buildFile(parentFile, artifactId + ".releases.json");
+        FilesUtils.write(json, indexFile);
+    }
+
+
+    protected List<String> extractReleaseNoteFiles(final File parentFile, final String artifactId) {
+        final List<String> files = new ArrayList<>();
+        if (parentFile != null && parentFile.exists()) {
+            for (final String fileName : parentFile.list()) {
+                if (fileName.startsWith(artifactId, 0) && fileName.endsWith(".json")) {
+                    files.add(fileName);
+                }
+            }
+        }
+        return files;
+    }
+
+    protected List<String> sortReleasesNotes(final List<String> files) {
+        final List<String> result = new ArrayList<>(files);
+        Collections.sort(result, (r, v) -> v.compareTo(r));
+        return result;
+    }
 
     private String convertToJson(final ReleaseNoteResult releaseNoteResult) {
         try {

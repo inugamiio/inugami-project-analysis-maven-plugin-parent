@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <!-- =======================================================================
+    = PARENT
+    ======================================================================== -->
+    <parent>
+        <artifactId>inugami-project-analysis-front</artifactId>
+        <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+        <version>1.6.0-SNAPSHOT</version>
+    </parent>
+
+
+    <!-- =======================================================================
+    = PROJECT
+    ======================================================================== -->
+    <artifactId>inugami-project-analysis-front-plugins</artifactId>
+
+    <!-- =======================================================================
+    = DEPENDENCIES
+    ======================================================================== -->
+    <dependencies>
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_configuration_tools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_core_tools</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+            <artifactId>inugami-project-analysis-front-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+    </dependencies>
+</project>

@@ -10,7 +10,7 @@
     =========================================================================-->
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin-parent</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.6.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Specifics maven lifecycle to package and run inugami project</description>
@@ -54,14 +54,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <plugins.org-apache-maven-plugins.maven-compiler-plugin>3.1
         </plugins.org-apache-maven-plugins.maven-compiler-plugin>
-
+        <maven-gpg-plugin.enabled />
         <!--[ ch ]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+        <ch.qos.logback.version>1.2.10</ch.qos.logback.version>
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <io.inugami.version>2.0.0</io.inugami.version>
 
+        <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+        <javax.servlet.version>3.1.0</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <org.slf4j.version>1.7.21</org.slf4j.version>
         <org.apache.maven.version>3.5.0</org.apache.maven.version>
@@ -92,6 +94,7 @@
         <module>inugami-project-analysis-maven-plugin-api</module>
         <module>inugami-project-analysis-maven-plugin</module>
         <module>inugami-project-analysis-maven-plugin-api-mvn</module>
+        <module>inugami-project-analysis-front</module>
     </modules>
 
     <!-- =======================================================================
@@ -122,6 +125,39 @@
     <dependencyManagement>
         <dependencies>
             <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            :: INUGAMI CORE
+            :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
+            <dependency>
+                <groupId>io.inugami</groupId>
+                <artifactId>inugami_api</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami</groupId>
+                <artifactId>inugami_commons</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami</groupId>
+                <artifactId>inugami_configuration_tools</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami</groupId>
+                <artifactId>inugami_commons</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami</groupId>
+                <artifactId>inugami_core_tools</artifactId>
+                <version>${io.inugami.version}</version>
+            </dependency>
+
+            <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
             :: PROJECT
             :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
             <dependency>
@@ -137,6 +173,24 @@
             <dependency>
                 <groupId>io.inugami.maven.plugin.analysis</groupId>
                 <artifactId>inugami-project-analysis-maven-plugin-api-mvn</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+                <artifactId>inugami-project-analysis-front-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+                <artifactId>inugami-project-analysis-front-plugins</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+                <artifactId>inugami-project-analysis-front-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -203,6 +257,15 @@
                 <groupId>io.inugami</groupId>
                 <artifactId>inugami_commons_test</artifactId>
                 <version>${io.inugami.version}</version>
+            </dependency>
+
+            <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+            :: JAVA EE
+            :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
             </dependency>
 
             <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -463,7 +526,7 @@
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>install</phase>
+                        <phase>${maven-gpg-plugin.enabled}install</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
@@ -477,5 +540,14 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <maven-gpg-plugin.enabled>false</maven-gpg-plugin.enabled>
+            </properties>
+
+        </profile>
+    </profiles>
 
 </project>

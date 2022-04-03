@@ -129,7 +129,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
         if (tickets != null && !tickets.isEmpty()) {
             for (final String ticket : tickets) {
                 final String ticketId = ticket.trim();
-                if (ticketId.startsWith("!")) {
+                if (ticketId.startsWith("!", 0)) {
                     tasks.add(new GitHubTask(ticketId.substring(1),
                                              IssueTrackerCommons.TicketType.MERGE_REQUEST,
                                              token,

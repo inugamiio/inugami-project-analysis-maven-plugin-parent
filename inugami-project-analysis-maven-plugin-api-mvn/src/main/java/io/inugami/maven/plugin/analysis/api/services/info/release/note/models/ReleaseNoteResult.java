@@ -17,16 +17,21 @@
 package io.inugami.maven.plugin.analysis.api.services.info.release.note.models;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
+@Setter
 @Getter
 public class ReleaseNoteResult {
+    GavInfo                   gav;
+    ProjectDependenciesGraph  projectDependenciesGraph;
     Set<String>               commit        = new LinkedHashSet<>();
     Set<Author>               authors       = new LinkedHashSet<>();
     List<Issue>               issues        = new ArrayList<>();
     List<MergeRequests>       mergeRequests = new ArrayList<>();
     Map<String, Differential> differentials = new LinkedHashMap<>();
+    Map<String, Object>       customFields  = new LinkedHashMap<>();
 
 
     public ReleaseNoteResult addCommit(final String... commit) {
@@ -62,6 +67,13 @@ public class ReleaseNoteResult {
     public ReleaseNoteResult addDifferential(final String name, final Differential differential) {
         if (name != null && differential != null) {
             differentials.put(name, differential);
+        }
+        return this;
+    }
+
+    public ReleaseNoteResult addCustomField(final String name, final Object value) {
+        if (name != null && value != null) {
+            customFields.put(name, value);
         }
         return this;
     }

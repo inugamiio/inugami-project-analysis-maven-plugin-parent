@@ -1,0 +1,78 @@
+{
+  "deprecated": [
+    {
+      "groupId": "io.inugami.maven.plugin.analysis",
+      "comment": "Please update to inugami maven plugin version 1.5.2 or higher",
+      "link":"https://search.maven.org/artifact/io.inugami.maven.plugin.analysis/inugami-project-analysis-maven-plugin-parent/1.5.2/pom",
+      "rules": {
+        "major": {
+            "version": 1,
+            "ruleType": "="
+        },
+        "minor": {
+          "version": 5,
+          "ruleType": "<"
+        }
+      }
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "rules": {
+        "minor": {
+          "version": 13,
+          "ruleType": "<="
+        }
+      }
+    },
+    {
+      "groupId": "org.apache.logging.log4j",
+      "link":"https://search.maven.org/search?q=g:org.apache.logging.log4j",
+      "rules": {
+        "major": {
+          "version": 2,
+          "ruleType": "="
+        },
+        "minor": {
+          "version": 17,
+          "ruleType": "<"
+        }
+      }
+    }
+  ],
+  "securityIssue": [
+    {
+      "groupId": "org.apache.logging.log4j",
+      "comment": "CVE-2021-44832 : Log4j2 contains major security issue",
+      "link":"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44832",
+      "level" : "critical",
+      "rules": {
+        "major": {
+          "version": 2,
+          "ruleType": "="
+        },
+        "minor": {
+          "version": 17,
+          "ruleType": "<"
+        }
+      }
+    }
+  ],
+  "ban": [
+    {
+      "groupId": "org.apache.logging.log4j",
+      "comment": "banished because of CVE-2021-44832",
+      "link":"https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44832",
+      "level" : "critical",
+      "rules": {
+        "major": {
+          "version": 2,
+          "ruleType": "="
+        },
+        "minor": {
+          "version": 17,
+          "ruleType": "<"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2767 @@
+[
+    {
+        "gav": {
+          "groupId": "io.inugami.demo",
+          "artifactId": "spring-boot-training",
+          "version": "0.0.2-SNAPSHOT",
+          "scanDate": "2022-01-01T12:00:00"
+        },
+        "authors": [
+          {
+            "email": "joe.smith@inugami.io",
+            "name": "Joe Smith"
+          },
+          {
+            "email": "pguillerm@inugami.io",
+            "name": "Patrick Guillerm"
+          },
+          {
+            "email": "",
+            "name": "John foobar"
+          },
+          {
+            "email": "patrickguillerm@inugami.io",
+            "name": "Patrick Guillerm"
+          }
+        ],
+        "commit": [
+          "[2020-12-20T13:25:50][858a9fdc36fd31ee882161cb84becf8b42a56155][Patrick Guillerm] #1 add inugami maven analysis plugin ",
+          "[2020-05-15T14:50:20][212f25a5c94fd70d7c18827ba6c9722ba23b43cf][Patrick Guillerm] add mapstruct ",
+          "[2020-05-15T13:14:10][3f9a89ac8d6e670dfef3ff52516f7874fba4dd20][Patrick Guillerm] add named native query ",
+          "[2020-05-15T08:53:52][4e645c1d977cbce7a2e522ecba3d46fdbaf04681][Patrick Guillerm] add JPA criteria ",
+          "[2020-05-14T15:43:59][1892c5150010e008a775768d0a74dcf652ebb5ac][Patrick Guillerm] begin create criteria query ",
+          "[2020-05-14T13:48:55][be2359a3cb7e93ebfc7d3a22373157130bc39419][Patrick Guillerm] add cerebros to docker-compose ",
+          "[2020-05-12T09:54:39][164f324eeb37327fda9a507ec00200f0bd55aed0][Patrick Guillerm] try to deploy docker image ",
+          "[2020-05-12T09:46:54][0019fbaa5834c64cd97d51adb381b06102a877a9][Patrick Guillerm] try to deploy docker image ",
+          "[2020-05-12T09:17:47][d4cc9ff793939acb3ea736a591a2179ea9f5a88d][Patrick Guillerm] disable upload artifacts on gitlab maven repository ",
+          "[2020-05-12T08:15:01][af38b6a50be62da40a375c6653cadc9b9e0bd478][Patrick Guillerm] set maven debug mode for check why gitlab make a broken pipe on uploading ",
+          "[2020-05-12T07:45:31][509ffe211c80be3502cacc1e5161b63e37546c41][Patrick Guillerm] force disable mutation testing and docker build ",
+          "[2020-05-12T07:33:20][f17ff2dd5b9d3e09096262ef9f8eee5ca2f93124][Patrick Guillerm] force disable building docker image ",
+          "[2020-05-12T07:10:31][262ecd5d0daf49826e873efbe17a8990c12b3baf][Patrick Guillerm] fix cucumber test ",
+          "[2020-04-23T13:54:53][b2da804d2cf0326b14f1d7a487e308d6ca33b52b][John foobar  ] Add superpom mamagement ",
+          "[2020-04-23T13:46:17][46c7db6c27138b8ce629ff230b4334ca8509fc4b][John foobar  ] Add maven repository ",
+          "[2020-04-23T13:42:21][8e238ffff2553bef278c82a184f35a4fe2d8f1c9][John foobar  ] Add plugin management ",
+          "[2020-04-23T13:35:11][794274b512499ae1f873771e0b754887e9a618d7][John foobar  ] Add superpom and plugin project ",
+          "[2020-04-22T16:02:56][303fc5349dfe8d57fc0cc6e191cb349a3eac8606][John foobar  ] Undo jdk changes ",
+          "[2020-04-22T15:11:56][d65117a95019d600a0bb949e15796c9910d73ca8][John foobar  ] Fix ci settings path ",
+          "[2020-04-22T14:54:06][c90bf04304a9f7eea34c9390544c65963bd7eec1][John foobar  ] Update gitlab maven configuration ",
+          "[2020-04-22T14:39:01][b93e4cdeba21a6d00f31b70b4687a3d72d444b76][John foobar  ] Update m2 paths ",
+          "[2020-04-22T14:33:36][8daa1a3c39b7fac345d996c9c672185547f16b2a][John foobar  ] Change m2 repo path ",
+          "[2020-04-22T13:58:39][b1f493eb08563468f4c9cbd57d26a5e683ac0648][John foobar  ] Add gitlab configuration for maven ",
+          "[2020-04-22T13:50:29][e3595804f0c76d8f2d1711813ad67887122a128e][John foobar  ] Update m2 path ",
+          "[2020-04-22T13:47:10][52d071106c485aa6c98e81d2026ac6753c9b4934][John foobar  ] Fix for settings path ",
+          "[2020-04-22T13:44:53][dfd101677e24c4c46aa7f6a0dffd06a467daf26b][John foobar  ] Add gitlab-ci ",
+          "[2020-03-13T08:13:52][83186aabf09af3dad0822937246eeea93e3ca59d][Patrick Guillerm] Merge branch 'security' into 'master'  Security  See merge request smartwavesa/internal/spring-boot-training!15",
+          "[2020-03-13T08:13:30][8e884f64b4cafd541a41866d0e984e30d11ea95f][Patrick Guillerm] Merge branch 'poc_hug' into 'security'  fix front  See merge request smartwavesa/internal/spring-boot-training!14",
+          "[2020-03-13T08:12:14][500f4b512a3cc4b1cc99ea25a7d5cce5034c2e89][Patrick Guillerm] fix front ",
+          "[2020-03-12T16:49:23][943d6975ed48bc79e2fe9049617e754ce2b9f9fe][Patrick Guillerm] Merge branch 'security' into 'master'  Security  See merge request smartwavesa/internal/spring-boot-training!13",
+          "[2020-03-12T16:48:47][c8f17097ab2564de6af415b11feff9eb33c071e7][Patrick Guillerm] Merge branch 'poc_hug' into 'security'  fix  See merge request smartwavesa/internal/spring-boot-training!12",
+          "[2020-03-12T16:47   ][4ea87c3e19b411616d3d17982e9e66b4d28202ea][Patrick Guillerm] fix ",
+          "[2020-03-11T09:54:41][3a49f5a9539f2db9031aa1219ccb59166c40ce3d][Patrick Guillerm] Angular integration ",
+          "[2020-03-09T16:44:48][cfc2312361c4dc55750e3a77fe9652350c62374b][Patrick Guillerm] cleaning and fixes on errors handling ",
+          "[2020-03-09T12:22:59][3f07269918b2389400f2ab18e7642890448ea0fe][Patrick Guillerm] add basic springboot security with JWT example ",
+          "[2020-03-04T08:40:14][ce5f40b648aa4c50a94d20b9aa370dd9bfaf43ec][Patrick Guillerm] add url on ElasticSearch mapping reference ",
+          "[2020-03-04T08:37:24][77964917c7e67ac5b6b0ce8d20a9105791d2b904][Patrick Guillerm] secure ELK url ",
+          "[2020-03-04T08:15:26][b3cfe2e07a63422cea685ba90fdbccc83d23914a][Patrick Guillerm] add documentation on ELK connector ",
+          "[2020-03-04T07:52:14][291799405f5e463fb61c7cae44f1985c82d57edf][Patrick Guillerm] add generic ELK connector ",
+          "[2020-03-02T09:23:35][7048db84018165b85529cc8d7187797e0dc4064e][Patrick Guillerm] fix save chenge log "        
+        ],
+        "projectDependenciesGraph":{
+          "artifacts":[
+            {
+              "artifactId": "spring-boot-training-test",
+              "groupId": "io.inugami.demo",
+              "type": "jar",
+              "version": "0.0.2-SNAPSHOT",
+              "hash": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar"
+            },
+            {
+              "artifactId": "spring-boot-training-api",
+              "groupId": "io.inugami.demo",
+              "type": "jar",
+              "version": "0.0.2-SNAPSHOT",
+              "hash": "io.inugami.demo:spring-boot-training-api:0.0.2-SNAPSHOT:jar"
+            },
+            {
+              "artifactId": "spring-boot-training-rest",
+              "groupId": "io.inugami.demo",
+              "type": "jar",
+              "version": "0.0.2-SNAPSHOT",
+              "hash": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+              "currentProject":true
+            },
+            {
+              "artifactId": "referentials",
+              "groupId": "io.inugami.maven.plugin.analysis",
+              "type": "jar",
+              "version": "1.1.0-SNAPSHOT",
+              "hash": "io.inugami.maven.plugin.analysis:referentials:1.1.0-SNAPSHOT:jar"
+            },
+            {
+              "artifactId": "spring-boot-training-lifecycle",
+              "groupId": "io.inugami.demo",
+              "hash": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+              "type": "jar",
+              "version": "1.0.0-SNAPSHOT"
+            },
+            {
+              "artifactId": "another-application",
+              "groupId": "io.inugami.demo",
+              "hash": "io.inugami.demo:another-application:1.0.0-SNAPSHOT",
+              "type": "jar",
+              "version": "1.0.0-SNAPSHOT"
+            }
+          ],
+
+          "graph":[
+            {
+              "hash": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+              "dependencies":[
+                {
+                  "hash": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+                  "consume" : ["lib"]
+                },
+                {
+                  "hash": "io.inugami.demo:spring-boot-training-api:0.0.2-SNAPSHOT:jar",
+                  "consume" : ["lib"]
+                },
+                {
+                  "hash": "io.inugami.maven.plugin.analysis:referentials:1.1.0-SNAPSHOT:jar",
+                  "consume" : ["REST", "RABBIT_MQ"]
+                },
+                {
+                  "hash": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                  "consume" : ["lib"]
+                }
+              ]
+            },
+            {
+              "hash": "io.inugami.demo:another-application:1.0.0-SNAPSHOT",
+              "dependencies":[
+                {
+                  "hash": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                  "consume" : ["REST"]
+                },
+                {
+                  "hash": "io.inugami.maven.plugin.analysis:referentials:1.1.0-SNAPSHOT:jar",
+                  "consume" : ["REST", "RABBIT_MQ"]
+                }
+              ]
+            },
+            {
+              "hash": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+              "dependencies":[
+                {
+                  "hash": "io.inugami.demo:spring-boot-training-api:0.0.2-SNAPSHOT:jar",
+                  "consume" : ["lib"]
+                }
+              ]
+            }
+          ]
+        },
+        "differentials": {
+          "exposedService": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.sayHello"
+                ],
+                "name": "8e71ed43adb06083f71e48462511dbcf63a1d115948e2ab463f54eb6c277950929e5cfbb00da9a00718e572d469d46a41a2e24d2e04afc26b4c988f667758779",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "String",
+                "shortName": "[GET]/hello",
+                "type": "REST",
+                "uri": "/hello",
+                "verb": "GET"
+              },
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssues"
+                ],
+                "name": "bd2a6e93117adad7d42dc5e05e75afbf3f9191e7a5b9c94c0ee5e8cf87d82cd78f0725d975161e3de99131934324f7574240cf8425920a6c92da473b2ead4438",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"uid\":\"Long\",\n    \"title\":\"String\",\n    \"description\":\"String\",\n    \"lifecycle\":\"String\",\n    \"previousKnownState\":\"String\",\n    \"changeLogs\":[\n      {\n        \"uid\":\"Long\",\n        \"status\":\"String\",\n        \"comment\":\"String\",\n        \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n      }\n    ],\n    \"status\":\"<<ChangeLog>>\",\n    \"createBy\":\"String\",\n    \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "shortName": "[GET]/issues",
+                "type": "REST",
+                "uri": "/issues",
+                "verb": "GET"
+              },
+              {
+                "consumeContentType": "application/json",
+                "consumers": [],
+                "contentType": "application/json",
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssue"
+                ],
+                "name": "c36c99f2e4855114b8de7601a6fa6afeaf57fb99e8d07b3b948ad99a82df98c7f53e0df93f60fe7fed92af0e2779587c4395bbfd00d2228ed8035809f2cb9f64",
+                "payload": "[\n  {\n    \"uid\":\"Long\",\n    \"title\":\"String\",\n    \"description\":\"String\",\n    \"lifecycle\":\"String\",\n    \"previousKnownState\":\"String\",\n    \"changeLogs\":[\n      {\n        \"uid\":\"Long\",\n        \"status\":\"String\",\n        \"comment\":\"String\",\n        \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n      }\n    ],\n    \"status\":\"<<ChangeLog>>\",\n    \"createBy\":\"String\",\n    \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"uid\":\"Long\",\n    \"title\":\"String\",\n    \"description\":\"String\",\n    \"lifecycle\":\"String\",\n    \"previousKnownState\":\"String\",\n    \"changeLogs\":[\n      {\n        \"uid\":\"Long\",\n        \"status\":\"String\",\n        \"comment\":\"String\",\n        \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n      }\n    ],\n    \"status\":\"<<ChangeLog>>\",\n    \"createBy\":\"String\",\n    \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "shortName": "[POST]/issues",
+                "type": "REST",
+                "uri": "/issues",
+                "verb": "POST"
+              },
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssuesByAuthor"
+                ],
+                "name": "2393582f3a417ec6a60fd2cb83db502ffbc91cec4ef9551cb605f56cbd93b9b8995b8f58aa3af047029eb9162e2868f5f127445d877ea1c4f01e58650d3892fe",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"uid\":\"Long\",\n    \"title\":\"String\",\n    \"description\":\"String\",\n    \"lifecycle\":\"String\",\n    \"previousKnownState\":\"String\",\n    \"changeLogs\":[\n      {\n        \"uid\":\"Long\",\n        \"status\":\"String\",\n        \"comment\":\"String\",\n        \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n      }\n    ],\n    \"status\":\"<<ChangeLog>>\",\n    \"createBy\":\"String\",\n    \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "shortName": "[GET]/issues/author/{author}",
+                "type": "REST",
+                "uri": "/issues/author/{author}",
+                "verb": "GET"
+              },
+              {
+        
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.getIssue"
+                ],
+                "name": "cdcd047f69fdd333b532db2579217872da1c7e332b25e31322b3b147517b72f3fccecae70def1ded43d8bf6584a4a880ca665dc7aa9ae28a5b59d59c7d970d41",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"uid\":\"Long\",\n    \"title\":\"String\",\n    \"description\":\"String\",\n    \"lifecycle\":\"String\",\n    \"previousKnownState\":\"String\",\n    \"changeLogs\":[\n      {\n        \"uid\":\"Long\",\n        \"status\":\"String\",\n        \"comment\":\"String\",\n        \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n      }\n    ],\n    \"status\":\"<<ChangeLog>>\",\n    \"createBy\":\"String\",\n    \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "shortName": "[GET]/issues/status/{status}",
+                "type": "REST",
+                "uri": "/issues/status/{status}",
+                "verb": "GET"
+              },
+              {
+                "consumeContentType": "application/json",
+                "consumers": [],
+                "contentType": "application/json",
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.issues.rest.IssuesRest.addIssueChangeLog"
+                ],
+                "name": "b53393511a03821dd2742d722236d3e28f5a3c6de5c8a4009e4e25061eb3240959ef9a5cd1a6f784588842643f300e529997c7fe0f984654a918b094b4e977b3",
+                "payload": "[\n  {\n    \"uid\":\"Long\",\n    \"status\":\"String\",\n    \"comment\":\"String\",\n    \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n  }\n]",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "{\n  \"uid\":\"Long\",\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"lifecycle\":\"String\",\n  \"previousKnownState\":\"String\",\n  \"changeLogs\":[\n    {\n      \"uid\":\"Long\",\n      \"status\":\"String\",\n      \"comment\":\"String\",\n      \"date\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n    }\n  ],\n  \"status\":\"<<ChangeLog>>\",\n  \"createBy\":\"String\",\n  \"createdDate\":\"yyyy-MM-dd'T'HH:mm:ss.SSSZ\"\n}",
+                "shortName": "[POST]/issues/{uid}/change_logs",
+                "type": "REST",
+                "uri": "/issues/{uid}/change_logs",
+                "verb": "POST"
+              },
+              {
+                "consumeContentType": "application/json",
+                "consumers": [],
+                "contentType": "application/json",
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.authenticate"
+                ],
+                "name": "cb471483683fe872e4dce72e7410f664505375efafedd75d865dee4ee624bd456c25523c5e500eaa1a307b6d7a4ed57a5c089052577482813e2cb06995093186",
+                "payload": "{\n  \"login\":\"String\",\n  \"password\":\"String\"\n}",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "{\n  \"login\":\"String\",\n  \"password\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"roles\":[\n        \"String\"\n  ]\n}",
+                "shortName": "[POST]/security/authenticate",
+                "type": "REST",
+                "uri": "/security/authenticate",
+                "verb": "POST"
+              },
+              {
+                "consumers": [],
+                "headers": "Authorization",
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.handcheck"
+                ],
+                "name": "5198b80047c71da15d9f51ccadef48139560ec5146a7ae3683052c3c80c1db1e552675a773d9e62f874886466b81be18eb30dda6af6c563868ffc4faa8b9d1c8",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "{\n  \"login\":\"String\",\n  \"password\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"roles\":[\n        \"String\"\n  ]\n}",
+                "shortName": "[GET]/security/handcheck",
+                "type": "REST",
+                "uri": "/security/handcheck",
+                "verb": "GET"
+              },
+              {
+                "consumers": [],
+                "headers": "Authorization",
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.security.rest.SecurityRest.logout"
+                ],
+                "name": "00298cd588c022282e6807a99e3e7fba347ee781b841153a9a4f2b062a7884415b6ba8102187ceddb6d7d2fbedd084b02b876a8c6dfa6165524f6f00e20a7b2b",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "shortName": "[DELETE]/security/logout",
+                "type": "REST",
+                "uri": "/security/logout",
+                "verb": "DELETE"
+              },
+              {
+                "consumers": ["io.inugami.demo:project-consumer:0.0.1-SNAPSHOT:jar"],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycles"
+                ],
+                "name": "61f8ac9b00dd00d8a2870fad2d401ef7df0a64378be7859a04a4bd74744ab3c6b60470f8627d468d15588ec81271ad680e46029fed8f2ad312c8c646558025bf",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"serialVersionUID\":\"long\",\n    \"name\":\"String\",\n    \"title\":\"String\",\n    \"states\":[\n      {\n        \"name\":\"String\",\n        \"title\":\"String\",\n        \"ref\":\"String\",\n        \"role\":\"String\",\n        \"next\":[\"<<State>>\"]\n      }\n    ],\n    \"statesNames\":[\"<<State>>\"],\n    \"globaleStates\":[\"<<State>>\"]\n  }\n]",
+                "shortName": "[GET]/lifecycles",
+                "type": "REST",
+                "uri": "/lifecycles",
+                "verb": "GET"
+              },
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycle"
+                ],
+                "name": "8d758416e57bbba502455483fe9175a71a7fd351b1919f2bc25919bd87d3797e4e285f908e78c1768b5e02851bf49f87813bbd38d16a7f35908035fc4cffaeb6",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "{\n  \"serialVersionUID\":\"long\",\n  \"name\":\"String\",\n  \"title\":\"String\",\n  \"states\":[\n    {\n      \"name\":\"String\",\n      \"title\":\"String\",\n      \"ref\":\"String\",\n      \"role\":\"String\",\n      \"next\":[\"<<State>>\"]\n    }\n  ],\n  \"statesNames\":[\"<<State>>\"],\n  \"globaleStates\":[\"<<State>>\"]\n}",
+                "shortName": "[GET]/lifecycles/{lifecycle}",
+                "type": "REST",
+                "uri": "/lifecycles/{lifecycle}",
+                "verb": "GET"
+              },
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecycles"
+                ],
+                "name": "2c2d3b1cd3ccdfd44513c3438a30667c85aa0cf1905f34a72b6cde965003a5a7f364cf2915f04813a4e5d36fff5efbf9e2aa989c616f4bdc52163ebf75769333",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"name\":\"String\",\n    \"title\":\"String\",\n    \"ref\":\"String\",\n    \"role\":\"String\",\n    \"next\":[\n      {\n        \"name\":\"String\",\n        \"title\":\"String\",\n        \"ref\":\"String\",\n        \"role\":\"String\",\n        \"next\":[\"<<State>>\"]\n      }\n    ]\n  }\n]",
+                "shortName": "[GET]/lifecycles/{lifecycle}/next-states",
+                "type": "REST",
+                "uri": "/lifecycles/{lifecycle}/next-states",
+                "verb": "GET"
+              },
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.LifecyclesRest.getLifecyclesFromState"
+                ],
+                "name": "5f5d994ddc6b3135ea2a3402e5a30964a252344c509731d2493fb37c7c2930ee5fe00e3e0bbb0ebba9203833a555fd375bbaade78c3629257fdcdda6ef823c1d",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"name\":\"String\",\n    \"title\":\"String\",\n    \"ref\":\"String\",\n    \"role\":\"String\",\n    \"next\":[\n      {\n        \"name\":\"String\",\n        \"title\":\"String\",\n        \"ref\":\"String\",\n        \"role\":\"String\",\n        \"next\":[\"<<State>>\"]\n      }\n    ]\n  }\n]",
+                "shortName": "[GET]/lifecycles/{lifecycle}/next-states/{state}",
+                "type": "REST",
+                "uri": "/lifecycles/{lifecycle}/next-states/{state}",
+                "verb": "GET"
+              }
+            ],
+            "sameValues": [
+              {
+                "consumers": [],
+                "methods": [
+                  "io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.rest.StatesRest.changeState"
+                ],
+                "name": "e0c4e898f607ee468805a79591c084a6831c75646c3440731e349854023c72820e7a67612c6c9b0698aacb5dd0903e7bda42ff2d04e638722519009e4d144860",
+                "payload": "{\n  \"lifecycle\":\"String\",\n  \"nextState\":\"String\",\n  \"uid\":\"Long\",\n  \"comment\":\"String\",\n  \"currentState\":\"String\",\n  \"previousKnownState\":\"String\"\n}",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "responsePayload": "[\n  {\n    \"name\":\"String\",\n    \"title\":\"String\",\n    \"ref\":\"String\",\n    \"role\":\"String\",\n    \"next\":[\n      {\n        \"name\":\"String\",\n        \"title\":\"String\",\n        \"ref\":\"String\",\n        \"role\":\"String\",\n        \"next\":[\"<<State>>\"]\n      }\n    ]\n  }\n]",
+                "shortName": "[POST]/states/change-state",
+                "type": "REST",
+                "uri": "/states/change-state",
+                "verb": "POST"
+              },
+              {
+                "consumers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "methods": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)",
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)"
+                ],
+                "name": "create.user.queue",
+                "payload": "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "shortName": "create.user.queue",
+                "type": "JMS",
+                "uri": "${my.activeMq.onUserCreated.queue}"
+              }
+            ]
+          },
+          "consumedService": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "additionalInfo": "[ {\n  \"queue\" : {\n    \"name\" : \"${events.user.queueName}\",\n    \"durable\" : \"true\",\n    \"exclusive\" : \"\",\n    \"autoDelete\" : \"false\",\n    \"ignoreDeclarationExceptions\" : \"false\",\n    \"declare\" : \"true\",\n    \"arguments\" : [ {\n      \"name\" : \"x-dead-letter-exchange\",\n      \"value\" : \"\",\n      \"type\" : \"java.lang.String\"\n    }, {\n      \"name\" : \"x-dead-letter-routing-key\",\n      \"value\" : \"${events.user.dlqName}\",\n      \"type\" : \"java.lang.String\"\n    } ],\n    \"admins\" : null\n  },\n  \"key\" : [ \"${events.user.created.routingKey}\", \"${events.user.authenticated.routingKey}\" ],\n  \"exchange\" : {\n    \"name\" : \"${events.exchangeName}\",\n    \"type\" : \"topic\",\n    \"durable\" : \"true\",\n    \"autoDelete\" : \"false\",\n    \"internal\" : \"false\",\n    \"ignoreDeclarationExceptions\" : \"false\",\n    \"delayed\" : \"false\",\n    \"declare\" : \"true\",\n    \"arguments\" : null,\n    \"admins\" : null\n  },\n  \"declare\" : \"true\",\n  \"ignoreDeclarationExceptions\" : \"false\",\n  \"admins\" : null\n} ]",
+                "consumers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "methods": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onAuthenticated(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserAuthenticatedEvent>)"
+                ],
+                "name": "events.exchangeName_events.user.authenticated.routingKey",
+                "payload": "{\n  \"userName\":\"String\",\n  \"date\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+                "producers": [],
+                "shortName": "events.exchangeName_events.user.authenticated.routingKey",
+                "type": "RABBITMQ"
+              },
+              {
+                "additionalInfo": "[ {\n  \"queue\" : {\n    \"name\" : \"${events.user.queueName}\",\n    \"durable\" : \"true\",\n    \"exclusive\" : \"\",\n    \"autoDelete\" : \"false\",\n    \"ignoreDeclarationExceptions\" : \"false\",\n    \"declare\" : \"true\",\n    \"arguments\" : [ {\n      \"name\" : \"x-dead-letter-exchange\",\n      \"value\" : \"\",\n      \"type\" : \"java.lang.String\"\n    }, {\n      \"name\" : \"x-dead-letter-routing-key\",\n      \"value\" : \"${events.user.dlqName}\",\n      \"type\" : \"java.lang.String\"\n    } ],\n    \"admins\" : null\n  },\n  \"key\" : [ \"${events.user.created.routingKey}\", \"${events.user.authenticated.routingKey}\" ],\n  \"exchange\" : {\n    \"name\" : \"${events.exchangeName}\",\n    \"type\" : \"topic\",\n    \"durable\" : \"true\",\n    \"autoDelete\" : \"false\",\n    \"internal\" : \"false\",\n    \"ignoreDeclarationExceptions\" : \"false\",\n    \"delayed\" : \"false\",\n    \"declare\" : \"true\",\n    \"arguments\" : null,\n    \"admins\" : null\n  },\n  \"declare\" : \"true\",\n  \"ignoreDeclarationExceptions\" : \"false\",\n  \"admins\" : null\n} ]",
+                "consumers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "methods": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.RabbitMqService.onUpdate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.UserCreatedEvent>)"
+                ],
+                "name": "events.exchangeName_events.user.created.routingKey",
+                "payload": "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+                "producers": [],
+                "shortName": "events.exchangeName_events.user.created.routingKey",
+                "type": "RABBITMQ"
+              },
+              {
+                "consumers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "methods": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.CommentEvent>)"
+                ],
+                "name": "onCreateComment",
+                "payload": "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}",
+                "producers": [],
+                "shortName": "onCreateComment",
+                "type": "JMS",
+                "uri": "${my.activeMq.onCreated.queue}"
+              },
+              {
+                "consumers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "methods": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.sendCreateUser(<String>,<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)",
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar:io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.JmsService.onUserCreate(<io.inugami.demo.spring.boot.training.rest.domaines.lifecycle.services.queues.events.User>)"
+                ],
+                "name": "create.user.queue",
+                "payload": "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}",
+                "producers": [
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar"
+                ],
+                "shortName": "create.user.queue",
+                "type": "JMS",
+                "uri": "${my.activeMq.onUserCreated.queue}"
+              }
+            ],
+            "sameValues": []
+          },
+          "errorCodes": {
+            "deletedValues": [
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_0000",
+                "message": "error on processing issue workflow",
+                "statusCode": 500,
+                "type": "technical"
+              }
+            ],
+            "newValues": [
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_8",
+                "message": "error on processing issue workflow",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_7",
+                "message": "invalid issue request",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_6_2",
+                "message": "any issue found",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_6_1",
+                "message": "status is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_4_2",
+                "message": "error on saving change log on issue",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_4",
+                "message": "issue not found",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_3",
+                "message": "error on searching issue",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_2",
+                "message": "can't add empty change logs to issue",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_1",
+                "message": "issue uid is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_0_2",
+                "message": "change logs is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_5_0_1",
+                "message": "issue uid is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_4_3",
+                "message": "no issues saved",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_4_2",
+                "message": "can't save issues into data sources",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_4_1",
+                "message": "issues must'nt be empty!",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_3_3",
+                "message": "any issue found",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_3_2",
+                "message": "any issue found",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_3_1",
+                "message": "can't retrieve issues from data sources",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_2_1",
+                "message": "can't save empty issues collection",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_1_1",
+                "message": "issue uid is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_1",
+                "message": "issues request invalid",
+                "statusCode": 500,
+                "type": "input"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_9_3",
+                "message": "unknown current user",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_9_2",
+                "message": "user token is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_9_1",
+                "message": "user token is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_1_1",
+                "message": "login is require",
+                "statusCode": 500,
+                "type": "input"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_1_2",
+                "message": "password is require",
+                "statusCode": 500,
+                "type": "input"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_0",
+                "message": "authentication error",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_1_BAD_CREDENTIAL",
+                "message": "bad credential",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_2_INSUFFICIENT_AUTH",
+                "message": "insufficient authentification",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_3_USER_NAME_NOT_FOUND",
+                "message": "user name not found",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_4_SESSION_AUTH",
+                "message": "session authentification exception",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_5_0_ACCOUNT",
+                "message": "account exception",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_5_1_ACCOUNT_LOCKED",
+                "message": "user account locked",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_5_2_ACCOUNT_DISABLED",
+                "message": "user account disabled",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_5_3_ACCOUNT_CREDENTIALS",
+                "message": "account credentials exception",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_5_4_ACCOUNT_EXPIRED",
+                "message": "account expired",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_6_BAD_TOKEN",
+                "message": "bad token",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_7_UNRECOGNIZED_USER",
+                "message": "unrecognized user",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "SECU_2_8_USER_NOT_ALLOWED",
+                "message": "you're not authorized for process this action",
+                "statusCode": 500,
+                "type": "security"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+                "errorCode": "MUST_BE_NOT_NULL",
+                "message": "value is null",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+                "errorCode": "MUST_BE_NULL",
+                "message": "value is not null",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+                "errorCode": "MUST_BE_EQUALS",
+                "message": "values must be equals",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_1_1",
+                "message": "can't load lifecycle xml null file path",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_1_2",
+                "message": "can't load lifecycle xml from malformed url",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_2_1",
+                "message": "can't load lifecycle xml null URL",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_2_2",
+                "message": "can't unmarshalling lifecycle xml",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_2_3",
+                "message": "can't read lifecycle xml",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_2_4",
+                "message": "lifecycle name is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_3_1",
+                "message": "can't map null value to lifecycle",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_4_1",
+                "message": "no lifecycle define!",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_1_4_2",
+                "message": "error on loading configuration!",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_1_1",
+                "message": "lifecycle name mustn't be null",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_1_2",
+                "message": "can't find lifecycle",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_2",
+                "message": "no states define for lifecycle",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_4_1",
+                "message": "current state must be define",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_3_2",
+                "message": "no state found for lifecycle",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_4_2",
+                "message": "lifecycle define any state",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_4_3",
+                "message": "can't found current state",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_2_5",
+                "message": "lifecycle name is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_3_1",
+                "message": "classloader mustn't be null!",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_4_1",
+                "message": "state name is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_1",
+                "message": "change state information is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_2",
+                "message": "next state is mandatory",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_3",
+                "message": "no lifecycle define for this request",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_4",
+                "message": "can't save change state with null value",
+                "statusCode": 500,
+                "type": "technical"
+              }
+            ],
+            "sameValues": [
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_5",
+                "message": "request already in wish state",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_6",
+                "message": "concurrent process launching",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar",
+                "errorCode": "COMMONS_1_1",
+                "message": "Http request is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar",
+                "errorCode": "COMMONS_1_2",
+                "message": "request information is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              }
+            ]
+          },
+          "properties": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "constraintType": "javax.validation.constraints.NotNull",
+                "mandatory": true,
+                "name": "project.bean.devices[].<String>",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "mandatory": false,
+                "name": "project.bean.countries.[].headers.<String>",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "mandatory": false,
+                "name": "project.bean.countries.[].enable",
+                "propertyType": "boolean",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "constraintDetail": "> 500",
+                "constraintType": "javax.validation.constraints.Min",
+                "mandatory": true,
+                "name": "project.bean.defaultTimeout",
+                "propertyType": "Long",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "constraintDetail": "http[s]{0,1}://.*",
+                "constraintType": "javax.validation.constraints.Pattern",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "weather.service.base.url",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "mandatory": false,
+                "name": "project.security.enable",
+                "propertyType": "boolean",
+                "useForConditionalBean": true
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-rest",
+                "defaultValue": "MySuperJwtSecretTokenKey",
+                "mandatory": false,
+                "name": "jwt.secret",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.authenticated.typeId",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.exchangeName",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.authenticated.routingKey",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.dlqName",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.queueName",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.created.typeId",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "events.user.created.routingKey",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "my.activeMq.selector",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "my.activeMq.subscription",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "my.activeMq.onCreated.queue",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "mandatory": true,
+                "name": "my.activeMq.onUserCreated.queue",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "lifecycle.resolver.classloader.maxParentClassLoader",
+                "propertyType": "Integer",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-lifecycle",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "lifecycle.resolver.classloader.fileName",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "5000",
+                "mandatory": false,
+                "name": "rest.template.read.timeout",
+                "propertyType": "Long",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "5000",
+                "mandatory": false,
+                "name": "rest.template.connect.timeout",
+                "propertyType": "Long",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "mandatory": true,
+                "name": "swagger.api.version",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "mandatory": true,
+                "name": "swagger.description",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "mandatory": true,
+                "name": "swagger.title",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "mandatory": true,
+                "name": "swagger.mapping",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "mandatory": true,
+                "name": "monitoring.iolog.enable",
+                "propertyType": "boolean",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "false",
+                "mandatory": false,
+                "name": "monitoring.iolog.payload.enable",
+                "propertyType": "boolean",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.env",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.application",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.hostname",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "instance",
+                "mandatory": false,
+                "name": "monitoring.instanceName",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "1",
+                "mandatory": false,
+                "name": "monitoring.instanceNumber",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.version",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.skip.url",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "false",
+                "mandatory": false,
+                "name": "exception.handler.verbose",
+                "propertyType": "boolean",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "monitoring.exception.non.explicit.stack",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "springboot",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.tagsAsPrefix",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "localhost",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.host",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "2004",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.port",
+                "propertyType": "int",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "true",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.enabled",
+                "propertyType": "Boolean",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.rate-units",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.duration-units",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "management.metrics.export.graphite.step",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "project.groupId",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "project.artifactId",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              },
+              {
+                "artifact": "io.inugami.demo spring-boot-training-commons",
+                "defaultValue": "null",
+                "mandatory": false,
+                "name": "project.version",
+                "propertyType": "String",
+                "useForConditionalBean": false
+              }
+            ],
+            "sameValues": []
+          },
+          "entities": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "name": "ISSUE_ENTITY",
+                "payload": "{\n  \"uid\":\"Long\",\n  \"title\":\"String\"\n}",
+                "projectsUsing": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT",
+                  "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT"
+                ]
+              },
+              {
+                "name": "change_log_entity",
+                "payload": "{\n  \"uid\":\"Long\"\n}",
+                "projectsUsing": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT"
+                ]
+              },
+              {
+                "name": "StatusEntity",
+                "payload": "{\n  \"uid\":\"String\"\n}",
+                "projectsUsing": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT"
+                ]
+              }
+            ],
+            "sameValues": []
+          },
+          "dependencies": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "artifactId": "spring-boot-training-rest",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              },
+              {
+                "artifactId": "mapstruct-jdk8",
+                "dependencies": [],
+                "groupId": "org.mapstruct",
+                "hash": "org.mapstruct:mapstruct-jdk8:1.3.1.Final:jar",
+                "type": "jar",
+                "version": "1.3.1.Final"
+              },
+              {
+                "artifactId": "swagger-annotations",
+                "dependencies": [],
+                "groupId": "io.swagger",
+                "hash": "io.swagger:swagger-annotations:1.5.20:jar",
+                "type": "jar",
+                "version": "1.5.20"
+              },
+              {
+                "artifactId": "spring-web",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-web:5.3.4:jar",
+                "type": "jar",
+                "version": "5.3.4"
+              },
+              {
+                "artifactId": "spring-beans",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-beans:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-core",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-core:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-jcl",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-jcl:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "mapstruct",
+                "dependencies": [],
+                "groupId": "org.mapstruct",
+                "hash": "org.mapstruct:mapstruct:1.3.1.Final:jar",
+                "type": "jar",
+                "version": "1.3.1.Final"
+              },
+              {
+                "artifactId": "mapstruct-processor",
+                "dependencies": [],
+                "groupId": "org.mapstruct",
+                "hash": "org.mapstruct:mapstruct-processor:1.3.1.Final:jar",
+                "type": "jar",
+                "version": "1.3.1.Final"
+              },
+              {
+                "artifactId": "lombok",
+                "dependencies": [],
+                "groupId": "org.projectlombok",
+                "hash": "org.projectlombok:lombok:1.18.12:jar",
+                "type": "jar",
+                "version": "1.18.12"
+              },
+              {
+                "artifactId": "jakarta.validation-api",
+                "dependencies": [],
+                "groupId": "jakarta.validation",
+                "hash": "jakarta.validation:jakarta.validation-api:2.0.2:jar",
+                "type": "jar",
+                "version": "2.0.2"
+              },
+              {
+                "artifactId": "reporting-plugin",
+                "dependencies": [],
+                "groupId": "de.monochromata.cucumber",
+                "hash": "de.monochromata.cucumber:reporting-plugin:3.0.16:jar",
+                "type": "jar",
+                "version": "3.0.16"
+              },
+              {
+                "artifactId": "gherkin",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:gherkin:5.1.0:jar",
+                "type": "jar",
+                "version": "5.1.0"
+              },
+              {
+                "artifactId": "gherkin-jvm-deps",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:gherkin-jvm-deps:1.0.4:jar",
+                "type": "jar",
+                "version": "1.0.4"
+              },
+              {
+                "artifactId": "cucumber-reporting",
+                "dependencies": [],
+                "groupId": "net.masterthought",
+                "hash": "net.masterthought:cucumber-reporting:4.11.2:jar",
+                "type": "jar",
+                "version": "4.11.2"
+              },
+              {
+                "artifactId": "velocity",
+                "dependencies": [],
+                "groupId": "org.apache.velocity",
+                "hash": "org.apache.velocity:velocity:1.7:jar",
+                "type": "jar",
+                "version": "1.7"
+              },
+              {
+                "artifactId": "commons-collections",
+                "dependencies": [],
+                "groupId": "commons-collections",
+                "hash": "commons-collections:commons-collections:3.2.1:jar",
+                "type": "jar",
+                "version": "3.2.1"
+              },
+              {
+                "artifactId": "commons-lang",
+                "dependencies": [],
+                "groupId": "commons-lang",
+                "hash": "commons-lang:commons-lang:2.4:jar",
+                "type": "jar",
+                "version": "2.4"
+              },
+              {
+                "artifactId": "commons-collections",
+                "dependencies": [],
+                "groupId": "commons-collections",
+                "hash": "commons-collections:commons-collections:3.2.2:jar",
+                "type": "jar",
+                "version": "3.2.2"
+              },
+              {
+                "artifactId": "velocity-tools",
+                "dependencies": [],
+                "groupId": "velocity-tools",
+                "hash": "velocity-tools:velocity-tools:1.4:jar",
+                "type": "jar",
+                "version": "1.4"
+              },
+              {
+                "artifactId": "joda-time",
+                "dependencies": [],
+                "groupId": "joda-time",
+                "hash": "joda-time:joda-time:2.10.5:jar",
+                "type": "jar",
+                "version": "2.10.5"
+              },
+              {
+                "artifactId": "commons-lang3",
+                "dependencies": [],
+                "groupId": "org.apache.commons",
+                "hash": "org.apache.commons:commons-lang3:3.9:jar",
+                "type": "jar",
+                "version": "3.9"
+              },
+              {
+                "artifactId": "plexus-utils",
+                "dependencies": [],
+                "groupId": "org.codehaus.plexus",
+                "hash": "org.codehaus.plexus:plexus-utils:3.2.0:jar",
+                "type": "jar",
+                "version": "3.2.0"
+              },
+              {
+                "artifactId": "jsoup",
+                "dependencies": [],
+                "groupId": "org.jsoup",
+                "hash": "org.jsoup:jsoup:1.12.1:jar",
+                "type": "jar",
+                "version": "1.12.1"
+              },
+              {
+                "artifactId": "owasp-java-html-sanitizer",
+                "dependencies": [],
+                "groupId": "com.googlecode.owasp-java-html-sanitizer",
+                "hash": "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20190610.1:jar",
+                "type": "jar",
+                "version": "20190610.1"
+              },
+              {
+                "artifactId": "commons-configuration",
+                "dependencies": [],
+                "groupId": "commons-configuration",
+                "hash": "commons-configuration:commons-configuration:1.10:jar",
+                "type": "jar",
+                "version": "1.10"
+              },
+              {
+                "artifactId": "cucumber-spring",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:cucumber-spring:4.8.0:jar",
+                "type": "jar",
+                "version": "4.8.0"
+              },
+              {
+                "artifactId": "cucumber-junit",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:cucumber-junit:4.8.0:jar",
+                "type": "jar",
+                "version": "4.8.0"
+              },
+              {
+                "artifactId": "junit",
+                "dependencies": [],
+                "groupId": "junit",
+                "hash": "junit:junit:4.12:jar",
+                "type": "jar",
+                "version": "4.12"
+              },
+              {
+                "artifactId": "hamcrest-core",
+                "dependencies": [],
+                "groupId": "org.hamcrest",
+                "hash": "org.hamcrest:hamcrest-core:2.1:jar",
+                "type": "jar",
+                "version": "2.1"
+              },
+              {
+                "artifactId": "cucumber-java",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:cucumber-java:4.8.0:jar",
+                "type": "jar",
+                "version": "4.8.0"
+              },
+              {
+                "artifactId": "cucumber-core",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:cucumber-core:4.8.0:jar",
+                "type": "jar",
+                "version": "4.8.0"
+              },
+              {
+                "artifactId": "tag-expressions",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:tag-expressions:1.1.1:jar",
+                "type": "jar",
+                "version": "1.1.1"
+              },
+              {
+                "artifactId": "cucumber-expressions",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:cucumber-expressions:7.0.2:jar",
+                "type": "jar",
+                "version": "7.0.2"
+              },
+              {
+                "artifactId": "datatable",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:datatable:1.1.14:jar",
+                "type": "jar",
+                "version": "1.1.14"
+              },
+              {
+                "artifactId": "datatable-dependencies",
+                "dependencies": [],
+                "groupId": "io.cucumber",
+                "hash": "io.cucumber:datatable-dependencies:1.1.14:jar",
+                "type": "jar",
+                "version": "1.1.14"
+              },
+              {
+                "artifactId": "spring-restdocs-mockmvc",
+                "dependencies": [],
+                "groupId": "org.springframework.restdocs",
+                "hash": "org.springframework.restdocs:spring-restdocs-mockmvc:2.0.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.0.4.RELEASE"
+              },
+              {
+                "artifactId": "javax.servlet-api",
+                "dependencies": [],
+                "groupId": "javax.servlet",
+                "hash": "javax.servlet:javax.servlet-api:4.0.1:jar",
+                "type": "jar",
+                "version": "4.0.1"
+              },
+              {
+                "artifactId": "spring-restdocs-core",
+                "dependencies": [],
+                "groupId": "org.springframework.restdocs",
+                "hash": "org.springframework.restdocs:spring-restdocs-core:2.0.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.0.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter-test",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-test",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-test:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-test-autoconfigure",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-test-autoconfigure:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "json-path",
+                "dependencies": [],
+                "groupId": "com.jayway.jsonpath",
+                "hash": "com.jayway.jsonpath:json-path:2.4.0:jar",
+                "type": "jar",
+                "version": "2.4.0"
+              },
+              {
+                "artifactId": "json-smart",
+                "dependencies": [],
+                "groupId": "net.minidev",
+                "hash": "net.minidev:json-smart:2.3:jar",
+                "type": "jar",
+                "version": "2.3"
+              },
+              {
+                "artifactId": "accessors-smart",
+                "dependencies": [],
+                "groupId": "net.minidev",
+                "hash": "net.minidev:accessors-smart:1.2:jar",
+                "type": "jar",
+                "version": "1.2"
+              },
+              {
+                "artifactId": "asm",
+                "dependencies": [],
+                "groupId": "org.ow2.asm",
+                "hash": "org.ow2.asm:asm:5.0.4:jar",
+                "type": "jar",
+                "version": "5.0.4"
+              },
+              {
+                "artifactId": "jakarta.xml.bind-api",
+                "dependencies": [],
+                "groupId": "jakarta.xml.bind",
+                "hash": "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2:jar",
+                "type": "jar",
+                "version": "2.3.2"
+              },
+              {
+                "artifactId": "jakarta.activation-api",
+                "dependencies": [],
+                "groupId": "jakarta.activation",
+                "hash": "jakarta.activation:jakarta.activation-api:1.2.1:jar",
+                "type": "jar",
+                "version": "1.2.1"
+              },
+              {
+                "artifactId": "junit-jupiter",
+                "dependencies": [],
+                "groupId": "org.junit.jupiter",
+                "hash": "org.junit.jupiter:junit-jupiter:5.5.2:jar",
+                "type": "jar",
+                "version": "5.5.2"
+              },
+              {
+                "artifactId": "junit-jupiter-params",
+                "dependencies": [],
+                "groupId": "org.junit.jupiter",
+                "hash": "org.junit.jupiter:junit-jupiter-params:5.5.2:jar",
+                "type": "jar",
+                "version": "5.5.2"
+              },
+              {
+                "artifactId": "hamcrest",
+                "dependencies": [],
+                "groupId": "org.hamcrest",
+                "hash": "org.hamcrest:hamcrest:2.1:jar",
+                "type": "jar",
+                "version": "2.1"
+              },
+              {
+                "artifactId": "jsonassert",
+                "dependencies": [],
+                "groupId": "org.skyscreamer",
+                "hash": "org.skyscreamer:jsonassert:1.5.0:jar",
+                "type": "jar",
+                "version": "1.5.0"
+              },
+              {
+                "artifactId": "android-json",
+                "dependencies": [],
+                "groupId": "com.vaadin.external.google",
+                "hash": "com.vaadin.external.google:android-json:0.0.20131108.vaadin1:jar",
+                "type": "jar",
+                "version": "0.0.20131108.vaadin1"
+              },
+              {
+                "artifactId": "spring-test",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-test:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "xmlunit-core",
+                "dependencies": [],
+                "groupId": "org.xmlunit",
+                "hash": "org.xmlunit:xmlunit-core:2.6.3:jar",
+                "type": "jar",
+                "version": "2.6.3"
+              },
+              {
+                "artifactId": "mockito-junit-jupiter",
+                "dependencies": [],
+                "groupId": "org.mockito",
+                "hash": "org.mockito:mockito-junit-jupiter:3.1.0:jar",
+                "type": "jar",
+                "version": "3.1.0"
+              },
+              {
+                "artifactId": "mockito-core",
+                "dependencies": [],
+                "groupId": "org.mockito",
+                "hash": "org.mockito:mockito-core:3.1.0:jar",
+                "type": "jar",
+                "version": "3.1.0"
+              },
+              {
+                "artifactId": "byte-buddy",
+                "dependencies": [],
+                "groupId": "net.bytebuddy",
+                "hash": "net.bytebuddy:byte-buddy:1.10.6:jar",
+                "type": "jar",
+                "version": "1.10.6"
+              },
+              {
+                "artifactId": "byte-buddy-agent",
+                "dependencies": [],
+                "groupId": "net.bytebuddy",
+                "hash": "net.bytebuddy:byte-buddy-agent:1.10.6:jar",
+                "type": "jar",
+                "version": "1.10.6"
+              },
+              {
+                "artifactId": "objenesis",
+                "dependencies": [],
+                "groupId": "org.objenesis",
+                "hash": "org.objenesis:objenesis:2.6:jar",
+                "type": "jar",
+                "version": "2.6"
+              },
+              {
+                "artifactId": "junit-jupiter-api",
+                "dependencies": [],
+                "groupId": "org.junit.jupiter",
+                "hash": "org.junit.jupiter:junit-jupiter-api:5.5.2:jar",
+                "type": "jar",
+                "version": "5.5.2"
+              },
+              {
+                "artifactId": "apiguardian-api",
+                "dependencies": [],
+                "groupId": "org.apiguardian",
+                "hash": "org.apiguardian:apiguardian-api:1.1.0:jar",
+                "type": "jar",
+                "version": "1.1.0"
+              },
+              {
+                "artifactId": "opentest4j",
+                "dependencies": [],
+                "groupId": "org.opentest4j",
+                "hash": "org.opentest4j:opentest4j:1.2.0:jar",
+                "type": "jar",
+                "version": "1.2.0"
+              },
+              {
+                "artifactId": "junit-platform-commons",
+                "dependencies": [],
+                "groupId": "org.junit.platform",
+                "hash": "org.junit.platform:junit-platform-commons:1.5.2:jar",
+                "type": "jar",
+                "version": "1.5.2"
+              },
+              {
+                "artifactId": "assertj-core",
+                "dependencies": [],
+                "groupId": "org.assertj",
+                "hash": "org.assertj:assertj-core:3.13.2:jar",
+                "type": "jar",
+                "version": "3.13.2"
+              },
+              {
+                "artifactId": "junit-jupiter-engine",
+                "dependencies": [],
+                "groupId": "org.junit.jupiter",
+                "hash": "org.junit.jupiter:junit-jupiter-engine:5.5.2:jar",
+                "type": "jar",
+                "version": "5.5.2"
+              },
+              {
+                "artifactId": "junit-platform-engine",
+                "dependencies": [],
+                "groupId": "org.junit.platform",
+                "hash": "org.junit.platform:junit-platform-engine:1.5.2:jar",
+                "type": "jar",
+                "version": "1.5.2"
+              },
+              {
+                "artifactId": "logback-elasticsearch-appender",
+                "dependencies": [],
+                "groupId": "com.internetitem",
+                "hash": "com.internetitem:logback-elasticsearch-appender:1.6:jar",
+                "type": "jar",
+                "version": "1.6"
+              },
+              {
+                "artifactId": "jackson-core",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.core",
+                "hash": "com.fasterxml.jackson.core:jackson-core:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "logback-classic",
+                "dependencies": [],
+                "groupId": "ch.qos.logback",
+                "hash": "ch.qos.logback:logback-classic:1.2.3:jar",
+                "type": "jar",
+                "version": "1.2.3"
+              },
+              {
+                "artifactId": "logback-core",
+                "dependencies": [],
+                "groupId": "ch.qos.logback",
+                "hash": "ch.qos.logback:logback-core:1.2.3:jar",
+                "type": "jar",
+                "version": "1.2.3"
+              },
+              {
+                "artifactId": "slf4j-api",
+                "dependencies": [],
+                "groupId": "org.slf4j",
+                "hash": "org.slf4j:slf4j-api:1.7.30:jar",
+                "type": "jar",
+                "version": "1.7.30"
+              },
+              {
+                "artifactId": "jjwt",
+                "dependencies": [],
+                "groupId": "io.jsonwebtoken",
+                "hash": "io.jsonwebtoken:jjwt:0.9.1:jar",
+                "type": "jar",
+                "version": "0.9.1"
+              },
+              {
+                "artifactId": "spring-boot-starter-security",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-security:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-aop",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-aop:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-security-config",
+                "dependencies": [],
+                "groupId": "org.springframework.security",
+                "hash": "org.springframework.security:spring-security-config:5.2.1.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.1.RELEASE"
+              },
+              {
+                "artifactId": "spring-security-core",
+                "dependencies": [],
+                "groupId": "org.springframework.security",
+                "hash": "org.springframework.security:spring-security-core:5.2.1.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.1.RELEASE"
+              },
+              {
+                "artifactId": "spring-security-web",
+                "dependencies": [],
+                "groupId": "org.springframework.security",
+                "hash": "org.springframework.security:spring-security-web:5.2.1.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.1.RELEASE"
+              },
+              {
+                "artifactId": "micrometer-registry-graphite",
+                "dependencies": [],
+                "groupId": "io.micrometer",
+                "hash": "io.micrometer:micrometer-registry-graphite:1.3.5:jar",
+                "type": "jar",
+                "version": "1.3.5"
+              },
+              {
+                "artifactId": "metrics-graphite",
+                "dependencies": [],
+                "groupId": "io.dropwizard.metrics",
+                "hash": "io.dropwizard.metrics:metrics-graphite:4.0.3:jar",
+                "type": "jar",
+                "version": "4.0.3"
+              },
+              {
+                "artifactId": "metrics-core",
+                "dependencies": [],
+                "groupId": "io.dropwizard.metrics",
+                "hash": "io.dropwizard.metrics:metrics-core:4.1.2:jar",
+                "type": "jar",
+                "version": "4.1.2"
+              },
+              {
+                "artifactId": "amqp-client",
+                "dependencies": [],
+                "groupId": "com.rabbitmq",
+                "hash": "com.rabbitmq:amqp-client:5.7.3:jar",
+                "type": "jar",
+                "version": "5.7.3"
+              },
+              {
+                "artifactId": "spring-boot-starter-actuator",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-actuator:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-actuator-autoconfigure",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-actuator-autoconfigure:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-actuator",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-actuator:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "micrometer-core",
+                "dependencies": [],
+                "groupId": "io.micrometer",
+                "hash": "io.micrometer:micrometer-core:1.3.2:jar",
+                "type": "jar",
+                "version": "1.3.2"
+              },
+              {
+                "artifactId": "HdrHistogram",
+                "dependencies": [],
+                "groupId": "org.hdrhistogram",
+                "hash": "org.hdrhistogram:HdrHistogram:2.1.11:jar",
+                "type": "jar",
+                "version": "2.1.11"
+              },
+              {
+                "artifactId": "LatencyUtils",
+                "dependencies": [],
+                "groupId": "org.latencyutils",
+                "hash": "org.latencyutils:LatencyUtils:2.0.3:jar",
+                "type": "jar",
+                "version": "2.0.3"
+              },
+              {
+                "artifactId": "h2",
+                "dependencies": [],
+                "groupId": "com.h2database",
+                "hash": "com.h2database:h2:1.4.200:jar",
+                "type": "jar",
+                "version": "1.4.200"
+              },
+              {
+                "artifactId": "jakarta.transaction-api",
+                "dependencies": [],
+                "groupId": "jakarta.transaction",
+                "hash": "jakarta.transaction:jakarta.transaction-api:1.3.3:jar",
+                "type": "jar",
+                "version": "1.3.3"
+              },
+              {
+                "artifactId": "jakarta.persistence-api",
+                "dependencies": [],
+                "groupId": "jakarta.persistence",
+                "hash": "jakarta.persistence:jakarta.persistence-api:2.2.3:jar",
+                "type": "jar",
+                "version": "2.2.3"
+              },
+              {
+                "artifactId": "spring-boot-starter-data-jpa",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-data-jpa:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter-aop",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-aop:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "aspectjweaver",
+                "dependencies": [],
+                "groupId": "org.aspectj",
+                "hash": "org.aspectj:aspectjweaver:1.9.5:jar",
+                "type": "jar",
+                "version": "1.9.5"
+              },
+              {
+                "artifactId": "spring-boot-starter-jdbc",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-jdbc:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "HikariCP",
+                "dependencies": [],
+                "groupId": "com.zaxxer",
+                "hash": "com.zaxxer:HikariCP:3.4.2:jar",
+                "type": "jar",
+                "version": "3.4.2"
+              },
+              {
+                "artifactId": "spring-jdbc",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-jdbc:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "hibernate-core",
+                "dependencies": [],
+                "groupId": "org.hibernate",
+                "hash": "org.hibernate:hibernate-core:5.4.10.Final:jar",
+                "type": "jar",
+                "version": "5.4.10.Final"
+              },
+              {
+                "artifactId": "jboss-logging",
+                "dependencies": [],
+                "groupId": "org.jboss.logging",
+                "hash": "org.jboss.logging:jboss-logging:3.4.1.Final:jar",
+                "type": "jar",
+                "version": "3.4.1.Final"
+              },
+              {
+                "artifactId": "javassist",
+                "dependencies": [],
+                "groupId": "org.javassist",
+                "hash": "org.javassist:javassist:3.24.0-GA:jar",
+                "type": "jar",
+                "version": "3.24.0-GA"
+              },
+              {
+                "artifactId": "antlr",
+                "dependencies": [],
+                "groupId": "antlr",
+                "hash": "antlr:antlr:2.7.7:jar",
+                "type": "jar",
+                "version": "2.7.7"
+              },
+              {
+                "artifactId": "jandex",
+                "dependencies": [],
+                "groupId": "org.jboss",
+                "hash": "org.jboss:jandex:2.1.1.Final:jar",
+                "type": "jar",
+                "version": "2.1.1.Final"
+              },
+              {
+                "artifactId": "dom4j",
+                "dependencies": [],
+                "groupId": "org.dom4j",
+                "hash": "org.dom4j:dom4j:2.1.1:jar",
+                "type": "jar",
+                "version": "2.1.1"
+              },
+              {
+                "artifactId": "hibernate-commons-annotations",
+                "dependencies": [],
+                "groupId": "org.hibernate.common",
+                "hash": "org.hibernate.common:hibernate-commons-annotations:5.1.0.Final:jar",
+                "type": "jar",
+                "version": "5.1.0.Final"
+              },
+              {
+                "artifactId": "jaxb-runtime",
+                "dependencies": [],
+                "groupId": "org.glassfish.jaxb",
+                "hash": "org.glassfish.jaxb:jaxb-runtime:2.3.2:jar",
+                "type": "jar",
+                "version": "2.3.2"
+              },
+              {
+                "artifactId": "txw2",
+                "dependencies": [],
+                "groupId": "org.glassfish.jaxb",
+                "hash": "org.glassfish.jaxb:txw2:2.3.2:jar",
+                "type": "jar",
+                "version": "2.3.2"
+              },
+              {
+                "artifactId": "istack-commons-runtime",
+                "dependencies": [],
+                "groupId": "com.sun.istack",
+                "hash": "com.sun.istack:istack-commons-runtime:3.0.8:jar",
+                "type": "jar",
+                "version": "3.0.8"
+              },
+              {
+                "artifactId": "stax-ex",
+                "dependencies": [],
+                "groupId": "org.jvnet.staxex",
+                "hash": "org.jvnet.staxex:stax-ex:1.8.1:jar",
+                "type": "jar",
+                "version": "1.8.1"
+              },
+              {
+                "artifactId": "FastInfoset",
+                "dependencies": [],
+                "groupId": "com.sun.xml.fastinfoset",
+                "hash": "com.sun.xml.fastinfoset:FastInfoset:1.2.16:jar",
+                "type": "jar",
+                "version": "1.2.16"
+              },
+              {
+                "artifactId": "spring-data-jpa",
+                "dependencies": [],
+                "groupId": "org.springframework.data",
+                "hash": "org.springframework.data:spring-data-jpa:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-data-commons",
+                "dependencies": [],
+                "groupId": "org.springframework.data",
+                "hash": "org.springframework.data:spring-data-commons:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-orm",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-orm:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-aspects",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-aspects:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter-json",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-json:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "jackson-databind",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.core",
+                "hash": "com.fasterxml.jackson.core:jackson-databind:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "jackson-annotations",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.core",
+                "hash": "com.fasterxml.jackson.core:jackson-annotations:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "jackson-datatype-jdk8",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.datatype",
+                "hash": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "jackson-datatype-jsr310",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.datatype",
+                "hash": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "jackson-module-parameter-names",
+                "dependencies": [],
+                "groupId": "com.fasterxml.jackson.module",
+                "hash": "com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.2:jar",
+                "type": "jar",
+                "version": "2.10.2"
+              },
+              {
+                "artifactId": "spring-web",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-web:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter-web",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-context",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-context:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-expression",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-expression:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-autoconfigure",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-autoconfigure:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "spring-boot-starter-logging",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-logging:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "log4j-to-slf4j",
+                "dependencies": [],
+                "groupId": "org.apache.logging.log4j",
+                "hash": "org.apache.logging.log4j:log4j-to-slf4j:2.12.1:jar",
+                "type": "jar",
+                "version": "2.12.1"
+              },
+              {
+                "artifactId": "log4j-api",
+                "dependencies": [],
+                "groupId": "org.apache.logging.log4j",
+                "hash": "org.apache.logging.log4j:log4j-api:2.12.1:jar",
+                "type": "jar",
+                "version": "2.12.1"
+              },
+              {
+                "artifactId": "jul-to-slf4j",
+                "dependencies": [],
+                "groupId": "org.slf4j",
+                "hash": "org.slf4j:jul-to-slf4j:1.7.30:jar",
+                "type": "jar",
+                "version": "1.7.30"
+              },
+              {
+                "artifactId": "jakarta.annotation-api",
+                "dependencies": [],
+                "groupId": "jakarta.annotation",
+                "hash": "jakarta.annotation:jakarta.annotation-api:1.3.5:jar",
+                "type": "jar",
+                "version": "1.3.5"
+              },
+              {
+                "artifactId": "snakeyaml",
+                "dependencies": [],
+                "groupId": "org.yaml",
+                "hash": "org.yaml:snakeyaml:1.25:jar",
+                "type": "jar",
+                "version": "1.25"
+              },
+              {
+                "artifactId": "spring-boot-starter-tomcat",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-tomcat:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "tomcat-embed-core",
+                "dependencies": [],
+                "groupId": "org.apache.tomcat.embed",
+                "hash": "org.apache.tomcat.embed:tomcat-embed-core:9.0.30:jar",
+                "type": "jar",
+                "version": "9.0.30"
+              },
+              {
+                "artifactId": "tomcat-embed-el",
+                "dependencies": [],
+                "groupId": "org.apache.tomcat.embed",
+                "hash": "org.apache.tomcat.embed:tomcat-embed-el:9.0.30:jar",
+                "type": "jar",
+                "version": "9.0.30"
+              },
+              {
+                "artifactId": "tomcat-embed-websocket",
+                "dependencies": [],
+                "groupId": "org.apache.tomcat.embed",
+                "hash": "org.apache.tomcat.embed:tomcat-embed-websocket:9.0.30:jar",
+                "type": "jar",
+                "version": "9.0.30"
+              },
+              {
+                "artifactId": "spring-boot-starter-validation",
+                "dependencies": [],
+                "groupId": "org.springframework.boot",
+                "hash": "org.springframework.boot:spring-boot-starter-validation:2.2.4.RELEASE:jar",
+                "type": "jar",
+                "version": "2.2.4.RELEASE"
+              },
+              {
+                "artifactId": "hibernate-validator",
+                "dependencies": [],
+                "groupId": "org.hibernate.validator",
+                "hash": "org.hibernate.validator:hibernate-validator:6.0.18.Final:jar",
+                "type": "jar",
+                "version": "6.0.18.Final"
+              },
+              {
+                "artifactId": "classmate",
+                "dependencies": [],
+                "groupId": "com.fasterxml",
+                "hash": "com.fasterxml:classmate:1.5.1:jar",
+                "type": "jar",
+                "version": "1.5.1"
+              },
+              {
+                "artifactId": "spring-webmvc",
+                "dependencies": [],
+                "groupId": "org.springframework",
+                "hash": "org.springframework:spring-webmvc:5.2.3.RELEASE:jar",
+                "type": "jar",
+                "version": "5.2.3.RELEASE"
+              }
+            ],
+            "sameValues": []
+          },
+          "dependencies_project": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "artifactId": "spring-boot-training-rest",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              },
+              {
+                "artifactId": "spring-boot-training-test",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-test:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              },
+              {
+                "artifactId": "spring-boot-training-api",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-api:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              },
+              {
+                "artifactId": "spring-boot-training-lifecycle",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              },
+              {
+                "artifactId": "inugami-project-analysis-maven-plugin-annotations",
+                "dependencies": [],
+                "groupId": "io.inugami.maven.plugin.analysis",
+                "hash": "io.inugami.maven.plugin.analysis:inugami-project-analysis-maven-plugin-annotations:1.1.0-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "1.1.0-SNAPSHOT"
+              },
+              {
+                "artifactId": "spring-boot-training-commons",
+                "dependencies": [],
+                "groupId": "io.inugami.demo",
+                "hash": "io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar",
+                "type": "jar",
+                "version": "0.0.2-SNAPSHOT"
+              }
+            ],
+            "sameValues": []
+          },
+          "flyway": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "content": "create table issue{\n    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n    `title` varchar(255) NOT NULL,\n    PRIMARY KEY(`id`)\n}",
+                "id": "94417ab084f823ff9c2b2dedfa6099c61b06110cc3fe5799db0671eff2bd3f6a2aad59a483abab9d0330cacf08f770366ea0224904f8f32a7028eb559d36bfb6",
+                "name": "v1_0_0_init_issue_table.sql",
+                "projectsUsing": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                  "io.inugami.demo:project-consumer:0.0.1-SNAPSHOT:jar"
+                ],
+                "type": "mysql"
+              },
+              {
+                "content": "alter table issue\n    add column description varchar(255) null;",
+                "id": "bed7140535657b70072cc2f2ba72344a69810495f8b93b8c58ecbfff47646ae1d7d8658d2d06bc1c05d6cf1f722d155ce41a5aecbf7eec30d67af71e68d15698",
+                "name": "v1_0_1_add_description_column.sql",
+                "projectsUsing": [
+                  "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar"
+                ],
+                "type": "mysql"
+              }
+            ],
+            "sameValues": []
+          }
+        },
+        "issues": [
+          {
+            "date": "2020-12-06T21:07:16.311Z",
+            "labels": ["feature"],
+            "name": "issue_1",
+            "title": "simple issue for test inugami analysis plugin",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/issues/1"
+          },
+          {
+            "date": "2020-12-06T22:38:09.579Z",
+            "labels": ["test"],
+            "name": "issue_2",
+            "title": "simple link issue",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/issues/2"
+          }
+        ],
+        "mergeRequests": [
+          {
+            "date": "2020-02-24T14:58:52.151Z",
+            "title": "fix unit test and build process",
+            "uid": "pr_9",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/9"
+          },
+          {
+            "date": "2020-02-24T12:48:21.984Z",
+            "title": "Monitoring",
+            "uid": "pr_8",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/8"
+          },
+          {
+            "date": "2020-01-29T13:04:07.854Z",
+            "title": "Data",
+            "uid": "pr_3",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/3"
+          },
+          {
+            "date": "2020-01-28T09:36:30.397Z",
+            "title": "Log management",
+            "uid": "pr_2",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/2"
+          },
+          {
+            "date": "2020-01-31T16:19:20.490Z",
+            "title": "Tests",
+            "uid": "pr_4",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/4"
+          },
+          {
+            "date": "2020-01-27T12:45:00.904Z",
+            "title": "Exceptions management",
+            "uid": "pr_1",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/1"
+          },
+          {
+            "date": "2020-03-13T08:13:31.220Z",
+            "title": "fix front",
+            "uid": "pr_14",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/14"
+          },
+          {
+            "date": "2020-03-12T16:48:49.478Z",
+            "title": "fix",
+            "uid": "pr_12",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/12"
+          },
+          {
+            "date": "2020-02-04T15:14:04.974Z",
+            "title": "Monitoring",
+            "uid": "pr_6",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/6"
+          },
+          {
+            "date": "2020-02-26T16:27:30.485Z",
+            "title": "add gatling test",
+            "uid": "pr_11",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/11"
+          },
+          {
+            "date": "2020-02-26T10:41:06.463Z",
+            "title": "Build process",
+            "uid": "pr_10",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/10"
+          },
+          {
+            "date": "2020-03-12T16:49:24.682Z",
+            "title": "Security",
+            "uid": "pr_13",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/13"
+          },
+          {
+            "date": "2020-03-13T08:13:54.245Z",
+            "title": "Security",
+            "uid": "pr_15",
+            "url": "https://gitlab.com/smartwavesa/internal/los-sen/trainings/spring-boot-training/-/merge_requests/15"
+          }
+        ]
+      },
+      
+      {
+        "gav": {
+          "groupId": "io.inugami.demo",
+          "artifactId": "spring-boot-training",
+          "version": "0.0.1-SNAPSHOT",
+          "scanDate": "2022-01-01T12:00:00"
+        },
+        "authors": [
+          {
+            "email": "joe.smith@inugami.io",
+            "name": "Joe Smith"
+          },
+          {
+            "email": "pguillerm@inugami.io",
+            "name": "Patrick Guillerm"
+          },
+          {
+            "email": "",
+            "name": "John foobar"
+          },
+          {
+            "email": "patrickguillerm@inugami.io",
+            "name": "Patrick Guillerm"
+          }
+        ],
+        "commit": [],
+        "differentials": {
+          "exposedService": {
+            "deletedValues": [],
+            "newValues": []
+          },
+          "consumedService": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          },
+          "errorCodes": {
+            "deletedValues": [],
+            "newValues": [
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-rest:0.0.2-SNAPSHOT:jar",
+                "errorCode": "ISSUES_0000",
+                "message": "error on processing issue workflow",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_5_5",
+                "message": "request already in wish state",
+                "statusCode": 500,
+                "type": "fonctionnal"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-lifecycle:0.0.2-SNAPSHOT:jar",
+                "errorCode": "LIFECYCLE_6",
+                "message": "concurrent process launching",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar",
+                "errorCode": "COMMONS_1_1",
+                "message": "Http request is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              },
+              {
+                "artifact": "io.inugami.demo:spring-boot-training-commons:0.0.2-SNAPSHOT:jar",
+                "errorCode": "COMMONS_1_2",
+                "message": "request information is mandatory",
+                "statusCode": 500,
+                "type": "technical"
+              }
+            ],
+            "sameValues": []
+          },
+          "properties": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          },
+          "entities": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          },
+          "dependencies": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          },
+          "dependencies_project": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          },
+          "flyway": {
+            "deletedValues": [],
+            "newValues": [],
+            "sameValues": []
+          }
+        },
+        "issues": []
+      }
+]

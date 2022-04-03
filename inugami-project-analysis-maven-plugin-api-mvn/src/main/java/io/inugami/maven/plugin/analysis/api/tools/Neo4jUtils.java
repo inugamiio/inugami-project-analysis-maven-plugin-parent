@@ -22,22 +22,23 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.InternalRelationship;
+import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.NodeValue;
+import org.neo4j.driver.types.Relationship;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jUtils {
     // =========================================================================
@@ -67,7 +68,9 @@ public final class Neo4jUtils {
         }
         return result;
     }
-    public static  Node buildArtifactVersion(final MavenProject project, final ConfigHandler<String, String> configuration) {
+
+    public static Node buildArtifactVersion(final MavenProject project,
+                                            final ConfigHandler<String, String> configuration) {
         final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
         final Node artifactNode = useMavenProject ? buildNodeVersion(project)
                                                   : buildNodeVersion(buildGav(project, configuration));
@@ -107,7 +110,7 @@ public final class Neo4jUtils {
     }
 
     public static Map<String, Collection<DataRow>> extractDataFromResultSet(final List<Record> resultSet,
-                                                                      final BiConsumer<Map<String, Collection<DataRow>>, Map<String, Object>> consumer) {
+                                                                            final BiConsumer<Map<String, Collection<DataRow>>, Map<String, Object>> consumer) {
 
         final Map<String, Collection<DataRow>> data = new LinkedHashMap<>();
         if (resultSet != null || !resultSet.isEmpty()) {
@@ -124,24 +127,50 @@ public final class Neo4jUtils {
 
     public static String getNodeName(final Object node) {
         String result = null;
-        if(node == null){
+        if (node == null) {
             result = null;
-        }else if(node instanceof org.neo4j.driver.types.Node ){
-            result = retrieve("name",  (org.neo4j.driver.types.Node) node );
-        }else if(node instanceof NodeValue){
-            result = String.valueOf(((NodeValue)node).get("name"));
         }
-        return result==null?null:result.replaceAll("\"","");
+        else if (node instanceof org.neo4j.driver.types.Node) {
+            result = retrieve("name", (org.neo4j.driver.types.Node) node);
+        }
+        else if (node instanceof NodeValue) {
+            result = String.valueOf(((NodeValue) node).get("name"));
+        }
+        return result == null ? null : result.replaceAll("\"", "");
     }
 
     public static NodeValue extractNode(final String nodeName, final Record record) {
-        NodeValue result= null;
-        Value     node = null;
-        if(record != null){
+        NodeValue result = null;
+        Value     node   = null;
+        if (record != null) {
             node = record.get(nodeName);
         }
-        if(node!= null && !node.isNull() && node instanceof  NodeValue){
-            result = (NodeValue)node;
+        if (node != null && !node.isNull() && node instanceof NodeValue) {
+            result = (NodeValue) node;
+        }
+        return result;
+    }
+
+    public static List<Relationship> extractRelationships(final String nodeName, final Record record) {
+        final List<Relationship> result = new ArrayList<>();
+        Value                    node   = null;
+        if (record != null) {
+            node = record.get(nodeName);
+        }
+        if (node != null && !node.isNull()) {
+            if (node instanceof Relationship) {
+                result.add((Relationship) node);
+            }
+            else if (node instanceof ListValue) {
+                final List<Object> nodes = ((ListValue) node).asList();
+                Optional.ofNullable(nodes)
+                        .orElse(new ArrayList<>())
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .filter(o -> o instanceof Relationship)
+                        .map(o -> (Relationship) o)
+                        .forEach(result::add);
+            }
         }
         return result;
     }
@@ -149,6 +178,7 @@ public final class Neo4jUtils {
     public static org.neo4j.driver.types.Node getNode(final Object node) {
         return node instanceof org.neo4j.driver.types.Node ? (org.neo4j.driver.types.Node) node : null;
     }
+
     public static InternalRelationship getRelationship(final Object node) {
         return node instanceof InternalRelationship ? (InternalRelationship) node : null;
     }
@@ -165,7 +195,8 @@ public final class Neo4jUtils {
         return result;
     }
 
-    public static <T> void ifPropertyNotNull(final String key, final org.neo4j.driver.types.Node node, final Consumer<Object> consumer) {
+    public static <T> void ifPropertyNotNull(final String key, final org.neo4j.driver.types.Node node,
+                                             final Consumer<Object> consumer) {
         final String result = null;
         if (node != null) {
             final Map<String, Object> values = node.asMap();
@@ -184,7 +215,7 @@ public final class Neo4jUtils {
     }
 
 
-    public static boolean isNotNull(final Value value){
-        return value !=null && !value.isNull();
+    public static boolean isNotNull(final Value value) {
+        return value != null && !value.isNull();
     }
 }

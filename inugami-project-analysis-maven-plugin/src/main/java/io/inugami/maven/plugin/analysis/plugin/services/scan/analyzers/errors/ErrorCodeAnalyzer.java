@@ -290,10 +290,10 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     private String cleanAccessor(final String value) {
         String result = value;
         if (result != null) {
-            if (result.startsWith(ACCESSOR_GET)) {
+            if (result.startsWith(ACCESSOR_GET, 0)) {
                 result = result.substring(ACCESSOR_GET.length());
             }
-            else if (result.startsWith(ACCESSOR_IS)) {
+            else if (result.startsWith(ACCESSOR_IS, 0)) {
                 result = result.substring(ACCESSOR_IS.length());
             }
 

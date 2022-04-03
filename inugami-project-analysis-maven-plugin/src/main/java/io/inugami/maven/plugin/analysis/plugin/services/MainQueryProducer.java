@@ -23,26 +23,29 @@ import java.util.List;
 
 public class MainQueryProducer implements QueryProducer {
 
-    public static final String QUERIES_SEARCH_SERVICES_REST_CQL = "META-INF/queries/search_services_rest.cql";
-    public static final String QUERIES_SEARCH_CONSUMERS_CQL = "META-INF/queries/search_consumers.cql";
-    public static final String QUERIES_SEARCH_PRODUCE_CQL = "META-INF/queries/search_produce.cql";
-    public static final String QUERIES_SEARCH_PROPERTIES_CQL = "META-INF/queries/search_properties.cql";
-    public static final String QUERIES_SEARCH_SERVICES_QUEUE_EXPOSE_CQL = "META-INF/queries/search_services_queue_expose.cql";
+    public static final String QUERIES_SEARCH_SERVICES_REST_CQL          = "META-INF/queries/search_services_rest.cql";
+    public static final String QUERIES_SEARCH_CONSUMERS_CQL              = "META-INF/queries/search_consumers.cql";
+    public static final String QUERIES_SEARCH_PRODUCE_CQL                = "META-INF/queries/search_produce.cql";
+    public static final String QUERIES_SEARCH_PROPERTIES_CQL             = "META-INF/queries/search_properties.cql";
+    public static final String QUERIES_SEARCH_SERVICES_QUEUE_EXPOSE_CQL  = "META-INF/queries/search_services_queue_expose.cql";
     public static final String QUERIES_SEARCH_SERVICES_QUEUE_CONSUME_CQL = "META-INF/queries/search_services_queue_consume.cql";
-    public static final String QUERIES_SEARCH_ERRORS_CQL = "META-INF/queries/search_errors.cql";
-    public static final String QUERIES_SEARCH_DEPLOY_ARTIFACT_CQL = "META-INF/queries/search_deploy_artifact.cql";
-    public static final String QUERIES_SEARCH_MISSING_SERVICE_CQL = "META-INF/queries/search_missing_service.cql";
-    public static final String QUERIES_SEARCH_PUBLISH_ARTIFACT_INFO_CQL = "META-INF/queries/search_publish_artifact_info.cql";
-    public static final String QUERIES_SEARCH_ENV_INFO_CQL = "META-INF/queries/search_env_info.cql";
-    public static final String QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL = "META-INF/queries/search_release_note_simple.cql";
-    public static final String QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL = "META-INF/queries/search_release_note_full.cql";
-    public static final String QUERIES_SEARCH_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies.cql";
-    public static final String QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL = "META-INF/queries/search_dependencies_project.cql";
+    public static final String QUERIES_SEARCH_ERRORS_CQL                 = "META-INF/queries/search_errors.cql";
+    public static final String QUERIES_SEARCH_DEPLOY_ARTIFACT_CQL        = "META-INF/queries/search_deploy_artifact.cql";
+    public static final String QUERIES_SEARCH_MISSING_SERVICE_CQL        = "META-INF/queries/search_missing_service.cql";
+    public static final String QUERIES_SEARCH_PUBLISH_ARTIFACT_INFO_CQL  = "META-INF/queries/search_publish_artifact_info.cql";
+    public static final String QUERIES_SEARCH_ENV_INFO_CQL               = "META-INF/queries/search_env_info.cql";
+    public static final String QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL    = "META-INF/queries/search_release_note_simple.cql";
+    public static final String QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL      = "META-INF/queries/search_release_note_full.cql";
+    public static final String QUERIES_SEARCH_DEPENDENCIES_CQL           = "META-INF/queries/search_dependencies.cql";
+    public static final String QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL   = "META-INF/queries/search_dependencies_project.cql";
 
-    public static final String QUERIES_SEARCH_ALL_EXPOSED_SERVICES = "META-INF/queries/search_all_exposed_services.cql";
+    public static final String QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL = "META-INF/queries/search_project_dependencies_graph.cql";
+
+    public static final String QUERIES_SEARCH_ALL_EXPOSED_SERVICES  = "META-INF/queries/search_all_exposed_services.cql";
     public static final String QUERIES_SEARCH_ALL_CONSUMED_SERVICES = "META-INF/queries/search_all_consumed_services.cql";
-    public static final String QUERIES_SEARCH_ENTITIES = "META-INF/queries/search_entities.cql";
-    public static final String QUERIES_SEARCH_FLYWAY = "META-INF/queries/search_flyway.cql";
+    public static final String QUERIES_SEARCH_ENTITIES              = "META-INF/queries/search_entities.cql";
+    public static final String QUERIES_SEARCH_FLYWAY                = "META-INF/queries/search_flyway.cql";
+
     // =========================================================================
     // API
     // =========================================================================
@@ -178,11 +181,19 @@ public class MainQueryProducer implements QueryProducer {
                                .build(),
 
                 QueryDefinition.builder()
-                              .path(QUERIES_SEARCH_FLYWAY)
-                              .name("search_flyway")
-                              .type("cql")
-                              .description("Allow to retrieve all flyway scripts")
-                              .build()
+                               .path(QUERIES_SEARCH_FLYWAY)
+                               .name("search_flyway")
+                               .type("cql")
+                               .description("Allow to retrieve all flyway scripts")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL)
+                               .name("search_project_dependencies_graph")
+                               .type("cql")
+                               .description(
+                                       "Allow to retrieve all project dependencies with relationship between dependencies")
+                               .build()
                       );
     }
 

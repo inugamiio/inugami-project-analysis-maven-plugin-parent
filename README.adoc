@@ -3,11 +3,12 @@
 :source-highlighter: pygments
 
 Inugami project analysis maven plugin have for target to generate a release note on your project.
-Detect hidden dependencies on microservices is not easy. This plugin use Neo4J to resolve them.
+Detect hidden dependencies on microservices is not easy.
+This plugin use Neo4J to resolve them.
 You can find a generated release note example here : link:doc/release-note-example.adoc[release-note]
 
-
 == Last Release:
+
 [source,xml]
 ----
 <dependency>
@@ -74,9 +75,6 @@ networks:
     driver: bridge
 ----
 
-
-
-
 In your project pom.xml (or settings) we need to add some properties :
 
 [source,xml]
@@ -104,10 +102,11 @@ You can also define Neo4J configuration into your maven settings :
     </servers>
 </servers>
 ----
+
 In this case, your maven settings will override your pom.xml properties.
 
-
 In your project build definition :
+
 [source,xml]
 ----
 <plugin>
@@ -150,11 +149,13 @@ After this analyse you can see in Neo4j your project information or just execute
 ----
 mvn info
 ----
+
 image::doc/info.png[]
 
 This phase requires to specify an action to display information
 
 == Neo4j data structure :
+
 image::doc/nodes.png[]
 
 [source,cql]
@@ -162,26 +163,28 @@ image::doc/nodes.png[]
 CALL db.schema.visualization
 ----
 
-
 == Retrieve information :
 
-After analyze, all information is present into Neo4J. We can now query Neo4J to retrieve
-information. Attention : in some commons use cases it's easier to invoke the plugin to display result.
+After analyze, all information is present into Neo4J. We can now query Neo4J to retrieve information.
+Attention : in some commons use cases it's easier to invoke the plugin to display result.
 
 All additional properties can be defined in properties section of pom.xml or via command line invocation (with -D prefix).
 
 === restServices
-One of common problems in microservice architecture is to known interconnections between services.
-What's happen if I change my service ? Who consume a service and which version is currently in use ?
-To address this issue, the inugami analysis plugin will analyze all Springboot Rest endpoint and feign clients
-to detect interdependencies between projects.
 
-REST endpoints can be defined in current project or as a transitive dependency. The plugin retrieve
-transitive dependencies over 10 sub levels.
+One of common problems in microservice architecture is to known interconnections between services.
+What's happen if I change my service ?
+Who consume a service and which version is currently in use ?
+To address this issue, the inugami analysis plugin will analyze all Springboot Rest endpoint and feign clients to detect interdependencies between projects.
+
+REST endpoints can be defined in current project or as a transitive dependency.
+The plugin retrieve transitive dependencies over 10 sub levels.
+
 [source,bash]
 ----
 mvn info -Daction=restServices
 ----
+
 The color code is the same as Swagger, all GET endpoints are blue, green for POST, and red for DELETE.
 
 image::doc/restServices-01.png[]
@@ -191,12 +194,14 @@ In case where some projects consume an endpoint these will be described in the r
 image::doc/restServices-02.png[]
 
 === queryDisplay
+
 Query display allows the generation of a Neo4J cypher query from the current projet.
 
 [source,bash]
 ----
 mvn info -Daction=queryDisplay
 ----
+
 image::doc/queryDisplay-01.png[]
 
 Different queries are available, so it's required to specify the one in use.
@@ -204,7 +209,6 @@ Different queries are available, so it's required to specify the one in use.
 ----
 mvn info -Daction=queryDisplay -Dquery=search_services_rest
 ----
-
 
 [source,bash]
 ----
@@ -214,9 +218,10 @@ mvn info -Daction=queryDisplay -Dquery=search_error_codes
 image::doc/queryDisplay-02.png[]
 
 === properties
-Properties action displays project properties. This action retrieves also dependencies properties.
-At this moment these properties are extracted from Spring properties (@Value, bean properties, conditionals beans,
-properties usages on JMS or RabbitMQ listeners)
+
+Properties action displays project properties.
+This action retrieves also dependencies properties.
+At this moment these properties are extracted from Spring properties (@Value, bean properties, conditionals beans, properties usages on JMS or RabbitMQ listeners)
 
 
 If a property has no default value, it will be displayed in red.
@@ -227,14 +232,16 @@ If a property have bean validator constraints, these will be displayed too.
 ----
 mvn info -Daction=properties
 ----
+
 image::doc/properties.png[]
 
 === queueInfo
+
 Queue information have the same approach as restServices but for JMS and RabbitMQ.
-It's able to detect producers and listeners, tracing event payload and all
-information on queue binding.
+It's able to detect producers and listeners, tracing event payload and all information on queue binding.
 
 Like restServices, the queueInfo retrieves information over 10 levels of transitive dependencies.
+
 [source,bash]
 ----
 mvn info -Daction=queueInfo
@@ -294,14 +301,16 @@ All specific annotations are contained into an inugami artifact :
 This artifact contains only annotations, nothing else.
 
 === errorDisplay
-Error management is essential to make better applications. Interteam communication is a must.
+
+Error management is essential to make better applications.
+Interteam communication is a must.
 Writing wiki is not our way, it's time-consuming and quickly outdate.
 Inugami generates errors directly from code.
+
 [source,bash]
 ----
 mvn info -Daction=errorDisplay
 ----
-
 
 Per default Inugami plugin use the Inugami error interface to detect error code :
 
@@ -344,6 +353,7 @@ public interface ErrorCode {
 ----
 
 This interface is present in inugami_api artifact :
+
 [source,xml]
 ----
 <dependencies>
@@ -354,6 +364,7 @@ This interface is present in inugami_api artifact :
 ----
 
 This interface can be used over enum types or on static class fields.
+
 [source,java]
 ----
 public enum IssuesError implements ErrorCode {
@@ -382,6 +393,7 @@ public enum IssuesError implements ErrorCode {
 ----
 
 You can define your error code interface, to do so just add a property in your pom.xml
+
 [source,java]
 ----
 <properties>
@@ -409,6 +421,7 @@ image::doc/errorCode.png[]
 |===
 
 === specificsQuery
+
 The plugin is able to retrieve information from Neo4J and display them.
 If you need to execute a specific cypher query is possible to use this plugin to do that.
 
@@ -443,18 +456,23 @@ image::doc/specificQuery.png[]
 |===
 
 === importData
+
 To import some data into Neo4J it's possible to call the importData action.
 This action is able to execute a cypher query or to import a JSON model.
 
 For both it's required to specify the property *inugami.query.path* to define the import script path
+
 [source,bash]
 ----
 mvn info -Daction=importData
 ----
 
-For cypher query is just a basic .cql script. This one must juste have for extension *.cql*. Neo4j has great documentation on cypher language : https://neo4j.com/docs/cypher-manual/current/
+For cypher query is just a basic .cql script.
+This one must juste have for extension *.cql*.
+Neo4j has great documentation on cypher language : https://neo4j.com/docs/cypher-manual/current/
 
 For the JSON model, is the internal plugin model as JSON :
+
 [source,json]
 ----
 {
@@ -507,12 +525,14 @@ For the JSON model, is the internal plugin model as JSON :
 
 
 |===
+
 === Deployment management
 
-Microservices complicate the deployment process. It's very important to know which microservice is on which
-environment.
+Microservices complicate the deployment process.
+It's very important to know which microservice is on which environment.
 
 ==== publish
+
 You need to pass some additional information to Neo4J to detect which artifact is on wich environment.
 The easiest way is to use the "publish action".
 
@@ -525,8 +545,8 @@ image::doc/publish-01.png[]
 
 image::doc/publish-02.png[]
 
-On *DEPLOY* we can see that the plugin has added the deployment date (on ISO date and timestamp, both are on system time zone and on UTC)
-.Additional configuration
+On *DEPLOY* we can see that the plugin has added the deployment date (on ISO date and timestamp, both are on system time zone and on UTC) .Additional configuration
+
 |===
 |Property | type | default value | description
 
@@ -569,11 +589,9 @@ On *DEPLOY* we can see that the plugin has added the deployment date (on ISO dat
 |For cleaning previous staging environment, this value will be prompted if not defined on an enabled autoPublish.
 |===
 
-
 ==== unpublish
 
-It's very closer than publish but in this action we will remove deployments relationship on a specific version and an
-environment.
+It's very closer than publish but in this action we will remove deployments relationship on a specific version and an environment.
 
 [source,bash]
 ----
@@ -611,8 +629,8 @@ mvn info -Daction=unpublish
 
 |===
 
-
 ==== versionEnv
+
 The action versionEnv is able to verify if your project have all dependencies available on all environments.
 
 [source,bash]
@@ -621,8 +639,8 @@ mvn info -Daction=versionEnv
 ----
 
 In this example, the project *project-consumer* is using a REST endpoint produced by *spring-boot-training-lifecycle*.
-PREP_2 is not deployed. The service project *project-consumer* can't work correctly on this
-environment.
+PREP_2 is not deployed.
+The service project *project-consumer* can't work correctly on this environment.
 
 Also, this project use a REST endpoint `[GET]/comments/comments` but no producer have been detected
 
@@ -643,10 +661,10 @@ image::doc/versionEnv.png[]
 |Allow using current project GAV and not ask for this information
 |===
 
-
 ==== envInfo
-This action is a quick representation of an environment deployment status. It's able to retrieve which artifacts are present
-on which environments.
+
+This action is a quick representation of an environment deployment status.
+It's able to retrieve which artifacts are present on which environments.
 
 [source,bash]
 ----
@@ -666,8 +684,8 @@ image::doc/envInfo.png[]
 |===
 
 === encodePassword
-This action is just a small tool to encode a password or sensible value in AES.
 
+This action is just a small tool to encode a password or sensible value in AES.
 
 [source,bash]
 ----
@@ -689,6 +707,7 @@ image::doc/password.png[]
 == Analyzers :
 
 === Feign clients
+
 Feign clients analyzer scan all feign client interface to resolve project consuming REST endpoints;
 
 .Properties
@@ -707,6 +726,7 @@ Feign clients analyzer scan all feign client interface to resolve project consum
 |===
 
 === SpringBoot RestControllers
+
 To resolve project REST endpoint exposition, this analyzer scan all SpringBoot RestController.
 
 .Properties
@@ -725,6 +745,7 @@ To resolve project REST endpoint exposition, this analyzer scan all SpringBoot R
 |===
 
 === Spring properties
+
 Bad properties configuration is the source of most problems on a spring project.
 This analyzer scan all properties injected by @Value annotation or Bean configuration definition.
 
@@ -739,6 +760,7 @@ This analyzer scan all properties injected by @Value annotation or Bean configur
 |===
 
 === ActiveMQ
+
 To resolve activeMQ consumers and listeners, this analyzer is scanning all Spring @JmsListener annotation.
 
 .Properties
@@ -751,8 +773,8 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |Allow disabling feign client analyzer
 |===
 
-
 === Error code
+
 To resolve activeMQ consumers and listeners, this analyzer is scanning all Spring @JmsListener annotation.
 
 .Properties
@@ -775,9 +797,10 @@ To resolve activeMQ consumers and listeners, this analyzer is scanning all Sprin
 |Allow to override the default error code "field". The method defined in error code interface resolves this field. Accessor prefix is ignored
 |===
 
-
 === Flyway
-this analyze allow to reference all flyway script. In release note you will see all them as differential.
+
+this analyze allow to reference all flyway script.
+In release note you will see all them as differential.
 
 .Properties
 |===
@@ -804,15 +827,16 @@ this analyze allow to reference all flyway script. In release note you will see 
 |Allow to define scripts type
 |===
 
-
 === Git SCM
-Git scm analyzer allow to extract all commit since last project tag. If your project haven't tag yet, this analyzer
-retrieve all commit since repository creation.
+
+Git scm analyzer allow to extract all commit since last project tag.
+If your project haven't tag yet, this analyzer retrieve all commit since repository creation.
 
 After analyze, new nodes types appear :
 
 - Scm, who contains all commit details
-- MergeRequest, to retrace all merges requests on version. If you use feature branch, the specified issue will be retrieve too  (for example with branch name `feature/123_my_feature`, issue *123* will be extracted).
+- MergeRequest, to retrace all merges requests on version.
+If you use feature branch, the specified issue will be retrieve too (for example with branch name `feature/123_my_feature`, issue *123* will be extracted).
 - Issue
 - Issue label
 
@@ -829,12 +853,14 @@ image::doc/release_note_light.png[]
 You can see on this example generated release-note as asciidoc : link:doc/release-note-example.adoc[release-note]
 
 ==== Issue Management
-the Git scm analyzer will extract issues and merge request from commit message. On each it will call your issue
-management to retrieve more information on tickets.
+
+the Git scm analyzer will extract issues and merge request from commit message.
+On each it will call your issue management to retrieve more information on tickets.
 
 To enable this behavior it's require to add `issueManagement` with link to SCM API in your pom.xml :
 
 *For GitLab :*
+
 [source,xml]
 ----
 <issueManagement>
@@ -844,6 +870,7 @@ To enable this behavior it's require to add `issueManagement` with link to SCM A
 ----
 
 *For GitHub :*
+
 [source,xml]
 ----
 <issueManagement>
@@ -852,8 +879,8 @@ To enable this behavior it's require to add `issueManagement` with link to SCM A
 </issueManagement>
 ----
 
-
 *For Jira :*
+
 [source,xml]
 ----
 <issueManagement>
@@ -862,9 +889,7 @@ To enable this behavior it's require to add `issueManagement` with link to SCM A
 </issueManagement>
 ----
 
-
-All issue management need credentials to grant access on REST API. To configure these you will add server tag in your
-maven settings.xml :
+All issue management need credentials to grant access on REST API. To configure these you will add server tag in your maven settings.xml :
 
 [source,xml]
 ----
@@ -889,8 +914,6 @@ maven settings.xml :
 
 It's possible to encrypt your password with maven standard encryption mechanism (https://maven.apache.org/guides/mini/guide-encryption.html)
 
-
-
 .Properties
 |===
 |Property | type | default value | description
@@ -910,10 +933,10 @@ source code repository
 
 |===
 
-
 ===== Jira custom fields
-Jira allow to define custom fields on your issues. To extract these you can create
-a SPI implementation of interface `i.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
+
+Jira allow to define custom fields on your issues.
+To extract these you can create a SPI implementation of interface `i.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
 
 [source,java]
 ----
@@ -952,6 +975,7 @@ All implementation must be declare into `src/resources/META-INF/services/io.inug
 Example :
 
 src/resources/META-INF/services/io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender :
+
 [source]
 ----
 io.app.JiraCustomFieldExtractor
@@ -971,15 +995,14 @@ public class JiraCustomFieldExtractor implements JiraCustomFieldsAppender {
 }
 ----
 
-
 === ReleaseNote
+
 Plugin main target is to generate a release note from current project.
 By default this release note will be generate as Json file.
 
 An ASCIIDOC implementation is present to generate a documentation more human friendly.
 
 To display the release note you can invoke task `mvn info -Daction=releaseNote -PpreviousVersion={previousVersion}`
-
 
 .Properties
 |===
@@ -1015,3 +1038,35 @@ To display the release note you can invoke task `mvn info -Daction=releaseNote -
 |false
 |Allow to generate the release note with one document or multi document parts
 |===
+
+==== ReleaseNote UI
+
+Since version 1.6.0 a spring boot module allow to display current project release notes.
+To include this ui you should add this dependency :
+
+----
+<dependency>
+    <groupId>io.inugami.maven.plugin.analysis.front</groupId>
+    <artifactId>inugami-project-analysis-front-springboot</artifactId>
+    <version>1.6.0</version>
+</dependency>
+----
+
+By default the ui is accessible on URL : http://localhost:8080/release-note-app/
+
+.Properties
+|===
+|Property | type | default value | Require | description
+
+|inugami.release.note.artifactName
+|String
+|null
+|true
+| Release note list json file. This property is mandatory
+
+
+|===
+
+image::doc/ui-01.png[ui global,920,500]
+
+image::doc/ui-02.png[ui detail,920,500]
