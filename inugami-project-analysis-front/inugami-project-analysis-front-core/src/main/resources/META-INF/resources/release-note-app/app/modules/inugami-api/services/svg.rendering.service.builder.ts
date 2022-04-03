@@ -81,9 +81,20 @@ export class ToolTip {
     public trackMouse() {
         this.mouseEvent = svg.event.onMouseMove.subscribe({
             next: (mousePos) => {
+                let config = this.config;
+                let nodeSize = svg.math.size(config.node, null, true);
                 let svgPos = svg.math.sizeHtmlElement(this.config.svg, null, true);
+                let mainContentSize = svg.math.size(this.mainContent, null, true);
                 let posX = mousePos.x - svgPos.x + 10;
                 let posY = mousePos.y - svgPos.y + 10;
+
+                if(posX> (nodeSize.width-mainContentSize.width)){
+                    posX = nodeSize.width-mainContentSize.width;
+                }
+
+                if(posY > (nodeSize.height-mainContentSize.height)){
+                    posY = nodeSize.height-mainContentSize.height;
+                }
                 svg.transform.translate(this.group, posX, posY);
             }
         });

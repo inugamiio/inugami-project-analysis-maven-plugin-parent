@@ -415,13 +415,23 @@ project-dependency-graph
   stroke-opacity: 1;
   transition: stroke 0.5s, stroke-width 0.5s;
 }
+.project-dependency-graph  .path.lib.just-one {
+  stroke: #9898988a;
+  stroke-width: 2px;
+}
+.project-dependency-graph  .path.JMS.just-one {
+  stroke: #940303;
+  stroke-width: 2px;
+}
 
 .project-dependency-graph  .path.hit-box{
   fill: none;
   stroke: #00000000;
   stroke-width: 20px;
 }
-.project-dependency-graph  .path.onHover{
+.project-dependency-graph  .path.onHover,
+.project-dependency-graph  .path.onHover.lib.just-one,
+.project-dependency-graph  .path.onHover.JMS.just-one {
   fill: none;
   stroke: #1649d4;
   stroke-width: 4px;
