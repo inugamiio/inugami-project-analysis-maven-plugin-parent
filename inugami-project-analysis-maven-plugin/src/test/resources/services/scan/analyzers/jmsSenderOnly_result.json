@@ -2,9 +2,30 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
+    "name" : "user",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "0a4db429edbe873deab233de58379dae8f8bc6dec443490dcdb0c2a99295af0d343472a91ffe59eff4b95894c4017e1046568b5ed55659f0f07290c36b2cd8c0"
+  }, {
+    "name" : "Void",
+    "properties" : {
+      "payload" : "Void"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf"
+  }, {
     "name" : "JMS",
     "type" : "ServiceType",
     "uid" : "JMS"
+  }, {
+    "name" : "someParameter",
+    "properties" : {
+      "payload" : "String"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
   }, {
     "name" : "create.user.queue",
     "properties" : {
@@ -40,6 +61,18 @@
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
+    "from" : "0a4db429edbe873deab233de58379dae8f8bc6dec443490dcdb0c2a99295af0d343472a91ffe59eff4b95894c4017e1046568b5ed55659f0f07290c36b2cd8c0",
+    "to" : "create.user.queue",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "to" : "create.user.queue",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "to" : "create.user.queue",
+    "type" : "HAS_INPUT_DTO"
+  }, {
     "from" : "create.user.queue",
     "to" : "JMS",
     "type" : "SERVICE_TYPE"

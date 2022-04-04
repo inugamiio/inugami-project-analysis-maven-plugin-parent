@@ -12,7 +12,6 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
 import java.io.File;
 
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.PREVIOUS_VERSION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +20,7 @@ class ReleaseNoteIT {
 
     public static void main(final String... args) {
 
-        final String[]     sysReplacements = System.getProperty("replaceValues").split(";");
+        final String[]     sysReplacements = getReplaceValues().split(";");
         final MavenProject project         = mock(MavenProject.class);
         when(project.getGroupId()).thenReturn("io.inugami.demo");
         when(project.getArtifactId()).thenReturn("spring-boot-training-rest");
@@ -40,17 +39,20 @@ class ReleaseNoteIT {
         //config.put("io.inugami.maven.plugin.analysis.asciidoc.authors.enabled", "false");
         //config.put("io.inugami.maven.plugin.analysis.asciidoc.errorCode.enabled", "false");
 
-        config.put(ReleaseNote.REPLACEMENTS, "[\n" +
-                "    {\"from\":\"(.*)(@gmail.com)\",\"to\":\"$1@inugami.io\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[0]+")(.*)\",\"to\":\"$1InugamiCi$3\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[1]+")(.*)\",\"to\":\"$1inugami.io$3\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[2]+")(.*)\",\"to\":\"$1joefoobar$3\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[3]+")(.*)\",\"to\":\"$1Joe Foobar$3\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[4]+")(.*)\",\"to\":\"$1John Smith$3\"},\n" +
-                "    {\"from\":\"(.*)("+sysReplacements[1]+")(.*)\",\"to\":\"$1inugami.io$3\"}\n" +
-                "]");
+        if (sysReplacements.length >= 5) {
+            config.put(ReleaseNote.REPLACEMENTS, "[\n" +
+                    "    {\"from\":\"(.*)(@gmail.com)\",\"to\":\"$1@inugami.io\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[0] + ")(.*)\",\"to\":\"$1InugamiCi$3\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[1] + ")(.*)\",\"to\":\"$1inugami.io$3\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[2] + ")(.*)\",\"to\":\"$1joefoobar$3\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[3] + ")(.*)\",\"to\":\"$1Joe Foobar$3\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[4] + ")(.*)\",\"to\":\"$1John Smith$3\"},\n" +
+                    "    {\"from\":\"(.*)(" + sysReplacements[1] + ")(.*)\",\"to\":\"$1inugami.io$3\"}\n" +
+                    "]");
+        }
 
-        final ReleaseNote                   display       = new ReleaseNote();
+
+        final ReleaseNote display = new ReleaseNote();
 
         final InfoContext context = InfoContext.builder()
                                                .basedir(project.getBasedir())
@@ -62,6 +64,11 @@ class ReleaseNoteIT {
                                                .settings(mock(Settings.class))
                                                .build();
         display.process(context);
+    }
+
+    private static String getReplaceValues() {
+        final String value = System.getProperty("replaceValues");
+        return value == null ? "" : value;
     }
 
 

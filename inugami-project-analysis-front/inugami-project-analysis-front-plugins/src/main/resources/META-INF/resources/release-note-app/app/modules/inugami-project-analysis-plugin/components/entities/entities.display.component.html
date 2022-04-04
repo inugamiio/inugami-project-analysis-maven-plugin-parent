@@ -1,0 +1,31 @@
+<div class="entities-display" *ngIf="hasValues">
+  <h4>{{ title }}</h4>
+  <ul>
+    <li *ngFor="let entity of innerValue" class="entities">
+        <h5 [innerHTML]="entity.name"></h5>
+        <div class="content">
+            <div class="row" *ngIf="entity.payload">
+                <div class="col-3">
+                    <label><msg key="structure"></msg></label>
+                  </div>
+                  <div class="col-9">
+                    <pre><code class="language-json" [innerHTML]="renderScript(entity.payload)"></code></pre>
+                  </div>
+            </div>
+            <div class="row" *ngIf="entity.projectsUsing">
+                <div class="col-3">
+                    <label><msg key="projects.using"></msg></label>
+                  </div>
+                  <div class="col-9">
+                    <ul>
+                        <li *ngFor="let project of entity.projectsUsing">
+                            <span class="project" [innerHTML]="project"></span>
+                        </li>
+                    </ul>
+                  </div>
+            </div>
+        </div>
+    </li>
+    <div [class]="initHighlight()"></div>
+  </ul>
+</div>

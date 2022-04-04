@@ -1,0 +1,85 @@
+<article class="release-note"  *ngIf="innerValue">
+    
+    <header>
+        <div class="title">
+            <h2>
+                <span class="groupId">{{innerValue.gav.groupId}}</span>
+                <span class="artifactId">{{innerValue.gav.artifactId}}</span>
+                <span class="version">{{innerValue.gav.version}}</span>
+            </h2>
+            <h3>
+                <label><msg key="scan.date"></msg></label>
+                <span>{{innerValue.gav.scanDate}}</span>
+            </h3>
+        </div>
+        
+        <div class="actions">
+            <button (click)="toggleDetail()" class="btn btn-primary">{{showDetailLabel}}</button>
+        </div>
+        <div class="clear"></div>
+    </header>
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <fieldset  *ngIf="hasContent(innerValue.authors)" class="authors-grp">
+                        <h3><msg key="authors"></msg>:</h3>
+                        <span [innerHTML]="getAuthors()"></span>
+                    </fieldset>
+            
+                    <fieldset  *ngIf="hasContent(innerValue.issues)" >
+                        <h3><msg key="issues"></msg>:</h3>
+                        <ul class="issues">
+                            <li *ngFor="let issue of innerValue.issues; let i = index">
+                                <a [href]="issue.url" target="blank">
+                                    <span class="name">{{issue.name}}</span>
+                                    <span class="title">{{issue.title}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </fieldset>
+            
+                    <change [(ngModel)]="innerValue"></change>
+                </div>
+                <div class="col-6">
+                    <project-dependency-graph [(ngModel)]="innerValue.projectDependenciesGraph"></project-dependency-graph>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="content detail"  *ngIf="showDetail">
+            <fieldset  *ngIf="hasContent(innerValue.mergeRequests)" >
+                <h3><msg key="merge.request"></msg>:</h3>
+                <ul class="merge-requests">
+                    <li *ngFor="let pr of innerValue.mergeRequests; let i = index">                    
+                        <a [href]="pr.url" target="blank">
+                            <span class="date">{{pr.date}}</span> 
+                            <span class="uid">{{pr.uid}}</span> 
+                            <span class="title">{{pr.title}}</span> 
+                        </a>
+                                               
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset  *ngIf="hasContent(innerValue.commit)" >
+                <h3><msg key="commit"></msg>:</h3>
+                <ul class="commits">
+                    <li *ngFor="let commit of innerValue.commit; let i = index">                    
+                        <span class="commit">{{commit}}</span>                        
+                    </li>
+                </ul>
+            </fieldset>
+            
+            <div  *ngIf="innerValue.differentials" >
+                <dynamic-component-loader [(ngModel)]="innerValue.differentials"></dynamic-component-loader>
+            </div>
+            
+        </div>
+        <div [class]="loadingStop()"></div>
+    </div>
+
+
+</article>

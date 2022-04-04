@@ -42,6 +42,7 @@ import java.util.function.Consumer;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 import static org.springframework.core.annotation.AnnotatedElementUtils.hasAnnotation;
@@ -110,6 +111,27 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                     result.addNode(node);
                     result.addNode(properties);
 
+                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
+                    result.addNode(inputDto);
+                    for(Node input : inputDto){
+                        result.addRelationship(Relationship.builder()
+                                                           .from(input.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+
+                    final Node outputDto = ReflectionService.extractOutputDto(method);
+                    if(outputDto!=null){
+                        result.addNode(outputDto);
+                        result.addRelationship(Relationship.builder()
+                                                           .from(outputDto.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+
+
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);
                     result.addRelationship(
@@ -121,6 +143,26 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                 buildSenderNode(method, (node, properties) -> {
                     result.addNode(node);
                     result.addNode(properties);
+
+                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
+                    result.addNode(inputDto);
+                    for(Node input : inputDto){
+                        result.addRelationship(Relationship.builder()
+                                                           .from(input.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
+
+                    final Node outputDto = ReflectionService.extractOutputDto(method);
+                    if(outputDto!=null){
+                        result.addNode(outputDto);
+                        result.addRelationship(Relationship.builder()
+                                                           .from(outputDto.getUid())
+                                                           .to(node.getUid())
+                                                           .type(HAS_INPUT_DTO)
+                                                           .build());
+                    }
 
                     final Node methodNode = buildMethodNode(clazz, method);
                     result.addNode(methodNode);

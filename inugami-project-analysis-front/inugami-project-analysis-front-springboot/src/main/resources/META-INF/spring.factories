@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+ io.inugami.maven.plugin.analysis.front.springboot.configuration.MvcConfiguration

@@ -1,0 +1,626 @@
+.clear{
+  clear: both;
+}
+
+body.loading {
+  background-color: var(--bs-body-color);
+  color: var(--bs-gray-100);
+  text-align: center;
+}
+
+body.loading .loading {
+  width: 512px;
+  margin: auto;
+}
+
+body.loading .loading .info {
+  margin-top: 6em;
+}
+
+body.loading .icon-loading {
+  width: 256px;
+  margin: auto;
+}
+
+
+.releases > li {
+  list-style: none;
+  margin-bottom: 2em;
+}
+
+.release-note{
+  margin-top: 1em;
+  margin-bottom: 4em;
+}
+.release-note header{
+    border-bottom: 1px solid gray;
+}
+.release-note header h2 {
+  font-size: 130%;
+}
+.release-note header h3 {
+  font-size: 90%;
+  color: var(--bs-gray-700);
+}
+.release-note header .groupId::after,
+.release-note header .artifactId::after {
+  content: ":";
+}
+
+.release-note header .title {
+  float: left;
+ }
+
+.release-note header .actions {
+ float: right;
+ font-size: 14px;
+}
+.release-note header .actions button{
+  font-size: 80%;
+  margin-top: 1em;
+}
+.release-note > .content{
+    font-size: 14px;
+    padding-left: 1em;
+}
+.release-note .content legend {
+  font-size: 100%;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+.release-note .content .issues .name::after {
+  content: " - ";
+}
+
+.release-note .content .authors-grp ul {
+  float: left;
+  clear: none;
+}
+.release-note .content .authors-grp ul::after {
+  clear: both;
+}
+.release-note .content .authors li {
+  list-style: none;
+  display: inline;
+}
+.release-note .content .authors li::after {
+  content: ", ";
+}
+
+.release-note .main-content .content-left{
+  float: left;
+}
+.release-note .main-content .content-right{
+  float: right;
+}
+.release-note .main-content .content-end{
+  clear: both;
+}
+
+/******************************************************
+rest-service-display
+******************************************************/
+.rest-service-display{
+}
+.rest-service-display ul{
+  margin: 0;
+  padding: 0;
+}
+.rest-service-display ul li{
+  list-style: none;
+}
+.rest-service-display article{
+    border: 1px solid;
+    padding: 0.3em;
+    margin-bottom: 1em;
+    border-radius: 0.2em;
+}
+.rest-service-display article.GET{
+  border-color: #61affe;
+  background: #61affe1a;
+}
+.rest-service-display article.POST{
+  border-color: #49cc90;
+  background: #49cc9026;
+}
+.rest-service-display article.PUT{
+  border-color: #fca130;
+  background: #fca1302b;
+}
+.rest-service-display article.DELETE{
+  border-color: #f93e3e;
+  background: #f93e3e21;
+}
+.rest-service-display article.HEAD{
+  border-color: #9012fe;
+  background: #9012fe1a;
+}
+.rest-service-display article.CONNECT{
+  border-color: var(--bs-primary);
+  background: #a050e31a;
+}
+.rest-service-display article.OPTIONS{
+  border-color:#0d5aa7;
+  background: #0d5aa71f;
+}
+.rest-service-display article.TRACE{
+  border-color: var(--bs-gray);
+  background: #a7a7a71f;
+}
+.rest-service-display article.PATCH{
+  border-color: #50e3c2;
+  background: #50e3c21a;
+}
+
+.release-note .rest-service-display article header{
+  border: none;
+}
+.rest-service-display article .service-type{
+  border-radius: 0.3em;
+  font-weight: bold;
+  color: var(--bs-gray-100);
+  width: 10em;
+  display: inline-block;
+  text-align: center;
+  margin-right: 1em;
+  background: #747474;
+}
+.rest-service-display article .uri{
+  font-weight: bold;
+}
+.rest-service-display article.GET .service-type{
+  background: #61affe;
+}
+.rest-service-display article.GET .service-type::after{
+  content: 'GET';
+}
+
+.rest-service-display article.POST .service-type{
+  background: #49cc90;
+}
+.rest-service-display article.POST .service-type::after{
+  content: 'POST';
+}
+
+.rest-service-display article.PUT .service-type{
+  background: #fca130;
+}
+.rest-service-display article.PUT .service-type::after{
+  content: 'PUT';
+}
+
+
+.rest-service-display article.DELETE .service-type{
+  background: #f93e3e;
+}
+.rest-service-display article.DELETE .service-type::after{
+  content: 'DELETE';
+}
+
+
+.rest-service-display article.HEAD .service-type{
+  background: #9012fe;
+}
+.rest-service-display article.HEAD .service-type::after{
+  content: 'HEAD';
+}
+
+
+.rest-service-display article.CONNECT .service-type{
+  background: var(--bs-primary);
+}
+.rest-service-display article.CONNECT .service-type::after{
+  content: 'CONNECT';
+}
+
+
+.rest-service-display article.OPTIONS .service-type{
+  background:#0d5aa7;
+}
+.rest-service-display article.OPTIONS .service-type::after{
+  content: 'OPTIONS';
+}
+
+
+.rest-service-display article.TRACE .service-type{
+  background: var(--bs-gray);
+}
+.rest-service-display article.TRACE .service-type::after{
+  content: 'TRACE';
+}
+
+
+.rest-service-display article.PATCH .service-type{
+  background: #50e3c2;
+}
+.rest-service-display article.PATCH .service-type::after{
+  content: 'PATCH';
+}
+
+
+.rest-service-display .display-detail{
+}
+
+.rest-service-display .display-detail.show{
+  display: block;
+}
+.rest-service-display .display-detail.hide{
+  display: none;
+}
+
+.rest-service-display ul.methods li{
+  list-style: square;
+}
+
+.rest-service-display .row{
+  margin-bottom: 1em;
+}
+
+.rest-service-display .col-3{
+  font-weight: bold;
+}
+
+
+
+
+/******************************************************
+properties-display
+******************************************************/
+.properties-display{
+
+}
+
+
+
+.properties-display .icon.artifact-icon{
+  cursor: pointer;
+}
+.properties-display .contraints{
+  float: left;
+}
+
+.properties-display tbody tr.useForConditionalBean{
+  color: var(--bs-primary);
+}
+.properties-display tbody tr.mandatory{
+  color: var(--bs-danger);
+}
+
+.properties-display .constraintDetail::before{
+  content:" ("
+}
+.properties-display .constraintDetail::after{
+  content:")"
+}
+
+
+
+/******************************************************
+error-codes-display
+******************************************************/
+.error-codes-display tr.security{
+  color: var(--bs-danger);
+}
+.error-codes-display tr.technical{
+  color : var(--bs-primary);
+}
+
+.error-codes-display tr.fonctionnal{
+  color: var(--bs-success);
+}
+
+/******************************************************
+entities-display
+******************************************************/
+.entities-display > ul{
+  margin: 0;
+  padding: 0;
+}
+
+.entities-display .entities{
+  list-style: none;
+  margin-bottom: 2em;
+  border: 1px solid;
+  padding: 0.3em;
+  border-radius: 0.2em;
+}
+.entities-display  h5{
+  border-radius: 0.3em;
+  font-weight: bold;
+  color: var(--bs-gray-100);
+  display: inline-block;
+  text-align: center;
+  margin-right: 1em;
+  background: #747474;
+  font-size: 100%;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+}
+
+/******************************************************
+flyway-display
+******************************************************/
+.flyway-display > ul{
+  margin: 0;
+  padding: 0;
+}
+
+.flyway-display .flyway{
+  list-style: none;
+  margin-bottom: 2em;
+  border: 1px solid;
+  padding: 0.3em;
+  border-radius: 0.2em;
+}
+.flyway-display  h5{
+  border-radius: 0.3em;
+  font-weight: bold;
+  color: var(--bs-gray-100);
+  display: inline-block;
+  text-align: center;
+  margin-right: 1em;
+  background: #747474;
+  font-size: 100%;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+}
+
+
+
+/******************************************************
+dependencies-display
+******************************************************/
+.dependencies-display .dependency-info{
+  float: left;
+}
+.dependencies-display .icon.brand{
+  float: right;
+}
+
+/******************************************************
+project-dependency-graph
+******************************************************/
+.project-dependency-graph svg{
+}
+
+.project-dependency-graph text{
+  fill:white;
+}
+
+.project-dependency-graph rect.artifact{
+  fill:rgb(106 131 155);
+  transition: fill 0.5s, stroke 0.5s;
+}
+.project-dependency-graph .current-project rect.artifact{
+  fill:rgb(3, 78, 148);
+}
+
+.project-dependency-graph .onHover rect.artifact{
+  fill:rgb(17, 125, 226);
+  stroke: #55d7ff;
+  stroke-width: 2px;
+  stroke-opacity: 1;
+  filter:url(#connectorBlur);
+}
+
+.project-dependency-graph  .path{
+  fill: none;
+  stroke: #000000;
+  stroke-width: 2px;
+  stroke-opacity: 1;
+  transition: stroke 0.5s, stroke-width 0.5s;
+}
+.project-dependency-graph  .path.lib.just-one {
+  stroke: #9898988a;
+  stroke-width: 2px;
+}
+.project-dependency-graph  .path.JMS.just-one {
+  stroke: #940303;
+  stroke-width: 2px;
+}
+
+.project-dependency-graph  .path.hit-box{
+  fill: none;
+  stroke: #00000000;
+  stroke-width: 20px;
+}
+.project-dependency-graph  .path.onHover,
+.project-dependency-graph  .path.onHover.lib.just-one,
+.project-dependency-graph  .path.onHover.JMS.just-one {
+  fill: none;
+  stroke: #1649d4;
+  stroke-width: 4px;
+  stroke-opacity: 1;
+  stroke-dasharray: 3%;
+  animation: dash  linear 5s infinite;
+}
+.project-dependency-graph text{
+  cursor: default;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 100%;
+  }
+  100% {
+    stroke-dashoffset: 0%;
+  }
+}
+
+.tool-tip .background{
+  fill: #33477a9a;
+} 
+
+.tool-tip text{ 
+  fill: #ffffff;
+}
+/******************************************************
+change
+******************************************************/
+.change{
+
+}
+.change .change-row{
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.change .change-row.deleted-change {
+  color: #ef8807;
+}
+.change .change-row label{
+  margin-right: 0.5em;
+  font-weight: bold;
+}
+.change .change-row label::after{
+  content: ':';
+}
+
+/******************************************************
+ICONS
+******************************************************/
+.icon{
+  height: 20px;
+  width: 20px;
+  display: block;
+  margin-right: 0.2em;
+  float: right;
+}
+
+.pointer{
+  cursor: pointer;
+}
+.package-icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f466";
+}
+
+.exclamation-icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f06a";
+}
+
+.exchange-icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f362";
+}
+
+
+
+.javax .icon::after{
+  font-family: "Font Awesome 5 Brands";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f4e4";
+  color: #f31717;
+}
+
+.org.springframework .icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f06c";
+  color:#1dc11d;
+}
+
+.io.inugami .icon.brand{
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAJxAAACcQGIJEUwAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAA3tJREFUOI2tk19MWncUxw8XQSaKZlGZIpgOeWAxy0xMbPvQOu3cjDF9MjXxYVnIHpY9EBNMiNmDRrdRjcke1vC0uBkjCmPOWNOJ3SJIWRx/NC6QVeVCkRsQCwOUcuECZ082hsCyNf28nvP95nt+53cAXjOsVxV2d3dXdHR0fJzL5W7bbDaF0+lk+vv7K1lDQ0Nsg8GQLxZMTEwQJycnN1pbW29zOBxuOBx2W63Wn51OJ6NUKj+Qy+WfDAwM1MzPz/OlUmnC7/e3BQKBedbo6KhTJBI1iESiA4qiPMFg8K+2trYuiURyXSaTvcPj8QihUEhks1m0WCwHdrv9aV9f3xuJREImEAgkXV1dVQ6Hw7++vv6ZRqP5BfR6/QYi4rnFglGdDpNeLyIi6vX6qFKptA0PD3/+0/37VObZM0xubyP16FH+4YMH55lMBhERd3d3T8bHx99/Odrc3NxXJEkmozodplwuZCIRvApJkhd/7+zgucWCL/b2MLaygtHFRUREpCjqxeTk5KdXn4ptMpl+raqq+vOisbG5MZUSo89H0B4P0G430G43VAaD3Lo7dyBuNAJwOMCTySAfjwOnoQGW19bWVCqVuuzmxsbG7i0sLGy4XK7sZcJcPI4RrRaZszOkvV48t1gwYTKh1Wq9UCgUHf/pS2i1WofZbEaz2YyxWAzz6TRGFxcxtryMBYZBRMTNzU2cmZn5pljLLmXY09Mj/4jLvU5IpRAOh+HQ6wWOXA6iW7eARRBwdHQEzc3NIBaL3yYI4je73R661BKlDI+PjzcSz58XKkkSuPk83BAKgabpl3WKoqClpQXa29sbOzs7v4YrB1IyYXV1deBdiURRVyjwftzfj7yXydT42GwQCwRAezxQfe0acCgKKurr4fT0FCORyHder5cpm3B7ezt3KBB4dKHQtz6f72ESAFhOJ6QqKoA+PIQ3UynIRSKQTqfR4XD8YDKZUv+aEACgqanp6ezs7Pe1tbU7HJFI8eHNm/x9ioK3aBoyJAl1d+/C6urqrl6vV/j9/kI5n5Ko1erfA4HAxdTU1B9ZisLk48cYDoczarX6XnFvyZGLCYVCe0aj0RqLxb44A8jU9PbC1taWWaPRrPyvZJcMDg7Wj4yM9AIAGAyGJxRFpVUq1eArmRUzPT395dLSkq1cvexSysHn8w8YhuHZbLaypq+VfwDV5t5G0zI9tAAAAABJRU5ErkJggg==');
+}
+
+.jakarta .icon.brand{
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAEpAAABKQEpNbwyAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAnVJREFUOI2tkktsjGEUhp/z/zMdOjNKZRbTYphxCUpCN3WvpIlLJBILC0JsbO1qI5GuxG1DIiEItgSp1lg0UiVScZe4G0QNNaHN0DKd6fzfsZiQzgWt9N2e932+95x8wihJ25YvQD0Je1Rg0fpJRuSqEX1o/RegeZZfL04dn2vWUGFsosAkgekjBmp7vUslcxaXa7ZG13gck20G5uWGGhwx0PR3HUZkNTh+4xo4LrBiyHPlI7qhXgrvRmgEEJ0ganu25BlE7g27obaEN6nQBGA+9l7PpjI1xSbNDAuorZGVCqcAcXr67jiJ5BJxe/wlrPF/ArU1UqOqF4Ay/Z56aro+zwGQMeVVxQWtd38FasvMalWNAuNJZ7qcl90BwItlvcG2xxb6bfT+H4EanT5OyUaByThO7+DzD0YhAKBeb6JE5K2svhYrCdS7tW51zHlgPqqpwSfv4xid+mtuBUMl7qdtAEVAVcR0954AGgCTfRZ/hGPm/zaIfLAnTJxXmLMMp0sCTWt4jyBbAZxX3Tc0PVg3dC6VgdcgeTmFm7KmoxPAFZh7xFf24/sGxU7u29zxQnhcA/Rl3/fc0/5UfcF7PXZ41sKCnYxtcp8dQABqa4+5P335dhJhkyoP3JbpWBt5HN9V1+IPeJKLUZYCPntKpFOCkxflA+WAvap9Zx4wpyarKuQ9KsL2IbtkEW57XNkbG2c/SDRuS1ZW+DLLBOoAj0CbfA2sk43nMiWAOWh1yNeM6LqCVQcUbltIDOXy8hn9D880tkdcA9lbsv5mX17fgiDh8N6KtLEfASHgmiKHyl1lV2KxHelC77AVnLZ/WfW0g1v+7SzWT/is+KvpKN03AAAAAElFTkSuQmCC');
+}
+
+.deprecated-security-issues{
+  display: inline-block;
+  float: left;
+}
+
+
+.dependency-info .icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f05a";
+  color: #24a7f9;
+}
+
+.dependency-info .icon.securityIssue::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f780";
+  color: #878685;
+}
+.dependency-info .icon.securityIssue.low::after,
+.dependency-info .icon.securityIssue.minor::after{
+  color: #fbc33b;
+}
+
+.dependency-info .icon.securityIssue.high::after,
+.dependency-info .icon.securityIssue.major::after{
+  color: #f92424;
+}
+
+@-webkit-keyframes critical /* Safari and Chrome */ {
+  from {
+    color: #f92424;
+    text-shadow: 0 0 5px #ff020265;
+  }
+  50% {
+    color: #9e0000;
+    text-shadow: 0 0 1px #ff02021e;
+  }
+  to {
+    color: #f92424;
+    text-shadow: 0 0 5px #ff020265;
+  }
+}
+@keyframes critical {
+  from {
+    color: #f92424;
+    text-shadow: 0 0 5px #ff020265;
+  }
+  50% {
+    color: #9e0000;
+    text-shadow: 0 0 1px #ff02021e;
+  }
+  to {
+    color: #f92424;
+    text-shadow: 0 0 5px #ff020265;
+  }
+}
+
+.dependency-info .icon.securityIssue.critical::after{
+  -moz-animation:    critical 1s linear infinite;
+  -webkit-animation: critical 1s linear infinite;
+  -ms-animation:     critical 1s linear infinite;
+  -o-animation:      critical 1s linear infinite;
+  animation:         critical 1s linear infinite;
+}
+
+.dependency-info .icon.ban::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f05e";
+  color: #f92424;
+}
+
+.dependency-info .icon.deprecated::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+  content: "\f021";
+}

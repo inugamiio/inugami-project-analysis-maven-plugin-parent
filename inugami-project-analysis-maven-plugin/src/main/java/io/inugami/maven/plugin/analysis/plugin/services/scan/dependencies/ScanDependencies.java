@@ -89,7 +89,7 @@ public class ScanDependencies implements ProjectScanner {
                                            final List<String> projectBaseNames) {
         boolean projectDependency = false;
         for (final String baseName : projectBaseNames) {
-            if (currentGroupId.startsWith(baseName) && dependencyGroupId.startsWith(baseName)) {
+            if (currentGroupId.startsWith(baseName, 0) && dependencyGroupId.startsWith(baseName, 0)) {
                 projectDependency = true;
                 break;
             }
