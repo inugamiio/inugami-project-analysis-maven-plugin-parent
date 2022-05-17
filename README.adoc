@@ -1075,7 +1075,7 @@ image::doc/ui-01.png[ui global,920,500]
 
 image::doc/ui-02.png[ui detail,920,500]
 
-video::doc/inugami-ui.mp4[]
+https://www.youtube.com/watch?v=dJlF4RYd4eI&ab_channel=inugami
 
 ===== Update & ban dependencies
 
