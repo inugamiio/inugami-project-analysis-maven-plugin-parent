@@ -1048,7 +1048,7 @@ To include this ui you should add this dependency :
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis.front</groupId>
     <artifactId>inugami-project-analysis-front-springboot</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
 </dependency>
 ----
 
@@ -1062,11 +1062,16 @@ By default the ui is accessible on URL : http://localhost:8080/release-note-app/
 |String
 |null
 |true
-| Release note list json file. This property is mandatory
+| Release note list json file name. This property is mandatory
 
+After the release note building, two file will be created in your project :
+- src/main/resources/META-INF/releases/{{inugami.release.note.artifactName}}.releases.json : this files contains the releases note list
+- src/main/resources/META-INF/releases/{{inugami.release.note.artifactName}}.{{version}}.json : the release note as json
 
 |===
 
 image::doc/ui-01.png[ui global,920,500]
 
 image::doc/ui-02.png[ui detail,920,500]
+
+video::doc/inugami-ui.mp4[]
