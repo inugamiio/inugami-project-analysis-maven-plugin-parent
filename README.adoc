@@ -1044,11 +1044,12 @@ To display the release note you can invoke task `mvn info -Daction=releaseNote -
 Since version 1.6.0 a spring boot module allow to display current project release notes.
 To include this ui you should add this dependency :
 
+[source,xml]
 ----
 <dependency>
     <groupId>io.inugami.maven.plugin.analysis.front</groupId>
     <artifactId>inugami-project-analysis-front-springboot</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
 </dependency>
 ----
 
@@ -1075,3 +1076,86 @@ image::doc/ui-01.png[ui global,920,500]
 image::doc/ui-02.png[ui detail,920,500]
 
 video::doc/inugami-ui.mp4[]
+
+===== Update & ban dependencies
+
+The inugami front ui is able to display information about dependencies baned or deprecated.
+The scan process doesn't check this information at this moment.
+
+But you can create new DependenciesCheckService implementation:
+
+[source,java]
+----
+public interface DependenciesCheckService {
+    DependenciesCheck getDependenciesCheckData();
+}
+----
+
+To implement this one you need to create a newer service and define it into a configuration bean :
+
+[source,java]
+----
+public class MyDependenciesCheckService {
+    public DependenciesCheck getDependenciesCheckData(){
+        return DependenciesCheck.builder()
+                        .deprecated(resolveDeprecatedArtifacts())
+                        .ban(resolveBanedArtifacts())
+                        .ban(resolveSecurityIssues())
+        .build();
+    }
+}
+----
+
+[source,java]
+----
+@Configuration
+public class MyProjectConfiguration {
+
+    @Primary
+    @Bean
+    public DependenciesCheck buildDependenciesCheck(){
+        return new MyDependenciesCheckService();
+    }
+}
+----
+
+This interface requires to return a DependenciesCheck object.
+This object is a basic DTO :
+
+[source,java]
+----
+@ToString
+@Builder(toBuilder = true)
+@Setter
+@Getter
+public class DependenciesCheck {
+    private List<DependencyRule> deprecated;
+    private List<DependencyRule> ban;
+    private List<DependencyRule> securityIssue;
+}
+----
+
+Each list contains a DependencyRule object like :
+
+[source,java]
+----
+@ToString
+@Builder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Setter
+@Getter
+public class DependencyRule {
+    @EqualsAndHashCode.Include
+    private String       groupId;
+    @EqualsAndHashCode.Include
+    private String       artifactId;
+    @EqualsAndHashCode.Include
+    private VersionRules rules;
+    private String       comment;
+    private String       link;
+    private Level        level;
+}
+----
+
+
+
