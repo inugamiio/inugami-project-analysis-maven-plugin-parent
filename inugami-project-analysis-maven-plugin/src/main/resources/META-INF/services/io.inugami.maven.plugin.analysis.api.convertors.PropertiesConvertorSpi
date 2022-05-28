@@ -1,0 +1,2 @@
+io.inugami.maven.plugin.analysis.plugin.services.build.convertors.PropertiesConvertor
+io.inugami.maven.plugin.analysis.plugin.services.build.convertors.JsonConvertor

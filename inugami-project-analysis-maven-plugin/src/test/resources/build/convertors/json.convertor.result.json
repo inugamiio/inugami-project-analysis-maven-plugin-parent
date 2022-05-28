@@ -1,0 +1,10 @@
+{
+  "version" : "0.0.1-SNAPSHOT",
+  "app.name" : "my application",
+  "rules.0.type" : "json",
+  "rules.0.enabled" : "true",
+  "rules.1.type" : "yaml",
+  "rules.1.enabled" : "false",
+  "authors.0" : "john",
+  "authors.1" : "smith"
+}

@@ -1,0 +1,6 @@
+hello the world
+<ul>
+    <li>io.inugami</li>
+    <li>inugami-project-analysis-maven-plugin</li>
+    <li>1.6.3-SNAPSHOT</li>
+</ul>

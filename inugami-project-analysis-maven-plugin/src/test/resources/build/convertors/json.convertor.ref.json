@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1-SNAPSHOT",
+  "app": {
+    "name": "my application"
+  },
+  "rules": [
+    {
+      "type": "json",
+      "enabled": "true"
+    },
+    {
+      "type": "yaml",
+      "enabled": "false"
+    }
+  ],
+  "authors": [
+    "john",
+    "smith"
+  ]
+}

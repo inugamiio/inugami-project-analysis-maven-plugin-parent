@@ -969,6 +969,7 @@ public interface JiraCustomFieldsAppender {
 |Allow to create another nodes or relationships
 |===
 
+
 Your implementation can be in classpath or linked on plugin dependencies.
 All implementation must be declare into `src/resources/META-INF/services/io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
 
@@ -1157,5 +1158,560 @@ public class DependencyRule {
 }
 ----
 
+== Others goals :
+
+=== mkdirs
+
+This goal allow to create basic folders
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>mkdirs</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>mkdirs</goal>
+            </goals>
+            <configuration>
+                <paths>
+                    <path>${basedir}/target/test</path>
+                    <path>${basedir}/target/test2</path>
+                </paths>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+=== delete
+
+This goal allow to delete folder or files
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>mkdirs</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>delete</goal>
+            </goals>
+            <configuration>
+                <paths>
+                    <path>${basedir}/target/test.*</path>
+                    <path>${basedir}/target/generate/.*log</path>
+                </paths>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+=== loadProperties
+
+This goal allow to load maven properties.
+All loaded properties will be accessible in nextmaven phase.
+
+==== Global properties
+
+The goal loadProperties can have global properties.
+All of them will added in maven properties context.
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>loadProperties</goal>
+            </goals>
+            <configuration>
+                <properties>
+                    <simple.properties>joe</simple.properties>
+                </properties>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+==== Local file properties
+
+In most of time, we need to add properties from local file.
+This files can be properties file or json file (another file will be supported in next release).
+To do that you can specify resources.
+Each one need to specify the path (this path can have maven properties to templatize this one).
+Also it's require to specify the file type (properties or json)
+
+[source,properties]
+----
+application.name=demo-app
+application.title=My application
+----
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>loadProperties</goal>
+            </goals>
+            <configuration>
+                <properties>
+                    <simple.properties>joe</simple.properties>
+                </properties>
+                <resources>
+                    <resource>
+                        <type>properties</type>
+                        <propertiesPath>${basedir}/src/test/resources/simple.properties</propertiesPath>
+                        <properties>
+                            <specific.file.properties>specific value</specific.file.properties>
+                        </properties>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+After properties loaded, you can use properties in maven context.
+
+In case of JSON file, all properties will be render as flat value.
+For example :
+
+[source,json]
+----
+{
+  "version": "0.0.1-SNAPSHOT",
+  "app": {
+    "name": "my application"
+  },
+  "rules": [
+    {
+      "type": "json",
+      "enabled": "true"
+    },
+    {
+      "type": "yaml",
+      "enabled": "false"
+    }
+  ],
+  "authors": [
+    "john",
+    "smith"
+  ]
+}
+----
+
+Will be rendered in maven context as :
+
+[source,json]
+----
+{
+  "version" : "0.0.1-SNAPSHOT",
+  "app.name" : "my application",
+  "rules.0.type" : "json",
+  "rules.0.enabled" : "true",
+  "rules.1.type" : "yaml",
+  "rules.1.enabled" : "false",
+  "authors.0" : "john",
+  "authors.1" : "smith"
+}
+----
 
 
+
+==== Properties convertors
+
+All properties convertors are SPI implementation. You can create easly one and enable its by including your jar dependency in inugami plugin.
+Inugami use a strategy partner to resolve right implementation. All of them need to implement the PropertiesConvertorSPI interface.
+
+[source,json]
+----
+public interface PropertiesConvertorSpi {
+    boolean accept(final String type);
+
+    Map<String, String> convert(final String content);
+}
+----
+
+As all SPI implementation you need to declare its in the specific file /META-INF/services/io.inugami.maven.plugin.analysis.api.convertors.PropertiesConvertorSpi
+
+[source]
+----
+io.inugami.maven.plugin.analysis.plugin.services.build.convertors.MyConvertor
+----
+
+After that you can create your implementation :
+
+
+[source,json]
+----
+@SpiPriority(10)
+public class MyConvertor implements PropertiesConvertorSpi {
+
+    public static final String PROPERTIES = "properties";
+
+
+    @Override
+    public boolean accept(final String type) {
+        return PROPERTIES.equalsIgnoreCase(type);
+    }
+
+    @Override
+    public Map<String, String> convert(final String content) {
+        // implementation
+    }
+}
+----
+
+Inugami order all implementation by higher SpiPriority. You can use this annotation if you need to override existing implementation. 
+
+
+
+==== External URL properties
+
+If you need to retrieve properties from external source, like springboot cloud config, you can specify corresponding url to load this resource.
+
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>validate</phase>
+            <goals>
+                <goal>loadProperties</goal>
+            </goals>
+            <configuration>            
+                <resources>
+                    <resource>
+                        <propertiesUrl>http://localhost:8888/demo.json</propertiesUrl>
+                        <propertiesUrlAuthorization>Basic YWRtaW46cGFzc3dvcmQ=</propertiesUrlAuthorization>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+In this example, the endpoint will give us a response like : 
+
+[source,json]
+----
+{
+    "external": {
+        "applicationName": "externalJson"
+    }
+}
+----
+
+It will be accessible in maven context by flatten value :
+
+[source,json]
+----
+{
+  "external.applicationName" : "externalJson"
+}
+----
+
+
+=== writeFile
+WriteFile goal allw to write file by using mustache template. By default, maven properties will be transform to mustache values.
+
+For example :
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>writeFile</goal>
+            </goals>
+            <configuration>
+                <mavenFiltering>true</mavenFiltering>
+                <fileResources>
+                    <fileResource>
+                        <target>${basedir}/target/file.from.innerTemplate.html</target>
+                        <template><![CDATA[
+<h1>${project.artifactId}</h1>
+<h2>{{subtitle}}</h2>
+]]>
+                        </template>
+                        <properties>
+                            <subtitle>Simple inner template rendering</subtitle>
+                        </properties>
+                    </fileResource>
+                </fileResources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+Will write in ${basedir}/target/file.from.innerTemplate.html this content : 
+[source,json]
+----
+<h1>demo</h1>
+<h2>Simple inner template rendering</h2>
+----
+
+
+You can also create external template file :
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>writeFile</goal>
+            </goals>
+            <configuration>
+                <mavenFiltering>true</mavenFiltering>
+                <fileResources>
+                    <fileResource>
+                        <target>${basedir}/target/file.from.externalTemplate.html</target>
+                        <templatePath>${basedir}/src/test/resources/simple.template.html</templatePath>
+                        <properties>
+                            <subtitle>Simple external template rendering</subtitle>
+                            <description>With external template, you can create more complex file without
+                                pollute your maven pom.xml
+                            </description>
+                        </properties>
+                    </fileResource>
+                </fileResources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+with template like :
+[source,xml]
+----
+<h1>${project.artifactId}</h1>
+<h2>{{subtitle}}</h2>
+
+<p>
+    {{description}}
+</p>
+----
+
+Will generate this file : 
+[source,xml]
+----
+<h1>${project.artifactId}</h1>
+<h2>{{subtitle}}</h2>
+
+<p>
+    {{description}}
+</p>
+----
+
+
+=== copy
+This goal allow to copy file. It's also allow to filtering resource.
+This goal will inject properties only on text file, binary file will only be copy to target file.
+
+==== copy simple file
+In this example we have a simple file in ${basedir}/src/test/resources/simple.template.html
+
+[source,xml]
+----
+<h1>${project.artifactId}</h1>
+<h2>{{subtitle}}</h2>
+
+<p>
+    {{description}}
+</p>
+
+----
+
+This file will be copy to ${basedir}/src/test/resources/simple.template.html and all maven context properties will be injected :
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>copy</goal>
+            </goals>
+            <configuration>
+                <mavenFiltering>true</mavenFiltering>
+                <resources>
+                    <resource>
+                        <target>${basedir}/target/generated/file.from.externalTemplate.html</target>
+                        <path>${basedir}/src/test/resources/simple.template.html</path>
+                        <properties>
+                            <subtitle>Simple copy</subtitle>
+                            <description>Lorem ipsum</description>
+                        </properties>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+The file result will be :
+[source,xml]
+----
+<h1>demo</h1>
+<h2>Simple copy</h2>
+
+<p>
+    Lorem ipsum
+</p>
+----
+
+==== copy folder
+The copy goal can also copy folder. To do that you need only to specify folder path and target as directories:
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>copy</goal>
+            </goals>
+            <configuration>
+                <mavenFiltering>true</mavenFiltering>
+                <resources>
+                    <resource>
+                        <target>${basedir}/target/generated/template</target>
+                        <path>${basedir}/src/test/resources/template</path>
+                        <properties>
+                            <subtitle>Simple copy</subtitle>
+                            <description>Lorem ipsum</description>
+                        </properties>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+==== maven dependencies
+The copy goal can copy maven dependencies. In this case you need to specify the artifact GAV to copy in target destination :
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>copy</goal>
+            </goals>
+            <configuration>
+                <mavenFiltering>true</mavenFiltering>
+                <resources>
+                    <resource>
+                        <target>${basedir}/target/maven/io.inugami.maven.plugin.analysis.front.jar</target>
+                        <gav>io.inugami.maven.plugin.analysis.front:inugami-project-analysis-front-plugins:1.6.2-SNAPSHOT</gav>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+
+
+=== unpack
+Unpack goal can unzip resources into folder. When resources are write on filesystem, if it's text resources, the filtering is apply. This behavior can be disabled by configuration.
+
+[source,xml]
+----
+<plugin>
+    <groupId>io.inugami.maven.plugin.analysis</groupId>
+    <artifactId>inugami-project-analysis-maven-plugin</artifactId>
+    <version>1.6.3</version>
+
+    <executions>
+        <execution>
+            <id>loadProperties</id>
+            <phase>generate-resources</phase>
+            <goals>
+                <goal>unpack</goal>
+            </goals>
+            <configuration>
+                <filtering>true</filtering>
+                <mavenFiltering>true</mavenFiltering>
+                <resources>
+                    <resource>
+                        <target>${basedir}/target/unpack</target>
+                        <gav>
+                            io.inugami.maven.plugin.analysis.front:inugami-project-analysis-front-plugins:1.6.2-SNAPSHOT
+                        </gav>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
