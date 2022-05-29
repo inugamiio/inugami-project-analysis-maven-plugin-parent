@@ -969,7 +969,6 @@ public interface JiraCustomFieldsAppender {
 |Allow to create another nodes or relationships
 |===
 
-
 Your implementation can be in classpath or linked on plugin dependencies.
 All implementation must be declare into `src/resources/META-INF/services/io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender`
 
@@ -1344,14 +1343,14 @@ Will be rendered in maven context as :
 }
 ----
 
-
-
 ==== Properties convertors
 
-All properties convertors are SPI implementation. You can create easly one and enable its by including your jar dependency in inugami plugin.
-Inugami use a strategy partner to resolve right implementation. All of them need to implement the PropertiesConvertorSPI interface.
+All properties convertors are SPI implementation.
+You can create easly one and enable its by including your jar dependency in inugami plugin.
+Inugami use a strategy partner to resolve right implementation.
+All of them need to implement the PropertiesConvertorSPI interface.
 
-[source,json]
+[source,java]
 ----
 public interface PropertiesConvertorSpi {
     boolean accept(final String type);
@@ -1369,8 +1368,7 @@ io.inugami.maven.plugin.analysis.plugin.services.build.convertors.MyConvertor
 
 After that you can create your implementation :
 
-
-[source,json]
+[source,java]
 ----
 @SpiPriority(10)
 public class MyConvertor implements PropertiesConvertorSpi {
@@ -1390,14 +1388,12 @@ public class MyConvertor implements PropertiesConvertorSpi {
 }
 ----
 
-Inugami order all implementation by higher SpiPriority. You can use this annotation if you need to override existing implementation. 
-
-
+Inugami order all implementation by higher SpiPriority.
+You can use this annotation if you need to override existing implementation.
 
 ==== External URL properties
 
 If you need to retrieve properties from external source, like springboot cloud config, you can specify corresponding url to load this resource.
-
 
 [source,xml]
 ----
@@ -1426,7 +1422,7 @@ If you need to retrieve properties from external source, like springboot cloud c
 </plugin>
 ----
 
-In this example, the endpoint will give us a response like : 
+In this example, the endpoint will give us a response like :
 
 [source,json]
 ----
@@ -1446,11 +1442,13 @@ It will be accessible in maven context by flatten value :
 }
 ----
 
-
 === writeFile
-WriteFile goal allw to write file by using mustache template. By default, maven properties will be transform to mustache values.
+
+WriteFile goal allw to write file by using mustache template.
+By default, maven properties will be transform to mustache values.
 
 For example :
+
 [source,xml]
 ----
 <plugin>
@@ -1486,15 +1484,16 @@ For example :
 </plugin>
 ----
 
-Will write in ${basedir}/target/file.from.innerTemplate.html this content : 
-[source,json]
+Will write in ${basedir}/target/file.from.innerTemplate.html this content :
+
+[source,xml]
 ----
 <h1>demo</h1>
 <h2>Simple inner template rendering</h2>
 ----
 
-
 You can also create external template file :
+
 [source,xml]
 ----
 <plugin>
@@ -1530,6 +1529,20 @@ You can also create external template file :
 ----
 
 with template like :
+
+[source,xml]
+----
+<h1>demo</h1>
+<h2>Simple external template rendering</h2>
+
+<p>
+With external template, you can create more complex file without
+                                pollute your maven pom.xml
+</p>
+----
+
+Will generate this file :
+
 [source,xml]
 ----
 <h1>${project.artifactId}</h1>
@@ -1539,24 +1552,15 @@ with template like :
     {{description}}
 </p>
 ----
-
-Will generate this file : 
-[source,xml]
-----
-<h1>${project.artifactId}</h1>
-<h2>{{subtitle}}</h2>
-
-<p>
-    {{description}}
-</p>
-----
-
 
 === copy
-This goal allow to copy file. It's also allow to filtering resource.
+
+This goal allow to copy file.
+It's also allow to filtering resource.
 This goal will inject properties only on text file, binary file will only be copy to target file.
 
 ==== copy simple file
+
 In this example we have a simple file in ${basedir}/src/test/resources/simple.template.html
 
 [source,xml]
@@ -1605,6 +1609,7 @@ This file will be copy to ${basedir}/src/test/resources/simple.template.html and
 ----
 
 The file result will be :
+
 [source,xml]
 ----
 <h1>demo</h1>
@@ -1616,7 +1621,9 @@ The file result will be :
 ----
 
 ==== copy folder
-The copy goal can also copy folder. To do that you need only to specify folder path and target as directories:
+
+The copy goal can also copy folder.
+To do that you need only to specify folder path and target as directories:
 
 [source,xml]
 ----
@@ -1651,7 +1658,9 @@ The copy goal can also copy folder. To do that you need only to specify folder p
 ----
 
 ==== maven dependencies
-The copy goal can copy maven dependencies. In this case you need to specify the artifact GAV to copy in target destination :
+
+The copy goal can copy maven dependencies.
+In this case you need to specify the artifact GAV to copy in target destination :
 
 [source,xml]
 ----
@@ -1681,9 +1690,11 @@ The copy goal can copy maven dependencies. In this case you need to specify the 
 </plugin>
 ----
 
-
 === unpack
-Unpack goal can unzip resources into folder. When resources are write on filesystem, if it's text resources, the filtering is apply. This behavior can be disabled by configuration.
+
+Unpack goal can unzip resources into folder.
+When resources are write on filesystem, if it's text resources, the filtering is apply.
+This behavior can be disabled by configuration.
 
 [source,xml]
 ----
