@@ -45,8 +45,9 @@ public class CopyMojo extends AbstractMojo {
     // ATTRIBUTES
     // =========================================================================
     @Parameter
-    private List<Resource> resources;
-
+    private List<Resource>      resources;
+    @Parameter
+    private List<String>        filteredExtensions;
     @Parameter
     private Map<String, String> properties;
 
@@ -83,7 +84,8 @@ public class CopyMojo extends AbstractMojo {
                                                   currentProperties,
                                                   filtering,
                                                   mavenFiltering,
-                                                  new MavenArtifactResolver(repoSession, artifactResolver));
+                                                  new MavenArtifactResolver(repoSession, artifactResolver),
+                                                  filteredExtensions);
         }
         catch (Exception e) {
             if (failSafe) {

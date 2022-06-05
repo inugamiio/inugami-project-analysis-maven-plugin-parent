@@ -30,7 +30,6 @@ import org.eclipse.aether.artifact.Artifact;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -94,12 +93,14 @@ public class BasicBuildService {
     }
 
     private void delete(final String path) {
-        File       file   = new File(path).getAbsoluteFile();
-        final File parent = file.getParentFile();
-        if (!parent.exists()) {
-            log.error("parent path doesn't exists : {}", file.getParent());
-            return;
+        File file = new File(path).getAbsoluteFile();
+
+        if (isNotAllowDeleteFile(file)) {
+            log.error("not allow to delete file : {}", file.getAbsoluteFile());
         }
+
+        final File parent = file.getParentFile();
+
 
         final Pattern fileNameRegex = Pattern.compile(file.getName());
         for (String fileName : parent.list()) {
@@ -108,6 +109,7 @@ public class BasicBuildService {
             }
         }
     }
+
 
     private void deleteFile(final File file) {
         if (file.exists()) {
@@ -132,6 +134,36 @@ public class BasicBuildService {
             }
 
         }
+    }
+
+
+    protected boolean isNotAllowDeleteFile(final File file) {
+        boolean result = false;
+        if (file == null) {
+            return true;
+        }
+        final File   parent = file.getAbsoluteFile().getParentFile();
+        final String path   = file.getAbsolutePath();
+
+
+        if ("/".equals(path) || path.trim().isEmpty() || windowsRootPath(path)) {
+            result = true;
+        }
+        else if (!parent.exists()) {
+            log.error("parent path doesn't exists : {}", file.getParent());
+            result = true;
+        }
+
+
+        return result;
+    }
+
+    protected boolean windowsRootPath(final String path) {
+        if (path.length() > 3) {
+            return false;
+        }
+        final String[] parts = path.split(":");
+        return parts.length == 2 && (parts[1].equals("\\") || parts[1].equals("/"));
     }
 
     // =========================================================================
@@ -171,12 +203,13 @@ public class BasicBuildService {
                               final Map<String, String> properties,
                               final boolean filtering,
                               final boolean mavenFiltering,
-                              final MavenArtifactResolver artifactResolver) throws IOException {
+                              final MavenArtifactResolver artifactResolver,
+                              final List<String> extensions) throws IOException {
         if (resources == null || resources.isEmpty()) {
             return;
         }
         for (Resource resource : resources) {
-            copyResources(resource, properties, filtering, mavenFiltering, artifactResolver);
+            copyResources(resource, properties, filtering, mavenFiltering, artifactResolver, extensions);
         }
     }
 
@@ -184,7 +217,8 @@ public class BasicBuildService {
                                final Map<String, String> properties,
                                final boolean filtering,
                                final boolean mavenFiltering,
-                               final MavenArtifactResolver artifactResolver) throws IOException {
+                               final MavenArtifactResolver artifactResolver,
+                               final List<String> extensions) throws IOException {
         if (resource.getTarget() == null) {
             return;
         }
@@ -202,7 +236,7 @@ public class BasicBuildService {
             return;
         }
         copyfile(resourcePath, resource.getTarget(), resource.getProperties(), properties, filtering,
-                 mavenFiltering);
+                 mavenFiltering, extensions);
 
     }
 
@@ -216,7 +250,8 @@ public class BasicBuildService {
                           final Map<String, String> resourceProperties,
                           final Map<String, String> properties,
                           final boolean filtering,
-                          final boolean mavenFiltering) throws IOException {
+                          final boolean mavenFiltering,
+                          final List<String> extensions) throws IOException {
         final File file       = new File(inputFile);
         final File targetFile = new File(target);
 
@@ -229,7 +264,7 @@ public class BasicBuildService {
         }
 
 
-        processCopy(file, targetFile, filtering, properties, resourceProperties, mavenFiltering);
+        processCopy(file, targetFile, filtering, properties, resourceProperties, mavenFiltering, extensions);
     }
 
     private void processCopy(final File file,
@@ -237,7 +272,8 @@ public class BasicBuildService {
                              final boolean filtering,
                              final Map<String, String> properties,
                              final Map<String, String> resourceProperties,
-                             final boolean mavenFiltering) throws IOException {
+                             final boolean mavenFiltering,
+                             final List<String> extensions) throws IOException {
 
         if (file.isFile()) {
             if (target.exists()) {
@@ -246,7 +282,7 @@ public class BasicBuildService {
             if (!target.getAbsoluteFile().getParentFile().exists()) {
                 target.getAbsoluteFile().getParentFile().mkdirs();
             }
-            if (filtering && !isBinary(file)) {
+            if (filtering && !isTextFile(file, extensions)) {
                 final String content = FilesUtils.readContent(file);
                 final String fileContent = TEMPLATE_RENDERING.render(file.getAbsolutePath(), content, properties,
                                                                      resourceProperties, mavenFiltering);
@@ -262,15 +298,10 @@ public class BasicBuildService {
             for (String childFile : childrenFile) {
                 File child       = new File(file.getAbsolutePath() + File.separator + childFile);
                 File childTarget = new File(target.getAbsolutePath() + File.separator + childFile);
-                processCopy(child, childTarget, filtering, properties, resourceProperties, mavenFiltering);
+                processCopy(child, childTarget, filtering, properties, resourceProperties, mavenFiltering, extensions);
             }
         }
 
-    }
-
-    private boolean isBinary(final File file) throws IOException {
-        final String type = Files.probeContentType(file.toPath());
-        return type == null ? true : !(type.startsWith("text") || TEXT_FILES.contains(type));
     }
 
     // =========================================================================
