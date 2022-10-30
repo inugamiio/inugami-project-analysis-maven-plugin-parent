@@ -1,0 +1,63 @@
+{
+  "body" : "<!--[/!\\ DEPRECATED ]*********************************\nThis service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n    * [S-003] [HTTP-0_technical]  can't connect to database\n    * [ERR-0000] [HTTP-500_technical]  undefine error occurs\n    * [ERR-003] [HTTP-500_technical]  Preference key is require\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <user>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </user>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+  "bodyRequireOnly" : "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <user>\n          </user>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+  "consume" : "application/xml; charset=UTF-8",
+  "deprecated" : true,
+  "descriptionDetail" : {
+    "content" : "This service allow to create new customer",
+    "example" : "",
+    "potentialErrors" : [ {
+      "description" : "",
+      "errorCode" : "ERR-0000",
+      "errorMessage" : "undefine error occurs",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 500,
+      "payload" : "",
+      "throwsAs" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$TechnicalException",
+      "type" : "technical",
+      "url" : ""
+    }, {
+      "description" : "",
+      "errorCode" : "ERR-003",
+      "errorMessage" : "Preference key is require",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 500,
+      "payload" : "",
+      "throwsAs" : "io.inugami.maven.plugin.analysis.annotations.PotentialError$NONE_EXCEPTION",
+      "type" : "technical",
+      "url" : ""
+    }, {
+      "description" : "",
+      "errorCode" : "S-002",
+      "errorMessage" : "User already exists, please choose another login to create a newer customer",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 409,
+      "payload" : "",
+      "throwsAs" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$BusinessException",
+      "type" : "functional",
+      "url" : ""
+    }, {
+      "description" : "",
+      "errorCode" : "S-003",
+      "errorMessage" : "can't connect to database",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 0,
+      "payload" : "",
+      "throwsAs" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$TechnicalException",
+      "type" : "technical",
+      "url" : ""
+    } ],
+    "url" : ""
+  },
+  "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.createUser",
+  "nickname" : "MyWebservice.createUser",
+  "produce" : "application/xml; charset=UTF-8",
+  "responseType" : "<!--[/!\\ DEPRECATED ]*********************************\nThis service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n    * [S-003] [HTTP-0_technical]  can't connect to database\n    * [ERR-0000] [HTTP-500_technical]  undefine error occurs\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <null>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </null>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+  "responseTypeRequireOnly" : "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <null>\n          </null>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+  "uri" : "/webserviceMyWebserviceEJB",
+  "verb" : "POST"
+}

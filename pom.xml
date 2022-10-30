@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.5.0</maven>
@@ -54,7 +55,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <plugins.org-apache-maven-plugins.maven-compiler-plugin>3.1
         </plugins.org-apache-maven-plugins.maven-compiler-plugin>
-        <maven-gpg-plugin.enabled />
+        <maven-gpg-plugin.enabled/>
         <!--[ ch ]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <ch.qos.logback.version>1.2.10</ch.qos.logback.version>
         <commons-io.version>2.5</commons-io.version>
@@ -64,6 +65,9 @@
 
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <javax.servlet.version>3.1.0</javax.servlet.version>
+        <com.sun.xml.ws.version>2.3.5</com.sun.xml.ws.version>
+        <org.jboss.ws.version>1.0.3.Final</org.jboss.ws.version>
+
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <org.slf4j.version>1.7.21</org.slf4j.version>
         <org.apache.maven.version>3.5.0</org.apache.maven.version>
@@ -266,6 +270,25 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax.servlet.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.ws</groupId>
+                <artifactId>jbossws-api</artifactId>
+                <version>${org.jboss.ws.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-rt</artifactId>
+                <version>${com.sun.xml.ws.version}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>rt</artifactId>
+                <version>${com.sun.xml.ws.version}</version>
             </dependency>
 
             <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

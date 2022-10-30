@@ -8,5 +8,18 @@ import java.lang.annotation.*;
 @Documented
 public @interface Partner {
     String name() default "";
+
+    String shortName() default "";
+
     String type() default "";
+
+    String service() default "";
+
+    String subService() default "";
+
+    String description() default "";
+
+    String protocol() default "";
+
+    String tokenType() default "";
 }

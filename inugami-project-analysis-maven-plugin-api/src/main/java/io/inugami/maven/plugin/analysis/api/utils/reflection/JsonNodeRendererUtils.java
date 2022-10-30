@@ -16,35 +16,33 @@
  */
 package io.inugami.maven.plugin.analysis.api.utils.reflection;
 
-import io.inugami.api.models.JsonBuilder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import java.util.Collections;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class JsonNodeRendererUtils {
 
-public class UnknownJsonType extends JsonNode {
-    public static final  String OBJECT           = "<object>";
-    private static final long   serialVersionUID = -4473300215794854497L;
 
     // =========================================================================
-    // CONSTRUCTORS
+    // API
     // =========================================================================
-
-
-    public UnknownJsonType() {
-        super(null,
-              false,
-              false,
-              false,
-              null,
-              null,
-              null,
-              null,
-              Collections.emptyList(),
-              false,
-              null);
+    public static int countLevel(final String path) {
+        int result = 0;
+        if (path != null) {
+            for (final char charElement : path.toCharArray()) {
+                if ('.' == charElement) {
+                    result++;
+                }
+            }
+        }
+        return result;
     }
 
-    @Override
-    public String convertToJson() {
-        return new JsonBuilder().valueQuot(OBJECT).toString();
+    public static String buildIndentation(final int length) {
+        final StringBuilder result = new StringBuilder();
+        for (int i = length; i > 0; i--) {
+            result.append("  ");
+        }
+        return result.toString();
     }
 }
