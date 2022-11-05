@@ -21,6 +21,7 @@ import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -56,6 +57,9 @@ public final class RestAnalyzerUtils {
     public static final  String IDENTIFIER                = "identifier";
     public static final  String URI                       = "uri";
     public static final  String DESCRIPTION               = "description";
+    public static final  String DESCRIPTION_DETAIL        = "descriptionDetail";
+    public static final  String DESCRIPTION_URL           = "descriptionUrl";
+    public static final  String DESCRIPTION_EXAMPLE       = "descriptionExample";
     public static final  String EXPOSE                    = "EXPOSE";
     public static final  String SEPARATOR                 = ",";
     public static final  String REST                      = "Rest";
@@ -130,7 +134,7 @@ public final class RestAnalyzerUtils {
 
         //@formatter:off
         processIfNotEmpty(endpoint.getNickname(),     (value)->result.put(NICKNAME, value));
-        processIfNotEmpty(endpoint.getMethod(),      (value)->result.put(METHOD, value));
+        processIfNotEmpty(endpoint.getMethod(),       (value)->result.put(METHOD, value));
         processIfNotEmpty(endpoint.getHeaders(),      (value)->result.put(HEADER, value));
         processIfNotEmpty(endpoint.getConsume(),      (value)->result.put(ACCEPT, value));
         processIfNotEmpty(endpoint.getProduce(),      (value)->result.put(CONTENT_TYPE, value));
@@ -138,6 +142,13 @@ public final class RestAnalyzerUtils {
         processIfNotEmpty(endpoint.getResponseType(), (value)->result.put(RESPONSE_PAYLOAD, value));
         processIfNotEmpty(endpoint.getDescription(),  (value)->result.put(DESCRIPTION, value));
         //@formatter:on
+
+        if (endpoint.getDescriptionDetail() != null) {
+            final DescriptionDTO detail = endpoint.getDescriptionDetail();
+            processIfNotEmpty(detail.getContent(), (value) -> result.put(DESCRIPTION_DETAIL, value));
+            processIfNotEmpty(detail.getUrl(), (value) -> result.put(DESCRIPTION_URL, value));
+            processIfNotEmpty(detail.getExample(), (value) -> result.put(DESCRIPTION_EXAMPLE, value));
+        }
 
         return result;
     }

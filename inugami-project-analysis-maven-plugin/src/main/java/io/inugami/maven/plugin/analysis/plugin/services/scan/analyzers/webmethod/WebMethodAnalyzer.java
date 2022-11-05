@@ -30,6 +30,7 @@ import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.tools.RestAnalyzerUtils;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.*;
 import io.inugami.maven.plugin.analysis.functional.CheckUtils;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.ws.api.annotation.WebContext;
 
@@ -57,14 +58,15 @@ public class WebMethodAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String SEPARATOR       = ",";
-    public static final String FEATURE_NAME    = "inugami.maven.plugin.analysis.analyzer.webMethod";
-    public static final String FEATURE         = FEATURE_NAME + ".enable";
-    public static final String POST            = "POST";
-    public static final String UTF_8           = "UTF-8";
-    public static final String CHARSET         = "; charset=";
-    public static final String APPLICATION_XML = "application/xml";
-    public static final String URL_SEPARATOR   = "/";
+    public static final  String            SEPARATOR           = ",";
+    public static final  String            FEATURE_NAME        = "inugami.maven.plugin.analysis.analyzer.webMethod";
+    public static final  String            FEATURE             = FEATURE_NAME + ".enable";
+    public static final  String            POST                = "POST";
+    public static final  String            UTF_8               = "UTF-8";
+    public static final  String            CHARSET             = "; charset=";
+    public static final  String            APPLICATION_XML     = "application/xml";
+    public static final  String            URL_SEPARATOR       = "/";
+    private static final ErrorCodeAnalyzer ERROR_CODE_ANALYZER = new ErrorCodeAnalyzer();
 
     // =========================================================================
     // ACCEPT
@@ -119,6 +121,14 @@ public class WebMethodAnalyzer implements ClassAnalyzer {
                 result.addNode(node);
             }
 
+            if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail()
+                                                                   .getPotentialErrors() != null) {
+                ERROR_CODE_ANALYZER.buildErrorCodes(endpoint.getDescriptionDetail().getPotentialErrors(),
+                                                    projectNode,
+                                                    node,
+                                                    result);
+            }
+
             final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
             result.addNode(inputDto);
             for (Node input : inputDto) {
@@ -171,6 +181,7 @@ public class WebMethodAnalyzer implements ClassAnalyzer {
         }
         return List.of(result);
     }
+
 
     protected RestApi analyseRestApi(final Class<?> clazz,
                                      final List<Method> methods,
