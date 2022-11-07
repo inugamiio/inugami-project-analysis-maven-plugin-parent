@@ -66,6 +66,7 @@ public final class RestAnalyzerUtils {
     public static final  String SERVICE_TYPE              = "ServiceType";
     public static final  String SERVICE_TYPE_RELATIONSHIP = "SERVICE_TYPE";
     public static final  String ADDITIONAL_IDENTIFIER     = "additionalIdentifier";
+    public static final  String DEPRECATED                = "deprecated";
 
 
     // =========================================================================
@@ -131,6 +132,7 @@ public final class RestAnalyzerUtils {
         result.put(VERB, cleanLines(endpoint.getVerb()));
         result.put(URI, cleanLines(endpoint.getUri()));
         result.put(IDENTIFIER, identifier);
+        result.put(DEPRECATED, endpoint.isDeprecated());
 
         //@formatter:off
         processIfNotEmpty(endpoint.getNickname(),     (value)->result.put(NICKNAME, value));

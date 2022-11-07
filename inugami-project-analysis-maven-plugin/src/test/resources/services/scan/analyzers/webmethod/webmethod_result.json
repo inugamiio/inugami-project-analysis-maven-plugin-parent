@@ -38,6 +38,7 @@
     "properties" : {
       "accept" : "application/xml; charset=UTF-8",
       "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : false,
       "descriptionDetail" : "This service allow to create new customer",
       "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUserV2>          <user>          </user></ns:createUserV2></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUserV2>          <null>          </null></ns:createUserV2></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.createUserV2'",
       "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.createUserV2",
@@ -68,6 +69,7 @@
     "properties" : {
       "accept" : "application/xml; charset=UTF-8",
       "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : true,
       "descriptionDetail" : "This service allow to create new customer",
       "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUser>          <user>          </user></ns:createUser></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUser>          <null>          </null></ns:createUser></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.createUser'",
       "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.createUser",
@@ -84,6 +86,7 @@
     "properties" : {
       "accept" : "application/xml; charset=UTF-8",
       "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : false,
       "descriptionDetail" : "This service allow say hello to specific user",
       "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:sayHello>          <userName>String</userName>          <country>String</country></ns:sayHello></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:sayHello>          <null>String</null></ns:sayHello></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.sayHello'",
       "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.sayHello",
