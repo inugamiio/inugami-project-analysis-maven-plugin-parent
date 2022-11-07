@@ -1,0 +1,629 @@
+{
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "user",
+    "properties" : {
+      "payload" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85"
+  }, {
+    "name" : "user",
+    "properties" : {
+      "payload" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85"
+  }, {
+    "name" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}",
+    "properties" : {
+      "payload" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85"
+  }, {
+    "name" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}",
+    "properties" : {
+      "payload" : "{\n  \"id\":\"Long\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"email\":\"String\",\n  \"roles\":\"String\",\n  \"globalPreference\":{\n    \"consents\":{\n  \"newsletter\":\"boolean\",\n  \"email\":\"boolean\",\n  \"phone\":\"boolean\"\n    },\n\"preferences\":[\n    \"preferences\":{\n  \"key\":\"String\",\n  \"value\":\"String\",\n  \"histories\":[\n    {\n      \"date\":\"Calendar\",\n      \"user\":\"String\",\n      \"tags\":[\n        {\n          \"name\":\"String\",\n          \"level\":\"int\"\n        }\n      ]\n    }\n  ]\n    }\n]\n  }\n}"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85"
+  }, {
+    "name" : "Rest",
+    "type" : "ServiceType",
+    "uid" : "Rest"
+  }, {
+    "name" : "MyWebservice.createUserV2",
+    "properties" : {
+      "accept" : "application/xml; charset=UTF-8",
+      "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : false,
+      "descriptionDetail" : "This service allow to create new customer",
+      "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUserV2>          <user>          </user></ns:createUserV2></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUserV2>          <null>          </null></ns:createUserV2></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.createUserV2'",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.createUserV2",
+      "nickname" : "MyWebservice.createUserV2",
+      "requestPayload" : "<!--This service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n    * [ERR-003] [HTTP-500_technical]  Preference key is require\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUserV2>\n          <user>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </user>\n\t\t</ns:createUserV2>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "responsePayload" : "<!--This service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUserV2>\n          <null>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </null>\n\t\t</ns:createUserV2>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "uri" : "/webserviceMyWebserviceEJB",
+      "verb" : "POST"
+    },
+    "type" : "Service",
+    "uid" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2"
+  }, {
+    "name" : "name",
+    "properties" : {
+      "payload" : "String"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "String",
+    "properties" : {
+      "payload" : "String"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "MyWebservice.createUser",
+    "properties" : {
+      "accept" : "application/xml; charset=UTF-8",
+      "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : true,
+      "descriptionDetail" : "This service allow to create new customer",
+      "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUser>          <user>          </user></ns:createUser></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:createUser>          <null>          </null></ns:createUser></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.createUser'",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.createUser",
+      "nickname" : "MyWebservice.createUser",
+      "requestPayload" : "<!--[/!\\ DEPRECATED ]*********************************\nThis service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n    * [S-003] [HTTP-0_technical]  can't connect to database\n    * [ERR-0000] [HTTP-500_technical]  undefine error occurs\n    * [ERR-003] [HTTP-500_technical]  Preference key is require\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <user>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </user>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "responsePayload" : "<!--[/!\\ DEPRECATED ]*********************************\nThis service allow to create new customer\n  Potential errors :\n    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer\n    * [S-003] [HTTP-0_technical]  can't connect to database\n    * [ERR-0000] [HTTP-500_technical]  undefine error occurs\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:createUser>\n          <null>\n            <id>Long</id>\n            <firstName>String</firstName>\n            <lastName>String</lastName>\n            <email>String</email>\n            <roles>String</roles>\n            <globalPreference>\n              <consents>\n                <newsletter>boolean</newsletter>\n                <email>boolean</email>\n                <phone>boolean</phone>\n              </consents>\n              <!--multiple occurrence possible-->\n              <preferences>\n                <!--key is mandatory\n                  Potential errors :\n                    * [ERR-003] [HTTP-500_technical]  Preference key is require\n                -->\n                <key>String</key>\n                <value>String</value>\n                <!--multiple occurrence possible-->\n                <histories>\n                  <date>Calendar</date>\n                  <user>String</user>\n                  <!--multiple occurrence possible-->\n                  <tags>\n                    <name>String</name>\n                    <level>int</level>\n                  </tags>\n                </histories>\n              </preferences>\n            </globalPreference>\n          </null>\n\t\t</ns:createUser>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "uri" : "/webserviceMyWebserviceEJB",
+      "verb" : "POST"
+    },
+    "type" : "Service",
+    "uid" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74"
+  }, {
+    "name" : "MyWebservice.sayHello",
+    "properties" : {
+      "accept" : "application/xml; charset=UTF-8",
+      "contentType" : "application/xml; charset=UTF-8",
+      "deprecated" : false,
+      "descriptionDetail" : "This service allow say hello to specific user",
+      "identifier" : "'verb':'POST','uri':'/webserviceMyWebserviceEJB','accept':'application/xml; charset=UTF-8','contentType':'application/xml; charset=UTF-8','requestPayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:sayHello>          <userName>String</userName>          <country>String</country></ns:sayHello></soapenv:Body></soapenv:Envelope>','responsePayload':'<soapenv:Envelope xmlns:soapenv='http:/schemas.xmlsoap.org/soap/envelope/' xmlns:ns='http:/inugami.io'>'<soapenv:Header/><soapenv:Body><ns:sayHello>          <null>String</null></ns:sayHello></soapenv:Body></soapenv:Envelope>','additionalIdentifier':'MyWebservice.sayHello'",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.webmethod.WebMethodAnalyzerTest$MyWebservice.sayHello",
+      "nickname" : "MyWebservice.sayHello",
+      "requestPayload" : "<!--This service allow say hello to specific user\n  Potential errors :\n    * [S-004] [HTTP-404_functional]  current user doesn't exists\n    * [S-001] [HTTP-400_functional]  the country isn't managed ( see http://inugami.io/documentation/errors#COUNTRY_NOT_MANAGED)\n    * [FUN-002] [HTTP-400_functional]  country is missing\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:sayHello>\n          <!--\n          user's name \n          You are allows to specify also the user's uuid\n          -->\n          <userName>String</userName>\n          <!--\n          user's country, this field is mandatory\n          country code should be ISO code\n            Potential errors :\n              * [S-001] [HTTP-400_functional]  the country isn't managed ( see http://inugami.io/documentation/errors#COUNTRY_NOT_MANAGED)\n              * [FUN-002] [HTTP-400_functional]  country is missing\n          -->\n          <country>String</country>\n\t\t</ns:sayHello>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "responsePayload" : "<!--This service allow say hello to specific user\n  Potential errors :\n    * [S-004] [HTTP-404_functional]  current user doesn't exists\n-->\n<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ns=\"http://inugami.io\">\"\n\t<soapenv:Header/>\n\t<soapenv:Body>\n\t\t<ns:sayHello>\n          <null>String</null>\n\t\t</ns:sayHello>\n\t</soapenv:Body>\n</soapenv:Envelope>\n",
+      "uri" : "/webserviceMyWebserviceEJB",
+      "verb" : "POST"
+    },
+    "type" : "Service",
+    "uid" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21"
+  }, {
+    "name" : "ERR-0000",
+    "properties" : {
+      "description" : "",
+      "errorType" : "technical",
+      "example" : "",
+      "message" : "undefine error occurs",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 500,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_ERR-0000"
+  }, {
+    "name" : "ERR-003",
+    "properties" : {
+      "description" : "",
+      "errorType" : "technical",
+      "example" : "",
+      "message" : "Preference key is require",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 500,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_ERR-003"
+  }, {
+    "name" : "ERR-003",
+    "properties" : {
+      "description" : "",
+      "errorType" : "technical",
+      "example" : "",
+      "message" : "Preference key is require",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 500,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_ERR-003"
+  }, {
+    "name" : "FUN-002",
+    "properties" : {
+      "description" : "",
+      "errorType" : "functional",
+      "example" : "",
+      "message" : "country is missing",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 400,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_FUN-002"
+  }, {
+    "name" : "S-001",
+    "properties" : {
+      "description" : "",
+      "errorType" : "functional",
+      "example" : "",
+      "message" : "the country isn't managed",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 400,
+      "url" : "http://inugami.io/documentation/errors#COUNTRY_NOT_MANAGED"
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-001"
+  }, {
+    "name" : "S-002",
+    "properties" : {
+      "description" : "",
+      "errorType" : "functional",
+      "example" : "",
+      "message" : "User already exists, please choose another login to create a newer customer",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 409,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-002"
+  }, {
+    "name" : "S-002",
+    "properties" : {
+      "description" : "",
+      "errorType" : "functional",
+      "example" : "",
+      "message" : "User already exists, please choose another login to create a newer customer",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 409,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-002"
+  }, {
+    "name" : "S-003",
+    "properties" : {
+      "description" : "",
+      "errorType" : "technical",
+      "example" : "",
+      "message" : "can't connect to database",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 500,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-003"
+  }, {
+    "name" : "S-004",
+    "properties" : {
+      "description" : "",
+      "errorType" : "functional",
+      "example" : "",
+      "message" : "current user doesn't exists",
+      "messageDetail" : "",
+      "payload" : "",
+      "status" : 404,
+      "url" : ""
+    },
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-004"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "functional",
+    "type" : "ErrorType",
+    "uid" : "errorType_functional"
+  }, {
+    "name" : "technical",
+    "type" : "ErrorType",
+    "uid" : "errorType_technical"
+  }, {
+    "name" : "technical",
+    "type" : "ErrorType",
+    "uid" : "errorType_technical"
+  }, {
+    "name" : "technical",
+    "type" : "ErrorType",
+    "uid" : "errorType_technical"
+  }, {
+    "name" : "technical",
+    "type" : "ErrorType",
+    "uid" : "errorType_technical"
+  }, {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "artifactId" : "basic-artifact",
+      "groupId" : "io.inugami.test",
+      "major" : 1,
+      "minor" : 0,
+      "packaging" : "jar",
+      "patch" : 0,
+      "tag" : "SNAPSHOT",
+      "version" : "1.0.0-SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "to" : "errorCode_ERR-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "to" : "errorCode_S-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "to" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "to" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "to" : "errorCode_ERR-0000",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "to" : "errorCode_ERR-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "to" : "errorCode_S-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "to" : "errorCode_S-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "to" : "errorCode_FUN-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "to" : "errorCode_S-001",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "to" : "errorCode_S-004",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_ERR-0000",
+    "to" : "errorType_technical",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_ERR-0000",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_ERR-003",
+    "to" : "errorType_technical",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_ERR-003",
+    "to" : "errorType_technical",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_ERR-003",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_ERR-003",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_FUN-002",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_FUN-002",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_S-001",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_S-001",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_S-002",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_S-002",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_S-002",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_S-002",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_S-003",
+    "to" : "errorType_technical",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_S-003",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorCode_S-004",
+    "to" : "errorType_functional",
+    "type" : "HAS_ERROR_TYPE"
+  }, {
+    "from" : "errorCode_S-004",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_functional",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_functional",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_functional",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_functional",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_functional",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_technical",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_technical",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_technical",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "errorType_technical",
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "2c7471a7ccd7b6d487f24c856a7c8cc02737664dc80afdf323505517449f6732736a5ace31f91dcd3dbd96a8fb64e02e2f9d49569376a9a779e603080a734a85",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "c75243ecb6ef314f7b1ff92d838eab52cad6fa0c8bf1c1a71de8643a1cb39ec43e82d9b7d066a2ef3a4fed2a5f5574ff81028ca70c55d03f222da002219c28e2",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "d453b287be9faaf1bb446e9e6fe0a0c9a2d114604d08f034fcaa606604a88123361ddaa8ee86bc6a6624976cbcde8fdadd69b45e533c2fc94717560bc3126c74",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "edf65b3d07af015ba84ff5ddb5472befdf71b86d85e9b374440de0eb694cc4997d2ca2f9aa76247a570bc6befe3571a1d93f40bee9d11566ec6c950b73947a21",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-0000",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-003",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-003",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_FUN-002",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-001",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-002",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-002",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-003",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-004",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_functional",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_functional",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_functional",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_functional",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_functional",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_technical",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_technical",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_technical",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorType_technical",
+    "type" : "EXPOSE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-0000",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_ERR-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_FUN-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-001",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-002",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-003",
+    "type" : "HAS_ERROR_CODE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "errorCode_S-004",
+    "type" : "HAS_ERROR_CODE"
+  } ],
+  "relationshipsToDeletes" : [ ]
+}

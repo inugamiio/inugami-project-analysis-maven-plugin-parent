@@ -1,0 +1,48 @@
+<!--[/!\ DEPRECATED ]*********************************
+This service allow to create new customer
+  Potential errors :
+    * [S-002] [HTTP-409_functional]  User already exists, please choose another login to create a newer customer
+    * [S-003] [HTTP-0_technical]  can't connect to database
+    * [ERR-0000] [HTTP-500_technical]  undefine error occurs
+    * [ERR-003] [HTTP-500_technical]  Preference key is require
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://inugami.io">"
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ns:createUser>
+            <user>
+                <id>Long</id>
+                <firstName>String</firstName>
+                <lastName>String</lastName>
+                <email>String</email>
+                <roles>String</roles>
+                <globalPreference>
+                    <consents>
+                        <newsletter>boolean</newsletter>
+                        <email>boolean</email>
+                        <phone>boolean</phone>
+                    </consents>
+                    <!--multiple occurrence possible-->
+                    <preferences>
+                        <!--key is mandatory
+                          Potential errors :
+                            * [ERR-003] [HTTP-500_technical]  Preference key is require
+                        -->
+                        <key>String</key>
+                        <value>String</value>
+                        <!--multiple occurrence possible-->
+                        <histories>
+                            <date>Calendar</date>
+                            <user>String</user>
+                            <!--multiple occurrence possible-->
+                            <tags>
+                                <name>String</name>
+                                <level>int</level>
+                            </tags>
+                        </histories>
+                    </preferences>
+                </globalPreference>
+            </user>
+        </ns:createUser>
+    </soapenv:Body>
+</soapenv:Envelope>

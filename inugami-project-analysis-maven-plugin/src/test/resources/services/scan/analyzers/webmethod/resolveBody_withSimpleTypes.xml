@@ -1,0 +1,26 @@
+<!--This service allow say hello to specific user
+  Potential errors :
+    * [S-004] [HTTP-404_functional]  current user doesn't exists
+    * [S-001] [HTTP-400_functional]  the country isn't managed ( see http://inugami.io/documentation/errors#COUNTRY_NOT_MANAGED)
+    * [FUN-002] [HTTP-400_functional]  country is missing
+-->
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://inugami.io">"
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ns:sayHello>
+            <!--
+            user's name
+            You are allows to specify also the user's uuid
+            -->
+            <userName>String</userName>
+            <!--
+            user's country, this field is mandatory
+            country code should be ISO code
+              Potential errors :
+                * [S-001] [HTTP-400_functional]  the country isn't managed ( see http://inugami.io/documentation/errors#COUNTRY_NOT_MANAGED)
+                * [FUN-002] [HTTP-400_functional]  country is missing
+            -->
+            <country>String</country>
+        </ns:sayHello>
+    </soapenv:Body>
+</soapenv:Envelope>

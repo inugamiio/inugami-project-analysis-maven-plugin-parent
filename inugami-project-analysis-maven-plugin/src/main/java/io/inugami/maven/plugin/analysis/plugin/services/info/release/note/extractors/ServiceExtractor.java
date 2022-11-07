@@ -27,6 +27,7 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Di
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.api.tools.RestAnalyzerUtils;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ServiceDto;
 import lombok.extern.slf4j.Slf4j;
@@ -185,8 +186,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                           final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .name(String.valueOf(properties.get(NAME)))
@@ -199,6 +200,11 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                          .consumeContentType((String) properties.get(CONSUME_CONTENT_TYPE))
                          .headers((String) properties.get(HEADER))
                          .type(type)
+                         .deprecated(resolveDeprecated(properties.get(RestAnalyzerUtils.DEPRECATED)))
+                         .description((String) properties.get(RestAnalyzerUtils.DESCRIPTION))
+                         .descriptionDetail((String) properties.get(RestAnalyzerUtils.DESCRIPTION_DETAIL))
+                         .descriptionUrl((String) properties.get(RestAnalyzerUtils.DESCRIPTION_URL))
+                         .descriptionExample((String) properties.get(RestAnalyzerUtils.DESCRIPTION_EXAMPLE))
                          .build()
                          .addConsumer(serviceConsume)
                          .addProducer(serviceExpose)
@@ -206,12 +212,25 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                          .addMethod(method);
     }
 
+    private boolean resolveDeprecated(final Object value) {
+        boolean result = false;
+        if (value != null) {
+            if (value instanceof Boolean) {
+                result = ((Boolean) value).booleanValue();
+            }
+            else {
+                result = Boolean.parseBoolean(String.valueOf(value));
+            }
+        }
+        return result;
+    }
+
 
     private ServiceDto convertJMSService(final Map<String, Object> properties, final Record record, final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .type(type)
@@ -229,8 +248,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                               final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         final String binding        = String.valueOf(properties.get(BINDINGS));
         String       additionalInfo = null;
@@ -260,8 +279,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                              final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .type(type)

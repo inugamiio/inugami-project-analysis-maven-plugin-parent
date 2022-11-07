@@ -4,7 +4,7 @@
   "nodes" : [ {
     "name" : "SQL_MAIN_DATABASE_APP_USER",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":\"Address\"\n}"
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"username\":\"String\",\n  \"firstName\":\"String\",\n  \"lastName\":\"String\",\n  \"address\":{\n        \"uid\":\"Long\",\n        \"street\":\"String\",\n        \"number\":\"String\",\n        \"city\":\"String\",\n        \"country\":\"String\",\n        \"zipcode\":\"String\"\n  }\n}"
     },
     "type" : "Entity",
     "uid" : "2a8381254911b0fc1e6e985044e0af95b5525636e9be3678fd6e0dec10265484a2cae9e9273970f238ca4cab696b27a1b08ac354c8c17dd82fb54e2d23c62f79"

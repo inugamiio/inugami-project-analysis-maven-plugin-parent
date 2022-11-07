@@ -39,10 +39,10 @@
   }, {
     "name" : "comment",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}"
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":{\n        \"uid\":\"String\",\n        \"userName\":\"String\"\n  },\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}"
     },
     "type" : "INPUT_DTO",
-    "uid" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8"
+    "uid" : "4158e2ab700592429f6969f49cf9dc8d303874ba96242837eca814a7680a8960374cacb22fd3aea9593de4534c0682efe9df258270f4227c4605c824048103e3"
   }, {
     "name" : "JMS",
     "type" : "ServiceType",
@@ -152,7 +152,7 @@
     "properties" : {
       "containerFactory" : "myContainerFactory",
       "destination" : "${my.activeMq.onCreated.queue}",
-      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}",
+      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":{\n        \"uid\":\"String\",\n        \"userName\":\"String\"\n  },\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}",
       "selector" : "${my.activeMq.selector}",
       "subscription" : "${my.activeMq.subscription}"
     },
@@ -181,7 +181,7 @@
     "to" : "onCreateComment",
     "type" : "HAS_INPUT_DTO"
   }, {
-    "from" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8",
+    "from" : "4158e2ab700592429f6969f49cf9dc8d303874ba96242837eca814a7680a8960374cacb22fd3aea9593de4534c0682efe9df258270f4227c4605c824048103e3",
     "to" : "onCreateComment",
     "type" : "HAS_INPUT_DTO"
   }, {

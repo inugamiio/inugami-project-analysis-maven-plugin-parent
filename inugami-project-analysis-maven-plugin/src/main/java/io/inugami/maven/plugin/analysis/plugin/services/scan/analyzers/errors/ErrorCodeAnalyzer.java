@@ -23,6 +23,7 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.PotentialErrorDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -33,6 +34,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
 @Slf4j
@@ -54,6 +56,15 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     public static final String HAS_ERROR_TYPE        = "HAS_ERROR_TYPE";
     public static final String ERROR_CODE_PREFIX     = "errorCode_";
     public static final String ERROR_TYPE_PREFIX     = "errorType_";
+    public static final String PROPS_ERROR_TYPE      = "errorType";
+    public static final String TECHNICAL             = "technical";
+    public static final String PROPS_MESSAGE         = "message";
+    public static final String DESCRIPTION           = "description";
+    public static final String URL                   = "url";
+    public static final String PROPS_MESSAGE_DETAIL  = "messageDetail";
+    public static final String EXAMPLE               = "example";
+    public static final String PAYLOAD               = "payload";
+    public static final String STATUS                = "status";
 
     private Class<?>     errorCodeClass     = null;
     private List<Method> methods            = null;
@@ -218,6 +229,68 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     }
 
 
+    public void buildErrorCodes(final List<PotentialErrorDTO> potentialErrors,
+                                final Node artifactNode,
+                                final Node endpointNode,
+                                final ScanNeo4jResult result) {
+
+        if (potentialErrors != null && !potentialErrors.isEmpty() && artifactNode != null && result != null) {
+            for (PotentialErrorDTO errorCode : potentialErrors) {
+                buildErrorCode(errorCode, artifactNode, endpointNode, result);
+            }
+        }
+    }
+
+    private void buildErrorCode(final PotentialErrorDTO errorCode,
+                                final Node artifactNode,
+                                final Node endpointNode,
+                                final ScanNeo4jResult result) {
+
+        final Node.NodeBuilder builder = Node.builder();
+
+        builder.type(ERROR_CODE);
+        builder.uid(ERROR_CODE_PREFIX + errorCode.getErrorCode());
+        builder.name(errorCode.getErrorCode());
+
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
+        processIfNotNull(errorCode.getType(), (value) -> properties.put(PROPS_ERROR_TYPE, value));
+        processIfNotNull(errorCode.getErrorMessage(), (value) -> properties.put(PROPS_MESSAGE, value));
+        processIfNotNull(errorCode.getDescription(), (value) -> properties.put(DESCRIPTION, value));
+        processIfNotNull(errorCode.getUrl(), (value) -> properties.put(URL, value));
+        processIfNotNull(errorCode.getErrorMessageDetail(), (value) -> properties.put(PROPS_MESSAGE_DETAIL, value));
+        processIfNotNull(errorCode.getExample(), (value) -> properties.put(EXAMPLE, value));
+        processIfNotNull(errorCode.getPayload(), (value) -> properties.put(PAYLOAD, value));
+        properties.put(STATUS, errorCode.getHttpStatus() <= 0 ? 500 : errorCode.getHttpStatus());
+        builder.properties(properties);
+
+        final Node errorCodeNode = builder.build();
+        final Node errorTypeNode = buildErrorType(errorCodeNode);
+
+        result.addNode(errorCodeNode, errorTypeNode);
+
+        if (endpointNode != null) {
+            result.addRelationship(Relationship.builder()
+                                               .from(endpointNode.getUid())
+                                               .to(errorCodeNode.getUid())
+                                               .type(HAS_ERROR_CODE)
+                                               .build());
+        }
+
+        result.addRelationship(Relationship.builder()
+                                           .from(artifactNode.getUid())
+                                           .to(errorCodeNode.getUid())
+                                           .type(HAS_ERROR_CODE)
+                                           .build());
+
+        result.addRelationship(Relationship.builder()
+                                           .from(errorCodeNode.getUid())
+                                           .to(errorTypeNode.getUid())
+                                           .type(HAS_ERROR_TYPE)
+                                           .build());
+
+    }
+
+
     private Node buildNode(final Object instance) {
         final Node.NodeBuilder node = Node.builder();
         node.type(ERROR_CODE);
@@ -260,8 +333,8 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
 
     private Node buildErrorType(final Node errorNode) {
-        final String errorType = errorNode.getProperties().get("errorType") == null ? "technical" :
-                                 String.valueOf(errorNode.getProperties().get("errorType"));
+        final String errorType = errorNode.getProperties().get(PROPS_ERROR_TYPE) == null ? TECHNICAL :
+                                 String.valueOf(errorNode.getProperties().get(PROPS_ERROR_TYPE));
 
 
         return Node.builder()
