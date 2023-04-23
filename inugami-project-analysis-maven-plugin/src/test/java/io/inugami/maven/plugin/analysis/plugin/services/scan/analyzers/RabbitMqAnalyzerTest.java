@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -73,7 +73,7 @@ class RabbitMqAnalyzerTest {
 
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(RabbitMqAnalyzerTest.ClassListener.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitListener_result_01.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitListener_result_01.json");
     }
 
     @Test
@@ -82,7 +82,7 @@ class RabbitMqAnalyzerTest {
 
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(RabbitMqAnalyzerTest.MethodListener.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitListener_result_02.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitListener_result_02.json");
     }
 
     @Test
@@ -91,7 +91,7 @@ class RabbitMqAnalyzerTest {
 
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(RabbitMqAnalyzerTest.MethodSender.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitSender_result_01.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitSender_result_01.json");
     }
 
     @Test
@@ -100,7 +100,7 @@ class RabbitMqAnalyzerTest {
 
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(RabbitMqAnalyzerTest.MethodSenderOneParam.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitSender_result_02.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/rabbitMq/rabbitSender_result_02.json");
     }
 
     @Test
@@ -148,15 +148,15 @@ class RabbitMqAnalyzerTest {
     )
     private static class ClassListener {
         @RabbitMqHandlerInfo(id = "user.created",
-                             routingKey = "${events.user.created.routingKey}",
-                             typeId = "${events.user.created.typeId}")
+                routingKey = "${events.user.created.routingKey}",
+                typeId = "${events.user.created.typeId}")
         @RabbitHandler
         public void onUpdate(final UserCreatedEvent event) {
 
         }
 
         @RabbitMqHandlerInfo(routingKey = "${events.user.authenticated.routingKey}",
-                             typeId = "${events.user.authenticated.typeId}")
+                typeId = "${events.user.authenticated.typeId}")
         @RabbitHandler
         public void onAuthenticated(final UserAuthenticatedEvent event) {
 
@@ -191,8 +191,8 @@ class RabbitMqAnalyzerTest {
     private static class MethodSender {
 
         @RabbitMqSender(echangeName = "${events.exchangeName}",
-                        queue = "${events.method.user.queueName}",
-                        routingKey = "${events.user.method.created.routingKey}"
+                queue = "${events.method.user.queueName}",
+                routingKey = "${events.user.method.created.routingKey}"
         )
         public void fireEvent(final String someValue, @RabbitMqEvent final UserCreatedEvent event) {
 
@@ -202,10 +202,10 @@ class RabbitMqAnalyzerTest {
 
     private static class MethodSenderOneParam {
         @RabbitMqSender(echangeName = "${events.exchangeName}",
-                        queue = "${events.method.user.queueName}",
-                        routingKey = "${events.user.method.created.routingKey}"
+                queue = "${events.method.user.queueName}",
+                routingKey = "${events.user.method.created.routingKey}"
         )
-        public void fireEvent(@RabbitMqEvent  final UserCreatedEvent event) {
+        public void fireEvent(@RabbitMqEvent final UserCreatedEvent event) {
 
         }
     }

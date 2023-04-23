@@ -16,7 +16,6 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.build;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.exceptions.FatalException;
 import io.inugami.api.exceptions.services.ConnectorException;
 import io.inugami.api.spi.SpiLoader;
@@ -38,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.inugami.api.exceptions.Asserts.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.*;
 
 @Slf4j
@@ -46,7 +46,7 @@ public class PropertiesLoader {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private static final List<PropertiesConvertorSpi> CONVERTORS    = new SpiLoader().loadSpiServicesByPriority(
+    private static final List<PropertiesConvertorSpi> CONVERTORS    = SpiLoader.getInstance().loadSpiServicesByPriority(
             PropertiesConvertorSpi.class);
     public static final  String                       AUTHORIZATION = "Authorization";
 
@@ -54,13 +54,13 @@ public class PropertiesLoader {
     // LOAD PROPERTIES
     // =========================================================================
     public Map<String, String> loadProperties(final PropertiesResources propertiesResources) {
-        Asserts.notNull(PROPERTIES_RESOURCES_REQUIRED, propertiesResources);
-        Asserts.isFalse(FILE_OR_URL_REQUIRE,
-                        propertiesResources.getPropertiesPath() == null && propertiesResources.getPropertiesUrl() == null);
+        assertNotNull(PROPERTIES_RESOURCES_REQUIRED, propertiesResources);
+        assertFalse(FILE_OR_URL_REQUIRE,
+                    propertiesResources.getPropertiesPath() == null && propertiesResources.getPropertiesUrl() == null);
 
         Map<String, String> result = propertiesResources.getPropertiesPath() == null
-                                     ? loadUrlProperties(propertiesResources)
-                                     : loadFileProperties(propertiesResources);
+                ? loadUrlProperties(propertiesResources)
+                : loadFileProperties(propertiesResources);
 
         if (propertiesResources.getProperties() != null) {
             if (result == null) {
@@ -76,20 +76,19 @@ public class PropertiesLoader {
     // LOAD FILE
     // =========================================================================
     private Map<String, String> loadFileProperties(final PropertiesResources propertiesResources) {
-        File file = new File(propertiesResources.getPropertiesPath());
+        final File file = new File(propertiesResources.getPropertiesPath());
 
-        Asserts.isTrue(
+        assertTrue(
                 FILE_NOT_EXISTS.addDetail("can't load properties, file {0} doesn't exists", file.getAbsoluteFile()),
                 file.exists());
 
         String content = null;
         try {
             final Charset charset = propertiesResources.getEncoding() == null
-                                    ? Charset.forName("UTF-8")
-                                    : Charset.forName(propertiesResources.getEncoding());
+                    ? Charset.forName("UTF-8")
+                    : Charset.forName(propertiesResources.getEncoding());
             content = new String(FilesUtils.readBytes(file), charset);
-        }
-        catch (IOException e) {
+        } catch (final IOException e) {
             throw new FatalException(e.getMessage(), e);
         }
         return convertToMap(content, propertiesResources.getType());
@@ -99,16 +98,15 @@ public class PropertiesLoader {
     // LOAD URL
     // =========================================================================
     private Map<String, String> loadUrlProperties(final PropertiesResources propertiesResources) {
-        Asserts.notEmpty(URL_REQUIRE, propertiesResources.getPropertiesUrl());
+        assertNotEmpty(URL_REQUIRE, propertiesResources.getPropertiesUrl());
 
-        ResponseContentType content = callExternalApi(propertiesResources);
+        final ResponseContentType content = callExternalApi(propertiesResources);
 
         PropertiesConvertorSpi convertor = null;
 
         if (content.getContent() == null) {
             log.error("no response data from : {}", propertiesResources.getPropertiesUrl());
-        }
-        else {
+        } else {
             convertor = resolveConvertor(content.getContentType());
         }
 
@@ -133,11 +131,9 @@ public class PropertiesLoader {
         HttpConnectorResult response = null;
         try {
             response = http.get(propertiesResources.getPropertiesUrl(), null, headers);
-        }
-        catch (ConnectorException e) {
+        } catch (final ConnectorException e) {
             log.error(e.getMessage(), e);
-        }
-        finally {
+        } finally {
             http.close();
         }
 
@@ -174,7 +170,7 @@ public class PropertiesLoader {
 
     private PropertiesConvertorSpi resolveConvertor(final String type) {
         PropertiesConvertorSpi result = null;
-        for (PropertiesConvertorSpi convertor : CONVERTORS) {
+        for (final PropertiesConvertorSpi convertor : CONVERTORS) {
             if (convertor.accept(type)) {
                 result = convertor;
                 break;

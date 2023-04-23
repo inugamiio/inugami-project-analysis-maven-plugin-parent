@@ -32,18 +32,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.atomic.AtomicReference;
 
 @EnableWebMvc
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
-
+    public static final AtomicReference<String> CURRENT_PATH = new AtomicReference<>();
     @Value("${inugami.release.note.enabled:true}")
-    private boolean mapping;
+    private             boolean                 mapping;
     @Value("${inugami.release.note.path:#{null}}")
-    private String  path;
+    private             String                  path;
     @Value("${inugami.release.note.artifactName:release-note}")
-    private String  artifactName;
-    private String  currentPath;
+    private             String                  artifactName;
+    private             String                  currentPath;
 
     @Autowired(required = false)
     private DependenciesCheckService dependenciesCheckService;
@@ -53,7 +54,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
         if (path == null) {
             path = "/release-note-app/";
         }
-
+        CURRENT_PATH.set(path);
         currentPath = path;
         if (!currentPath.endsWith("/")) {
             currentPath = currentPath + "/";

@@ -16,7 +16,6 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.mojo;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.loggers.Loggers;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
@@ -70,6 +69,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
+
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -111,10 +112,10 @@ public class CheckMojo extends AbstractMojo {
     private PluginDescriptor pluginDescriptor;
 
     @Component
-    private ArtifactHandler  artifactHandler;
+    private ArtifactHandler artifactHandler;
 
     @Parameter(defaultValue = "${settings}", readonly = true, required = true)
-    private Settings         settings;
+    private Settings settings;
 
     @Component
     private SecDispatcher secDispatcher;
@@ -135,13 +136,12 @@ public class CheckMojo extends AbstractMojo {
             writeResult(context, result);
             postAnalyse(context, result);
             log.info(ConsoleColors.renderState(ConsoleColors.State.SUCCESS, "scan complete"));
-        }
-        catch (final Throwable error) {
+        } catch (final Throwable error) {
             log.error(error.getMessage(), error);
             log.info(ConsoleColors.renderState(ConsoleColors.State.ERROR, "scan complete with error"));
             throw new MojoFailureException(error.getMessage(), error);
-        }finally {
-            if(context.getNeo4jDao()!=null){
+        } finally {
+            if (context.getNeo4jDao() != null) {
                 context.getNeo4jDao().shutdown();
             }
         }
@@ -153,15 +153,14 @@ public class CheckMojo extends AbstractMojo {
     // =========================================================================
     private void preAnalyze(final ScanConext context) {
         log.info("launching pre analyze ...");
-        final List<ProjectPreAnalyzer> scanners = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(ProjectPreAnalyzer.class);
+        final List<ProjectPreAnalyzer> scanners = SpiLoader.getInstance()
+                                                           .loadSpiServicesByPriority(ProjectPreAnalyzer.class);
 
         for (final ProjectPreAnalyzer analyzer : scanners) {
             if (analyzer.accept(context)) {
                 try {
                     analyzer.preAnalyze(context);
-                }
-                finally {
+                } finally {
                     analyzer.shutdown();
                 }
             }
@@ -172,7 +171,7 @@ public class CheckMojo extends AbstractMojo {
     private List<JsonObject> analyze(final ScanConext context) {
         log.info("launching scan ...");
         final List<JsonObject>     result;
-        final List<ProjectScanner> scanners = SpiLoader.INSTANCE.loadSpiServicesByPriority(ProjectScanner.class);
+        final List<ProjectScanner> scanners = SpiLoader.getInstance().loadSpiServicesByPriority(ProjectScanner.class);
         result = new ScanService(context, scanners).scan();
         log.info(ConsoleColors.renderState(ConsoleColors.State.SUCCESS, "scan done"));
         return result;
@@ -180,7 +179,7 @@ public class CheckMojo extends AbstractMojo {
 
     private void writeResult(final ScanConext context, final List<JsonObject> result) {
         log.info("launching writing result ...");
-        final List<ResultWriter> writers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ResultWriter.class);
+        final List<ResultWriter> writers = SpiLoader.getInstance().loadSpiServicesByPriority(ResultWriter.class);
         writers.forEach(writer -> writer.init(context));
         new WriterService(result, context, writers).write();
         writers.forEach(writer -> writer.shutdown(context));
@@ -190,15 +189,14 @@ public class CheckMojo extends AbstractMojo {
 
     private void postAnalyse(final ScanConext context, final List<JsonObject> result) {
         log.info("launching pre analyze ...");
-        final List<ProjectPostAnalyzer> scanners = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(ProjectPostAnalyzer.class);
+        final List<ProjectPostAnalyzer> scanners = SpiLoader.getInstance()
+                                                            .loadSpiServicesByPriority(ProjectPostAnalyzer.class);
 
         for (final ProjectPostAnalyzer analyzer : scanners) {
             if (analyzer.accept(context)) {
                 try {
                     analyzer.postAnalyze(context, result);
-                }
-                finally {
+                } finally {
                     analyzer.shutdown();
                 }
             }
@@ -220,7 +218,7 @@ public class CheckMojo extends AbstractMojo {
         configuration.put(Constants.INTERACTIVE, "false");
         initProperties(configuration);
 
-        Neo4jDao neo4jDao = new DefaultNeo4jDao(configuration);
+        final Neo4jDao neo4jDao = new DefaultNeo4jDao(configuration);
         return ScanConext.builder()
                          .basedir(basedir)
                          .project(project)
@@ -255,8 +253,8 @@ public class CheckMojo extends AbstractMojo {
     private void initProperties(final ConfigHandler<String, String> configuration) {
 
         if (project.getIssueManagement() != null) {
-            Asserts.notEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
-            Asserts.notEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
+            assertNotEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
+            assertNotEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
             configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
             configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
         }
@@ -270,8 +268,8 @@ public class CheckMojo extends AbstractMojo {
             ((DefaultSecDispatcher) secDispatcher).setConfigurationFile(securityPath);
         }
 
-        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.getInstance()
+                                                                               .loadSpiServicesByPriority(PropertiesInitialization.class);
         for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
             propsInitializer.initialize(configuration, project, settings, secDispatcher);
         }
@@ -320,11 +318,9 @@ public class CheckMojo extends AbstractMojo {
             }
             ReflectionService.initializeClassloader(currentClassloader);
             return currentClassloader;
-        }
-        catch (final MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new MojoExecutionException("Unable to create class loader with compiled classes", e);
-        }
-        catch (final DependencyResolutionRequiredException e) {
+        } catch (final DependencyResolutionRequiredException e) {
             throw new MojoExecutionException("Dependency resolution (runtime + compile) is required");
         }
     }
@@ -346,8 +342,7 @@ public class CheckMojo extends AbstractMojo {
                 final URL url = artifact.getFile().toURI().toURL();
                 Loggers.DEBUG.info("load jar : {}", url);
                 result.add(url);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 if (Loggers.DEBUG.isDebugEnabled()) {
                     Loggers.DEBUG.error(e.getMessage(), e);
                 }

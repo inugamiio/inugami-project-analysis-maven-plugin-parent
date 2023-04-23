@@ -86,8 +86,7 @@ public class GitLogScan implements ProjectScanner {
         List<JsonObject> result = null;
         try {
             result = process(context);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             log.error(e.getMessage(), e);
         }
         return result == null ? List.of() : result;
@@ -153,7 +152,7 @@ public class GitLogScan implements ProjectScanner {
         log.debug(" tag {}", tagCommit);
 
         final Iterable<RevCommit> logs = tagFound == null ? git.log().call()
-                                                          : git.log().addRange(tagCommit, headCommitId).call();
+                : git.log().addRange(tagCommit, headCommitId).call();
 
         for (final Iterator<RevCommit> iterator = logs.iterator(); iterator.hasNext(); ) {
             final RevCommit rev = iterator.next();
@@ -180,8 +179,7 @@ public class GitLogScan implements ProjectScanner {
             File file = new File(absolutePath + File.separator + ".git");
             if (file.exists()) {
                 result = file;
-            }
-            else {
+            } else {
                 file = resolveGitRepo(new File(absolutePath).getParent());
                 if (file.exists()) {
                     result = file;
@@ -209,8 +207,7 @@ public class GitLogScan implements ProjectScanner {
             }
 
             return resolveLastTag(majorVersion, minorVersion, pathVersion, tags);
-        }
-        catch (final IOException error) {
+        } catch (final IOException error) {
             return null;
         }
     }
@@ -340,13 +337,13 @@ public class GitLogScan implements ProjectScanner {
                                .to(versionNode.getUid())
                                .type(RELATIONSHIP_WORKED_ON_VERSION)
                                .build()
-                      );
+        );
     }
 
 
     private ScanNeo4jResult buildIssues(final List<GitLog> gitLogs, final Node versionNode, final ScanConext context) {
-        final List<IssueTackerProvider> providers = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(IssueTackerProvider.class);
+        final List<IssueTackerProvider> providers = SpiLoader.getInstance()
+                                                             .loadSpiServicesByPriority(IssueTackerProvider.class);
 
         final List<IssueTackerProvider> providersEnabled = providers.stream()
                                                                     .filter(provider -> provider.enable(context))
@@ -374,7 +371,7 @@ public class GitLogScan implements ProjectScanner {
     }
 
     private synchronized ScanNeo4jResult getNeo4jResult(final Node versionNode, final ScanConext context,
-                                           final Map<IssueTackerProvider, Set<String>> issues) {
+                                                        final Map<IssueTackerProvider, Set<String>> issues) {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (!issues.isEmpty()) {
             for (final Map.Entry<IssueTackerProvider, Set<String>> entry : issues.entrySet()) {
@@ -383,16 +380,14 @@ public class GitLogScan implements ProjectScanner {
                 try {
                     final ScanNeo4jResult providerResult = provider.buildNodes(entry.getValue(), versionNode.getUid());
                     ScanNeo4jResult.merge(providerResult, result);
-                }
-                catch (final Exception error) {
+                } catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
             }
             for (final IssueTackerProvider provider : issues.keySet()) {
                 try {
                     provider.shutdown();
-                }
-                catch (final Exception error) {
+                } catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
             }

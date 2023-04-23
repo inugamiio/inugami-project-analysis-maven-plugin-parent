@@ -39,7 +39,7 @@ public class PluginsModuleRenderer {
     // INIT
     // =========================================================================
     private static List<FrontPluginSpi> loadPlugins() {
-        final List<FrontPluginSpi> result = new SpiLoader().loadSpiServicesByPriority(FrontPluginSpi.class);
+        final List<FrontPluginSpi> result = SpiLoader.getInstance().loadSpiServicesByPriority(FrontPluginSpi.class);
         return result == null ? new ArrayList<>() : result;
     }
 
@@ -110,8 +110,7 @@ public class PluginsModuleRenderer {
             buffer.tab().tab().write(module);
             if (iterator.hasNext()) {
                 buffer.addSeparator().line();
-            }
-            else {
+            } else {
                 buffer.line();
             }
         }

@@ -45,7 +45,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
     // =========================================================================
     protected DefaultNeo4jDao() {
         encoders = null;
-        driver   = null;
+        driver = null;
     }
 
     public DefaultNeo4jDao(final Properties properties) {
@@ -54,22 +54,22 @@ public class DefaultNeo4jDao implements Neo4jDao {
         final String password = decodePassword(properties);
 
 
-        encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
-        driver   = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
+        encoders = SpiLoader.getInstance().loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
+        driver = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
     }
 
 
     public DefaultNeo4jDao(final ConfigHandler<String, String> configuration) {
-        encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
-        driver   = GraphDatabase.driver(configuration.grab("inugami.maven.plugin.analysis.writer.neo4j.url"),
-                                        AuthTokens.basic(configuration
-                                                                 .grab("inugami.maven.plugin.analysis.writer.neo4j.user"),
-                                                         decodePassword(configuration)));
+        encoders = SpiLoader.getInstance().loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
+        driver = GraphDatabase.driver(configuration.grab("inugami.maven.plugin.analysis.writer.neo4j.url"),
+                                      AuthTokens.basic(configuration
+                                                               .grab("inugami.maven.plugin.analysis.writer.neo4j.user"),
+                                                       decodePassword(configuration)));
     }
 
     public DefaultNeo4jDao(final String boltUri, final String login, final String password) {
-        encoders = SpiLoader.INSTANCE.loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
-        driver   = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
+        encoders = SpiLoader.getInstance().loadSpiServicesWithDefault(Neo4jValueEncoder.class, new DefaultNeo4jEncoder());
+        driver = GraphDatabase.driver(boltUri, AuthTokens.basic(login, password));
     }
 
 
@@ -233,8 +233,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
                     return result;
                 }
             });
-        }
-        catch (final Exception error) {
+        } catch (final Exception error) {
             log.error(error.getMessage(), error);
             log.error("enable to execute query : \n{}", cypherQuery);
         }
@@ -249,8 +248,8 @@ public class DefaultNeo4jDao implements Neo4jDao {
     public Node getNode(final String name, final String type, final Map<String, Object> parameters) {
         final Session             session = driver.session();
         final Map<String, Object> params  = parameters == null ? new HashMap<>() : parameters;
-        final String query  = searchQuery(name, type);
-        Node         result = null;
+        final String              query   = searchQuery(name, type);
+        Node                      result  = null;
         try {
             result = session.readTransaction(new TransactionWork<Node>() {
                 @Override
@@ -271,8 +270,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
                     return result;
                 }
             });
-        }
-        catch (final Exception error) {
+        } catch (final Exception error) {
             log.error(error.getMessage(), error);
             log.error("enable to execute query : \n{}", query);
         }
@@ -303,8 +301,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
                     return null;
                 }
             });
-        }
-        catch (final Exception error) {
+        } catch (final Exception error) {
             log.error(error.getMessage(), error);
             log.error("enable to execute query : \n{}", query);
         }

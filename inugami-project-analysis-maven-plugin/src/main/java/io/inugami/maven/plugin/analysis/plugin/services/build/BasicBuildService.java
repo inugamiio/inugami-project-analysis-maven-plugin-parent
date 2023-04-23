@@ -16,7 +16,6 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.build;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.exceptions.FatalException;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.models.FileResources;
@@ -38,6 +37,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static io.inugami.api.exceptions.Asserts.assertTrue;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_EXISTS;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_READABLE;
 
@@ -87,13 +87,13 @@ public class BasicBuildService {
         if (paths == null || paths.isEmpty()) {
             return;
         }
-        for (String path : paths) {
+        for (final String path : paths) {
             delete(path);
         }
     }
 
     private void delete(final String path) {
-        File file = new File(path).getAbsoluteFile();
+        final File file = new File(path).getAbsoluteFile();
 
         if (isNotAllowDeleteFile(file)) {
             log.error("not allow to delete file : {}", file.getAbsoluteFile());
@@ -103,7 +103,7 @@ public class BasicBuildService {
 
 
         final Pattern fileNameRegex = Pattern.compile(file.getName());
-        for (String fileName : parent.list()) {
+        for (final String fileName : parent.list()) {
             if (fileNameRegex.matcher(fileName).matches()) {
                 deleteFile(new File(String.join(File.separator, parent.getAbsolutePath(), fileName)));
             }
@@ -117,17 +117,14 @@ public class BasicBuildService {
 
                 if (file.delete()) {
                     log.info("file {} deleted", file.getAbsoluteFile());
-                }
-                else {
+                } else {
                     log.error("file {} not deleted", file.getAbsoluteFile());
                 }
-            }
-            else {
+            } else {
                 try {
                     FileUtils.deleteDirectory(file);
                     log.info("folder {} deleted", file.getAbsoluteFile());
-                }
-                catch (IOException e) {
+                } catch (final IOException e) {
                     log.error(e.getMessage(), e);
                     log.info("folder {} not deleted", file.getAbsoluteFile());
                 }
@@ -148,8 +145,7 @@ public class BasicBuildService {
 
         if ("/".equals(path) || path.trim().isEmpty() || windowsRootPath(path)) {
             result = true;
-        }
-        else if (!parent.exists()) {
+        } else if (!parent.exists()) {
             log.error("parent path doesn't exists : {}", file.getParent());
             result = true;
         }
@@ -171,7 +167,7 @@ public class BasicBuildService {
     // =========================================================================
     public void mkdirs(final List<String> paths) {
         if (paths != null) {
-            for (String path : paths) {
+            for (final String path : paths) {
                 mkdir(path);
             }
         }
@@ -189,8 +185,7 @@ public class BasicBuildService {
 
         if (file.mkdirs()) {
             log.info("{} created", path);
-        }
-        else {
+        } else {
             log.error("{} not created", path);
         }
     }
@@ -208,7 +203,7 @@ public class BasicBuildService {
         if (resources == null || resources.isEmpty()) {
             return;
         }
-        for (Resource resource : resources) {
+        for (final Resource resource : resources) {
             copyResources(resource, properties, filtering, mavenFiltering, artifactResolver, extensions);
         }
     }
@@ -287,17 +282,15 @@ public class BasicBuildService {
                 final String fileContent = TEMPLATE_RENDERING.render(file.getAbsolutePath(), content, properties,
                                                                      resourceProperties, mavenFiltering);
                 FilesUtils.write(fileContent, target);
-            }
-            else {
+            } else {
                 FilesUtils.copy(file, target.getParentFile());
             }
-        }
-        else {
+        } else {
             final String[] childrenFile = file.list();
 
-            for (String childFile : childrenFile) {
-                File child       = new File(file.getAbsolutePath() + File.separator + childFile);
-                File childTarget = new File(target.getAbsolutePath() + File.separator + childFile);
+            for (final String childFile : childrenFile) {
+                final File child       = new File(file.getAbsolutePath() + File.separator + childFile);
+                final File childTarget = new File(target.getAbsolutePath() + File.separator + childFile);
                 processCopy(child, childTarget, filtering, properties, resourceProperties, mavenFiltering, extensions);
             }
         }
@@ -318,7 +311,7 @@ public class BasicBuildService {
             return;
         }
 
-        for (Resource resource : resources) {
+        for (final Resource resource : resources) {
             unpackResource(resource, properties, filtering, mavenFiltering, artifactResolver, textFiles);
         }
     }
@@ -343,8 +336,7 @@ public class BasicBuildService {
 
         if (archive == null) {
             log.error("can't unpack resource : {}", resource);
-        }
-        else {
+        } else {
             unpackArchive(archive, resource.getTarget(), resource.getProperties(), properties, filtering,
                           mavenFiltering, textFiles);
         }
@@ -358,7 +350,7 @@ public class BasicBuildService {
                                final boolean mavenFiltering,
                                final List<String> textFiles) throws IOException {
 
-        File targetFile = new File(target).getAbsoluteFile();
+        final File targetFile = new File(target).getAbsoluteFile();
         if (!targetFile.getParentFile().exists()) {
             targetFile.getParentFile().mkdirs();
         }
@@ -376,12 +368,10 @@ public class BasicBuildService {
                 }
             } while (entry != null);
 
-        }
-        catch (IOException e) {
+        } catch (final IOException e) {
             log.error(e.getMessage());
             throw e;
-        }
-        finally {
+        } finally {
             close(() -> zip.closeEntry());
             close(() -> zip.close());
             close(() -> fileZipStream.close());
@@ -397,22 +387,21 @@ public class BasicBuildService {
                            final boolean mavenFiltering,
                            final List<String> textFiles)
             throws FileNotFoundException, IOException {
-        byte[]     buffer   = new byte[1024];
-        String     fileName = entry.getName();
-        final File newFile  = buildFileEntry(target, fileName);
+        final byte[] buffer   = new byte[1024];
+        final String fileName = entry.getName();
+        final File   newFile  = buildFileEntry(target, fileName);
 
         log.info("unzip : {}", newFile.getAbsolutePath());
 
 
         if (entry.isDirectory()) {
             newFile.mkdirs();
-        }
-        else {
+        } else {
             final boolean textFile = isTextFile(newFile, textFiles);
 
             if (filtering && textFile) {
-                ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-                int                   len;
+                final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+                int                         len;
                 while ((len = zip.read(buffer)) > 0) {
                     byteStream.write(buffer, 0, len);
                 }
@@ -420,8 +409,7 @@ public class BasicBuildService {
                 final String realContent = TEMPLATE_RENDERING.render(newFile.getAbsolutePath(), content,
                                                                      mavenProperties, properties, mavenFiltering);
                 FilesUtils.write(realContent, newFile);
-            }
-            else {
+            } else {
                 final FileOutputStream fos = new FileOutputStream(newFile);
                 int                    len;
                 while ((len = zip.read(buffer)) > 0) {
@@ -449,8 +437,8 @@ public class BasicBuildService {
         }
 
         if (!result && textFiles != null) {
-            for (String textFile : textFiles) {
-                Pattern regex = Pattern.compile(textFile);
+            for (final String textFile : textFiles) {
+                final Pattern regex = Pattern.compile(textFile);
                 result = regex.matcher(newFile.getName()).matches();
                 if (result) {
                     break;
@@ -464,7 +452,7 @@ public class BasicBuildService {
         return TEXT_FILES_EXTS.contains(extension.toLowerCase());
     }
 
-    private File buildFileEntry(File target, String fileName) {
+    private File buildFileEntry(final File target, final String fileName) {
         // @formatter:off
         final String path = new StringBuilder(target.getAbsolutePath()).append(File.separator).append(fileName)
                                                                        .toString();
@@ -485,7 +473,7 @@ public class BasicBuildService {
     public void writeFiles(final List<FileResources> fileResources, final Map<String, String> properties,
                            final boolean applyMavenProperties) {
         if (fileResources != null && !fileResources.isEmpty()) {
-            for (FileResources fileResource : fileResources) {
+            for (final FileResources fileResource : fileResources) {
                 writeFile(fileResource, properties, applyMavenProperties);
             }
         }
@@ -501,32 +489,29 @@ public class BasicBuildService {
         String templateId = null;
         String content    = fileResource.getTemplate();
         if (content == null && fileResource.getTemplatePath() != null) {
-            File file = new File(fileResource.getTemplatePath());
-            Asserts.isTrue(TEMPLATE_FILE_NOT_EXISTS.addDetail(file.getAbsolutePath()), file.exists());
-            Asserts.isTrue(TEMPLATE_FILE_NOT_READABLE.addDetail(file.getAbsolutePath()), file.canRead());
+            final File file = new File(fileResource.getTemplatePath());
+            assertTrue(TEMPLATE_FILE_NOT_EXISTS.addDetail(file.getAbsolutePath()), file.exists());
+            assertTrue(TEMPLATE_FILE_NOT_READABLE.addDetail(file.getAbsolutePath()), file.canRead());
             try {
-                content    = FilesUtils.readContent(file);
+                content = FilesUtils.readContent(file);
                 templateId = file.getAbsolutePath();
-            }
-            catch (IOException e) {
+            } catch (final IOException e) {
                 throw new FatalException(TEMPLATE_FILE_NOT_READABLE.addDetail(file.getAbsolutePath()));
             }
         }
 
-        String fileContent = TEMPLATE_RENDERING.render(templateId, content, properties,
-                                                       fileResource.getProperties(),
-                                                       applyMavenProperties);
+        final String fileContent = TEMPLATE_RENDERING.render(templateId, content, properties,
+                                                             fileResource.getProperties(),
+                                                             applyMavenProperties);
 
         if (fileContent == null) {
             log.error("can't write null content");
-        }
-        else {
+        } else {
             final File target = new File(fileResource.getTarget()).getAbsoluteFile();
             if (!target.getParentFile().exists()) {
                 if (target.getParentFile().mkdirs()) {
                     log.error("folder created : {}", target.getParentFile());
-                }
-                else {
+                } else {
                     log.error("can't create folder {}", target.getParentFile());
                 }
             }
@@ -544,14 +529,14 @@ public class BasicBuildService {
 
         if (properties != null) {
             if (globalProperties != null) {
-                for (Map.Entry<String, String> entry : globalProperties.entrySet()) {
+                for (final Map.Entry<String, String> entry : globalProperties.entrySet()) {
                     log.debug("include properties : {}={}", entry.getKey(), entry.getValue());
                     properties.put(entry.getKey(), entry.getValue());
                 }
             }
 
             if (resources != null && !resources.isEmpty()) {
-                for (PropertiesResources propertiesResource : resources) {
+                for (final PropertiesResources propertiesResource : resources) {
                     loadProperties(propertiesResource, properties);
                 }
             }
@@ -563,7 +548,7 @@ public class BasicBuildService {
         final Map<String, String> loadedProperties = PROPERTIES_LOADER.loadProperties(propertiesResources);
 
         if (loadedProperties != null) {
-            for (Map.Entry<String, String> entry : loadedProperties.entrySet()) {
+            for (final Map.Entry<String, String> entry : loadedProperties.entrySet()) {
                 log.debug("include loaded properties : {}={}", entry.getKey(), entry.getValue());
                 properties.put(entry.getKey(), entry.getValue());
             }
@@ -573,20 +558,18 @@ public class BasicBuildService {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private FileInputStream openFileInputStream(File tomcatZip) throws IOException {
+    private FileInputStream openFileInputStream(final File tomcatZip) throws IOException {
         try {
             return new FileInputStream(tomcatZip);
-        }
-        catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             throw e;
         }
     }
 
-    private void close(AutoCloseable closable) {
+    private void close(final AutoCloseable closable) {
         try {
             closable.close();
-        }
-        catch (Exception e) {
+        } catch (final Exception e) {
             log.error(e.getMessage());
         }
 

@@ -16,7 +16,6 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.maven.plugin.analysis.annotations.JmsEvent;
 import io.inugami.maven.plugin.analysis.annotations.JmsSender;
@@ -42,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
@@ -115,7 +115,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
                     final List<Node> inputDto = ReflectionService.extractInputDto(method);
                     result.addNode(inputDto);
-                    for(Node input : inputDto){
+                    for (final Node input : inputDto) {
                         result.addRelationship(Relationship.builder()
                                                            .from(input.getUid())
                                                            .to(node.getUid())
@@ -123,7 +123,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                                            .build());
                     }
                     final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if(outputDto!=null){
+                    if (outputDto != null) {
                         result.addNode(outputDto);
                         result.addRelationship(Relationship.builder()
                                                            .from(outputDto.getUid())
@@ -133,8 +133,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                     }
                 });
 
-            }
-            else if (hasAnnotation(method, JmsSender.class)) {
+            } else if (hasAnnotation(method, JmsSender.class)) {
                 buildSenderNode(method, (node, properties) -> {
                     result.addNode(node);
                     result.addNode(properties);
@@ -146,7 +145,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
                     final List<Node> inputDto = ReflectionService.extractInputDto(method);
                     result.addNode(inputDto);
-                    for(Node input : inputDto){
+                    for (final Node input : inputDto) {
                         result.addRelationship(Relationship.builder()
                                                            .from(input.getUid())
                                                            .to(node.getUid())
@@ -154,7 +153,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                                            .build());
                     }
                     final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if(outputDto!=null){
+                    if (outputDto != null) {
                         result.addNode(outputDto);
                         result.addRelationship(Relationship.builder()
                                                            .from(outputDto.getUid())
@@ -222,7 +221,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
         final JmsListener listener   = method.getDeclaredAnnotation(JmsListener.class);
 
         String name = hasText(listener.id()) ? listener.id()
-                                             : listener.destination();
+                : listener.destination();
 
         if (!hasText(name)) {
             name = method.getName();
@@ -259,12 +258,12 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
 
         //@formatter:off
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.id()),properties::add);
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.containerFactory()),properties::add);
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.destination()),properties::add);
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.subscription()),properties::add);
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.selector()),properties::add);
-        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class,listener.concurrency()),properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.id()), properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.containerFactory()), properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.destination()), properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.subscription()), properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.selector()), properties::add);
+        processIfNotNull(PROPERTIES_ANALYZER.buildPropertyNode(String.class, listener.concurrency()), properties::add);
         //@formatter:on
 
         onData.accept(result, properties);
@@ -277,8 +276,7 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
                                                                  .value() != JmsEvent.None.class) {
             result = renderType(parameter.getAnnotation(JmsEvent.class)
                                          .value(), null, null);
-        }
-        else {
+        } else {
             result = renderParameterType(parameter);
         }
         return result == null ? null : result.convertToJson();
@@ -289,10 +287,10 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
         final List<Node> properties = new ArrayList<>();
         final JmsSender  sender     = method.getDeclaredAnnotation(JmsSender.class);
         final String name = hasText(sender.id()) ? sender.id()
-                                                 : sender.destination();
+                : sender.destination();
 
-        Asserts.notEmpty("id or destination must be define on JmsSender annotation on method " + method.getName(),
-                         name);
+        assertNotEmpty("id or destination must be define on JmsSender annotation on method " + method.getName(),
+                       name);
 
         Parameter event = null;
         for (final Parameter param : method.getParameters()) {

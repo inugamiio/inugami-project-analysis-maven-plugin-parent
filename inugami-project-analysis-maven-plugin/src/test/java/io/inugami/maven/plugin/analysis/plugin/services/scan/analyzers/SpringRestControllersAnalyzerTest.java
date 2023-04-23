@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
@@ -26,6 +27,7 @@ import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,19 +42,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.lenient;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class SpringRestControllersAnalyzerTest {
-
     @Mock
-    private ScanConext context;
+    private MavenProject mavenProject;
+    @Mock
+    private ScanConext   context;
 
     @BeforeEach
     public void setup() {
+        lenient().when(mavenProject.getGroupId()).thenReturn("io.inugami.test");
+        lenient().when(mavenProject.getArtifactId()).thenReturn("basic-artifact");
+        lenient().when(mavenProject.getVersion()).thenReturn("1.0.0-SNAPSHOT");
+        lenient().when(mavenProject.getPackaging()).thenReturn("jar");
+        lenient().when(context.getProject()).thenReturn(mavenProject);
+
         final ConfigHandler<String, String> configuration = new ConfigHandlerHashMap(
                 Map.ofEntries(Map.entry(SpringRestControllersAnalyzer.FEATURE, "true"))
         );
@@ -77,19 +86,26 @@ class SpringRestControllersAnalyzerTest {
         assertThat(api.getEndpoints()).isNotNull();
         assertThat(api.getEndpoints().size()).isEqualTo(7);
 
-        api.getEndpoints().sort((val,ref)->{
+        api.getEndpoints().sort((val, ref) -> {
             return buildPath(val).compareTo(buildPath(ref));
         });
 
-        for(int i=0;i<api.getEndpoints().size(); i++){
-            log.info("check api  : /services/scan/analyzers/api_{}.json",i);
-            assertTextRelatif(api.getEndpoints().get(i), "/services/scan/analyzers/api_"+i+".json");
+        for (int i = 0; i < api.getEndpoints().size(); i++) {
+            log.info("check api  : /services/scan/analyzers/api_{}.json", i);
+            assertTextRelative(api.getEndpoints().get(i), "/services/scan/analyzers/api_" + i + ".json");
         }
 
     }
 
+    @Test
+    void analyze_nominal() {
+        final SpringRestControllersAnalyzer analyzer = new SpringRestControllersAnalyzer();
+        final List<JsonObject>              result   = analyzer.analyze(BasicRestController.class, context);
+        assertTextRelative(result, "/services/scan/analyzers/analyze_nominal.json");
+    }
+
     private String buildPath(final RestEndpoint value) {
-        return String.join("_", value.getVerb(),value.getUri());
+        return String.join("_", value.getVerb(), value.getUri());
     }
 
 
@@ -106,6 +122,7 @@ class SpringRestControllersAnalyzerTest {
                                                  @RequestHeader("requestId") final String requestId) {
             return null;
         }
+
         @GetMapping(path = "/uids", produces = MediaType.APPLICATION_JSON_VALUE)
         public List<Long> getAllUids() {
             return null;
@@ -125,6 +142,7 @@ class SpringRestControllersAnalyzerTest {
         @GetMapping(path = "/users/{name}/process")
         public void process(@PathVariable("name") final String name) {
         }
+
         @GetMapping(path = "/health")
         public String process() {
             return "hello";
@@ -155,9 +173,9 @@ class SpringRestControllersAnalyzerTest {
                    final List<Comment> comments,
                    final Map<String, Data> data) {
             super(uid);
-            this.name     = name;
+            this.name = name;
             this.comments = comments;
-            this.data     = data;
+            this.data = data;
         }
     }
 
