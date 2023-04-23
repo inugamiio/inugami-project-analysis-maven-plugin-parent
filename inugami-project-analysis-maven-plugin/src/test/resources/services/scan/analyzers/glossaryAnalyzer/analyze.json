@@ -1,0 +1,60 @@
+[ {
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "Person_Personne",
+    "properties" : {
+      "label" : "Personne",
+      "value" : "Person"
+    },
+    "type" : "Glossary",
+    "uid" : "Person_Personne"
+  }, {
+    "name" : "Person_Personne",
+    "properties" : {
+      "label" : "Personne",
+      "language" : "fr",
+      "value" : "Person"
+    },
+    "type" : "Glossary",
+    "uid" : "Person_Personne"
+  }, {
+    "name" : "address_adresse",
+    "properties" : {
+      "description" : "lorem ipsum",
+      "label" : "adresse",
+      "language" : "fr",
+      "type" : "java.lang.String",
+      "value" : "address"
+    },
+    "type" : "Glossary",
+    "uid" : "address_adresse"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "Person_Personne",
+    "type" : "GLOSSARY"
+  }, {
+    "from" : "Person_Personne",
+    "to" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "type" : "HAS_GLOSSARY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "Person_Personne",
+    "type" : "GLOSSARY"
+  }, {
+    "from" : "Person_Personne",
+    "to" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "type" : "HAS_GLOSSARY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "address_adresse",
+    "type" : "GLOSSARY"
+  }, {
+    "from" : "address_adresse",
+    "to" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "type" : "HAS_GLOSSARY"
+  } ],
+  "relationshipsToDeletes" : [ ]
+} ]

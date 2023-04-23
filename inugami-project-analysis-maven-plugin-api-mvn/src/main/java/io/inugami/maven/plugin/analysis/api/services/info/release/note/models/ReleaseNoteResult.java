@@ -31,7 +31,9 @@ public class ReleaseNoteResult {
     List<Issue>               issues        = new ArrayList<>();
     List<MergeRequests>       mergeRequests = new ArrayList<>();
     Map<String, Differential> differentials = new LinkedHashMap<>();
-    Map<String, Object>       customFields  = new LinkedHashMap<>();
+
+    Map<String, Object> extractedInformation = new LinkedHashMap<>();
+    Map<String, Object> customFields         = new LinkedHashMap<>();
 
 
     public ReleaseNoteResult addCommit(final String... commit) {
@@ -76,5 +78,11 @@ public class ReleaseNoteResult {
             customFields.put(name, value);
         }
         return this;
+    }
+
+    public void addExtractedInformation(final String key, final Object value) {
+        if (key != null && value != null) {
+            extractedInformation.put(key, value);
+        }
     }
 }
