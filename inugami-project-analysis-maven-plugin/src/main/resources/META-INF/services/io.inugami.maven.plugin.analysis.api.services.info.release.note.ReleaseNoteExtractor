@@ -6,3 +6,4 @@ io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.En
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.DependenciesExtractor
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.FlywayExtractor
 io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.ProjectDependenciesExtractor
+io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.GlossaryExtractor

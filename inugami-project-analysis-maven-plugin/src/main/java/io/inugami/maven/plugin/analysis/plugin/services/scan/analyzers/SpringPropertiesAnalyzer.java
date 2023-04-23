@@ -74,7 +74,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                                                                                         Calendar.class,
                                                                                         LocalDate.class,
                                                                                         LocalDateTime.class
-                                                                                       );
+    );
     private static final List<Strategy<String, String>> CONDITIONAL_BEAN_TYPE = List.of(
             new StringPatternStrategy("TRUE|true", "boolean"),
             new StringPatternStrategy("FALSE|false", "boolean"),
@@ -85,22 +85,22 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public static final String PROPERTY_TYPE = "propertyType";
 
     //@formatter:off
-    private static final String  GROUP_PROPERTY           = "property";
-    private static final String  GROUP_DEFAULT_VALUE      = "defaultValue";
-    private static final Pattern VALUE_PATTERN            = Pattern.compile("(?:[$][{])(?<property>[^:}]+)(?:[:](?:#[{]){0,1}(?<defaultValue>[^}]+)(?:[}]){0,1}){0,1}(?:[}]){0,1}");
-    public static final String  USE_PROPERTY             = "USE_PROPERTY";
-    public  static final String  PROPERTY                 = "Property";
-    private static final String  DEFAULT_VALUE            = "defaultValue";
-    private static final String  MANDATORY                = "mandatory";
-    private static final String  USE_FOR_CONDITIONAL_BEAN = "useForConditionalBean";
-    private static final String  MATCH_IF_MISSING         = "matchIfMissing";
-    private static final String  CONSTRAINT_TYPE          = "constraintType";
-    private static final List<BeanPropertyTypeResolver> TYPE_RESOLVERS = new SpiLoader().loadSpiServicesByPriority(BeanPropertyTypeResolver.class);
-    private static final CyclicClassesResolver CYCLIC_CLASSES_RESOLVER = (CyclicClassesResolver)TYPE_RESOLVERS.stream()
-                                                                                          .filter(service->service instanceof CyclicClassesResolver)
-                                                                                          .findFirst()
-                                                                                          .get();
-    private static final List<ConstraintInformationResolver> CONSTRAINTS_INFO_RESOLVERS = new SpiLoader().loadSpiServicesByPriority(ConstraintInformationResolver.class);
+    private static final String                              GROUP_PROPERTY             = "property";
+    private static final String                              GROUP_DEFAULT_VALUE        = "defaultValue";
+    private static final Pattern                             VALUE_PATTERN              = Pattern.compile("(?:[$][{])(?<property>[^:}]+)(?:[:](?:#[{]){0,1}(?<defaultValue>[^}]+)(?:[}]){0,1}){0,1}(?:[}]){0,1}");
+    public static final  String                              USE_PROPERTY               = "USE_PROPERTY";
+    public static final  String                              PROPERTY                   = "Property";
+    private static final String                              DEFAULT_VALUE              = "defaultValue";
+    private static final String                              MANDATORY                  = "mandatory";
+    private static final String                              USE_FOR_CONDITIONAL_BEAN   = "useForConditionalBean";
+    private static final String                              MATCH_IF_MISSING           = "matchIfMissing";
+    private static final String                              CONSTRAINT_TYPE            = "constraintType";
+    private static final List<BeanPropertyTypeResolver>      TYPE_RESOLVERS             = SpiLoader.getInstance().loadSpiServicesByPriority(BeanPropertyTypeResolver.class);
+    private static final CyclicClassesResolver               CYCLIC_CLASSES_RESOLVER    = (CyclicClassesResolver) TYPE_RESOLVERS.stream()
+                                                                                                                                .filter(service -> service instanceof CyclicClassesResolver)
+                                                                                                                                .findFirst()
+                                                                                                                                .get();
+    private static final List<ConstraintInformationResolver> CONSTRAINTS_INFO_RESOLVERS = SpiLoader.getInstance().loadSpiServicesByPriority(ConstraintInformationResolver.class);
     //@formatter:on
 
     // =========================================================================
@@ -246,8 +246,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         if ((names != null && names.length > 0) || (values != null && values.length > 0)) {
 
             final String prefix = annotation.prefix() == null || "".equals(annotation.prefix().trim())
-                                  ? null
-                                  : annotation.prefix();
+                    ? null
+                    : annotation.prefix();
             final String  havingValue    = annotation.havingValue();
             final boolean matchIfMissing = annotation.matchIfMissing();
 
@@ -262,7 +262,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
             for (final String name : currentNames) {
                 if (stringNotEmpty(name)) {
 
-                    final String                    valueFull      = (prefix == null ? "" : prefix + ".") + name;
+                    final String                              valueFull      = (prefix == null ? "" : prefix + ".") + name;
                     final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
 
                     additionalInfo.put(USE_FOR_CONDITIONAL_BEAN, Boolean.TRUE);
@@ -290,8 +290,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                 if (strategy.accept(havingValue)) {
                     try {
                         result = strategy.process(havingValue);
-                    }
-                    catch (final StrategyException e) {
+                    } catch (final StrategyException e) {
                         Loggers.DEBUG.debug(e.getMessage(), e);
                         //can't occurs
                     }
@@ -315,7 +314,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         if (value != null && value.contains("$")) {
             final Matcher matcher = VALUE_PATTERN.matcher(value);
             if (matcher.matches()) {
-                property     = matcher.group(GROUP_PROPERTY);
+                property = matcher.group(GROUP_PROPERTY);
                 defaultValue = matcher.group(GROUP_DEFAULT_VALUE);
             }
         }
@@ -324,8 +323,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
             final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             if (defaultValue == null) {
                 additionalInfo.put(MANDATORY, Boolean.TRUE);
-            }
-            else {
+            } else {
                 additionalInfo.put(MANDATORY, Boolean.FALSE);
                 additionalInfo.put(DEFAULT_VALUE, defaultValue);
             }
@@ -354,8 +352,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         if (stringNotEmpty(annotation.value())) {
             if (fullPrefix.toString().isEmpty()) {
                 fullPrefix.append(annotation.value());
-            }
-            else {
+            } else {
                 fullPrefix.append('.');
                 fullPrefix.append(annotation.value());
             }
@@ -449,8 +446,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                             node.getProperties().put(entry.getKey(), entry.getValue());
                         }
                     }
-                }
-                else {
+                } else {
                     nodes.add(conditionalNode);
                 }
             }

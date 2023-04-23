@@ -38,7 +38,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
@@ -77,7 +77,7 @@ class SpringPropertiesAnalyzerTest {
         final List<JsonObject> result = new SpringPropertiesAnalyzer().analyze(Example.class, context);
         assertThat(result).isNotNull().size().isEqualTo(1);
         final ScanNeo4jResult nodesResult = (ScanNeo4jResult) result.get(0);
-        assertTextRelatif(nodesResult, "services/scan/analyzers/properties_result.json");
+        assertTextRelative(nodesResult, "services/scan/analyzers/properties_result.json");
     }
 
     @Test
@@ -86,7 +86,7 @@ class SpringPropertiesAnalyzerTest {
         assertThat(result).isNotNull().size().isEqualTo(1);
         final ScanNeo4jResult nodesResult = (ScanNeo4jResult) result.get(0);
 
-        assertTextRelatif(nodesResult, "services/scan/analyzers/properties_bean_result.json");
+        assertTextRelative(nodesResult, "services/scan/analyzers/properties_bean_result.json");
     }
 
     // =========================================================================
@@ -146,7 +146,7 @@ class SpringPropertiesAnalyzerTest {
     public static class BeanProperty {
 
         private boolean                          enable;
-        @Min(value=500)
+        @Min(value = 500)
         private Long                             timeout;
         private Map<String, String>              headers;
         private PoolConfiguration                poolConfiguration;
@@ -154,21 +154,22 @@ class SpringPropertiesAnalyzerTest {
         private List<Key>                        keys;
 
         @NotEmpty
-        private String                           url;
+        private String url;
     }
 
     @Getter
     public static class PoolConfiguration {
-        private int  nbThreads;
-        private long timeout;
+        private int               nbThreads;
+        private long              timeout;
         private PoolConfiguration child;
     }
 
     @Getter
     public static class Key {
-        private String value;
+        private String      value;
         private Information info;
     }
+
     @Getter
     public static class Information {
         private String comment;
@@ -183,6 +184,6 @@ class SpringPropertiesAnalyzerTest {
         private Map<String, String> headers;
 
         @NotEmpty
-        private List<String>        countries;
+        private List<String> countries;
     }
 }

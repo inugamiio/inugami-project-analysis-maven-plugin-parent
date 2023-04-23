@@ -45,6 +45,7 @@ public class MainQueryProducer implements QueryProducer {
     public static final String QUERIES_SEARCH_ALL_CONSUMED_SERVICES = "META-INF/queries/search_all_consumed_services.cql";
     public static final String QUERIES_SEARCH_ENTITIES              = "META-INF/queries/search_entities.cql";
     public static final String QUERIES_SEARCH_FLYWAY                = "META-INF/queries/search_flyway.cql";
+    public static final String QUERIES_SEARCH_GLOSSARY              = "META-INF/queries/search_glossary.cql";
 
     // =========================================================================
     // API
@@ -193,8 +194,18 @@ public class MainQueryProducer implements QueryProducer {
                                .type("cql")
                                .description(
                                        "Allow to retrieve all project dependencies with relationship between dependencies")
+                               .build(),
+
+                QueryDefinition.builder()
+                               .path(QUERIES_SEARCH_GLOSSARY)
+                               .name("search_glossary")
+                               .type("cql")
+                               .description(
+                                       "Allow to retrieve all project glossaries")
                                .build()
-                      );
+        );
+
+
     }
 
 }

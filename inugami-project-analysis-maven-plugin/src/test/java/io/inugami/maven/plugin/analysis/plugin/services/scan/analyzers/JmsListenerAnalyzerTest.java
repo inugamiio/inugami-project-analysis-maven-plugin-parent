@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -75,7 +75,7 @@ class JmsListenerAnalyzerTest {
         assertThat(result).size().isEqualTo(1);
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
         neo4jResult.sort();
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/jmsListener_result.json");
     }
 
 
@@ -88,13 +88,14 @@ class JmsListenerAnalyzerTest {
         assertThat(result).size().isEqualTo(1);
         final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) result.get(0);
         neo4jResult.sort();
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/jmsSenderOnly_result.json");
     }
 
     private int compareNodes(final Node value, final Node ref) {
         final EncryptionUtils sha1 = new EncryptionUtils();
         return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));
     }
+
     private int sortRelationship(final Relationship value, final Relationship ref) {
         final EncryptionUtils sha1 = new EncryptionUtils();
         return sha1.encodeSha1(value.convertToJson()).compareTo(sha1.encodeSha1(ref.convertToJson()));

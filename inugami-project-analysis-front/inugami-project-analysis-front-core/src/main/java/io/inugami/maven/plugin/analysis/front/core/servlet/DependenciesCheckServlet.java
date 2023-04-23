@@ -54,10 +54,9 @@ public class DependenciesCheckServlet extends HttpServlet {
             final DependenciesCheckService dependenciesCheckService) {
 
         if (dependenciesCheckService == null) {
-            this.dependenciesCheckService = new SpiLoader().loadSpiSingleServicesByPriority(
+            this.dependenciesCheckService = SpiLoader.getInstance().loadSpiSingleServicesByPriority(
                     DependenciesCheckService.class);
-        }
-        else {
+        } else {
             this.dependenciesCheckService = dependenciesCheckService;
         }
     }
@@ -76,10 +75,9 @@ public class DependenciesCheckServlet extends HttpServlet {
 
         try {
             json = retrieveData();
-        }
-        catch (final Exception error) {
+        } catch (final Exception error) {
             status = ERROR;
-            json   = DEFUALT_RESPONSE;
+            json = DEFUALT_RESPONSE;
         }
 
 
@@ -97,8 +95,7 @@ public class DependenciesCheckServlet extends HttpServlet {
 
             try {
                 result = OBJECT_MAPPER.writeValueAsString(data);
-            }
-            catch (final JsonProcessingException e) {
+            } catch (final JsonProcessingException e) {
                 log.error(e.getMessage(), e);
                 throw e;
             }

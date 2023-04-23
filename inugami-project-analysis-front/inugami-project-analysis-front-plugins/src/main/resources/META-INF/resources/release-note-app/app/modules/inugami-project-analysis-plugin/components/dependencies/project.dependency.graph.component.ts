@@ -525,7 +525,7 @@ export class ProjectDependencyGraphComponent implements AfterViewInit {
     }
 
     private onZoom(d:any){
-        let ratio = 0.1;
+        let ratio = 0.001;
         let delta =Math.round(Math.trunc(d.deltaY)/4)*ratio ;
 
         this.zoom = this.zoom-delta;

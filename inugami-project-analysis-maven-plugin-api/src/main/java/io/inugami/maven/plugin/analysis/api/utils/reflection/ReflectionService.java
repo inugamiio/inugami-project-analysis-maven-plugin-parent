@@ -19,12 +19,12 @@ package io.inugami.maven.plugin.analysis.api.utils.reflection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.inugami.api.loggers.Loggers;
 import io.inugami.api.spi.SpiLoader;
+import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import io.inugami.commons.security.EncryptionUtils;
 
 import javax.validation.Constraint;
 import java.io.Serializable;
@@ -56,14 +56,13 @@ public final class ReflectionService {
     // =========================================================================
     // API
     // =========================================================================
-    private static final List<FieldTransformer> FIELD_TRANSFORMERS = SpiLoader.INSTANCE
-            .loadSpiServicesByPriority(FieldTransformer.class, new DefaultFieldTransformer());
+    private static final List<FieldTransformer> FIELD_TRANSFORMERS = SpiLoader.getInstance()
+                                                                              .loadSpiServicesByPriority(FieldTransformer.class, new DefaultFieldTransformer());
 
     public static Class<?> loadClass(final String className, final ClassLoader classLoader) {
         try {
             return Class.forName(className, true, classLoader);
-        }
-        catch (final ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             return null;
         }
     }
@@ -77,8 +76,7 @@ public final class ReflectionService {
                     result.addAll(loadAllFields(clazz.getSuperclass()));
                 }
             }
-        }
-        catch (final Throwable err) {
+        } catch (final Throwable err) {
             Loggers.DEBUG.warn(err.getMessage());
         }
 
@@ -103,8 +101,7 @@ public final class ReflectionService {
                     result.addAll(loadAllConstructors(clazz.getSuperclass()));
                 }
             }
-        }
-        catch (final Throwable err) {
+        } catch (final Throwable err) {
             Loggers.DEBUG.warn(err.getMessage());
         }
 
@@ -122,8 +119,7 @@ public final class ReflectionService {
                 }
             }
 
-        }
-        catch (final Throwable err) {
+        } catch (final Throwable err) {
             Loggers.DEBUG.warn(err.getMessage());
         }
 
@@ -183,7 +179,7 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderParameterType(final Parameter parameter, final boolean strict) {
-        return parameter==null?null:renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
+        return parameter == null ? null : renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
     }
 
     public static JsonNode renderReturnType(final Method method) {
@@ -191,7 +187,7 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderReturnType(final Method method, final boolean strict) {
-        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor(),strict);
+        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor(), strict);
     }
 
     public static JsonNode renderType(final Class<?> type,
@@ -231,21 +227,19 @@ public final class ReflectionService {
                     builder.path("[]");
                     JsonNode structure = null;
                     if (currentClass != null) {
-                        structure = renderStructureJson(currentClass, path, cursorChildren,strict);
+                        structure = renderStructureJson(currentClass, path, cursorChildren, strict);
                     }
 
                     if (structure != null) {
                         builder.children(List.of(structure));
                     }
                     result = builder.build();
-                }
-                else if (isBasicType(currentClass)) {
+                } else if (isBasicType(currentClass)) {
                     final JsonNode.JsonNodeBuilder node = JsonNode.builder()
                                                                   .type(renderFieldType(currentClass))
                                                                   .basicType(true);
                     result = node.build();
-                }
-                else {
+                } else {
                     result = renderStructureJson(currentClass, null, cursorChildren, strict);
 
                 }
@@ -264,7 +258,7 @@ public final class ReflectionService {
 
     public static boolean isBasicType(final Class<?> currentClass) {
         return currentClass == null ? true :
-               PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang", 0);
+                PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang", 0);
     }
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
@@ -282,13 +276,11 @@ public final class ReflectionService {
 
         if (genericType == null) {
             Loggers.DEBUG.warn("generic is null for path : {}", path);
-        }
-        else if (isBasicType(genericType)) {
+        } else if (isBasicType(genericType)) {
             result.structure(false);
             result.basicType(true);
             result.type(renderFieldType(genericType));
-        }
-        else {
+        } else {
             final List<Field> fields = new ArrayList<>(Arrays.asList(genericType.getDeclaredFields()));
             fields.addAll(extractParentsFields(genericType.getSuperclass()));
             final List<JsonNode> fieldNodes = new ArrayList<>();
@@ -335,8 +327,7 @@ public final class ReflectionService {
         for (final FieldTransformer transformer : FIELD_TRANSFORMERS) {
             if (transformer.accept(field, fieldClass, genericType, currentPath)) {
                 try {
-                }
-                catch (final Exception error) {
+                } catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
                 transformer.transform(field, fieldClass, genericType, result, currentPath, cursor);
@@ -351,7 +342,7 @@ public final class ReflectionService {
 
 
     public static String renderFieldType(final Class<?> classType) {
-        return classType==null? "null" : classType.getSimpleName();
+        return classType == null ? "null" : classType.getSimpleName();
     }
 
     public static String renderFieldTypeRecursive(final Class<?> classType) {
@@ -399,12 +390,10 @@ public final class ReflectionService {
                         .getTypeName();
                 try {
                     result = getClassloader().loadClass(className);
-                }
-                catch (final ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     log.error("no class def found : {}", genericType);
                 }
-            }
-            else if (genericType instanceof Class) {
+            } else if (genericType instanceof Class) {
                 result = (Class<?>) genericType;
             }
 
@@ -427,8 +416,7 @@ public final class ReflectionService {
         constructor.setAccessible(true);
         try {
             field = (Field) constructor.newInstance(type, name, type, 0, 0, null, null);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             Loggers.DEBUG.error(e.getMessage());
         }
         return field;
@@ -436,15 +424,15 @@ public final class ReflectionService {
 
 
     public static List<Node> extractInputDto(final Method method) {
-        Set<Node> result = new LinkedHashSet<>();
-        if(method!=null){
-            for(Parameter parameter : method.getParameters()){
+        final Set<Node> result = new LinkedHashSet<>();
+        if (method != null) {
+            for (final Parameter parameter : method.getParameters()) {
 
                 final Class<?> paramClass  = parameter.getType();
                 final JsonNode payloadNode = renderType(paramClass, null, null, true);
                 final String   payload     = payloadNode == null ? null : payloadNode.convertToJson();
 
-                if(parameter == null || parameter.getName()==null || payload== null){
+                if (parameter == null || parameter.getName() == null || payload == null) {
                     continue;
                 }
                 final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
@@ -461,21 +449,21 @@ public final class ReflectionService {
     }
 
     public static Node extractOutputDto(final Method method) {
-        Node result = null;
+        Node           result     = null;
         final Class<?> returnType = method.getReturnType();
-        if(returnType != null){
-            String   payload     = null;
-            if(returnType== void.class || returnType == Void.class){
+        if (returnType != null) {
+            String payload = null;
+            if (returnType == void.class || returnType == Void.class) {
                 payload = "Void";
-            }else{
-                JsonNode payloadNode = renderType(returnType, null, null, true);
+            } else {
+                final JsonNode payloadNode = renderType(returnType, null, null, true);
                 payload = payloadNode == null ? "null" : payloadNode.convertToJson();
             }
 
             final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
             additionalInfo.put(PAYLOAD, payload);
 
-            result=  Node.builder()
+            result = Node.builder()
                          .name(payload)
                          .uid(encodeSha1(payload))
                          .type(OUTPUT_DTO)

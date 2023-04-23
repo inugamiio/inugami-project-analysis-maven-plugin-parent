@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -56,12 +56,13 @@ class EntitiesAnalyzerTest {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
         assertThat(analyzer.accept(EntitiesAnalyzerTest.User.class, context)).isTrue();
     }
+
     @Test
     public void analyze_withEntity_shouldFindIt() {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(EntitiesAnalyzerTest.User.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/entity/entity_result.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/entity/entity_result.json");
     }
 
     @Test
@@ -91,7 +92,7 @@ class EntitiesAnalyzerTest {
     @EntityDatabase("mainDatabase")
     @Table(name = "app_user")
     @Entity
-    private static class User{
+    private static class User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)
@@ -109,7 +110,7 @@ class EntitiesAnalyzerTest {
     }
 
     @Entity
-    private static class Address{
+    private static class Address {
 
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)

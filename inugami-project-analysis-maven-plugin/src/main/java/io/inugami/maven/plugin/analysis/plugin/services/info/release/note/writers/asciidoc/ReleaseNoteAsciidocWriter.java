@@ -76,8 +76,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         try {
             render(releaseNote, baseDocFolder, context);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -111,10 +110,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final Writer  writer       = buildWriter(baseDocFolder, version, notSplitFile);
 
         final String project = renderProject(context.getProject(), notSplitFile);
-        final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile,context.getConfiguration());
-        final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile,context.getConfiguration());
-        final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile,context.getConfiguration());
-        final String issues  = renderIssues(releaseNote.getIssues(), notSplitFile,context.getConfiguration());
+        final String authors = renderAuthors(releaseNote.getAuthors(), notSplitFile, context.getConfiguration());
+        final String commit  = renderCommit(releaseNote.getCommit(), notSplitFile, context.getConfiguration());
+        final String pr      = renderMergeRequest(releaseNote.getMergeRequests(), notSplitFile, context.getConfiguration());
+        final String issues  = renderIssues(releaseNote.getIssues(), notSplitFile, context.getConfiguration());
 
         write(project, writer, "project", version, baseDocFolder);
         write(authors, writer, "author", version, baseDocFolder);
@@ -122,8 +121,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         write(pr, writer, "merge-requests", version, baseDocFolder);
         write(commit, writer, "commit", version, baseDocFolder);
 
-        final List<AsciidocInfoWriter> infoWriters = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(AsciidocInfoWriter.class);
+        final List<AsciidocInfoWriter> infoWriters = SpiLoader.getInstance()
+                                                              .loadSpiServicesByPriority(AsciidocInfoWriter.class);
 
         for (final AsciidocInfoWriter writerInfo : infoWriters) {
             if (writerInfo.isEnabled(context.getConfiguration())) {
@@ -136,8 +135,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                               writerInfo.getParagraphName(),
                               version,
                               baseDocFolder);
-                    }
-                    else {
+                    } else {
                         for (final Map.Entry<String, String> entry : content.entrySet()) {
                             write(entry.getValue(),
                                   writer,
@@ -147,7 +145,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                         }
                     }
                 }
-            }else{
+            } else {
                 log.info("asciidoc writer disabled : {}", writerInfo.getClass().getName());
             }
         }
@@ -163,12 +161,11 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                        final String context,
                        final String version,
                        final File baseDocFolder) throws IOException {
-        if(content!=null){
+        if (content != null) {
             if (writer != null) {
                 writer.write(content);
                 writer.flush();
-            }
-            else {
+            } else {
                 final File file = FilesUtils.buildFile(baseDocFolder,
                                                        version,
                                                        String.join(DELIMITER, RELEASE_NOTE, context + ADOC));
@@ -229,7 +226,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     protected String renderAuthors(final Set<Author> authors, final boolean notSplitFile,
                                    final ConfigHandler<String, String> configuration) {
-        if(notEnabled("authors",configuration)){
+        if (notEnabled("authors", configuration)) {
             return null;
         }
         final JsonBuilder writer = new JsonBuilder();
@@ -257,7 +254,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     protected String renderCommit(final Set<String> commit, final boolean notSplitFile,
                                   final ConfigHandler<String, String> configuration) {
-        if(notEnabled("commit",configuration)){
+        if (notEnabled("commit", configuration)) {
             return null;
         }
         final JsonBuilder writer = new JsonBuilder();
@@ -289,7 +286,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     protected String renderMergeRequest(final List<MergeRequests> mergeRequests, final boolean notSplitFile,
                                         final ConfigHandler<String, String> configuration) {
-        if(notEnabled("mergeRequest",configuration)){
+        if (notEnabled("mergeRequest", configuration)) {
             return null;
         }
         final JsonBuilder writer = new JsonBuilder();
@@ -323,7 +320,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     protected String renderIssues(final List<Issue> values, final boolean notSplitFile,
                                   final ConfigHandler<String, String> configuration) {
-        if(notEnabled("issues",configuration)){
+        if (notEnabled("issues", configuration)) {
             return null;
         }
         final JsonBuilder writer = new JsonBuilder();
@@ -370,8 +367,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     // TOOLS
     // =========================================================================
     private boolean notEnabled(final String featureName, final ConfigHandler<String, String> configuration) {
-        final String featureFullName = "io.inugami.maven.plugin.analysis.asciidoc."+featureName+".enabled";
-        return !Boolean.parseBoolean(configuration.grabOrDefault(featureFullName,"true"));
+        final String featureFullName = "io.inugami.maven.plugin.analysis.asciidoc." + featureName + ".enabled";
+        return !Boolean.parseBoolean(configuration.grabOrDefault(featureFullName, "true"));
     }
 
 

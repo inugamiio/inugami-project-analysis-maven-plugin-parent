@@ -48,15 +48,14 @@ class JiraTaskTest {
                     String data = null;
                     try {
                         data = UnitTestHelper
-                                .loadJsonReference("services/scan/git/issue/trackers/jira/" + id + ".json");
-                    }
-                    catch (final Exception e) {
+                                .readFileRelative("services/scan/git/issue/trackers/jira/" + id + ".json");
+                    } catch (final Exception e) {
                     }
 
                     builder.addUrl(String.valueOf(url));
-                    builder.addVerbe("GET");
+                    builder.addVerb("GET");
                     builder.addStatusCode(data == null ? 404 : 200);
-                    builder.addContenType("application/json");
+                    builder.addContentType("application/json");
                     builder.addEncoding("UTF-8");
                     builder.addData(data == null ? null : data.getBytes());
                     result = builder.build();
@@ -74,7 +73,7 @@ class JiraTaskTest {
         final JiraTask        task   = buildTask("INU-1");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
-        UnitTestHelper.assertTextRelatif(result, "services/scan/git/issue/trackers/jira/epic.json");
+        UnitTestHelper.assertTextRelative(result, "services/scan/git/issue/trackers/jira/epic.json");
     }
 
     @Test
@@ -82,7 +81,7 @@ class JiraTaskTest {
         final JiraTask        task   = buildTask("INU-2");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
-        UnitTestHelper.assertTextRelatif(result, "services/scan/git/issue/trackers/jira/issue.json");
+        UnitTestHelper.assertTextRelative(result, "services/scan/git/issue/trackers/jira/issue.json");
     }
 
     @Test
@@ -90,8 +89,9 @@ class JiraTaskTest {
         final JiraTask        task   = buildTask("INU-4");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
-        UnitTestHelper.assertTextRelatif(result, "services/scan/git/issue/trackers/jira/subTask.json");
+        UnitTestHelper.assertTextRelative(result, "services/scan/git/issue/trackers/jira/subTask.json");
     }
+
     // =========================================================================
     // TOOLS
     // =========================================================================

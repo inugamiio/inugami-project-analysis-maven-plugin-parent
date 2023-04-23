@@ -16,12 +16,13 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.info.password;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.api.tools.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 
 @Slf4j
 public class EncodePassword implements ProjectInformation {
@@ -38,8 +39,8 @@ public class EncodePassword implements ProjectInformation {
         if (secret == null) {
             secret = ConsoleTools.askPassword("Secret passphrase (16 chars) : ", null);
         }
-        Asserts.notEmpty("password shouldn't be null", secret);
-        Asserts.notEmpty("secret passphrase shouldn't be null", secret);
+        assertNotEmpty("password shouldn't be null", secret);
+        assertNotEmpty("secret passphrase shouldn't be null", secret);
         final String result = SecurityUtils.encodeAes(password, secret);
         log.info("encoded password : {}", result);
     }

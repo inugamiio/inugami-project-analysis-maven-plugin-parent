@@ -57,12 +57,11 @@ public class QueryDisplay implements ProjectInformation {
                 help.line();
             }
             throw new ConfigurationException(help.toString());
-        }
-        else {
+        } else {
             final QueryDefinition queryDef = QueriesLoader.getQueryByName(queryName);
 
-            final List<QueryConfigurator> configurators = SpiLoader.INSTANCE
-                    .loadSpiServicesByPriority(QueryConfigurator.class);
+            final List<QueryConfigurator> configurators = SpiLoader.getInstance()
+                                                                   .loadSpiServicesByPriority(QueryConfigurator.class);
             final QueryConfigurator configurator = configurators.stream()
                                                                 .filter(item -> item.accept(queryDef.getPath()))
                                                                 .findFirst()

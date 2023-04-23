@@ -54,6 +54,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     public static final String HAS_ERROR_TYPE        = "HAS_ERROR_TYPE";
     public static final String ERROR_CODE_PREFIX     = "errorCode_";
     public static final String ERROR_TYPE_PREFIX     = "errorType_";
+    public static final String TO_MAP                = "toMap";
 
     private Class<?>     errorCodeClass     = null;
     private List<Method> methods            = null;
@@ -89,16 +90,13 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
             errorCodeFieldName = context.getConfiguration().grabOrDefault(ERROR_CODE_FIELD_NAME, "errorCode");
             if (interfaceName == null) {
                 errorCodeClass = ErrorCode.class;
-            }
-            else {
+            } else {
                 try {
                     errorCodeClass = this.getClass().getClassLoader().loadClass(interfaceName);
-                }
-                catch (final ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     try {
                         errorCodeClass = context.getClassLoader().loadClass(interfaceName);
-                    }
-                    catch (final ClassNotFoundException ex) {
+                    } catch (final ClassNotFoundException ex) {
                         log.error(e.getMessage(), e);
                     }
 
@@ -135,8 +133,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
         List<Node> nodes = null;
         if (errorCodeClass.isAssignableFrom(clazz) && clazz.isEnum()) {
             nodes = scanErrorEnum(clazz);
-        }
-        else {
+        } else {
             nodes = scanErrorOnClass(clazz);
         }
 
@@ -198,8 +195,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
             if (Modifier.isStatic(field.getModifiers()) && errorCodeClass.isAssignableFrom(field.getType())) {
                 try {
                     data = field.get(null);
-                }
-                catch (final IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     if (log.isDebugEnabled()) {
                         log.error("class : {}, field : {}", clazz, field);
                         log.error(e.getMessage(), e);
@@ -224,6 +220,9 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
         for (final Method method : methods) {
+            if (TO_MAP.equalsIgnoreCase(method.getName())) {
+                continue;
+            }
             final String key   = method.getName();
             Serializable value = null;
 
@@ -233,8 +232,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
                     if (rawValue instanceof Serializable) {
                         value = (Serializable) rawValue;
                     }
-                }
-                catch (final Exception e) {
+                } catch (final Exception e) {
                     if (log.isDebugEnabled()) {
                         log.error("instance : {} on retrieve value from method : {}", instance.getClass(),
                                   method.getName());
@@ -261,7 +259,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
     private Node buildErrorType(final Node errorNode) {
         final String errorType = errorNode.getProperties().get("errorType") == null ? "technical" :
-                                 String.valueOf(errorNode.getProperties().get("errorType"));
+                String.valueOf(errorNode.getProperties().get("errorType"));
 
 
         return Node.builder()
@@ -280,8 +278,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         try {
             defaultConstructor = clazz.getConstructor();
-        }
-        catch (final NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             log.error("no default constructor found on class : {}", clazz.getName());
         }
         return null;
@@ -292,8 +289,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
         if (result != null) {
             if (result.startsWith(ACCESSOR_GET, 0)) {
                 result = result.substring(ACCESSOR_GET.length());
-            }
-            else if (result.startsWith(ACCESSOR_IS, 0)) {
+            } else if (result.startsWith(ACCESSOR_IS, 0)) {
                 result = result.substring(ACCESSOR_IS.length());
             }
 

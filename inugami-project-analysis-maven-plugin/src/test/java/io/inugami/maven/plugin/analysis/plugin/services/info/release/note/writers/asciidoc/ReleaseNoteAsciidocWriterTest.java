@@ -42,10 +42,10 @@ public class ReleaseNoteAsciidocWriterTest {
                                                                     .build()));
 
 
-        assertTextRelatif(writer.renderAuthors(authors, false, context.getConfiguration()),
-                          "info/release/note/writers/asciidoc-authors-split.adoc");
-        assertTextRelatif(writer.renderAuthors(authors, true, context.getConfiguration()),
-                          "info/release/note/writers/asciidoc-authors.adoc");
+        assertTextRelative(writer.renderAuthors(authors, false, context.getConfiguration()),
+                           "info/release/note/writers/asciidoc-authors-split.adoc");
+        assertTextRelative(writer.renderAuthors(authors, true, context.getConfiguration()),
+                           "info/release/note/writers/asciidoc-authors.adoc");
     }
 
     @Test
@@ -62,12 +62,12 @@ public class ReleaseNoteAsciidocWriterTest {
                 "[2020-09-17T21:13:52][21192a2e8c596794bcc996aa8c1173df7af23a0d][Patrick Guillerm] Merge branch 'master' into development",
                 "[2020-10-31T13:58:12][0150b50af2444810487dbbae906d2248aab7e372][Patrick Guillerm] prepare to deploy on sonatype repository",
                 "[2020-10-31T14:03:43][e636be118db974543bfc1630772ebc47d0cc0e0b][Patrick Guillerm] prepare release"
-                                                            ));
+        ));
 
 
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-commit-split.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-commit-split.adoc"),
                    writer.renderCommit(commit, false, context.getConfiguration()));
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-commit.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-commit.adoc"),
                    writer.renderCommit(commit, true, context.getConfiguration()));
     }
 
@@ -95,11 +95,11 @@ public class ReleaseNoteAsciidocWriterTest {
                              .uid("pr_3")
                              .url("https://github.com/inugamiio/inugami-plugin-dashboard-demo/pull/3")
                              .build()
-                                                         );
+        );
 
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-merge-split.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-merge-split.adoc"),
                    writer.renderMergeRequest(mergeRequests, false, context.getConfiguration()));
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-merge.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-merge.adoc"),
                    writer.renderMergeRequest(mergeRequests, true, context.getConfiguration()));
     }
 
@@ -122,11 +122,11 @@ public class ReleaseNoteAsciidocWriterTest {
                      .title("Monitoring - create Kafka sender")
                      .url("https://github.com/inugamiio/inugami/issues/104")
                      .build()
-                                          );
+        );
 
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-issues-split.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-issues-split.adoc"),
                    writer.renderIssues(issues, false, context.getConfiguration()));
-        assertText(loadJsonReference("info/release/note/writers/asciidoc-issues.adoc"),
+        assertText(readFileRelative("info/release/note/writers/asciidoc-issues.adoc"),
                    writer.renderIssues(issues, true, context.getConfiguration()));
     }
 }

@@ -51,14 +51,15 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     // ATTRIBUTES
     // =========================================================================
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.display.release.note";
+    public static final String TOGGLE       = FEATURE_NAME + ".enabled";
     public static final String MODE_FULL    = FEATURE_NAME + ".full";
     public static final String REPLACEMENTS = FEATURE_NAME + ".emails.replacements";
 
 
-    private static final List<String> QUERIES          = List.of(
+    private static final List<String> QUERIES = List.of(
             QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL,
             QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL
-                                                       );
+    );
 
 
     // =========================================================================
@@ -77,7 +78,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                 Map.entry(GROUP_ID, gav.getGroupId()),
                 Map.entry(ARTIFACT_ID, gav.getArtifactId()),
                 Map.entry(VERSION, gav.getVersion())
-                                   ));
+        ));
         return config;
     }
 
@@ -87,6 +88,10 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     @Override
     public void process(final InfoContext context) {
         final ConfigHandler<String, String> configuration = context.getConfiguration();
+
+        if (shouldSkip(configuration)) {
+            return;
+        }
 
         final String previousVersion = configuration.grabOrDefault(PREVIOUS_VERSION, null);
 
@@ -100,8 +105,8 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         final List<Replacement> replacements      = buildReplacements(configuration);
 
 
-        final List<ReleaseNoteExtractor> extractors = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(ReleaseNoteExtractor.class);
+        final List<ReleaseNoteExtractor> extractors = SpiLoader.getInstance()
+                                                               .loadSpiServicesByPriority(ReleaseNoteExtractor.class);
         for (final ReleaseNoteExtractor extractor : extractors) {
             try {
                 log.info("invoke extractor : {}", extractor.getClass().getName());
@@ -111,9 +116,8 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                                              dao,
                                              replacements,
                                              context
-                                            );
-            }
-            catch (final Exception error) {
+                );
+            } catch (final Exception error) {
                 log.error(error.getMessage(), error);
             }
         }
@@ -131,6 +135,16 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         dao.shutdown();
     }
 
+    private boolean shouldSkip(final ConfigHandler<String, String> configuration) {
+        final String toggle = configuration.get(TOGGLE);
+
+        if (toggle == null || "".equals(toggle) || Boolean.parseBoolean(toggle)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private Gav buildPreviousGav(final Gav gav, final String previousVersion) {
         Gav result = null;
         if (previousVersion != null) {
@@ -144,26 +158,25 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     private void writeReleaseNote(final ReleaseNoteResult releaseNoteResult,
                                   final InfoContext context) {
-        final List<ReleaseNoteWriter> writers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ReleaseNoteWriter.class);
+        final List<ReleaseNoteWriter> writers = SpiLoader.getInstance().loadSpiServicesByPriority(ReleaseNoteWriter.class);
 
         for (final ReleaseNoteWriter writer : writers) {
             if (writer.accept(context.getConfiguration())) {
                 try {
-                    log.info(inColor("invoke writer : {}",ConsoleColors.BLUE_BOLD), writer.getClass().getName());
+                    log.info(inColor("invoke writer : {}", ConsoleColors.BLUE_BOLD), writer.getClass().getName());
                     writer.process(releaseNoteResult, context);
-                }
-                catch (final Exception error) {
+                } catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
 
-            }else{
-                log.info(inColor("writer disabled : {}",ConsoleColors.YELLOW_BOLD), writer.getClass().getName());
+            } else {
+                log.info(inColor("writer disabled : {}", ConsoleColors.YELLOW_BOLD), writer.getClass().getName());
             }
         }
     }
 
     private String inColor(final String message, final String color) {
-        return color+message+ConsoleColors.RESET;
+        return color + message + ConsoleColors.RESET;
     }
 
     // =========================================================================
@@ -205,11 +218,9 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
             final String lowerCase = line.toLowerCase();
             if (lowerCase.contains("merge branch") || line.contains("merge pull request")) {
                 result = ConsoleColors.CYAN;
-            }
-            else if (lowerCase.contains("fix")) {
+            } else if (lowerCase.contains("fix")) {
                 result = ConsoleColors.RED;
-            }
-            else if (lowerCase.contains("prepare for next development") || lowerCase.contains("prepare release")) {
+            } else if (lowerCase.contains("prepare for next development") || lowerCase.contains("prepare release")) {
                 result = ConsoleColors.YELLOW;
             }
         }
@@ -252,7 +263,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                 final DataRow                   row        = new DataRow();
                 final String labels = issue.getLabels() == null || issue.getLabels()
                                                                         .isEmpty() ? "" : String
-                                              .join(" ", issue.getLabels());
+                        .join(" ", issue.getLabels());
                 row.setUid(issue.getName());
                 row.setRowColor(chooseIssueColor(labels));
                 properties.put("date", issue.getDate());
@@ -274,8 +285,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
         final String value  = labels.toLowerCase();
         if (value.contains("epic")) {
             result = ConsoleColors.RED;
-        }
-        else if (value.contains("feature") || value.contains("story")) {
+        } else if (value.contains("feature") || value.contains("story")) {
             result = ConsoleColors.GREEN;
         }
         return result;
@@ -315,8 +325,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     private String convertToJson(final ReleaseNoteResult releaseNoteResult) {
         try {
             return ObjectMapperBuilder.build().writerWithDefaultPrettyPrinter().writeValueAsString(releaseNoteResult);
-        }
-        catch (final JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             log.error(e.getMessage(), e);
             return null;
         }
@@ -336,10 +345,9 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                                           .pattern(Pattern.compile(replacementConfig.getFrom()))
                                           .replacement(replacementConfig.getTo())
                                           .build()
-                              );
+                    );
                 }
-            }
-            catch (final JsonProcessingException e) {
+            } catch (final JsonProcessingException e) {
                 log.error(e.getMessage(), e);
             }
         }

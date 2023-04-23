@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static io.inugami.commons.test.UnitTestHelper.assertTextRelatif;
+import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.lenient;
 
@@ -61,21 +61,21 @@ class ErrorCodeAnalyzerTest {
 
     @Test
     public void analyze_withEnum_shouldFoundErrors() {
-        final ErrorCodeAnalyzer analyzer    = new ErrorCodeAnalyzer();
+        final ErrorCodeAnalyzer analyzer = new ErrorCodeAnalyzer();
         analyzer.initialize(context);
-        final ScanNeo4jResult   neo4jResult = extractResult(
+        final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(ErrorCodeAnalyzerTest.EnumErrors.class, context));
-        assertTextRelatif(neo4jResult.getNodes(), "services/scan/analyzers/errors/enum_result_nodes.json");
-        assertTextRelatif(neo4jResult.getRelationships(), "services/scan/analyzers/errors/enum_result_relationship.json");
+        assertTextRelative(neo4jResult.getNodes(), "services/scan/analyzers/errors/enum_result_nodes.json");
+        assertTextRelative(neo4jResult.getRelationships(), "services/scan/analyzers/errors/enum_result_relationship.json");
     }
 
     @Test
     public void analyze_withClass_shouldFoundErrors() {
-        final ErrorCodeAnalyzer analyzer    = new ErrorCodeAnalyzer();
+        final ErrorCodeAnalyzer analyzer = new ErrorCodeAnalyzer();
         analyzer.initialize(context);
-        final ScanNeo4jResult   neo4jResult = extractResult(
+        final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(ErrorCodeAnalyzerTest.ClassErrors.class, context));
-        assertTextRelatif(neo4jResult, "services/scan/analyzers/errors/class_result.json");
+        assertTextRelative(neo4jResult, "services/scan/analyzers/errors/class_result.json");
     }
 
 
@@ -104,7 +104,7 @@ class ErrorCodeAnalyzerTest {
     }
 
     public static class ClassErrors {
-        public static final String DATA = "some data";
+        public static final String          DATA         = "some data";
         public static final CustomErrorCode USER_REQUIRE = CustomError.builder()
                                                                       .errorCode("ERR-2")
                                                                       .message("user require")

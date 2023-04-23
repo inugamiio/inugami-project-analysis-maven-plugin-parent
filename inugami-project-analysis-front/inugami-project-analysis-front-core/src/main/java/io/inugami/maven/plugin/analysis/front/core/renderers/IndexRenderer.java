@@ -50,13 +50,13 @@ public class IndexRenderer {
     // INIT
     // =========================================================================
     private static List<FrontPluginSpi> loadPlugins() {
-        final List<FrontPluginSpi> result = new SpiLoader().loadSpiServicesByPriority(FrontPluginSpi.class);
+        final List<FrontPluginSpi> result = SpiLoader.getInstance().loadSpiServicesByPriority(FrontPluginSpi.class);
         return result == null ? new ArrayList<>() : result;
     }
 
     private static IndexHtmlLoadingContentSpi loadIndexHtmlLoaderRenderer() {
-        return new SpiLoader().loadSpiServiceByPriority(IndexHtmlLoadingContentSpi.class,
-                                                        new DefaultIndexLoadingContent());
+        return SpiLoader.getInstance().loadSpiServiceByPriority(IndexHtmlLoadingContentSpi.class,
+                                                                new DefaultIndexLoadingContent());
     }
 
 
@@ -89,7 +89,7 @@ public class IndexRenderer {
                                      HtmlAttribute.build("rel", "shortcut icon"),
                                      HtmlAttribute.build("type", "image/x-icon"),
                                      HtmlAttribute.build("type", buildPath(contextPath, buildPluginFavIcon()))
-                                    ));
+        ));
 
         result.write(autoClosableTag(BASE, HtmlAttribute.build("href", ".")));
         result.write(autoClosableTag(META,
@@ -121,7 +121,7 @@ public class IndexRenderer {
                 "/vendors/systemjs/dist/system.js",
                 "/vendors/zone.js/bundles/zone.umd.min.js",
                 "/vendors/bootstrap/dist/js/bootstrap.min.js"
-                                             ));
+        ));
         writeJavaScript(result, scripts);
 
         result.addLine();
@@ -193,16 +193,14 @@ public class IndexRenderer {
                 result.tab().tab().addField(entry.getKey()).valueQuot(entry.getValue());
                 if (entryIterator.hasNext()) {
                     result.addSeparator().line();
-                }
-                else {
+                } else {
                     result.line();
                 }
             }
             result.tab().closeObject();
             if (iterator.hasNext()) {
                 result.addSeparator().line();
-            }
-            else {
+            } else {
                 result.line();
             }
         }
@@ -252,8 +250,7 @@ public class IndexRenderer {
             js.tab().tab().tab().valueQuot(bundleIterator.next());
             if (bundleIterator.hasNext()) {
                 js.addSeparator().line();
-            }
-            else {
+            } else {
                 js.line();
             }
         }
@@ -295,8 +292,7 @@ public class IndexRenderer {
             js.tab().tab().tab().addField(mapEntry.getKey()).write(mapEntry.getValue());
             if (mapIterator.hasNext()) {
                 js.addSeparator().line();
-            }
-            else {
+            } else {
                 js.line();
             }
         }
@@ -349,8 +345,7 @@ public class IndexRenderer {
                 final Map<String, String> localResult = buffer.get(entry.getKey());
                 if (localResult == null) {
                     buffer.put(entry.getKey(), entry.getValue());
-                }
-                else {
+                } else {
                     localResult.putAll(entry.getValue());
                 }
             }
@@ -379,12 +374,10 @@ public class IndexRenderer {
                 final Map<String, String> localResult = result.get(local);
                 if (localResult == null) {
                     result.put(local, subResult);
-                }
-                else {
+                } else {
                     localResult.putAll(subResult);
                 }
-            }
-            catch (final Exception error) {
+            } catch (final Exception error) {
                 log.error(error.getMessage(), error);
             }
 

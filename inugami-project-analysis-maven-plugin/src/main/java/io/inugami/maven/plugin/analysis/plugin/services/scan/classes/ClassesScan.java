@@ -38,9 +38,9 @@ public class ClassesScan implements ProjectScanner {
 
         final List<String> foundClasses = scanProjectSource(
                 context.getProject().getBuild().getOutputDirectory());
-        final List<ClassAnalyzer> analyzers = SpiLoader.INSTANCE.loadSpiServicesByPriority(ClassAnalyzer.class);
+        final List<ClassAnalyzer> analyzers = SpiLoader.getInstance().loadSpiServicesByPriority(ClassAnalyzer.class);
 
-        for(final ClassAnalyzer analyzer : analyzers){
+        for (final ClassAnalyzer analyzer : analyzers) {
             analyzer.initialize(context);
         }
 
@@ -49,8 +49,7 @@ public class ClassesScan implements ProjectScanner {
             try {
                 final Class<?> clazz = context.getClassLoader().loadClass(className);
                 result.addAll(analyzeClass(clazz, analyzers, context));
-            }
-            catch (final ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 if (log.isDebugEnabled()) {
                     log.error(e.getMessage(), e);
                 }
@@ -74,8 +73,7 @@ public class ClassesScan implements ProjectScanner {
                     if (resultSet != null) {
                         result.addAll(resultSet);
                     }
-                }
-                catch (final Exception error) {
+                } catch (final Exception error) {
                     log.error(error.getMessage(), error);
                 }
 
@@ -103,8 +101,7 @@ public class ClassesScan implements ProjectScanner {
 
                 if (file.isDirectory()) {
                     classes.addAll(retrieveAllClasses(file, baseFolder));
-                }
-                else if (fileName.endsWith(".class")) {
+                } else if (fileName.endsWith(".class")) {
                     classes.add(buildClassName(file.getAbsolutePath(), baseFolder));
                 }
             }
@@ -113,19 +110,19 @@ public class ClassesScan implements ProjectScanner {
     }
 
     private String buildClassName(final String absolutePath, final String baseFolder) {
-        return buildClassNameNormilized(absolutePath, baseFolder,File.separator);
+        return buildClassNameNormilized(absolutePath, baseFolder, File.separator);
     }
 
     protected static String buildClassNameNormilized(final String absolutePath, final String baseFolder, final String fileSeparator) {
-         String currentPath = absolutePath;
-       if("\\".equals(fileSeparator)){
-           currentPath = String.join("/",currentPath.split("\\\\"));
-       }
+        String currentPath = absolutePath;
+        if ("\\".equals(fileSeparator)) {
+            currentPath = String.join("/", currentPath.split("\\\\"));
+        }
 
         return currentPath.substring(baseFolder.length() + 1)
-                           .replaceAll(".class", "")
-                           .replaceAll("[$]", ".")
-                           .replaceAll("/", ".");
+                          .replaceAll(".class", "")
+                          .replaceAll("[$]", ".")
+                          .replaceAll("/", ".");
     }
 
 

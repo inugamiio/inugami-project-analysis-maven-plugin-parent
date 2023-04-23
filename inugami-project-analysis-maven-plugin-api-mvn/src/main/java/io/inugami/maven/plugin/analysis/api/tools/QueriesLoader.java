@@ -36,7 +36,7 @@ public final class QueriesLoader {
     // =========================================================================
     public synchronized static Set<QueryDefinition> loadQueries() {
         if (QUERIES.isEmpty()) {
-            final List<QueryProducer> producers = SpiLoader.INSTANCE.loadSpiServicesByPriority(QueryProducer.class);
+            final List<QueryProducer> producers = SpiLoader.getInstance().loadSpiServicesByPriority(QueryProducer.class);
             if (producers != null) {
                 producers.stream().map(QueryProducer::extractQueries).forEach(QUERIES::addAll);
             }

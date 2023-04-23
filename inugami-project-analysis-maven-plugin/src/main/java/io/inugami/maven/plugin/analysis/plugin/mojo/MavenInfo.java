@@ -16,7 +16,6 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.mojo;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
@@ -48,6 +47,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -84,7 +85,7 @@ public class MavenInfo extends AbstractMojo {
         configuration.putAll(extractProperties(System.getProperties()));
         configuration.put(Constants.PROJECT_BASE_DIR, project.getBasedir().getAbsolutePath());
         configuration.put(Constants.PROJECT_BUILD_DIR, FilesUtils.buildFile(project.getBasedir(), "target")
-                                                               .getAbsolutePath());
+                                                                 .getAbsolutePath());
         configuration.put(Constants.INTERACTIVE, isInteractive(configuration));
 
 
@@ -105,33 +106,29 @@ public class MavenInfo extends AbstractMojo {
                                                    .artifactHandler(artifactHandler)
                                                    .settings(settings)
                                                    .build();
-            handler = SpiLoader.INSTANCE.loadSpiService(String.valueOf(action), ProjectInformation.class, true);
+            handler = SpiLoader.getInstance().loadSpiService(String.valueOf(action), ProjectInformation.class, true);
             try {
                 handler.process(context);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 if (e instanceof ConfigurationException) {
                     log.error(e.getMessage());
-                }
-                else {
+                } else {
                     log.error(e.getMessage(), e);
                 }
 
                 throw e;
-            }
-            finally {
+            } finally {
                 handler.shutdown();
             }
-        }
-        else {
+        } else {
             displayHelp();
         }
     }
 
     private void initProperties(final ConfigHandler<String, String> configuration) {
         if (project.getIssueManagement() != null) {
-            Asserts.notEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
-            Asserts.notEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
+            assertNotEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
+            assertNotEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
             configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
             configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
         }
@@ -145,8 +142,8 @@ public class MavenInfo extends AbstractMojo {
             ((DefaultSecDispatcher) secDispatcher).setConfigurationFile(securityPath);
         }
 
-        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(PropertiesInitialization.class);
+        final List<PropertiesInitialization> propertiesInitializers = SpiLoader.getInstance()
+                                                                               .loadSpiServicesByPriority(PropertiesInitialization.class);
         for (final PropertiesInitialization propsInitializer : propertiesInitializers) {
             propsInitializer.initialize(configuration, project, settings, secDispatcher);
         }
@@ -159,7 +156,7 @@ public class MavenInfo extends AbstractMojo {
     }
 
     private void displayHelp() throws MojoFailureException {
-        final List<ProjectInformation> actions = SpiLoader.INSTANCE.loadSpiServicesByPriority(ProjectInformation.class);
+        final List<ProjectInformation> actions = SpiLoader.getInstance().loadSpiServicesByPriority(ProjectInformation.class);
         final JsonBuilder              help    = new JsonBuilder();
         help.line().write("No action define. Actions available : ").line();
         for (final ProjectInformation action : actions) {

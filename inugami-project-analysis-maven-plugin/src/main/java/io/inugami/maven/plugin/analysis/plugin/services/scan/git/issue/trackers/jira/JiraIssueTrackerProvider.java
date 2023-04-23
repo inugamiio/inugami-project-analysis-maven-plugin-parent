@@ -84,10 +84,10 @@ public class JiraIssueTrackerProvider implements IssueTackerProvider, Properties
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url       = configuration.grab(IssueTackerProvider.URL);
-        username  = configuration.grab(SERVER_USER);
-        password  = configuration.grab(SERVER_PASSWORD);
-        timeout   = configuration.grabLong(TIMEOUT, 30000L);
+        url = configuration.grab(IssueTackerProvider.URL);
+        username = configuration.grab(SERVER_USER);
+        password = configuration.grab(SERVER_PASSWORD);
+        timeout = configuration.grabLong(TIMEOUT, 30000L);
         nbThreads = configuration.grabInt(NB_THREADS, 10);
     }
 
@@ -112,8 +112,8 @@ public class JiraIssueTrackerProvider implements IssueTackerProvider, Properties
     public ScanNeo4jResult buildNodes(final Set<String> tickets, final String versionUid) {
         final ScanNeo4jResult      result      = ScanNeo4jResult.builder().build();
         final HttpConnectorBuilder httpBuilder = new HttpConnectorBuilder();
-        final List<JiraCustomFieldsAppender> customFieldsAppenders = SpiLoader.INSTANCE
-                .loadSpiServicesByPriority(JiraCustomFieldsAppender.class);
+        final List<JiraCustomFieldsAppender> customFieldsAppenders = SpiLoader.getInstance()
+                                                                              .loadSpiServicesByPriority(JiraCustomFieldsAppender.class);
 
         final List<Callable<ScanNeo4jResult>> tasks = new ArrayList<>();
         if (tickets != null && !tickets.isEmpty()) {
