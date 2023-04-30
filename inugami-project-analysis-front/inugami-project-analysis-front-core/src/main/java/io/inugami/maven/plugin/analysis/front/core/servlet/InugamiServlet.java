@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+
 @AllArgsConstructor
 public class InugamiServlet extends HttpServlet {
 
@@ -32,7 +33,7 @@ public class InugamiServlet extends HttpServlet {
     // ATTRIBUTES
     // =========================================================================
     private static final int SUCCCESS = 200;
-    private static final String UTF_8 = "UTF-8";
+
     private final String contextPath;
     // =========================================================================
     // API
@@ -41,11 +42,10 @@ public class InugamiServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
-
-        resp.getWriter().print(new IndexRenderer(contextPath).render());
         resp.setStatus(SUCCCESS);
         resp.setContentType(MediaType.TEXT_HTML);
-        resp.setCharacterEncoding(UTF_8);
+        ServletCommons.setUtf8(resp);
+        resp.getWriter().print(new IndexRenderer(contextPath).render());
     }
 
 }

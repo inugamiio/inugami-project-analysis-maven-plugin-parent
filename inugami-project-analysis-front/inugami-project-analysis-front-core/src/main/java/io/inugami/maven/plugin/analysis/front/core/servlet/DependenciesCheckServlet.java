@@ -69,7 +69,8 @@ public class DependenciesCheckServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType(MediaType.APPLICATION_JSON);
+        ServletCommons.setUtf8(resp);
         int    status = SUCCCESS;
         String json   = null;
 
@@ -83,8 +84,7 @@ public class DependenciesCheckServlet extends HttpServlet {
 
         resp.getWriter().print(json);
         resp.setStatus(status);
-        resp.setContentType(MediaType.APPLICATION_JSON);
-        resp.setCharacterEncoding(UTF_8);
+
     }
 
     private String retrieveData() throws JsonProcessingException {

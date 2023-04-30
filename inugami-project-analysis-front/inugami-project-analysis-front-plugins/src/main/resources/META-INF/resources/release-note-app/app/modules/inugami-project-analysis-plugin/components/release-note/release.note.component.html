@@ -73,6 +73,10 @@
                 </ul>
             </fieldset>
             
+            <div  *ngIf="innerValue.extractedInformation" >
+                <dynamic-component-loader [(ngModel)]="innerValue.extractedInformation"></dynamic-component-loader>
+            </div>
+
             <div  *ngIf="innerValue.differentials" >
                 <dynamic-component-loader [(ngModel)]="innerValue.differentials"></dynamic-component-loader>
             </div>

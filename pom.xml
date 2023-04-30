@@ -61,7 +61,7 @@
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>3.1.0-SNAPSHOT</io.inugami.version>
+        <io.inugami.version>3.1.0</io.inugami.version>
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
