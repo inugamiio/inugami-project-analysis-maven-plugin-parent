@@ -27,7 +27,6 @@ import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.EntityDTO;
 import org.neo4j.driver.Record;
-import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.types.Node;
 
@@ -47,6 +46,7 @@ public class EntitiesExtractor implements ReleaseNoteExtractor {
     // =========================================================================
     public static final  String ENTITY_TYPE         = "entities";
     public static final  String NODE_LOCAL_ENTITY   = "localEntity";
+    public static final  String NODE_ENTITY         = "entity";
     public static final  String PAYLOAD             = "payload";
     public static final  String SHORT_NAME          = "shortName";
     private static final String NODE_DEPENDENCY_REF = "dependencyEntityRef";
@@ -83,7 +83,7 @@ public class EntitiesExtractor implements ReleaseNoteExtractor {
         final Map<String, EntityDTO> buffer = new LinkedHashMap<>();
 
         for (final Record record : resultSet) {
-            final NodeValue entityNode        = extractNode(NODE_LOCAL_ENTITY, record);
+            final NodeValue entityNode        = extractNode(NODE_ENTITY, record);
             final NodeValue dependencyNode    = extractNode(NODE_DEPENDENCY, record);
             final NodeValue dependencyRefNode = extractNode(NODE_DEPENDENCY_REF, record);
             if (isNotNull(entityNode)) {
@@ -92,8 +92,7 @@ public class EntitiesExtractor implements ReleaseNoteExtractor {
                 EntityDTO    entity       = null;
                 if (buffer.containsKey(nodeName)) {
                     entity = buffer.get(nodeName);
-                }
-                else {
+                } else {
                     entity = EntityDTO.builder()
                                       .name(nodeName)
                                       .payload(retrieve(PAYLOAD, propertyNode))
