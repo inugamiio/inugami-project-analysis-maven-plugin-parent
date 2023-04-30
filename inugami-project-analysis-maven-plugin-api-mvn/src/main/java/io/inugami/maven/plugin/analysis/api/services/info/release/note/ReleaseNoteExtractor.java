@@ -58,6 +58,11 @@ public interface ReleaseNoteExtractor {
         return result;
     }
 
+    default Boolean retrieveBoolean(final String key, final Map<String, Object> data) {
+        final String value = retrieveString(key, data);
+        return value == null ? null : Boolean.parseBoolean(value);
+    }
+
     default String retrieveString(final String key, final Map<String, Object> data,
                                   final List<Replacement> replacements) {
         String result = null;
@@ -92,7 +97,7 @@ public interface ReleaseNoteExtractor {
                 Map.entry(GROUP_ID, gav.getGroupId()),
                 Map.entry(ARTIFACT_ID, gav.getArtifactId()),
                 Map.entry(VERSION, gav.getVersion())
-                                   ));
+        ));
         final String query = TemplateRendering.render(QueriesLoader.getQuery(queryName),
                                                       config);
         final List<Record> resultSet = dao.search(query);

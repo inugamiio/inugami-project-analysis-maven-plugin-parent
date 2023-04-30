@@ -27,6 +27,10 @@ import { EntitiesDisplayComponent } from './components/entities/entities.display
 import { ChangeComponent } from './components/change/change.component';
 import { ProjectDependencyGraphComponent } from './components/dependencies/project.dependency.graph.component';
 
+
+import { GlossaryComponent } from './components/glossary/glossary.component';
+import { GlossaryDisplayComponent } from './components/glossary/glossary.display.component';
+
 @NgModule({
   declarations: [
     HomeView,
@@ -47,7 +51,9 @@ import { ProjectDependencyGraphComponent } from './components/dependencies/proje
     EntitiesComponent,
     EntitiesDisplayComponent,
     ChangeComponent,
-    ProjectDependencyGraphComponent
+    ProjectDependencyGraphComponent,
+    GlossaryComponent,
+    GlossaryDisplayComponent
   ],
   imports: [
     CommonModule,
@@ -76,7 +82,9 @@ import { ProjectDependencyGraphComponent } from './components/dependencies/proje
     EntitiesComponent,
     EntitiesDisplayComponent,
     ChangeComponent,
-    ProjectDependencyGraphComponent
+    ProjectDependencyGraphComponent,
+    GlossaryComponent,
+    GlossaryDisplayComponent
   ],
   entryComponents: [
     RestServiceComponent,
@@ -84,7 +92,8 @@ import { ProjectDependencyGraphComponent } from './components/dependencies/proje
     ErrorCodesComponent,
     DependenciesComponent,
     FlywayComponent,
-    EntitiesComponent
+    EntitiesComponent,
+    GlossaryComponent
   ],
   providers: [
     HomeView
@@ -102,6 +111,7 @@ export class InugamiProjectAnalysisPluginModule {
     registerComponent("dependencies_project",DependenciesComponent);
     registerComponent("flyway",FlywayComponent);
     registerComponent("entities",EntitiesComponent);
+    registerComponent("glossary",GlossaryComponent);
     
   }
  

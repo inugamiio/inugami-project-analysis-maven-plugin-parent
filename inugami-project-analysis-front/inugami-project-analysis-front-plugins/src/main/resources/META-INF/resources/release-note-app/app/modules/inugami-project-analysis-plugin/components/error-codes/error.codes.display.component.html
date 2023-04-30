@@ -2,27 +2,38 @@
     <h4>{{title}}</h4>
     <table class="table">
         <thead>
-          <tr>
-            <th scope="col"><msg key="error.code"></msg></th>
-            <th scope="col"><msg key="status"></msg></th>
-            <th scope="col"><msg key="message"></msg></th>
-            <th scope="col"><msg key="type"></msg></th>
-            <th scope="col"><msg key="details"></msg></th>
-          </tr>
+        <tr>
+            <th scope="col">
+                <msg key="error.code"></msg>
+            </th>
+            <th scope="col">
+                <msg key="status"></msg>
+            </th>
+            <th scope="col">
+                <msg key="message"></msg>
+            </th>
+            <th scope="col">
+                <msg key="type"></msg>
+            </th>
+            <th scope="col">
+                <msg key="details"></msg>
+            </th>
+        </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let errorCode of innerValue; let i = index" [class]="getClass(errorCode)">
+        <tr *ngFor="let errorCode of innerValue; let i = index" [class]="getClass(errorCode)">
             <td [innerHTML]="errorCode.errorCode"></td>
             <td [innerHTML]="errorCode.statusCode"></td>
             <td [innerHTML]="errorCode.message"></td>
             <td [innerHTML]="errorCode.type"></td>
             <td>
                 <div class="details">
-                    <span class="icon artifact-icon pointer" *ngIf="errorCode.artifact" [title]="errorCode.artifact"><i class="package-icon"></i></span>
+                    <span class="icon artifact-icon pointer" *ngIf="errorCode.artifact" [title]="errorCode.artifact"><i
+                            class="package-icon"></i></span>
                 </div>
             </td>
-            
-          </tr>          
+
+        </tr>
         </tbody>
-      </table>
+    </table>
 </div>

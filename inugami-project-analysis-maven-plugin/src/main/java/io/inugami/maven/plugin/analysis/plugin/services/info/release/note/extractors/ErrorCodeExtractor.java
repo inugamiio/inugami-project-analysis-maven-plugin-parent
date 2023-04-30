@@ -55,12 +55,11 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
 
         final Set<JsonObject> currentErrorCodes = searchErrorCode(currentVersion, context.getConfiguration(), dao);
         final Set<JsonObject> previousErrorCodes = previousVersion == null ? null : searchErrorCode(previousVersion,
-                                                                                                      context.getConfiguration(),
-                                                                                                      dao);
+                                                                                                    context.getConfiguration(),
+                                                                                                    dao);
 
 
-
-        releaseNoteResult.addDifferential(ERROR_CODES, Differential.buildDifferential(currentErrorCodes,previousErrorCodes));
+        releaseNoteResult.addDifferential(ERROR_CODES, Differential.buildDifferential(currentErrorCodes, previousErrorCodes));
     }
 
 
@@ -100,14 +99,14 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
     }
 
     private Set<JsonObject> searchErrorCode(final Gav gav, final ConfigHandler<String, String> configuration,
-                                              final Neo4jDao dao) {
-        Set<JsonObject>                   result = null;
+                                            final Neo4jDao dao) {
+        Set<JsonObject>                     result = null;
         final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
         config.putAll(Map.ofEntries(
                 Map.entry(GROUP_ID, gav.getGroupId()),
                 Map.entry(ARTIFACT_ID, gav.getArtifactId()),
                 Map.entry(VERSION, gav.getVersion())
-                                   ));
+        ));
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES_SEARCH_ERRORS_CQL),
                                                       config);
         final List<Record> resultSet = dao.search(query);
@@ -131,6 +130,17 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
                                        .message(retrieveString("message", errorData))
                                        .type(retrieveString("errorType", errorData))
                                        .statusCode(statusCode)
+
+                                       .messageDetail(retrieveString("messageDetail", errorData))
+                                       .payload(retrieveString("payload", errorData))
+                                       .exploitationError(retrieveBoolean("exploitationError", errorData))
+                                       .rollback(retrieveBoolean("rollback", errorData))
+                                       .retryable(retrieveBoolean("retryable", errorData))
+                                       .field(retrieveString("field", errorData))
+                                       .url(retrieveString("url", errorData))
+                                       .errorDomain(retrieveString("errorDomain", errorData))
+                                       .errorSubDomain(retrieveString("errorSubDomain", errorData))
+
                                        .artifact(artifact == null ? null : retrieveString("name", artifact.asMap()))
                                        .build());
             }
@@ -139,9 +149,22 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
         return result;
     }
 
+
     private int extractStatusCode(final Map<String, Object> errorData) {
-        final Object status = errorData.get("statusCode");
-        return status instanceof Integer ? (Integer) status : 500;
+        Object status = errorData.get("errorStatus");
+        if (status == null) {
+            status = errorData.get("statusCode");
+        }
+
+        if (status == null) {
+            return 500;
+        } else if (status instanceof Integer) {
+            return (Integer) status;
+        } else if (status instanceof Long) {
+            return ((Long) status).intValue();
+        } else {
+            return 500;
+        }
     }
 
 

@@ -1,0 +1,10 @@
+<div class="glossary-display" *ngIf="hasValues">
+    <h4>{{title}}</h4>
+
+    <dl class="container-fluid">
+        <div *ngFor="let item of innerValue; let i = index"  class="row" [title]="item.type">
+            <dt [innerHTML]="item.value" class="col-6"></dt>
+            <dd [innerHTML]="item.label" class="col-6"></dd>
+        </div>
+    </dl>
+</div>

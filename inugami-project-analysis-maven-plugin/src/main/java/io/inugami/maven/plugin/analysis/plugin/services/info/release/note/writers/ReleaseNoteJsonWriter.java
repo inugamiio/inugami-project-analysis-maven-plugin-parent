@@ -114,6 +114,9 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
         final List<String> files = new ArrayList<>();
         if (parentFile != null && parentFile.exists()) {
             for (final String fileName : parentFile.list()) {
+                if (fileName.endsWith(".releases.json")) {
+                    continue;
+                }
                 if (fileName.startsWith(artifactId, 0) && fileName.endsWith(".json")) {
                     files.add(fileName);
                 }
@@ -131,8 +134,7 @@ public class ReleaseNoteJsonWriter implements ReleaseNoteWriter {
     private String convertToJson(final ReleaseNoteResult releaseNoteResult) {
         try {
             return ObjectMapperBuilder.build().writerWithDefaultPrettyPrinter().writeValueAsString(releaseNoteResult);
-        }
-        catch (final JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             log.error(e.getMessage(), e);
             return null;
         }

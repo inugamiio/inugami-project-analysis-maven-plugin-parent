@@ -139,7 +139,7 @@ public class GlossaryAnalyzer implements ClassAnalyzer {
 
 
     private Node buildNode(final Class<?> clazz, final Glossary glossary) {
-        final String                              uid            = String.join("_", clazz.getSimpleName(), glossary.value());
+        final String                              uid            = String.join("_", clazz.getSimpleName(), glossary.value(), glossary.language());
         final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put(VALUE, clazz.getSimpleName());
         processIfNotEmpty(glossary.value(), value -> additionalInfo.put(LABEL, value));

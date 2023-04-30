@@ -32,10 +32,9 @@ public class PluginsModuleServlet extends HttpServlet {
     // ATTRIBUTES
     // =========================================================================
     private static final int    SUCCCESS               = 200;
-    private static final String UTF_8                  = "UTF-8";
     private static final long   serialVersionUID       = -4097614303888347284L;
     public static final  String APPLICATION_TYPESCRIPT = "application/x-typescript";
-    
+
     // =========================================================================
     // API
     // =========================================================================
@@ -43,10 +42,10 @@ public class PluginsModuleServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
-
-        resp.getWriter().print(new PluginsModuleRenderer().render());
+        
         resp.setStatus(SUCCCESS);
         resp.setContentType(APPLICATION_TYPESCRIPT);
-        resp.setCharacterEncoding(UTF_8);
+        ServletCommons.setUtf8(resp);
+        resp.getWriter().print(new PluginsModuleRenderer().render());
     }
 }

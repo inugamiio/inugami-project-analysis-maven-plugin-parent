@@ -10,7 +10,9 @@ import lombok.*;
 @Builder(toBuilder = true)
 @Getter
 public class GlossaryDTO implements JsonObject {
+    @EqualsAndHashCode.Include
     private String value;
+    @EqualsAndHashCode.Include
     private String label;
     private String description;
     private String type;
