@@ -121,7 +121,7 @@ public class GitLogScan implements ProjectScanner {
                 result.addNode(authors);
                 final List<Relationship> authorRelationships = new ArrayList<>();
                 authors.stream()
-                       .map(author -> buildAuthorRelationships(versionNode, author))
+                       .map(author -> buildAuthorRelationships(versionNode, author, scm))
                        .forEach(authorRelationships::addAll);
                 result.addRelationship(authorRelationships);
             }
@@ -324,7 +324,7 @@ public class GitLogScan implements ProjectScanner {
                    .build();
     }
 
-    private List<Relationship> buildAuthorRelationships(final Node versionNode, final Node author) {
+    private List<Relationship> buildAuthorRelationships(final Node versionNode, final Node author, final Node scm) {
         return List.of(Relationship
                                .builder()
                                .from(versionNode.getUid())
@@ -333,8 +333,20 @@ public class GitLogScan implements ProjectScanner {
                                .build(),
                        Relationship
                                .builder()
+                               .from(scm.getUid())
+                               .to(author.getUid())
+                               .type(RELATIONSHIP_HAVE_AUTHOR)
+                               .build(),
+                       Relationship
+                               .builder()
                                .from(author.getUid())
                                .to(versionNode.getUid())
+                               .type(RELATIONSHIP_WORKED_ON_VERSION)
+                               .build(),
+                       Relationship
+                               .builder()
+                               .from(author.getUid())
+                               .to(scm.getUid())
                                .type(RELATIONSHIP_WORKED_ON_VERSION)
                                .build()
         );
