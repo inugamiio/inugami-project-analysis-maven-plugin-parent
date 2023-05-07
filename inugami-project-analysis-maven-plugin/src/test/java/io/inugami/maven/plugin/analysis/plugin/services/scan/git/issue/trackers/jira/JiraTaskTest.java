@@ -14,7 +14,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -90,6 +92,15 @@ class JiraTaskTest {
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
         UnitTestHelper.assertTextRelative(result, "services/scan/git/issue/trackers/jira/subTask.json");
+    }
+
+
+    @Test
+    void extractResponseCharset_withCharset() {
+        final JiraTask task    = buildTask("INU-4");
+        final Charset  charset = task.extractResponseCharset(Map.ofEntries(Map.entry("content-type", "text/html; charset=iso-8859-1")));
+        assertThat(charset).isNotNull()
+                           .hasToString("ISO-8859-1");
     }
 
     // =========================================================================
