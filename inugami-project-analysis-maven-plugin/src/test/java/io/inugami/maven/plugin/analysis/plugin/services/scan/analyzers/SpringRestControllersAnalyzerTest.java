@@ -104,6 +104,14 @@ class SpringRestControllersAnalyzerTest {
         assertTextRelative(result, "/services/scan/analyzers/analyze_nominal.json");
     }
 
+    @Test
+    void analyze_withInterface() {
+        final SpringRestControllersAnalyzer analyzer = new SpringRestControllersAnalyzer();
+        final List<JsonObject>              result   = analyzer.analyze(SpringRestController.class, context);
+        assertTextRelative(result, "/services/scan/analyzers/analyze_withInterface.json");
+    }
+
+
     private String buildPath(final RestEndpoint value) {
         return String.join("_", value.getVerb(), value.getUri());
     }
@@ -199,5 +207,75 @@ class SpringRestControllersAnalyzerTest {
         private final LocalDateTime     publishedDate;
         private final Map<String, Data> data;
         private final Data              parent;
+    }
+
+
+    @Api("USERS")
+    @RequestMapping("v1/api")
+    public static interface RestClient {
+        @GetMapping(path = "/users/headers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+        List<Dto> retrieveUserInformation(@PathVariable("name") final String name,
+                                          @RequestHeader("correlationId") final String correlationId,
+                                          @RequestHeader("requestId") final String requestId);
+
+        @GetMapping(path = "/uids", produces = MediaType.APPLICATION_JSON_VALUE)
+        List<Long> getAllUids();
+
+        @PostMapping(path = "/users/{name}/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+        ResponseEntity<Comment> addComment(@PathVariable("name") final String name,
+                                           @RequestBody final Comment comment);
+
+        @RequestMapping(path = "/users/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+        Dto retrieveInformation(@PathVariable("name") final String name);
+
+        @GetMapping(path = "/users/{name}/process")
+        void process(@PathVariable("name") final String name);
+
+        @GetMapping(path = "/health")
+        String process();
+
+
+        @RequestMapping(path = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+        List<Dto> retrieveAllInformation();
+
+    }
+
+    @RestController("simpleRest")
+    public static class SpringRestController implements RestClient {
+
+        @Override
+        public List<Dto> retrieveUserInformation(final String name, final String correlationId, final String requestId) {
+            return null;
+        }
+
+        @Override
+        public List<Long> getAllUids() {
+            return null;
+        }
+
+        @Override
+        public ResponseEntity<Comment> addComment(final String name, final Comment comment) {
+            return null;
+        }
+
+        @Override
+        public Dto retrieveInformation(final String name) {
+            return null;
+        }
+
+        @Override
+        public void process(final String name) {
+
+        }
+
+        @Override
+        public String process() {
+            return null;
+        }
+
+        @Override
+        public List<Dto> retrieveAllInformation() {
+            return null;
+        }
     }
 }

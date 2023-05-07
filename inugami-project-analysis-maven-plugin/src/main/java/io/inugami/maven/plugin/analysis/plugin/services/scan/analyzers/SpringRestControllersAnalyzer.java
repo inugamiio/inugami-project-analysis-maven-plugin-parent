@@ -38,6 +38,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -110,14 +111,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                 if (node != null) {
                     if (existingNode(node, context.getNeo4jDao())) {
                         existingNodes.add(node.getUid());
-                    }
-                    else {
+                    } else {
                         result.addNode(node);
                     }
 
                     final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
                     result.addNode(inputDto);
-                    for(Node input : inputDto){
+                    for (final Node input : inputDto) {
                         result.addRelationship(Relationship.builder()
                                                            .from(input.getUid())
                                                            .to(node.getUid())
@@ -125,7 +125,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                                                            .build());
                     }
                     final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
-                    if(outputDto!=null){
+                    if (outputDto != null) {
                         result.addNode(outputDto);
                         result.addRelationship(Relationship.builder()
                                                            .from(outputDto.getUid())
@@ -202,11 +202,11 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         json.addField(URI).valueQuot(endpoint.getUri()).addSeparator();
 
         //@formatter:off
-        processIfNotNull(endpoint.getHeaders(),     (value)-> json.addField(HEADER).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getConsume(),     (value)-> json.addField(ACCEPT).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getProduce(),     (value)-> json.addField(CONTENT_TYPE).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getBodyRequireOnly(),        (value)-> json.addField(REQUEST_PAYLOAD).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getResponseTypeRequireOnly(),(value)-> json.addField(RESPONSE_PAYLOAD).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getHeaders(), (value) -> json.addField(HEADER).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getConsume(), (value) -> json.addField(ACCEPT).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getProduce(), (value) -> json.addField(CONTENT_TYPE).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getBodyRequireOnly(), (value) -> json.addField(REQUEST_PAYLOAD).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getResponseTypeRequireOnly(), (value) -> json.addField(RESPONSE_PAYLOAD).valueQuot(value).addSeparator());
         //@formatter:on
 
         return json.toString()
@@ -237,14 +237,14 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         result.put(IDENTIFIER, identifier);
 
         //@formatter:off
-        processIfNotEmpty(endpoint.getNickname(),     (value)->result.put(NICKNAME, value));
-        processIfNotEmpty(endpoint.getMethod(),      (value)->result.put(METHOD, value));
-        processIfNotEmpty(endpoint.getHeaders(),      (value)->result.put(HEADER, value));
-        processIfNotEmpty(endpoint.getConsume(),      (value)->result.put(ACCEPT, value));
-        processIfNotEmpty(endpoint.getProduce(),      (value)->result.put(CONTENT_TYPE, value));
-        processIfNotEmpty(endpoint.getBody(),         (value)->result.put(REQUEST_PAYLOAD, value));
-        processIfNotEmpty(endpoint.getResponseType(), (value)->result.put(RESPONSE_PAYLOAD, value));
-        processIfNotEmpty(endpoint.getDescription(),  (value)->result.put(DESCRIPTION, value));
+        processIfNotEmpty(endpoint.getNickname(), (value) -> result.put(NICKNAME, value));
+        processIfNotEmpty(endpoint.getMethod(), (value) -> result.put(METHOD, value));
+        processIfNotEmpty(endpoint.getHeaders(), (value) -> result.put(HEADER, value));
+        processIfNotEmpty(endpoint.getConsume(), (value) -> result.put(ACCEPT, value));
+        processIfNotEmpty(endpoint.getProduce(), (value) -> result.put(CONTENT_TYPE, value));
+        processIfNotEmpty(endpoint.getBody(), (value) -> result.put(REQUEST_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getResponseType(), (value) -> result.put(RESPONSE_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getDescription(), (value) -> result.put(DESCRIPTION, value));
         //@formatter:on
 
         return result;
@@ -268,12 +268,29 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         String result = EMPTY;
 
         RequestMapping annotation = clazz.getDeclaredAnnotation(RequestMapping.class);
+        if (annotation == null) {
+            annotation = searchRequestMappingInInterface(clazz.getInterfaces());
+        }
+
         if (annotation != null) {
             if (annotation.value() != null && annotation.value().length > 0) {
                 result = annotation.value()[0];
             }
             if (result.isEmpty() && annotation.path() != null && annotation.path().length > 0) {
                 result = annotation.path()[0];
+            }
+        }
+        return result;
+    }
+
+    private RequestMapping searchRequestMappingInInterface(final Class<?>[] interfaces) {
+        RequestMapping result = null;
+        if (interfaces != null) {
+            for (final Class<?> interfaceClass : interfaces) {
+                result = interfaceClass.getDeclaredAnnotation(RequestMapping.class);
+                if (result != null) {
+                    break;
+                }
             }
         }
         return result;
@@ -286,13 +303,26 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
     private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext, final boolean strict) {
         final List<RestEndpoint> result = new ArrayList<>();
-        for (final Method method : clazz.getMethods()) {
+        for (final Method method : extractMethods(clazz)) {
             if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
                               DeleteMapping.class)) {
                 result.add(resolveEndpoint(method, baseContext, clazz, strict));
             }
         }
         return result;
+    }
+
+    private Method[] extractMethods(final Class<?> clazz) {
+        final List<Method> result = new ArrayList<>();
+
+        result.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+        if (clazz.getInterfaces() != null) {
+            for (final Class<?> interfaceClass : clazz.getInterfaces()) {
+                result.addAll(Arrays.asList(interfaceClass.getDeclaredMethods()));
+            }
+        }
+
+        return result.toArray(new Method[]{});
     }
 
     private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,
