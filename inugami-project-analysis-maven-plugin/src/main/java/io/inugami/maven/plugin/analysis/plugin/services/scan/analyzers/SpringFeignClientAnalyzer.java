@@ -18,18 +18,24 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.maven.plugin.analysis.annotations.FeignClientDefinition;
+import io.inugami.maven.plugin.analysis.annotations.UsingFeignClient;
 import io.inugami.maven.plugin.analysis.api.actions.ClassAnalyzer;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer implements ClassAnalyzer {
-    public static final  String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.feign";
-    public static final  String FEATURE      = FEATURE_NAME + ".enable";
+    public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.feign";
+    public static final String FEATURE      = FEATURE_NAME + ".enable";
     public static final String CONSUME      = "CONSUME";
 
     // =========================================================================
@@ -37,13 +43,47 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return isEnable(FEATURE, context, true) && clazz.getAnnotation(FeignClient.class) != null;
+        return isEnable(FEATURE, context, true) && (clazz.getAnnotation(FeignClient.class) != null || clazz.getAnnotation(UsingFeignClient.class) != null);
     }
 
     @Override
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
         log.info("{} : {}", FEATURE_NAME, clazz);
-        return super.analyze(clazz, context);
+        final List<JsonObject> result = new ArrayList<>();
+
+        if (clazz.getAnnotation(FeignClient.class) != null) {
+            final List<JsonObject> subResult = super.analyze(clazz, context);
+            if (subResult != null) {
+                result.addAll(subResult);
+            }
+        } else if (clazz.getAnnotation(UsingFeignClient.class) != null) {
+            final List<Class<?>> feignClasses = resolveFeignClasses(clazz);
+            for (final Class<?> feignClientClass : feignClasses) {
+                final List<JsonObject> subResult = super.analyze(feignClientClass, context);
+                if (subResult != null) {
+                    result.addAll(subResult);
+                }
+            }
+        }
+
+
+        return result;
+    }
+
+    private List<Class<?>> resolveFeignClasses(final Class<?> clazz) {
+        final Set<Class<?>>    result                      = new LinkedHashSet<>();
+        final UsingFeignClient feignClientConfigAnnotation = clazz.getAnnotation(UsingFeignClient.class);
+        
+
+        final Method[] methods = feignClientConfigAnnotation.feignConfigurationBean().getDeclaredMethods();
+        for (final Method method : methods) {
+            final FeignClientDefinition feignClient = method.getAnnotation(FeignClientDefinition.class);
+            if (feignClient != null) {
+                result.add(feignClient.value());
+            }
+        }
+
+        return new ArrayList<>(result);
     }
 
     // =========================================================================
