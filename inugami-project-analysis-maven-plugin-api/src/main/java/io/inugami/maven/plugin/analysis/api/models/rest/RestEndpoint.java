@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.api.models.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
 import lombok.*;
 
 import java.lang.reflect.Method;
@@ -28,20 +29,22 @@ import java.lang.reflect.Method;
 @Getter
 @Builder(toBuilder = true)
 public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
-    private static final long serialVersionUID = -6556991122270585469L;
-    private final String      nickname;
-    private final String      uri;
-    private final String      verb;
-    private final String      headers;
-    private final String      body;
-    private final String      bodyRequireOnly;
-    private final String      consume;
-    private final String      produce;
-    private final String      description;
-    private final String      responseType;
-    private final String      responseTypeRequireOnly;
-    private final String      uid;
-    private final String      method;
+    private static final long           serialVersionUID = -6556991122270585469L;
+    private final        String         nickname;
+    private final        String         uri;
+    private final        String         verb;
+    private final        String         headers;
+    private final        String         body;
+    private final        String         bodyRequireOnly;
+    private final        String         consume;
+    private final        String         produce;
+    private final        String         description;
+    private final        String         responseType;
+    private final        String         responseTypeRequireOnly;
+    private final        String         uid;
+    private final        String         method;
+    private final        DescriptionDTO descriptionDetail;
+    private final        boolean        deprecated;
 
     @JsonIgnore
     private final transient Method javaMethod;
@@ -51,8 +54,7 @@ public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
         int result = 0;
         if (value.getUri().equals(this.getUri())) {
             result = value.getVerb().compareTo(this.getVerb());
-        }
-        else {
+        } else {
             result = value.getUri().compareTo(this.getUri());
         }
         return result;

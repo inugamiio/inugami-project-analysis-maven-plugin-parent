@@ -35,10 +35,17 @@
             <version>${io.inugami.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>io.inugami</groupId>
             <artifactId>inugami_commons</artifactId>
             <version>${io.inugami.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.inugami.maven.plugin.analysis</groupId>
+            <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
         </dependency>
 
         <dependency>

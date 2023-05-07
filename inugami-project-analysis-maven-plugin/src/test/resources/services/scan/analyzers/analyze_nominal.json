@@ -183,6 +183,54 @@
     "name" : "Rest",
     "type" : "ServiceType",
     "uid" : "Rest"
+  }, {
+    "name" : "S-002",
+    "properties" : {
+      "description" : "",
+      "example" : "",
+      "message" : "User already exists, please choose another login to create a newer customer",
+      "messageDetail" : "",
+      "payload" : "",
+      "statusCode" : 409
+    },
+    "type" : "PotentialError",
+    "uid" : "S-002"
+  }, {
+    "name" : "S-002",
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-002"
+  }, {
+    "name" : "S-003",
+    "properties" : {
+      "description" : "",
+      "example" : "",
+      "message" : "can't connect to database",
+      "messageDetail" : "",
+      "payload" : "",
+      "statusCode" : 0
+    },
+    "type" : "PotentialError",
+    "uid" : "S-003"
+  }, {
+    "name" : "S-003",
+    "type" : "ErrorCode",
+    "uid" : "errorCode_S-003"
+  }, {
+    "name" : "ERR-0000",
+    "properties" : {
+      "description" : "",
+      "example" : "",
+      "message" : "undefine error occurs",
+      "messageDetail" : "",
+      "payload" : "",
+      "statusCode" : 500
+    },
+    "type" : "PotentialError",
+    "uid" : "ERR-0000"
+  }, {
+    "name" : "ERR-0000",
+    "type" : "ErrorCode",
+    "uid" : "errorCode_ERR-0000"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
@@ -221,6 +269,54 @@
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
     "to" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
     "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "to" : "S-002",
+    "type" : "HAS_ERROR_POTENTIAL"
+  }, {
+    "from" : "S-002",
+    "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "type" : "HAS_ENDPOINT"
+  }, {
+    "from" : "S-002",
+    "to" : "errorCode_S-002",
+    "type" : "HAS_ERROR"
+  }, {
+    "from" : "errorCode_S-002",
+    "to" : "S-002",
+    "type" : "HAS_POTENTIAL_ERROR"
+  }, {
+    "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "to" : "S-003",
+    "type" : "HAS_ERROR_POTENTIAL"
+  }, {
+    "from" : "S-003",
+    "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "type" : "HAS_ENDPOINT"
+  }, {
+    "from" : "S-003",
+    "to" : "errorCode_S-003",
+    "type" : "HAS_ERROR"
+  }, {
+    "from" : "errorCode_S-003",
+    "to" : "S-003",
+    "type" : "HAS_POTENTIAL_ERROR"
+  }, {
+    "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "to" : "ERR-0000",
+    "type" : "HAS_ERROR_POTENTIAL"
+  }, {
+    "from" : "ERR-0000",
+    "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "type" : "HAS_ENDPOINT"
+  }, {
+    "from" : "ERR-0000",
+    "to" : "errorCode_ERR-0000",
+    "type" : "HAS_ERROR"
+  }, {
+    "from" : "errorCode_ERR-0000",
+    "to" : "ERR-0000",
+    "type" : "HAS_POTENTIAL_ERROR"
   }, {
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",

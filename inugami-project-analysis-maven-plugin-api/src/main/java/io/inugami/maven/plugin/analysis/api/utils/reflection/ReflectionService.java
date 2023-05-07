@@ -19,7 +19,9 @@ package io.inugami.maven.plugin.analysis.api.utils.reflection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.inugami.api.loggers.Loggers;
 import io.inugami.api.spi.SpiLoader;
+import io.inugami.api.tools.ReflectionUtils;
 import io.inugami.commons.security.EncryptionUtils;
+import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
@@ -35,11 +37,20 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
+import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.INPUT_DTO;
+import static io.inugami.maven.plugin.analysis.api.utils.Constants.OUTPUT_DTO;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
+    public static final  String                ERROR_CODE     = "errorCode";
+    public static final  String                MESSAGE        = "message";
+    public static final  String                MESSAGE_DETAIL = "messageDetail";
+    public static final  String                ERROR_TYPE     = "errorType";
+    public static final  String                PAYLOAD        = "payload";
+    public static final  String                STATUS_CODE    = "statusCode";
+    public static final  String                NAME           = "name";
     private static       ClassLoader           CLASS_LOADER   = null;
     private static final Map<String, JsonNode> CACHE          = new LinkedHashMap<>();
     private static final List<Class<?>>        PRIMITIF_TYPES = List.of(
@@ -65,6 +76,14 @@ public final class ReflectionService {
         } catch (final ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public static Class<?> safeLoadClass(final String className, final ClassLoader classLoader) {
+        Class<?> result = loadClass(className, classLoader);
+        if (result == null) {
+            result = loadClass(className, ReflectionService.class.getClassLoader());
+        }
+        return result;
     }
 
     public static Set<Field> loadAllFields(final Class<?> clazz) {
@@ -475,5 +494,78 @@ public final class ReflectionService {
 
     public static String encodeSha1(final String value) {
         return value == null ? null : new EncryptionUtils().encodeSha1(value);
+    }
+
+
+    public static List<PotentialErrorDTO> convertPotentialErrors(final PotentialError[] potentialErrors) {
+        final List<PotentialErrorDTO> result = new ArrayList<>();
+
+        if (potentialErrors != null) {
+            for (final PotentialError potentialError : potentialErrors) {
+                result.add(convertPotentialError(potentialError));
+            }
+        }
+        return result;
+    }
+
+    private static PotentialErrorDTO convertPotentialError(final PotentialError potentialErrorAnnotation) {
+        final PotentialErrorDTO.PotentialErrorDTOBuilder builder = PotentialErrorDTO.builder();
+        builder.throwsAs(potentialErrorAnnotation.throwsAs())
+               .description(potentialErrorAnnotation.description())
+               .example(potentialErrorAnnotation.example())
+               .url(potentialErrorAnnotation.url())
+               .errorCode(potentialErrorAnnotation.errorCode())
+               .errorMessage(potentialErrorAnnotation.errorMessage())
+               .errorMessageDetail(potentialErrorAnnotation.errorMessageDetail())
+               .payload(potentialErrorAnnotation.payload())
+               .httpStatus(potentialErrorAnnotation.httpStatus())
+               .type(potentialErrorAnnotation.type());
+
+        Class<?> errorCodeClass = null;
+        if (potentialErrorAnnotation.errorCodeClass() != PotentialError.NONE.class) {
+            errorCodeClass = safeLoadClass(potentialErrorAnnotation.errorCodeClass().getName(), CLASS_LOADER);
+        }
+
+        Object realErrorCode = null;
+        if (errorCodeClass != null) {
+            if (errorCodeClass.isEnum()) {
+                realErrorCode = getEnumValue(potentialErrorAnnotation.errorCode(), errorCodeClass);
+            } else {
+                realErrorCode = ReflectionUtils.getStaticFieldValue(potentialErrorAnnotation.errorCode(), errorCodeClass);
+            }
+        }
+
+        if (realErrorCode != null) {
+            applyIfNotNull(ReflectionUtils.callGetterForField(ERROR_CODE, realErrorCode),
+                           value -> builder.errorCode(String.valueOf(value)));
+
+            applyIfNotNull(ReflectionUtils.callGetterForField(MESSAGE, realErrorCode),
+                           value -> builder.errorMessage(String.valueOf(value)));
+
+            applyIfNotNull(ReflectionUtils.callGetterForField(MESSAGE_DETAIL, realErrorCode),
+                           value -> builder.errorMessageDetail(String.valueOf(value)));
+
+            applyIfNotNull(ReflectionUtils.callGetterForField(ERROR_TYPE, realErrorCode),
+                           value -> builder.type(String.valueOf(value)));
+
+            applyIfNotNull(ReflectionUtils.callGetterForField(PAYLOAD, realErrorCode),
+                           value -> builder.type(String.valueOf(value)));
+
+            applyIfNotNull(ReflectionUtils.callGetterForField(STATUS_CODE, realErrorCode),
+                           value -> builder.httpStatus(ReflectionUtils.parseInt(value)));
+        }
+
+        return builder.build();
+    }
+
+    private static Object getEnumValue(final String errorCode, final Class<?> errorCodeClass) {
+        Object             result = null;
+        final List<Object> values = ReflectionUtils.getEnumValues(errorCodeClass);
+        for (final Object value : values) {
+            if (errorCode.equals(ReflectionUtils.getFieldValue(NAME, value))) {
+                result = ReflectionUtils.getFieldValue(ERROR_CODE, value);
+            }
+        }
+        return result;
     }
 }

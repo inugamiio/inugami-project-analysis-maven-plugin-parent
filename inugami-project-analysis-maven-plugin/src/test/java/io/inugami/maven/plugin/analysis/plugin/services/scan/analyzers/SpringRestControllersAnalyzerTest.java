@@ -17,9 +17,14 @@
 package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.inugami.api.exceptions.DefaultErrorCode;
+import io.inugami.api.exceptions.ErrorCode;
+import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
+import io.inugami.maven.plugin.analysis.annotations.Description;
+import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
@@ -42,6 +47,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static io.inugami.api.exceptions.DefaultErrorCode.builder;
 import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.lenient;
@@ -157,6 +163,20 @@ class SpringRestControllersAnalyzerTest {
         }
 
 
+        @Description(
+                value = "This service allow to create new customer",
+                potentialErrors = {
+                        @PotentialError(errorCode = "USER_ALREADY_EXISTS",
+                                errorCodeClass = SerivceErrorCode.class,
+                                throwsAs = UncheckedException.class),
+                        @PotentialError(errorCode = "DB_CONNECTION_ERROR",
+                                errorCodeClass = SerivceErrorCode.class,
+                                throwsAs = UncheckedException.class),
+                        @PotentialError(errorCode = "ERR-0000",
+                                errorMessage = "undefine error occurs",
+                                throwsAs = UncheckedException.class)
+                }
+        )
         @RequestMapping(path = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
         public List<Dto> retrieveAllInformation() {
             return null;
@@ -276,6 +296,44 @@ class SpringRestControllersAnalyzerTest {
         @Override
         public List<Dto> retrieveAllInformation() {
             return null;
+        }
+    }
+
+    public static enum SerivceErrorCode implements ErrorCode {
+        COUNTRY_NOT_MANAGED(
+                builder()
+                        .errorCode("S-001")
+                        .message("the country isn't managed")
+                        .statusCode(400)
+                        .errorTypeFunctional()),
+
+        USER_ALREADY_EXISTS(
+                builder()
+                        .errorCode("S-002")
+                        .message("User already exists, please choose another login to create a newer customer")
+                        .statusCode(409)
+                        .errorTypeFunctional()),
+        DB_CONNECTION_ERROR(
+                builder()
+                        .errorCode("S-003")
+                        .message("can't connect to database")),
+
+        USER_NOT_EXISTS(
+                builder()
+                        .errorCode("S-004")
+                        .message("current user doesn't exists")
+                        .statusCode(404)
+                        .errorTypeFunctional());
+
+        private final ErrorCode errorCode;
+
+        private SerivceErrorCode(final DefaultErrorCode.DefaultErrorCodeBuilder builder) {
+            errorCode = builder.build();
+        }
+
+        @Override
+        public ErrorCode getCurrentErrorCode() {
+            return errorCode;
         }
     }
 }

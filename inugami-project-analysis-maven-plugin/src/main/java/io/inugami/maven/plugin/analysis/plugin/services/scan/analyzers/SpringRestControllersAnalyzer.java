@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.commons.security.EncryptionUtils;
+import io.inugami.maven.plugin.analysis.annotations.Description;
 import io.inugami.maven.plugin.analysis.api.actions.ClassAnalyzer;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
@@ -27,8 +28,11 @@ import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +46,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
@@ -85,6 +90,16 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final  String                      LINE                     = "\n";
     public static final  String                      TAB                      = "\t";
     public static final  String                      SIMPLE_QUOT              = "'";
+    public static final  String                      MESSAGE                  = "message";
+    public static final  String                      MESSAGE_DETAIL           = "messageDetail";
+    public static final  String                      ERROR_DESCRIPTION        = "description";
+    public static final  String                      EXAMPLE                  = "example";
+    public static final  String                      STATUS_CODE              = "statusCode";
+    public static final  String                      PAYLOAD                  = "payload";
+    public static final  String                      HAS_ERROR_POTENTIAL      = "HAS_ERROR_POTENTIAL";
+    public static final  String                      HAS_ENDPOINT             = "HAS_ENDPOINT";
+    public static final  String                      HAS_ERROR                = "HAS_ERROR";
+    public static final  String                      HAS_POTENTIAL_ERROR      = "HAS_POTENTIAL_ERROR";
 
     // =========================================================================
     // API
@@ -101,18 +116,50 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
         final RestApi restApi = analyseClass(clazz);
 
-        final List<String> existingNodes = new ArrayList<>();
+        final List<String> existingNodes   = new ArrayList<>();
+        final List<Node>   potentialErrors = new ArrayList<>();
 
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
             for (final RestEndpoint endpoint : restApi.getEndpoints()) {
 
-                final Node node = convertEndpointToNeo4j(endpoint);
-                if (node != null) {
-                    if (existingNode(node, context.getNeo4jDao())) {
-                        existingNodes.add(node.getUid());
+                final Node endpointNode = convertEndpointToNeo4j(endpoint);
+                if (endpointNode != null) {
+                    if (existingNode(endpointNode, context.getNeo4jDao())) {
+                        existingNodes.add(endpointNode.getUid());
                     } else {
-                        result.addNode(node);
+                        result.addNode(endpointNode);
+                    }
+
+                    if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail().getPotentialErrors() != null) {
+                        for (final PotentialErrorDTO potentialError : endpoint.getDescriptionDetail().getPotentialErrors()) {
+                            final Node potentialErrorNode = buildPotentialErrorNode(potentialError);
+                            final Node errorCode          = ErrorCodeAnalyzer.buildErrorCodeNode(potentialError.getErrorCode());
+                            potentialErrors.add(potentialErrorNode);
+                            potentialErrors.add(errorCode);
+
+                            result.addRelationship(Relationship.builder()
+                                                               .from(endpointNode.getUid())
+                                                               .to(potentialErrorNode.getUid())
+                                                               .type(HAS_ERROR_POTENTIAL)
+                                                               .build());
+                            result.addRelationship(Relationship.builder()
+                                                               .from(potentialErrorNode.getUid())
+                                                               .to(endpointNode.getUid())
+                                                               .type(HAS_ENDPOINT)
+                                                               .build());
+
+                            result.addRelationship(Relationship.builder()
+                                                               .from(potentialErrorNode.getUid())
+                                                               .to(errorCode.getUid())
+                                                               .type(HAS_ERROR)
+                                                               .build());
+                            result.addRelationship(Relationship.builder()
+                                                               .from(errorCode.getUid())
+                                                               .to(potentialErrorNode.getUid())
+                                                               .type(HAS_POTENTIAL_ERROR)
+                                                               .build());
+                        }
                     }
 
                     final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
@@ -120,7 +167,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                     for (final Node input : inputDto) {
                         result.addRelationship(Relationship.builder()
                                                            .from(input.getUid())
-                                                           .to(node.getUid())
+                                                           .to(endpointNode.getUid())
                                                            .type(HAS_INPUT_DTO)
                                                            .build());
                     }
@@ -129,7 +176,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                         result.addNode(outputDto);
                         result.addRelationship(Relationship.builder()
                                                            .from(outputDto.getUid())
-                                                           .to(node.getUid())
+                                                           .to(endpointNode.getUid())
                                                            .type(HAS_INPUT_DTO)
                                                            .build());
                     }
@@ -139,12 +186,12 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
             }
         }
 
-        final Node node = buildNodeVersion(context.getProject());
+        final Node versionNode = buildNodeVersion(context.getProject());
         if (!result.getNodes().isEmpty()) {
             final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(REST).name(REST).build();
             for (final Node service : result.getNodes()) {
                 result.addRelationship(Relationship.builder()
-                                                   .from(node.getUid())
+                                                   .from(versionNode.getUid())
                                                    .to(service.getUid())
                                                    .type(getRelationshipType())
                                                    .build(),
@@ -156,19 +203,40 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
                                                    .build());
             }
 
-            result.addNode(node, serviceType);
+            result.addNode(versionNode, serviceType);
         }
 
         if (!existingNodes.isEmpty()) {
             for (final String service : existingNodes) {
                 result.addRelationship(Relationship.builder()
-                                                   .from(node.getUid())
+                                                   .from(versionNode.getUid())
                                                    .to(service)
                                                    .type(getRelationshipType())
                                                    .build());
             }
         }
+        result.addNode(potentialErrors);
         return List.of(result);
+    }
+
+    private Node buildPotentialErrorNode(final PotentialErrorDTO potentialError) {
+        final Node.NodeBuilder node = Node.builder();
+
+        node.type("PotentialError");
+        node.uid(potentialError.getErrorCode());
+        node.name(potentialError.getErrorCode());
+
+        final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
+        applyIfNotNull(potentialError.getErrorMessage(), value -> properties.put(MESSAGE, value));
+        applyIfNotNull(potentialError.getErrorMessageDetail(), value -> properties.put(MESSAGE_DETAIL, value));
+        applyIfNotNull(potentialError.getDescription(), value -> properties.put(ERROR_DESCRIPTION, value));
+        applyIfNotNull(potentialError.getExample(), value -> properties.put(EXAMPLE, value));
+        applyIfNotNull(potentialError.getHttpStatus(), value -> properties.put(STATUS_CODE, value));
+        applyIfNotNull(potentialError.getPayload(), value -> properties.put(PAYLOAD, value));
+
+        node.properties(properties);
+        return node.build();
+
     }
 
     private boolean existingNode(final Node node,
@@ -369,13 +437,34 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         builder.headers(extractHeader(method.getParameters()));
         builder.body(extractBody(method.getParameters(), true));
         builder.bodyRequireOnly(extractBody(method.getParameters(), false));
-
+        builder.descriptionDetail(resolveDescription(method));
         final JsonNode payload = renderReturnType(method, true);
         builder.responseType(payload == null ? null : payload.convertToJson());
 
         final JsonNode payloadRequireOnly = renderReturnType(method, false);
         builder.responseTypeRequireOnly(payloadRequireOnly == null ? null : payloadRequireOnly.convertToJson());
         return builder.build();
+    }
+
+    private DescriptionDTO resolveDescription(final Method method) {
+        final Description description = method.getAnnotation(Description.class);
+        DescriptionDTO    result      = null;
+        if (description != null) {
+            result = buildDescription(method, description);
+        }
+        return result;
+    }
+
+    private DescriptionDTO buildDescription(final Method method, final Description description) {
+        final String                  example         = null;
+        final List<PotentialErrorDTO> potentialErrors = new ArrayList<>();
+
+        return DescriptionDTO.builder()
+                             .url(description.url())
+                             .content(description.value())
+                             .example(example)
+                             .potentialErrors(ReflectionService.convertPotentialErrors(description.potentialErrors()))
+                             .build();
     }
 
 

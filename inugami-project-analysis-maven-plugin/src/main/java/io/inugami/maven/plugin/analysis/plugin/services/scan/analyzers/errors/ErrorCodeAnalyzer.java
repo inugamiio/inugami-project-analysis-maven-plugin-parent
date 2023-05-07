@@ -257,6 +257,14 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
     }
 
 
+    public static Node buildErrorCodeNode(final String errorCode) {
+        final Node.NodeBuilder node = Node.builder();
+        node.type(ERROR_CODE);
+        node.uid(ERROR_CODE_PREFIX + errorCode);
+        node.name(errorCode);
+        return node.build();
+    }
+
     private Node buildErrorType(final Node errorNode) {
         final String errorType = errorNode.getProperties().get("errorType") == null ? "technical" :
                 String.valueOf(errorNode.getProperties().get("errorType"));
