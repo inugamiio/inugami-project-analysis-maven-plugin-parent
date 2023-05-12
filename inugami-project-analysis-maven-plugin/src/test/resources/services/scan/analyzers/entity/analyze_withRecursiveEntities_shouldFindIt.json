@@ -1,0 +1,48 @@
+{
+  "createScripts" : [ ],
+  "deleteScripts" : [ ],
+  "nodes" : [ {
+    "name" : "ISSUE_ENTITY",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"lifecycle\":\"String\",\n  \"previousKnownState\":\"String\",\n  \"createBy\":\"String\",\n  \"createdDate\":\"Calendar\",\n  \"changeLogs\":[\n    {\n      \"uid\":\"Long\",\n      \"status\":{\n                \"uid\":\"String\"\n      },\n      \"comment\":\"<<String>>\",\n      \"date\":\"Calendar\",\n      \"issue\":\"<<IssueEntity>>\"\n    }\n  ],\n  \"status\":\"<<ChangeLogEntity>>\",\n  \"parent\":\"<<IssueEntity>>\"\n}"
+    },
+    "type" : "Entity",
+    "uid" : "54cafc9c29c4cec16044f1bd35c6b30cff280ac6b562c7ef929d4d305a266958c25cb11869b6f419b9410ab8d48937015ca0e6f57f7421a7edc7d5170c24ff74"
+  }, {
+    "name" : "local@ISSUE_ENTITY",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"title\":\"String\"\n}"
+    },
+    "type" : "LocalEntity",
+    "uid" : "7227b775824736c0ba849077b904eacd175c582cf9fabcd9c354354fde48e47fbf9116489eadc87ae15f8be6758687ff6556491d2213d112806b2af785000cbc"
+  }, {
+    "name" : "1.0.0-SNAPSHOT",
+    "properties" : {
+      "artifactId" : "basic-artifact",
+      "groupId" : "io.inugami.test",
+      "major" : 1,
+      "minor" : 0,
+      "packaging" : "jar",
+      "patch" : 0,
+      "tag" : "SNAPSHOT",
+      "version" : "1.0.0-SNAPSHOT"
+    },
+    "type" : "Version",
+    "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
+  } ],
+  "nodesToDeletes" : [ ],
+  "relationships" : [ {
+    "from" : "7227b775824736c0ba849077b904eacd175c582cf9fabcd9c354354fde48e47fbf9116489eadc87ae15f8be6758687ff6556491d2213d112806b2af785000cbc",
+    "to" : "54cafc9c29c4cec16044f1bd35c6b30cff280ac6b562c7ef929d4d305a266958c25cb11869b6f419b9410ab8d48937015ca0e6f57f7421a7edc7d5170c24ff74",
+    "type" : "HAS_ENTITY_REFERENCE"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "54cafc9c29c4cec16044f1bd35c6b30cff280ac6b562c7ef929d4d305a266958c25cb11869b6f419b9410ab8d48937015ca0e6f57f7421a7edc7d5170c24ff74",
+    "type" : "HAS_ENTITY"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "to" : "7227b775824736c0ba849077b904eacd175c582cf9fabcd9c354354fde48e47fbf9116489eadc87ae15f8be6758687ff6556491d2213d112806b2af785000cbc",
+    "type" : "HAS_LOCAL_ENTITY"
+  } ],
+  "relationshipsToDeletes" : [ ]
+}

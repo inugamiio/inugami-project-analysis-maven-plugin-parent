@@ -6,6 +6,7 @@ import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.annotations.EntityDatabase;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.entities.IssueEntity;
 import org.apache.maven.project.MavenProject;
 import org.assertj.core.api.AssertionsForInterfaceTypes;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +57,7 @@ class EntitiesAnalyzerTest {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
         assertThat(analyzer.accept(EntitiesAnalyzerTest.User.class, context)).isTrue();
     }
+
     @Test
     public void analyze_withEntity_shouldFindIt() {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
@@ -85,13 +87,25 @@ class EntitiesAnalyzerTest {
         return neo4jResult;
     }
 
+    @Test
+    public void analyze_withRecursiveEntities_shouldFindIt() {
+        final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
+        final ScanNeo4jResult neo4jResult = extractResult(
+                analyzer.analyze(IssueEntity.class, context));
+
+        neo4jResult.getNodes().sort((value, ref) -> value.getUid().compareTo(ref.getUid()));
+        assertTextRelatif(neo4jResult,
+                          "services/scan/analyzers/entity/analyze_withRecursiveEntities_shouldFindIt.json");
+    }
+
+
     // =========================================================================
     // ENTITIES
     // =========================================================================
     @EntityDatabase("mainDatabase")
     @Table(name = "app_user")
     @Entity
-    private static class User{
+    private static class User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)
@@ -109,7 +123,7 @@ class EntitiesAnalyzerTest {
     }
 
     @Entity
-    private static class Address{
+    private static class Address {
 
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)

@@ -30,25 +30,25 @@ import java.util.List;
 @Builder(toBuilder = true)
 public class JsonNode implements JsonObject {
     private static final long    serialVersionUID = -8448971914950919949L;
-    public static final  String  ROOT             = ".";
+    public final         String  ROOT             = ".";
     @EqualsAndHashCode.Include
-    private final        String  path;
-    private final        boolean list;
-    private final        boolean structure;
+    private              String  path;
+    private              boolean list;
+    private              boolean structure;
 
-    private final boolean map;
-    private final String  fieldName;
-    private final String  type;
+    private boolean map;
+    private String  fieldName;
+    private String  type;
 
 
-    private final String   mapKey;
-    private final JsonNode mapValue;
+    private String   mapKey;
+    private JsonNode mapValue;
 
-    private final List<JsonNode> children;
+    private List<JsonNode> children;
 
-    private final boolean basicType;
+    private boolean basicType;
 
-    private final DescriptionDTO description;
+    private DescriptionDTO description;
 
     @Override
     public String convertToJson() {
@@ -62,5 +62,9 @@ public class JsonNode implements JsonObject {
 
     public boolean isRoot() {
         return path == null || !path.contains(ROOT);
+    }
+
+    public static class JsonNodeBuilder {
+
     }
 }

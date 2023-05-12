@@ -16,6 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
 
+
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ClassCursor;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.FieldTransformer;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
@@ -42,7 +43,7 @@ public class DefaultFieldTransformer implements FieldTransformer {
     // API
     // =========================================================================
     @Override
-    public void transform(final Field field, final Class<?> type,
+    public void transform(final Field field, Class<?> type,
                           final Type genericType,
                           final JsonNode.JsonNodeBuilder builder,
                           final String currentPath,

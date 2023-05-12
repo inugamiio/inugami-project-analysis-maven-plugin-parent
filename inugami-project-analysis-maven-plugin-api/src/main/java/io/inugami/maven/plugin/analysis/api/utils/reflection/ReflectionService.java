@@ -231,62 +231,69 @@ public final class ReflectionService {
                                       final Type genericReturnType,
                                       final ClassCursor classCursor,
                                       final boolean strict) {
-        final String key = "class:" + (type == null ? "null" : type
-                .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName())
-                + ":strict " + strict;
 
-        final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
-        JsonNode          result = CACHE.get(key);
-        if (result == null) {
-            final Class<?> returnClass = type;
+        try {
+            final String key = "class:" + (type == null ? "null" : type
+                    .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName())
+                    + ":strict " + strict;
 
-            final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
-            if (returnClass != null && !"void".equals(returnClass.getName())) {
+            final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
+            JsonNode          result = CACHE.get(key);
+            if (result == null) {
+                final Class<?> returnClass = type;
 
-                String     path       = null;
-                final Type returnType = genericReturnType;
+                final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
+                if (returnClass != null && !"void".equals(returnClass.getName())) {
 
-                Class<?> currentClass = returnClass;
-                if (returnType != null) {
-                    currentClass = extractGenericType(returnType);
-                }
+                    String     path       = null;
+                    final Type returnType = genericReturnType;
 
-                if (isList(returnClass)) {
-                    final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
-                    builder.list(true);
-                    path = "[]";
-                    builder.path("[]");
-                    JsonNode structure = null;
-                    if (currentClass != null) {
-                        structure = renderStructureJson(currentClass, path, cursorChildren, strict);
+                    Class<?> currentClass = returnClass;
+                    if (returnType != null) {
+                        currentClass = extractGenericType(returnType);
                     }
 
-                    if (structure != null) {
-                        builder.children(List.of(structure));
+                    if (isList(returnClass)) {
+                        final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
+                        builder.list(true);
+                        path = "[]";
+                        builder.path("[]");
+                        JsonNode structure = null;
+                        if (currentClass != null) {
+                            structure = renderStructureJson(currentClass, path, cursorChildren, strict);
+                        }
+
+                        if (structure != null) {
+                            builder.children(List.of(structure));
+                        }
+                        result = builder.build();
                     }
-                    result = builder.build();
-                }
-                else if (isBasicType(currentClass)) {
-                    final JsonNode.JsonNodeBuilder node = JsonNode.builder()
-                                                                  .type(renderFieldType(currentClass))
-                                                                  .basicType(true);
-                    result = node.build();
-                }
-                else {
-                    result = renderStructureJson(currentClass, null, cursorChildren, strict);
-                    result.isStructure();
+                    else if (isBasicType(currentClass)) {
+                        final JsonNode.JsonNodeBuilder node = JsonNode.builder()
+                                                                      .type(renderFieldType(currentClass))
+                                                                      .basicType(true);
+                        result = node.build();
+                    }
+                    else {
+                        log.info("render type : {}", type);
+                        result = renderStructureJson(currentClass, null, cursorChildren, strict);
+                        result.isStructure();
 
+                    }
+                    Loggers.DEBUG.debug("json structure : {}\n{}", currentClass.getTypeName(), result.convertToJson());
                 }
-                Loggers.DEBUG.debug("json structure : {}\n{}", currentClass.getTypeName(), result.convertToJson());
+
+                if (result != null) {
+                    CACHE.put(key, result);
+                }
+
             }
-
-            if (result != null) {
-                CACHE.put(key, result);
-            }
-
+            return result;
         }
-
-        return result;
+        catch (Throwable error) {
+            log.error("error on rendering class : {} : {}", type.getName(), error.getMessage(), error);
+            throw error;
+        }
     }
 
 
