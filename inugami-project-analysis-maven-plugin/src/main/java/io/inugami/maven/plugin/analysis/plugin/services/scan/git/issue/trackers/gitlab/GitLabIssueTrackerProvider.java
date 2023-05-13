@@ -84,11 +84,11 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url        = configuration.grab(IssueTackerProvider.URL);
-        urlPr      = configuration.grabOrDefault(PR_URL, url);
-        token      = configuration.grab(SERVER_TOKEN);
-        timeout    = configuration.grabLong(TIMEOUT, 30000L);
-        nbThreads  = configuration.grabInt(NB_THREADS, 10);
+        url = configuration.grab(IssueTackerProvider.URL);
+        urlPr = configuration.grabOrDefault(PR_URL, url);
+        token = configuration.grab(SERVER_TOKEN);
+        timeout = configuration.grabLong(TIMEOUT, 30000L);
+        nbThreads = configuration.grabInt(NB_THREADS, 10);
         projectSha = new EncryptionUtils().encodeSha1(url);
     }
 
@@ -134,8 +134,7 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
                                              urlPr,
                                              versionUid,
                                              projectSha));
-                }
-                else {
+                } else {
                     tasks.add(new GitlabTask(ticketId.substring(1),
                                              IssueTrackerCommons.TicketType.ISSUE,
                                              token,

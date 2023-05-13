@@ -16,9 +16,11 @@
  */
 package io.inugami.maven.plugin.analysis.api.utils;
 
+import io.inugami.maven.plugin.analysis.api.models.Node;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -62,4 +64,12 @@ public class NodeUtils {
     }
 
 
+    public static String getStringValue(final String field, final Node node) {
+        if (node == null || field == null || node.getProperties() == null) {
+            return null;
+        }
+
+        final Serializable value = node.getProperties().get(field);
+        return value == null ? null : String.valueOf(value);
+    }
 }

@@ -26,7 +26,7 @@ import java.util.*;
 public class ReleaseNoteResult {
     GavInfo                   gav;
     ProjectDependenciesGraph  projectDependenciesGraph;
-    Set<String>               commit        = new LinkedHashSet<>();
+    Set<Map<String, Object>>  commit        = new LinkedHashSet<>();
     Set<Author>               authors       = new LinkedHashSet<>();
     List<Issue>               issues        = new ArrayList<>();
     List<MergeRequests>       mergeRequests = new ArrayList<>();
@@ -36,8 +36,8 @@ public class ReleaseNoteResult {
     Map<String, Object> customFields         = new LinkedHashMap<>();
 
 
-    public ReleaseNoteResult addCommit(final String... commit) {
-        for (final String item : commit) {
+    public ReleaseNoteResult addCommit(final Map<String, Object>... commit) {
+        for (final Map<String, Object> item : commit) {
             if (item != null) {
                 this.commit.add(item);
             }

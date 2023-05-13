@@ -16,16 +16,19 @@
  */
 package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.github;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
+import io.inugami.commons.connectors.HttpRequest;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.utils.CacheUtils;
-import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,31 +57,43 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     public static final String FIELD_HEAD       = "head";
     public static final String FIELD_NAME       = "name";
 
-    private final String                         id;
-    private final IssueTrackerCommons.TicketType ticketType;
-    private final String                         token;
-    private final String                         url;
-    private final String                         urlPr;
-    private final String                         versionUid;
-    private final String                         projectSha;
+    private static final ObjectMapper                   OBJECT_MAPPER   = buildObjectMapper();
+    public static final  int                            TIMEOUT         = 30000;
+    public static final  int                            MAX_CONNECTIONS = 50;
+    private final        String                         id;
+    private final        IssueTrackerCommons.TicketType ticketType;
+    private final        String                         token;
+    private final        String                         url;
+    private final        String                         urlPr;
+    private final        String                         versionUid;
+    private final        String                         projectSha;
 
     // =========================================================================
     // API
     // =========================================================================
     @Override
     public ScanNeo4jResult call() throws Exception {
+        try {
+            return processCall();
+        } catch (final Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    private ScanNeo4jResult processCall() {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         final Map<String, String> headers = Map.ofEntries(Map.entry("PRIVATE-TOKEN", token),
                                                           Map.entry("Content-Type", "application/json"));
-        final ObjectMapper objectMapper = ObjectMapperBuilder.build();
-        Node               node         = null;
+
+        Node node = null;
         switch (ticketType) {
             case MERGE_REQUEST:
-                node = processMergeRequest(headers, objectMapper);
+                node = processMergeRequest(headers);
                 break;
             default:
-                node = processIssue(headers, objectMapper, result);
-                processIssueLinks(headers, objectMapper, node, result);
+                node = processIssue(headers, result);
+                processIssueLinks(headers, node, result);
                 break;
         }
 
@@ -98,15 +113,14 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
         return result;
     }
 
-    private Node processIssue(final Map<String, String> headers, final ObjectMapper objectMapper,
-                              final ScanNeo4jResult resultNeo4J) {
+    private Node processIssue(final Map<String, String> headers, final ScanNeo4jResult resultNeo4J) {
         final Node          result  = null;
         final StringBuilder fullUrl = new StringBuilder();
         fullUrl.append(url);
         fullUrl.append("/issues/");
         fullUrl.append(id);
 
-        final JsonNode json = callGitHub(fullUrl.toString(), headers, objectMapper);
+        final JsonNode json = callGitHub(fullUrl.toString(), headers);
         return buildIssueNode(json, resultNeo4J);
     }
 
@@ -165,7 +179,7 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     }
 
 
-    private void processIssueLinks(final Map<String, String> headers, final ObjectMapper objectMapper,
+    private void processIssueLinks(final Map<String, String> headers,
                                    final Node node,
                                    final ScanNeo4jResult resultNeo4J) {
 
@@ -177,7 +191,7 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
             fullUrl.append("/issues/");
             fullUrl.append(linkId.substring(1));
 
-            final JsonNode link = callGitHub(fullUrl.toString(), headers, objectMapper);
+            final JsonNode link = callGitHub(fullUrl.toString(), headers);
             if (link != null) {
                 final Node linkNeo4JNode = buildIssueNode(link, resultNeo4J);
                 resultNeo4J.addNode(linkNeo4JNode);
@@ -209,14 +223,14 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     // =========================================================================
     // OVERRIDES
     // =========================================================================
-    private Node processMergeRequest(final Map<String, String> headers, final ObjectMapper objectMapper) {
+    private Node processMergeRequest(final Map<String, String> headers) {
         Node                result  = null;
         final StringBuilder fullUrl = new StringBuilder();
         fullUrl.append(urlPr);
         fullUrl.append("/pulls/");
         fullUrl.append(id);
 
-        final JsonNode json = callGitHub(fullUrl.toString(), headers, objectMapper);
+        final JsonNode json = callGitHub(fullUrl.toString(), headers);
         if (json != null) {
             final String                              name       = TicketType.MERGE_REQUEST.getNodePrefix() + id;
             final String                              uid        = projectSha + "_" + name;
@@ -291,21 +305,24 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     // =========================================================================
     // TOOLS
     // =========================================================================
-    private JsonNode callGitHub(final String fullUrl, final Map<String, String> headers,
-                                final ObjectMapper objectMapper) {
+    private JsonNode callGitHub(final String fullUrl, final Map<String, String> headers) {
         JsonNode result = CacheUtils.get(fullUrl);
         if (result == null) {
             HttpConnectorResult      httpResult = null;
-            final HttpBasicConnector http       = new HttpBasicConnector();
+            final HttpBasicConnector http       = new HttpBasicConnector(TIMEOUT, TIMEOUT, MAX_CONNECTIONS, MAX_CONNECTIONS, TIMEOUT);
+
             try {
                 log.info("calling {}", fullUrl);
 
-                httpResult = http.get(fullUrl, headers);
-            }
-            catch (final Exception e) {
+                httpResult = http.get(HttpRequest.builder()
+                                                 .verb("GET")
+                                                 .url(fullUrl)
+                                                 .headers(headers)
+                                                 .build());
+
+            } catch (final Exception e) {
                 log.error(e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
                           httpResult == null ? 0 : httpResult.getDelais());
                 http.close();
@@ -313,24 +330,36 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
 
             if (httpResult == null || httpResult.getStatusCode() != 200) {
                 log.error("can't call : {}", fullUrl);
-            }
-            else {
+            } else {
                 try {
-                    result = objectMapper.readTree(new String(httpResult.getData()));
-                }
-                catch (final JsonProcessingException e) {
+                    result = OBJECT_MAPPER.readTree(new String(httpResult.getData()));
+                } catch (final JsonProcessingException e) {
                     log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
                 }
             }
             if (result != null) {
                 CacheUtils.put(fullUrl, result);
             }
-        }
-        else {
+        } else {
             log.info("loading github information from cache");
         }
 
 
         return result;
+    }
+
+    private static ObjectMapper buildObjectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        objectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+
+        objectMapper.registerModule(new ParameterNamesModule())
+                    .registerModule(new Jdk8Module())
+                    .registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return objectMapper;
     }
 }

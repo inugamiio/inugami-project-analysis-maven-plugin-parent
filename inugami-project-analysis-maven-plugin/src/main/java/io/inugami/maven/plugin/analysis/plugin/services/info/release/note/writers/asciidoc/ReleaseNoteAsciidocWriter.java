@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -57,6 +56,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     public static final  String  RELEASE_NOTE = "release-note";
     public static final  String  ADOC         = ".adoc";
     public static final  String  DELIMITER    = "-";
+    public static final  String  DATE         = "date";
+    public static final  String  COMMIT_UID   = "commitUid";
+    public static final  String  AUTHOR       = "author";
+    public static final  String  MESSAGE      = "message";
 
     // =========================================================================
     // ACCEPT
@@ -116,7 +119,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final String issues  = renderIssues(releaseNote.getIssues(), notSplitFile, context.getConfiguration());
 
         write(project, writer, "project", version, baseDocFolder);
-        write(authors, writer, "author", version, baseDocFolder);
+        write(authors, writer, AUTHOR, version, baseDocFolder);
         write(issues, writer, "issues", version, baseDocFolder);
         write(pr, writer, "merge-requests", version, baseDocFolder);
         write(commit, writer, "commit", version, baseDocFolder);
@@ -252,7 +255,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
 
-    protected String renderCommit(final Set<String> commit, final boolean notSplitFile,
+    protected String renderCommit(final Set<Map<String, Object>> commit, final boolean notSplitFile,
                                   final ConfigHandler<String, String> configuration) {
         if (notEnabled("commit", configuration)) {
             return null;
@@ -267,20 +270,27 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.write("|Date | SHA | Author | Message").line();
             writer.line();
 
-            for (final String item : commit) {
-                final Matcher matcher = COMMIT_REGEX.matcher(item);
-                if (matcher.matches()) {
-                    writer.write("|").write(trim(matcher.group(1))).line();
-                    writer.write("|").write(trim(matcher.group(2))).line();
-                    writer.write("|").write(trim(matcher.group(3))).line();
-                    writer.write("|").write(trim(matcher.group(4))).line();
-                    writer.line();
-                }
+            for (final Map<String, Object> item : commit) {
+                writer.write("|").write(trim(orEmpty(item, DATE))).line();
+                writer.write("|").write(trim(orEmpty(item, COMMIT_UID))).line();
+                writer.write("|").write(trim(orEmpty(item, AUTHOR))).line();
+                writer.write("|").write(trim(orEmpty(item, MESSAGE))).line();
+                writer.line();
+
             }
             writer.write("|===").line();
             writer.line();
         }
         return writer.toString();
+    }
+
+    private String orEmpty(final Map<String, Object> item, final String key) {
+        String result = null;
+        if (item != null) {
+            final Object value = item.get(key);
+            result = value == null ? "" : String.valueOf(value);
+        }
+        return result;
     }
 
 

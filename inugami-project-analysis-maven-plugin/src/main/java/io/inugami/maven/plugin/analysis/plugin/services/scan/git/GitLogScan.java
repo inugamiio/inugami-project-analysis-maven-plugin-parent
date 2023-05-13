@@ -26,6 +26,11 @@ import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
+import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -68,6 +73,9 @@ public class GitLogScan implements ProjectScanner {
     public static final  String CLOSE_SPACE                    = "] ";
     public static final  String SPACE                          = " ";
     private static final String RELATIONSHIP_FIX_VERSION       = "FIX_VERSION";
+    public static final  String HAS_ISSUE                      = "HAS_ISSUE";
+    public static final  String HAS_SCM                        = "HAS_SCM";
+    public static final  String COMMIT_UID                     = "commitUid";
 
 
     // =========================================================================
@@ -101,22 +109,25 @@ public class GitLogScan implements ProjectScanner {
             final Node versionNode = buildNodeVersion(context.getProject());
             result.addNode(versionNode);
 
-            final ScanNeo4jResult issues = buildIssues(gitLogs, versionNode, context);
-            ScanNeo4jResult.merge(issues, result);
+            final IssueResult issues = buildIssues(gitLogs, versionNode, context);
+            ScanNeo4jResult.merge(issues.getScanNeo4jResult(), result);
 
-            final Node scm = buildScmNode(gitLogs, versionNode.getUid());
-            result.addNodeToDelete(scm.getUid());
+            final List<Node> scm = buildScmNode(gitLogs);
+            result.addNodeToDelete(scm.stream().map(Node::getUid).collect(Collectors.toList()));
             result.addNode(scm);
 
-            result.addRelationship(Relationship
-                                           .builder()
-                                           .from(versionNode.getUid())
-                                           .to(scm.getUid())
-                                           .type(RELATIONSHIP_HAVE_SCM_INFO)
-                                           .build());
+
+            for (final Node scmNode : scm) {
+                result.addRelationship(Relationship
+                                               .builder()
+                                               .from(versionNode.getUid())
+                                               .to(scmNode.getUid())
+                                               .type(RELATIONSHIP_HAVE_SCM_INFO)
+                                               .build());
+            }
+
 
             final List<Node> authors = buildAuthors(gitLogs);
-
             if (!authors.isEmpty()) {
                 result.addNode(authors);
                 final List<Relationship> authorRelationships = new ArrayList<>();
@@ -125,6 +136,7 @@ public class GitLogScan implements ProjectScanner {
                        .forEach(authorRelationships::addAll);
                 result.addRelationship(authorRelationships);
             }
+            attachIssueToGit(result, issues.getGitIssues());
         }
 
         return List.of(result);
@@ -158,6 +170,7 @@ public class GitLogScan implements ProjectScanner {
             final RevCommit rev = iterator.next();
 
             final GitLog gitLog = GitLog.builder()
+                                        .id(String.valueOf(rev.getId()))
                                         .type(rev.getType())
                                         .name(rev.getName())
                                         .message(rev.getFullMessage().replaceAll("\n", " "))
@@ -269,53 +282,63 @@ public class GitLogScan implements ProjectScanner {
         return result;
     }
 
-    private Node buildScmNode(final List<GitLog> gitLogs, final String versionUid) {
-        final String                              name       = String.join("_", versionUid, SCM);
+    private List<Node> buildScmNode(final List<GitLog> gitLogs) {
+        final List<Node> result = new ArrayList<>();
+
+        if (gitLogs != null) {
+            for (final GitLog log : gitLogs) {
+                result.add(buildScmNode(log));
+            }
+        }
+        return result;
+    }
+
+    private Node buildScmNode(final GitLog gitLog) {
+        final String                              name       = String.join("_", gitLog.getName());
         final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
         final JsonBuilder                         commit     = new JsonBuilder();
 
         int dateSize   = 0;
         int nameSize   = 0;
         int authorSize = 0;
-        for (final GitLog gitLog : gitLogs) {
-            final String commitUid = String.valueOf(gitLog.getName());
-            final String author    = String.valueOf(gitLog.getAuthor());
-            final String date      = String.valueOf(gitLog.getDate());
-            if (date.length() > dateSize) {
-                dateSize = date.length();
-            }
-            if (commitUid.length() > nameSize) {
-                nameSize = commitUid.length();
-            }
-            if (author.length() > authorSize) {
-                authorSize = author.length();
-            }
+
+        final String commitUid = String.valueOf(gitLog.getName());
+        final String author    = String.valueOf(gitLog.getAuthor());
+        final String date      = String.valueOf(gitLog.getDate());
+        if (date.length() > dateSize) {
+            dateSize = date.length();
+        }
+        if (commitUid.length() > nameSize) {
+            nameSize = commitUid.length();
+        }
+        if (author.length() > authorSize) {
+            authorSize = author.length();
         }
 
-        final Iterator<GitLog> iterator = gitLogs.iterator();
-        while (iterator.hasNext()) {
-            final GitLog gitLog = iterator.next();
-            commit.write(OPEN);
-            commit.write(gitLog.getDate());
-            commit.write(ConsoleColors.createLine(SPACE, dateSize - String.valueOf(gitLog.getDate()).length()));
-            commit.write(CLOSE);
 
-            commit.write(OPEN);
-            commit.write(gitLog.getName());
-            commit.write(ConsoleColors.createLine(SPACE, nameSize - gitLog.getName().length()));
-            commit.write(CLOSE);
+        commit.write(OPEN);
+        commit.write(gitLog.getDate());
+        commit.write(ConsoleColors.createLine(SPACE, dateSize - String.valueOf(gitLog.getDate()).length()));
+        commit.write(CLOSE);
 
-            commit.write(OPEN);
-            commit.write(gitLog.getAuthor());
-            commit.write(ConsoleColors.createLine(SPACE, authorSize - gitLog.getAuthor().length()));
-            commit.write(CLOSE_SPACE);
-            commit.write(gitLog.getMessage() == null ? "" : gitLog.getMessage().replaceAll("\n", SPACE));
-            if (iterator.hasNext()) {
-                commit.line();
-            }
-        }
+        commit.write(OPEN);
+        commit.write(gitLog.getName());
+        commit.write(ConsoleColors.createLine(SPACE, nameSize - gitLog.getName().length()));
+        commit.write(CLOSE);
+
+        commit.write(OPEN);
+        commit.write(gitLog.getAuthor());
+        commit.write(ConsoleColors.createLine(SPACE, authorSize - gitLog.getAuthor().length()));
+        commit.write(CLOSE_SPACE);
+        commit.write(gitLog.getMessage() == null ? "" : gitLog.getMessage().replaceAll("\n", SPACE));
+
 
         properties.put("commit", commit.toString());
+        properties.put("message", gitLog.getMessage().replaceAll("\n", SPACE));
+        properties.put(COMMIT_UID, commitUid);
+        properties.put("author", author);
+        properties.put("date", date);
+
         return Node.builder()
                    .type(SCM_TYPE)
                    .uid(name)
@@ -324,36 +347,41 @@ public class GitLogScan implements ProjectScanner {
                    .build();
     }
 
-    private List<Relationship> buildAuthorRelationships(final Node versionNode, final Node author, final Node scm) {
-        return List.of(Relationship
-                               .builder()
-                               .from(versionNode.getUid())
-                               .to(author.getUid())
-                               .type(RELATIONSHIP_HAVE_AUTHOR)
-                               .build(),
-                       Relationship
-                               .builder()
-                               .from(scm.getUid())
-                               .to(author.getUid())
-                               .type(RELATIONSHIP_HAVE_AUTHOR)
-                               .build(),
-                       Relationship
-                               .builder()
-                               .from(author.getUid())
-                               .to(versionNode.getUid())
-                               .type(RELATIONSHIP_WORKED_ON_VERSION)
-                               .build(),
-                       Relationship
-                               .builder()
-                               .from(author.getUid())
-                               .to(scm.getUid())
-                               .type(RELATIONSHIP_WORKED_ON_VERSION)
-                               .build()
-        );
+    private List<Relationship> buildAuthorRelationships(final Node versionNode, final Node author, final List<Node> scmNodes) {
+        final List<Relationship> result = new ArrayList<>();
+
+        for (final Node scm : scmNodes) {
+            result.addAll(List.of(Relationship
+                                          .builder()
+                                          .from(versionNode.getUid())
+                                          .to(author.getUid())
+                                          .type(RELATIONSHIP_HAVE_AUTHOR)
+                                          .build(),
+                                  Relationship
+                                          .builder()
+                                          .from(scm.getUid())
+                                          .to(author.getUid())
+                                          .type(RELATIONSHIP_HAVE_AUTHOR)
+                                          .build(),
+                                  Relationship
+                                          .builder()
+                                          .from(author.getUid())
+                                          .to(versionNode.getUid())
+                                          .type(RELATIONSHIP_WORKED_ON_VERSION)
+                                          .build(),
+                                  Relationship
+                                          .builder()
+                                          .from(author.getUid())
+                                          .to(scm.getUid())
+                                          .type(RELATIONSHIP_WORKED_ON_VERSION)
+                                          .build()
+            ));
+        }
+        return result;
     }
 
 
-    private ScanNeo4jResult buildIssues(final List<GitLog> gitLogs, final Node versionNode, final ScanConext context) {
+    private IssueResult buildIssues(final List<GitLog> gitLogs, final Node versionNode, final ScanConext context) {
         final List<IssueTackerProvider> providers = SpiLoader.getInstance()
                                                              .loadSpiServicesByPriority(IssueTackerProvider.class);
 
@@ -361,7 +389,8 @@ public class GitLogScan implements ProjectScanner {
                                                                     .filter(provider -> provider.enable(context))
                                                                     .collect(Collectors.toList());
 
-        final Map<IssueTackerProvider, Set<String>> issues = new LinkedHashMap<>();
+        final Map<IssueTackerProvider, Set<String>> issues    = new LinkedHashMap<>();
+        final Map<GitLog, Set<String>>              gitIssues = new LinkedHashMap<>();
 
         for (final GitLog gitLog : gitLogs) {
             for (final IssueTackerProvider provider : providersEnabled) {
@@ -374,13 +403,18 @@ public class GitLogScan implements ProjectScanner {
                             issues.put(provider, providerIssues);
                         }
                         providerIssues.addAll(extractedTicketsNumber);
+                        gitIssues.put(gitLog, extractedTicketsNumber);
                     }
                 }
             }
         }
 
-        return getNeo4jResult(versionNode, context, issues);
+        return IssueResult.builder()
+                          .gitIssues(gitIssues)
+                          .scanNeo4jResult(getNeo4jResult(versionNode, context, issues))
+                          .build();
     }
+
 
     private synchronized ScanNeo4jResult getNeo4jResult(final Node versionNode, final ScanConext context,
                                                         final Map<IssueTackerProvider, Set<String>> issues) {
@@ -408,6 +442,74 @@ public class GitLogScan implements ProjectScanner {
         return result;
     }
 
+    private void attachIssueToGit(final ScanNeo4jResult providerResult, final Map<GitLog, Set<String>> gitIssues) {
+        if (gitIssues == null) {
+            return;
+        }
+        final List<Node> nodeIssues = extractNodeType(providerResult.getNodes(), IssueTrackerCommons.TicketType.ISSUE.getNodeType());
+        final List<Node> nodeGit    = extractNodeType(providerResult.getNodes(), SCM_TYPE);
+
+
+        for (final Map.Entry<GitLog, Set<String>> entry : gitIssues.entrySet()) {
+            final Node       gitNode     = searchGitNode(entry.getKey(), nodeGit);
+            final List<Node> isssueNodes = searchIssueNodes(entry.getValue(), nodeIssues);
+
+            if (gitNode != null && isssueNodes != null) {
+                for (final Node isssueNode : isssueNodes) {
+                    providerResult.addRelationship(Relationship
+                                                           .builder()
+                                                           .from(gitNode.getUid())
+                                                           .to(isssueNode.getUid())
+                                                           .type(HAS_ISSUE)
+                                                           .build());
+
+                    providerResult.addRelationship(Relationship
+                                                           .builder()
+                                                           .from(isssueNode.getUid())
+                                                           .to(gitNode.getUid())
+                                                           .type(HAS_SCM)
+                                                           .build());
+                }
+            }
+        }
+    }
+
+
+    private Node searchGitNode(final GitLog gitlog, final List<Node> nodes) {
+        for (final Node node : nodes) {
+            if (gitlog.getName().equals(NodeUtils.getStringValue(COMMIT_UID, node))) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    private List<Node> searchIssueNodes(final Collection<String> issues, final List<Node> nodeIssues) {
+        if (issues == null || nodeIssues == null) {
+            return null;
+        }
+        final Set<Node> result = new LinkedHashSet<>();
+
+        for (final String issue : issues) {
+            final String issueNumber = cleanIssueNumber(issue);
+            for (final Node node : nodeIssues) {
+                if (node.getName().equalsIgnoreCase("issue_" + issueNumber)) {
+                    result.add(node);
+                }
+            }
+        }
+        return new ArrayList<>(result);
+    }
+
+    private String cleanIssueNumber(final String issue) {
+        return issue.replaceAll("#", "");
+    }
+
+    private List<Node> extractNodeType(final List<Node> nodes, final String nodeType) {
+        return nodes.stream()
+                    .filter(node -> node.getType().equals(nodeType))
+                    .collect(Collectors.toList());
+    }
 
     private List<Relationship> buildIssueRelationship(final List<Node> issues, final Node versionNode) {
         final List<Relationship> result = new ArrayList<>();
@@ -423,4 +525,11 @@ public class GitLogScan implements ProjectScanner {
         return result;
     }
 
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    private static class IssueResult {
+        private final ScanNeo4jResult          scanNeo4jResult;
+        private final Map<GitLog, Set<String>> gitIssues;
+    }
 }

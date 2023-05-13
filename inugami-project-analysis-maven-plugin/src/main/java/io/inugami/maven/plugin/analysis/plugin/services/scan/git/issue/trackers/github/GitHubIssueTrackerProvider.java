@@ -18,11 +18,11 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers
 
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.security.EncryptionUtils;
-import io.inugami.commons.threads.RunAndCloseService;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
+@Slf4j
 public class GitHubIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
 
 
@@ -82,11 +83,11 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url        = configuration.grab(IssueTackerProvider.URL);
-        urlPr      = configuration.grabOrDefault(PR_URL, url);
-        token      = configuration.grab(SERVER_TOKEN);
-        timeout    = configuration.grabLong(TIMEOUT, 30000L);
-        nbThreads  = configuration.grabInt(NB_THREADS, 10);
+        url = configuration.grab(IssueTackerProvider.URL);
+        urlPr = configuration.grabOrDefault(PR_URL, url);
+        token = configuration.grab(SERVER_TOKEN);
+        timeout = configuration.grabLong(TIMEOUT, 30000L);
+        nbThreads = configuration.grabInt(NB_THREADS, 10);
         projectSha = new EncryptionUtils().encodeSha1(url);
     }
 
@@ -97,7 +98,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
     @Override
     public Set<String> extractTicketNumber(final String commitMessage) {
         final Set<String> result = new LinkedHashSet<>();
-        if (commitMessage != null && (commitMessage.contains("#")||(commitMessage.contains("/")))) {
+        if (commitMessage != null && (commitMessage.contains("#") || (commitMessage.contains("/")))) {
 
             if (commitMessage.contains(MERGE_PULL_REQUEST)) {
                 final Matcher matcher = REGEX.matcher(commitMessage);
@@ -107,11 +108,10 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
                     processIfNotNull(feature, value -> result.add(value.replaceAll("#", "!")));
                     processIfNotNull(refFeature, value -> result.add("#" + value));
                 }
-            }
-            else {
+            } else {
                 final Matcher matcher = REGEX.matcher(commitMessage);
                 while (matcher.find()) {
-                    final String feature = matcher.group(GRP_FEATURE);
+                    final String feature    = matcher.group(GRP_FEATURE);
                     final String refFeature = matcher.group(GRP_REF_FEATURE);
                     processIfNotNull(feature, value -> result.add(value));
                     processIfNotNull(refFeature, value -> result.add("#" + value));
@@ -137,8 +137,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
                                              urlPr,
                                              versionUid,
                                              projectSha));
-                }
-                else {
+                } else {
                     tasks.add(new GitHubTask(ticketId.substring(1),
                                              IssueTrackerCommons.TicketType.ISSUE,
                                              token,
@@ -155,7 +154,18 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
 
     private ScanNeo4jResult retrieveNodeInformation(final ScanNeo4jResult result,
                                                     final List<Callable<ScanNeo4jResult>> tasks) {
-        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(GITHUB, timeout, nbThreads, tasks).run();
+        final List<ScanNeo4jResult> resultSet = new ArrayList<>();
+
+        for (final Callable<ScanNeo4jResult> task : tasks) {
+            try {
+                final ScanNeo4jResult data = task.call();
+                if (data != null) {
+                    resultSet.add(data);
+                }
+            } catch (final Throwable e) {
+                log.error(e.getMessage(), e);
+            }
+        }
 
         for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
             if (itemResult != null) {
