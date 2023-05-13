@@ -73,13 +73,18 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
     private List<Class<?>> resolveFeignClasses(final Class<?> clazz) {
         final Set<Class<?>>    result                      = new LinkedHashSet<>();
         final UsingFeignClient feignClientConfigAnnotation = clazz.getAnnotation(UsingFeignClient.class);
-        
+
 
         final Method[] methods = feignClientConfigAnnotation.feignConfigurationBean().getDeclaredMethods();
         for (final Method method : methods) {
             final FeignClientDefinition feignClient = method.getAnnotation(FeignClientDefinition.class);
             if (feignClient != null) {
-                result.add(feignClient.value());
+                final Class<?> currentClass = feignClient.value();
+                if (currentClass == FeignClientDefinition.None.class) {
+                    result.add(method.getReturnType());
+                } else {
+                    result.add(feignClient.value());
+                }
             }
         }
 
