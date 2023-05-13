@@ -97,6 +97,7 @@ export class DependenciesDisplayComponent implements OnInit {
         }
 
         if (this.hasValues) {
+            let resultSet = [];
             for (let dependency of this.innerValue) {
                 let isNotEmpty = false;
                 let info = {};
@@ -111,12 +112,24 @@ export class DependenciesDisplayComponent implements OnInit {
                 }
 
 
-                this.data.push({
+                resultSet.push({
                     "dependency": dependency,
                     "info": info,
                     "isNotEmpty" : isNotEmpty
                 });
             }
+
+            this.data = resultSet.sort((ref, value)=>{
+                let refHash = [ref.dependency.groupId,ref.dependency.artifactId].join(":");
+                let valueHash = [value.dependency.groupId,value.dependency.artifactId].join(":");
+                if(refHash==valueHash){
+                    return 0;
+                }else if(refHash > valueHash){
+                    return 1;
+                }else{
+                    return -1;
+                }
+            });
         }
     }
 
