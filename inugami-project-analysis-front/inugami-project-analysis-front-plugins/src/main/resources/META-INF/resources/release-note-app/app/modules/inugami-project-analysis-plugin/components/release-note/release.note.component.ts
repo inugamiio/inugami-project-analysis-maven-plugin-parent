@@ -2,7 +2,7 @@ import { Component, forwardRef, OnInit, Inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { MessageComponent } from '../message.component';
 import { MessageService } from '../../../inugami-api/services/message.service';
-import { ReleaseNote } from '../../models/release.note';
+import { ReleaseNote,Issue } from '../../models/release.note';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic.component.loader';
 import { ChangeComponent } from '../change/change.component';
 import { ProjectDependencyGraphComponent } from '../dependencies/project.dependency.graph.component';
@@ -80,6 +80,19 @@ export class ReleaseNoteComponent implements ControlValueAccessor, OnInit {
   }
   hasContent(data: any) {
     return data != undefined && data != null && data.length > 0;
+  }
+
+  resolveIssueLabel(issue:Issue):string{
+    if(issue!=null && issue.labels !=null){
+
+      let result = [];
+      for(let item in issue.labels){
+        result.push(issue.labels[item].toLowerCase());
+      }
+
+      return result.join(" ");
+    }
+    return "default";
   }
   /*****************************************************************************
   * IMPLEMENTS ControlValueAccessor

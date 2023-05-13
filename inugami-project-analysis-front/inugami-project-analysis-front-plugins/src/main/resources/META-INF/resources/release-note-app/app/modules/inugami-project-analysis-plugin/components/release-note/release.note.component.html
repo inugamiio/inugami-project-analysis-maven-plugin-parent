@@ -40,7 +40,8 @@
                         </h3>
                         <ul class="issues">
                             <li *ngFor="let issue of innerValue.issues; let i = index">
-                                <a [href]="issue.url" target="blank">
+                                <a [href]="issue.url" target="blank" [class]="resolveIssueLabel(issue)">
+                                    <span class="issue-icon"></span>
                                     <span class="name">{{issue.name}}</span>
                                     <span class="title">{{issue.title}}</span>
                                 </a>
