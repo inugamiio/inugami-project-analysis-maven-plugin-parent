@@ -78,7 +78,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
                 Map.entry(GROUP_ID, currentVersion.getGroupId()),
                 Map.entry(ARTIFACT_ID, currentVersion.getArtifactId()),
                 Map.entry(VERSION, currentVersion.getVersion())
-                                   ));
+        ));
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL),
                                                       config);
 
@@ -115,11 +115,11 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
                                     final Map<String, Serializable> cache,
                                     final List<Replacement> replacements) {
         //@formatter:off
-        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value           -> addScm(releaseNote, value, cache, replacements));
+        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value -> addScm(releaseNote, value, cache, replacements));
         processIfNotNull(Neo4jUtils.extractNode(MERGE_REQUEST, record), value -> addMergeRequest(releaseNote, value, cache));
-        processIfNotNull(Neo4jUtils.extractNode(ISSUE, record), value         -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LABEL)));
-        processIfNotNull(Neo4jUtils.extractNode(ISSUE_LINK, record), value    -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LINK_LABEL)));
-        processIfNotNull(Neo4jUtils.extractNode(AUTHOR, record), value        -> addAuthors(releaseNote, value, cache, replacements));
+        processIfNotNull(Neo4jUtils.extractNode(ISSUE, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LABEL)));
+        processIfNotNull(Neo4jUtils.extractNode(ISSUE_LINK, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LINK_LABEL)));
+        processIfNotNull(Neo4jUtils.extractNode(AUTHOR, record), value -> addAuthors(releaseNote, value, cache, replacements));
         //@formatter:on
     }
 
@@ -139,12 +139,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
 
         if (commit != null) {
-            for (final String commitLine : commit.split("\n")) {
-                if (commitLine != null) {
-                    releaseNote.addCommit(replace(commitLine, replacements));
-                }
-            }
-
+            releaseNote.addCommit(data);
         }
     }
 
@@ -181,8 +176,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
             if (releaseNote.getIssues().contains(issue)) {
                 savedIssue = releaseNote.getIssues().get(releaseNote.getIssues().indexOf(issue));
-            }
-            else {
+            } else {
                 releaseNote.addIssue(issue);
                 savedIssue = issue;
             }

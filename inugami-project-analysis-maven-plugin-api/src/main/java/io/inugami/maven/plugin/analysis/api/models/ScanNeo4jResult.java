@@ -25,12 +25,12 @@ public class ScanNeo4jResult implements JsonObject {
     private              List<String>       deleteScripts;
 
     public ScanNeo4jResult() {
-        nodesToDeletes         = new ArrayList<>();
-        nodes                  = new ArrayList<>();
-        createScripts          = new ArrayList<>();
-        relationships          = new ArrayList<>();
+        nodesToDeletes = new ArrayList<>();
+        nodes = new ArrayList<>();
+        createScripts = new ArrayList<>();
+        relationships = new ArrayList<>();
         relationshipsToDeletes = new ArrayList<>();
-        deleteScripts          = new ArrayList<>();
+        deleteScripts = new ArrayList<>();
     }
 
     public ScanNeo4jResult(final String type,
@@ -50,7 +50,7 @@ public class ScanNeo4jResult implements JsonObject {
         processIfNotNull(deleteScripts, this.deleteScripts::addAll);
     }
 
-    public void sort(){
+    public void sort() {
         Collections.sort(nodesToDeletes);
         Collections.sort(nodes);
         Collections.sort(createScripts);
@@ -58,6 +58,7 @@ public class ScanNeo4jResult implements JsonObject {
         Collections.sort(relationshipsToDeletes);
         Collections.sort(deleteScripts);
     }
+
     public ScanNeo4jResult addNode(final List<Node> values) {
         appendIfNotNull(values, nodes::addAll);
         return this;
@@ -131,14 +132,14 @@ public class ScanNeo4jResult implements JsonObject {
     }
 
     public static void merge(final ScanNeo4jResult providerResult, final ScanNeo4jResult result) {
-        if(providerResult!=null && result!=null){
+        if (providerResult != null && result != null) {
             //@formatter:off
-            processIfNotNull(providerResult.getNodes(),                  values->result.addNode(values));
-            processIfNotNull(providerResult.getRelationships(),          values->result.addRelationship(values));
-            processIfNotNull(providerResult.getNodesToDeletes(),         values->result.addNodeToDelete(values));
-            processIfNotNull(providerResult.getRelationshipsToDeletes(), values->result.addRelationshipToDelete(values));
-            processIfNotNull(providerResult.getCreateScripts(),          values->result.addCreateScript(values));
-            processIfNotNull(providerResult.getDeleteScripts(),          values->result.addDeleteScript(values));
+            processIfNotNull(providerResult.getNodes(), values -> result.addNode(values));
+            processIfNotNull(providerResult.getRelationships(), values -> result.addRelationship(values));
+            processIfNotNull(providerResult.getNodesToDeletes(), values -> result.addNodeToDelete(values));
+            processIfNotNull(providerResult.getRelationshipsToDeletes(), values -> result.addRelationshipToDelete(values));
+            processIfNotNull(providerResult.getCreateScripts(), values -> result.addCreateScript(values));
+            processIfNotNull(providerResult.getDeleteScripts(), values -> result.addDeleteScript(values));
             //@formatter:on
         }
     }

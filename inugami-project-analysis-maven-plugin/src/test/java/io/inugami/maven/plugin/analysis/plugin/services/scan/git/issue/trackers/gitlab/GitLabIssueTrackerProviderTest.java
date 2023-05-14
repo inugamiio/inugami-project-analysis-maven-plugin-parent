@@ -12,11 +12,11 @@ class GitLabIssueTrackerProviderTest {
 
 
     @Test
-    public void extractTicketNumber_withTicketsInCommit_shouldExtractThese(){
+    public void extractTicketNumber_withTicketsInCommit_shouldExtractThese() {
         final GitLabIssueTrackerProvider service = new GitLabIssueTrackerProvider();
 
         assertThat(service.extractTicketNumber("MergeCommand.FastForwardMode.Merge branch '#21 my_feature' into 'dev' fix front See merge request project/internal/spring-boot-training!14 and !15"))
-                .isEqualTo(buildSet("#21","!14","!15"));
+                .isEqualTo(buildSet("#21", "!14", "!15"));
         assertThat(service.extractTicketNumber("Dev/104 create kafka provider"))
                 .isEqualTo(buildSet("#104"));
         assertThat(service.extractTicketNumber(null)).isNull();

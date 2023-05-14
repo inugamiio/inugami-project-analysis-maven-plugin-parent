@@ -60,6 +60,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
             QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL,
             QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL
     );
+    public static final  String       TAB     = "\t";
 
 
     // =========================================================================
@@ -192,9 +193,11 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
     }
 
 
-    private void renderingCommit(final Set<String> commit, final JsonBuilder writer) {
+    private void renderingCommit(final Set<Map<String, Object>> commit, final JsonBuilder writer) {
         if (commit != null && !commit.isEmpty()) {
-            final List<String> lines = new ArrayList<>(commit);
+
+
+            final List<String> lines = buildCommit(commit);
             Collections.sort(lines);
 
             writer.write(ConsoleColors.CYAN);
@@ -210,6 +213,31 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
                 writer.line();
             }
         }
+    }
+
+    private List<String> buildCommit(final Set<Map<String, Object>> commit) {
+        final List<String> result = new ArrayList<>();
+        if (commit != null) {
+
+            for (final Map<String, Object> item : commit) {
+                final StringBuilder buffer = new StringBuilder();
+                buffer.append(orEmpty(item, "date")).append(TAB);
+                buffer.append(orEmpty(item, "commitUid")).append(TAB);
+                buffer.append(orEmpty(item, "author")).append(TAB);
+                buffer.append(orEmpty(item, "message"));
+                result.add(buffer.toString());
+            }
+        }
+        return result;
+    }
+
+    private String orEmpty(final Map<String, Object> item, final String key) {
+        String result = null;
+        if (item != null) {
+            final Object value = item.get(key);
+            result = value == null ? "" : String.valueOf(value);
+        }
+        return result;
     }
 
     private String chooseCommitLineColor(final String line) {

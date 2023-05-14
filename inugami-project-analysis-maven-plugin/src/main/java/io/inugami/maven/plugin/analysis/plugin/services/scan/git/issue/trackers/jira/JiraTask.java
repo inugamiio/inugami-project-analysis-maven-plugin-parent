@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -63,6 +65,9 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
     public static final  String                         ISSUE_LINKS           = "issuelinks";
     public static final  String                         FIELD_OUTWARD_ISSUE   = "outwardIssue";
     public static final  String                         FIELD_SUBTASKS        = "subtasks";
+    public static final  String                         CHARSET               = "charset";
+    public static final  String                         HEADER_SEP            = ";";
+    public static final  String                         HEADER_VALUE_SEP      = "=";
     private final        String                         id;
     private final        String                         username;
     private final        String                         password;
@@ -151,8 +156,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
             for (final JiraCustomFieldsAppender appender : customFieldsAppenders) {
                 appender.append(uid, json, properties, result);
             }
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -214,8 +218,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                 if (isNotNull(linkNode)) {
                     try {
                         buildIssueLink(linkNode, uid, result);
-                    }
-                    catch (final Exception e) {
+                    } catch (final Exception e) {
                         log.error(e.getMessage(), e);
                     }
                 }
@@ -247,7 +250,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                                 .to(linkNeo4jNode.getUid())
                                 .type(HAS_ISSUE_LINK)
                                 .build()
-                                  );
+            );
         }
     }
 
@@ -264,8 +267,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                 if (isNotNull(subtask)) {
                     try {
 
-                    }
-                    catch (final Exception e) {
+                    } catch (final Exception e) {
                         log.error(e.getMessage(), e);
                     }
                     buildSubTask(subtask, uid, result);
@@ -294,7 +296,7 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                                 .to(subTaskNode.getUid())
                                 .type(HAS_ISSUE_LINK)
                                 .build()
-                                  );
+            );
         }
     }
 
@@ -352,11 +354,9 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                 log.info("calling {}", fullUrl);
 
                 httpResult = http.get(fullUrl, headers);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 log.error(e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
                           httpResult == null ? 0 : httpResult.getDelais());
                 http.close();
@@ -364,24 +364,66 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
 
             if (httpResult == null || httpResult.getStatusCode() != 200) {
                 log.error("can't call : {}", fullUrl);
-            }
-            else {
+            } else {
                 try {
                     final ObjectMapper objectMapper = ObjectMapperBuilder.build();
-                    result = objectMapper.readTree(new String(httpResult.getData()));
-                }
-                catch (final JsonProcessingException e) {
+                    final String       content      = extractContent(httpResult);
+                    result = objectMapper.readTree(content);
+                } catch (final JsonProcessingException e) {
                     log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
                 }
             }
             if (result != null) {
                 CacheUtils.put(fullUrl, result);
             }
-        }
-        else {
+        } else {
             log.info("loading jira information from cache");
         }
 
         return result;
+    }
+
+    private String extractContent(final HttpConnectorResult httpResult) {
+
+        Charset charset = extractResponseCharset(httpResult.getResponseHeaders());
+        if (charset == null && httpResult.getCharset() != null) {
+            charset = httpResult.getCharset();
+        }
+        return new String(httpResult.getData(), charset == null ? StandardCharsets.UTF_8 : charset);
+    }
+
+    protected Charset extractResponseCharset(final Map<String, String> responseHeaders) {
+        Charset result      = null;
+        String  contentType = null;
+        try {
+            if (responseHeaders != null) {
+                for (final Map.Entry<String, String> header : responseHeaders.entrySet()) {
+                    if (header.getKey().equalsIgnoreCase("content-type")) {
+                        contentType = header.getValue();
+                        break;
+                    }
+                }
+            }
+
+            String charset = null;
+            if (contentType != null) {
+                final String[] values = contentType.split(HEADER_SEP);
+                for (final String value : values) {
+                    if (value.toLowerCase().contains(CHARSET)) {
+                        charset = value;
+                        break;
+                    }
+                }
+            }
+
+            if (charset != null) {
+                final String charsetValue = charset.split(HEADER_VALUE_SEP)[1].toUpperCase();
+                result = Charset.forName(charsetValue);
+            }
+        } catch (final Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return result == null ? StandardCharsets.UTF_8 : result;
     }
 }

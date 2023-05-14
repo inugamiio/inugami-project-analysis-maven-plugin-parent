@@ -30,6 +30,7 @@ public class GitLog {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
+    private final String        id;
     private final int           type;
     private final String        message;
     @EqualsAndHashCode.Include

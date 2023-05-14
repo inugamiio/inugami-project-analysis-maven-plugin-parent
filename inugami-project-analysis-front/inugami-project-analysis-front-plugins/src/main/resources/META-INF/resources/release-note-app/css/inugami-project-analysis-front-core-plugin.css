@@ -624,3 +624,46 @@ ICONS
   font-style: normal;
   content: "\f021";
 }
+
+.issues{
+  list-style: none;
+}
+
+
+.issues li a .issue-icon::after{
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+.issues li a .issue-icon{
+  width: 32px;
+  display: inline-block;
+}
+
+.issues li a .issue-icon::after{
+  content: "\f111";
+}
+
+
+.issues li a.epic .issue-icon::after{
+  content: "\f1b3";
+}
+.issues li a.feature .issue-icon::after{
+  content: "\f12e";
+}
+.issues li a.story .issue-icon::after{
+  content: "\f12e";
+}
+
+.issues li a.task .issue-icon::after{
+  content: "\f0ae";
+}
+.issues li a.test .issue-icon::after{
+  content: "\f0c3";
+}
+.issues li a.bug .issue-icon::after,
+.issues li a.issue .issue-icon::after{
+  content: "\f188";
+}

@@ -1,5 +1,44 @@
 {
   "consume" : "",
+  "deprecated" : false,
+  "descriptionDetail" : {
+    "content" : "This service allow to create new customer",
+    "potentialErrors" : [ {
+      "description" : "",
+      "errorCode" : "S-002",
+      "errorMessage" : "User already exists, please choose another login to create a newer customer",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 409,
+      "payload" : "",
+      "throwsAs" : "io.inugami.api.exceptions.UncheckedException",
+      "type" : "functional",
+      "url" : ""
+    }, {
+      "description" : "",
+      "errorCode" : "S-003",
+      "errorMessage" : "can't connect to database",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 0,
+      "payload" : "",
+      "throwsAs" : "io.inugami.api.exceptions.UncheckedException",
+      "type" : "technical",
+      "url" : ""
+    }, {
+      "description" : "",
+      "errorCode" : "ERR-0000",
+      "errorMessage" : "undefine error occurs",
+      "errorMessageDetail" : "",
+      "example" : "",
+      "httpStatus" : 500,
+      "payload" : "",
+      "throwsAs" : "io.inugami.api.exceptions.UncheckedException",
+      "type" : "technical",
+      "url" : ""
+    } ],
+    "url" : ""
+  },
   "headers" : "",
   "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringRestControllersAnalyzerTest$BasicRestController.retrieveAllInformation",
   "produce" : "",

@@ -24,21 +24,22 @@ import java.util.Set;
 
 public interface IssueTackerProvider {
 
-    String SYSTEM ="project.issue.management.system";
-    String URL ="project.issue.management.url";
+    String SYSTEM = "project.issue.management.system";
+    String URL    = "project.issue.management.url";
 
     default boolean enable(final ScanConext context) {
         return enable(context.getConfiguration());
     }
 
     default boolean enable(final ConfigHandler<String, String> configuration) {
-        final String  system = configuration.grabOrDefault(SYSTEM, null);
-        return system==null?false:system.equals(getSystemName());
+        final String system = configuration.grabOrDefault(SYSTEM, null);
+        return system == null ? false : system.equals(getSystemName());
     }
 
     default void postConstruct(final ConfigHandler<String, String> configuration) {
 
     }
+
     default void shutdown() {
 
     }
