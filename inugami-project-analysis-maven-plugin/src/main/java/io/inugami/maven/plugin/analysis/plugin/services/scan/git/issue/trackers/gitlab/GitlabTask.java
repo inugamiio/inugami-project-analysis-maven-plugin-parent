@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.inugami.api.tools.StringTools;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
 import io.inugami.maven.plugin.analysis.api.models.Node;
@@ -130,8 +131,12 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
             if (labels != null && labels.isArray()) {
                 final List<String> labelNames = new ArrayList<>();
                 labels.spliterator().forEachRemaining(item -> {
+                    String currentLabel = null;
                     if (!item.isNull()) {
-                        labelNames.add(item.asText());
+                        currentLabel = item.asText();
+                    }
+                    if (currentLabel != null) {
+                        labelNames.add(StringTools.convertToAscii(currentLabel).trim().toLowerCase());
                     }
                 });
 
@@ -245,11 +250,9 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
                 log.info("calling {}", fullUrl);
 
                 httpResult = http.get(fullUrl, headers);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 log.error(e.getMessage(), e);
-            }
-            finally {
+            } finally {
                 log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
                           httpResult == null ? 0 : httpResult.getDelais());
                 http.close();
@@ -257,20 +260,17 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
 
             if (httpResult == null || httpResult.getStatusCode() != 200) {
                 log.error("can't call : {}", fullUrl);
-            }
-            else {
+            } else {
                 try {
                     result = objectMapper.readTree(new String(httpResult.getData()));
-                }
-                catch (final JsonProcessingException e) {
+                } catch (final JsonProcessingException e) {
                     log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
                 }
             }
             if (result != null) {
                 CacheUtils.put(fullUrl, result);
             }
-        }
-        else {
+        } else {
             log.info("loading gitlab information from cache");
         }
 

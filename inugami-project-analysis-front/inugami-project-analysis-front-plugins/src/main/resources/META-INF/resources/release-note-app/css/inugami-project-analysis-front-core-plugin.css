@@ -657,6 +657,12 @@ ICONS
   content: "\f12e";
 }
 
+.issues li a.tache .issue-icon::after{
+  content: "\f0ae";
+}
+.issues li a.taches .issue-icon::after{
+  content: "\f0ae";
+}
 .issues li a.task .issue-icon::after{
   content: "\f0ae";
 }

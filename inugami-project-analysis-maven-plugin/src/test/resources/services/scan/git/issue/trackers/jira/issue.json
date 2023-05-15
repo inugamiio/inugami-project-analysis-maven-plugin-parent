@@ -2,35 +2,35 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
-    "name" : "Story",
+    "name" : "story",
     "type" : "IssueLabel",
-    "uid" : "issue_label_Story"
+    "uid" : "issue_label_story"
   }, {
     "name" : "connectors",
     "type" : "IssueLabel",
     "uid" : "issue_label_connectors"
   }, {
-    "name" : "Story",
+    "name" : "story",
     "type" : "IssueLabel",
-    "uid" : "issue_label_Story"
+    "uid" : "issue_label_story"
   }, {
     "name" : "INU-3",
     "properties" : {
-      "issueType" : "Story",
+      "issueType" : "story",
       "title" : "write documentation",
       "url" : "http://localhost/browse/INU-3"
     },
     "type" : "Issue",
     "uid" : "issue_Inugami_INU-3"
   }, {
-    "name" : "Sub-task",
+    "name" : "sub-task",
     "type" : "IssueLabel",
-    "uid" : "issue_label_Sub-task"
+    "uid" : "issue_label_sub-task"
   }, {
     "name" : "INU-4",
     "properties" : {
       "description" : "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
-      "issueType" : "Sub-task",
+      "issueType" : "sub-task",
       "title" : "add http connector",
       "url" : "http://localhost/browse/INU-4"
     },
@@ -40,7 +40,7 @@
     "name" : "INU-2",
     "properties" : {
       "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac. Curabitur leo est, malesuada vitae orci nec, lacinia mollis neque. Ut dictum augue ac diam scelerisque fringilla. Duis posuere nulla sed ipsum aliquet placerat. Sed interdum quis enim eget suscipit. Vivamus ullamcorper lacus ac eros accumsan, eget auctor ipsum posuere. Maecenas sagittis risus in ullamcorper imperdiet.",
-      "issueType" : "Story",
+      "issueType" : "story",
       "title" : "Add task to retrieve Jira information",
       "url" : "http://localhost/browse/INU-2"
     },
@@ -50,7 +50,7 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "issue_Inugami_INU-2",
-    "to" : "issue_label_Story",
+    "to" : "issue_label_story",
     "type" : "HAS_LABEL"
   }, {
     "from" : "issue_Inugami_INU-2",
@@ -58,7 +58,7 @@
     "type" : "HAS_LABEL"
   }, {
     "from" : "issue_Inugami_INU-3",
-    "to" : "issue_label_Story",
+    "to" : "issue_label_story",
     "type" : "HAS_LABEL"
   }, {
     "from" : "issue_Inugami_INU-2",
@@ -66,7 +66,7 @@
     "type" : "HAS_ISSUE_LINK"
   }, {
     "from" : "issue_Inugami_INU-4",
-    "to" : "issue_label_Sub-task",
+    "to" : "issue_label_sub-task",
     "type" : "HAS_LABEL"
   }, {
     "from" : "issue_Inugami_INU-2",

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import io.inugami.api.tools.StringTools;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
 import io.inugami.commons.connectors.HttpRequest;
@@ -146,7 +147,9 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
                 labels.spliterator().forEachRemaining(item -> {
                     if (!item.isNull()) {
                         final String labelName = extractLabelName(item);
-                        processIfNotNull(labelName, labelNames::add);
+                        if (labelName != null) {
+                            labelNames.add(StringTools.convertToAscii(labelName).trim().toLowerCase());
+                        }
                     }
                 });
 
