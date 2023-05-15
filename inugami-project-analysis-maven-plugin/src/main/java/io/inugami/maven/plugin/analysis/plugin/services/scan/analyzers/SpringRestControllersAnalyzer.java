@@ -206,14 +206,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
             result.addNode(versionNode, serviceType);
         }
 
-        if (!existingNodes.isEmpty()) {
-            for (final String service : existingNodes) {
-                result.addRelationship(Relationship.builder()
-                                                   .from(versionNode.getUid())
-                                                   .to(service)
-                                                   .type(getRelationshipType())
-                                                   .build());
-            }
+
+        for (final String service : existingNodes) {
+            result.addRelationship(Relationship.builder()
+                                               .from(versionNode.getUid())
+                                               .to(service)
+                                               .type(getRelationshipType())
+                                               .build());
         }
         result.addNode(potentialErrors);
         return List.of(result);
