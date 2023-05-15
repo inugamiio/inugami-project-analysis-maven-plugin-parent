@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.inugami.api.tools.StringTools;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
 import io.inugami.maven.plugin.analysis.api.connectors.HttpConnectorBuilder;
@@ -320,6 +321,9 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
         }
         if (isNotNull(issueTypeNode)) {
             result = extract(NAME, issueTypeNode);
+        }
+        if (result != null) {
+            result = StringTools.convertToAscii(result).trim().toLowerCase();
         }
         return result;
     }

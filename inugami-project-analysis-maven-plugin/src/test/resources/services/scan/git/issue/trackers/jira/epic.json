@@ -2,9 +2,9 @@
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
-    "name" : "Epic",
+    "name" : "epic",
     "type" : "IssueLabel",
-    "uid" : "issue_label_Epic"
+    "uid" : "issue_label_epic"
   }, {
     "name" : "feature",
     "type" : "IssueLabel",
@@ -13,7 +13,7 @@
     "name" : "INU-1",
     "properties" : {
       "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac",
-      "issueType" : "Epic",
+      "issueType" : "epic",
       "title" : "Add jira connector on git analyzer",
       "url" : "http://localhost/browse/INU-1"
     },
@@ -23,7 +23,7 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "issue_Inugami_INU-1",
-    "to" : "issue_label_Epic",
+    "to" : "issue_label_epic",
     "type" : "HAS_LABEL"
   }, {
     "from" : "issue_Inugami_INU-1",
