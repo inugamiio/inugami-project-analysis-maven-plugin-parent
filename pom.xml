@@ -10,7 +10,7 @@
     =========================================================================-->
     <groupId>io.inugami.maven.plugin.analysis</groupId>
     <artifactId>inugami-project-analysis-maven-plugin-parent</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.2.1</version>
     <packaging>pom</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Specifics maven lifecycle to package and run inugami project</description>
@@ -104,7 +104,7 @@
         <connection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git</connection>
         <developerConnection>scm:git:git@github.com:inugamiio/inugami-project-analysis-maven-plugin-parent.git
         </developerConnection>
-        <tag>inugami-project-analysis-maven-plugin-parent-1.0.0</tag>
+        <tag>inugami-project-analysis-maven-plugin-parent-3.2.1</tag>
     </scm>
 
     <distributionManagement>
