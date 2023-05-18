@@ -28,8 +28,10 @@ import java.util.Set;
 
 public class ScanDependencies implements ProjectScanner {
 
+    public static final String TEST_DEPENDENCY    = "TEST_DEPENDENCY";
     public static final String DEPENDENCY         = "DEPENDENCY";
     public static final String PROJECT_DEPENDENCY = "PROJECT_DEPENDENCY";
+    public static final String SCOPE_TEST         = "test";
 
     // =========================================================================
     // API
@@ -42,7 +44,6 @@ public class ScanDependencies implements ProjectScanner {
         final List<String> projectBaseNames = new ArrayList<>();
         final String projectBaseName = context.getConfiguration()
                                               .get("inugami.maven.plugin.analysis.project.base.name");
-
 
 
         if (projectBaseName != null) {
@@ -60,8 +61,11 @@ public class ScanDependencies implements ProjectScanner {
             result.addNodeToDelete(currentVersion.getUid());
         }
 
-        addDirectDependencies(currentVersion, context.getDirectDependencies(), result,
-                              context.getProject().getGroupId(), projectBaseNames);
+        addDirectDependencies(currentVersion,
+                              context.getDirectDependencies(),
+                              result,
+                              context.getProject().getGroupId(),
+                              projectBaseNames);
         return List.of(result);
     }
 
@@ -74,26 +78,33 @@ public class ScanDependencies implements ProjectScanner {
             for (final Gav dependency : directDependencies) {
                 final Node dependencyNode = BuilderTools.buildNodeVersion(dependency);
                 result.addNode(dependencyNode);
+                final String type = chooseRelationshiptType(groupId,
+                                                            dependency,
+                                                            projectBaseNames);
                 result.addRelationship(Relationship.builder()
                                                    .from(currentVersion.getUid())
                                                    .to(dependencyNode.getUid())
-                                                   .type(chooseRelationshiptType(groupId, dependency.getGroupId(),
-                                                                                 projectBaseNames))
+                                                   .type(type)
                                                    .build());
             }
 
         }
     }
 
-    private String chooseRelationshiptType(final String currentGroupId, final String dependencyGroupId,
+    private String chooseRelationshiptType(final String currentGroupId,
+                                           final Gav gav,
                                            final List<String> projectBaseNames) {
+        if (gav.getScope() != null && gav.getScope().toLowerCase().equals(SCOPE_TEST)) {
+            return TEST_DEPENDENCY;
+        }
         boolean projectDependency = false;
         for (final String baseName : projectBaseNames) {
-            if (currentGroupId.startsWith(baseName, 0) && dependencyGroupId.startsWith(baseName, 0)) {
+            if (currentGroupId.startsWith(baseName, 0) && gav.getGroupId().startsWith(baseName, 0)) {
                 projectDependency = true;
                 break;
             }
         }
+
         return projectDependency ? PROJECT_DEPENDENCY : DEPENDENCY;
     }
 
@@ -117,11 +128,11 @@ public class ScanDependencies implements ProjectScanner {
 
             result.addRelationship(BuilderTools.buildRelationshipArtifact(node, artifactNode));
             if (parent != null) {
+                final String type = chooseRelationshiptType(parent.getGroupId(), gav, projectBaseNames);
                 result.addRelationship(Relationship.builder()
                                                    .from(BuilderTools.buildNodeVersion(parent).getUid())
                                                    .to(node.getUid())
-                                                   .type(chooseRelationshiptType(parent.getGroupId(), gav.getGroupId(),
-                                                                                 projectBaseNames))
+                                                   .type(type)
                                                    .build());
             }
 

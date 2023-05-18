@@ -106,7 +106,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return isEnable(FEATURE, context, true) && clazz.getAnnotation(RestController.class) != null;
+        return isEnable(FEATURE, context, true) && getAnnotation(clazz, RestController.class) != null;
     }
 
 
@@ -190,17 +190,19 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         if (!result.getNodes().isEmpty()) {
             final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(REST).name(REST).build();
             for (final Node service : result.getNodes()) {
-                result.addRelationship(Relationship.builder()
-                                                   .from(versionNode.getUid())
-                                                   .to(service.getUid())
-                                                   .type(getRelationshipType())
-                                                   .build(),
+                if (service.getType().equals(SERVICE)) {
+                    result.addRelationship(Relationship.builder()
+                                                       .from(versionNode.getUid())
+                                                       .to(service.getUid())
+                                                       .type(getRelationshipType())
+                                                       .build(),
 
-                                       Relationship.builder()
-                                                   .from(service.getUid())
-                                                   .to(serviceType.getUid())
-                                                   .type(SERVICE_TYPE_RELATIONSHIP)
-                                                   .build());
+                                           Relationship.builder()
+                                                       .from(service.getUid())
+                                                       .to(serviceType.getUid())
+                                                       .type(SERVICE_TYPE_RELATIONSHIP)
+                                                       .build());
+                }
             }
 
             result.addNode(versionNode, serviceType);
@@ -322,11 +324,11 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     protected RestApi analyseClass(final Class<?> clazz) {
         final String name        = getApiName(clazz);
-        final String baseContext = getBaseContext(clazz);
+        final String rootContext = getBaseContext(clazz);
         return RestApi.builder()
                       .name(name)
-                      .baseContext(URI_SEP + baseContext)
-                      .endpoints(resolveEndpoints(clazz, baseContext, true))
+                      .baseContext(rootContext == null ? URI_SEP : URI_SEP + rootContext)
+                      .endpoints(resolveEndpoints(clazz, rootContext == null ? EMPTY : rootContext, true))
                       .build()
                       .orderEndPoint();
     }
@@ -334,7 +336,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     protected String getBaseContext(final Class<?> clazz) {
         String result = EMPTY;
 
-        RequestMapping annotation = clazz.getDeclaredAnnotation(RequestMapping.class);
+        RequestMapping annotation = getAnnotation(clazz, RequestMapping.class);
         if (annotation == null) {
             annotation = searchRequestMappingInInterface(clazz.getInterfaces());
         }
@@ -354,7 +356,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         RequestMapping result = null;
         if (interfaces != null) {
             for (final Class<?> interfaceClass : interfaces) {
-                result = interfaceClass.getDeclaredAnnotation(RequestMapping.class);
+                result = getAnnotation(interfaceClass, RequestMapping.class);
                 if (result != null) {
                     break;
                 }
@@ -446,7 +448,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     private DescriptionDTO resolveDescription(final Method method) {
-        final Description description = method.getAnnotation(Description.class);
+        final Description description = getAnnotation(method, Description.class);
         DescriptionDTO    result      = null;
         if (description != null) {
             result = buildDescription(method, description);

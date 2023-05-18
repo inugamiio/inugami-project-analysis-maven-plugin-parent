@@ -272,10 +272,9 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
     private String buildEventPayload(final Parameter parameter) {
         JsonNode result = null;
-        if (hasAnnotation(parameter, JmsEvent.class) && parameter.getAnnotation(JmsEvent.class)
-                                                                 .value() != JmsEvent.None.class) {
-            result = renderType(parameter.getAnnotation(JmsEvent.class)
-                                         .value(), null, null);
+        if (hasAnnotation(parameter, JmsEvent.class) && getAnnotation(parameter, JmsEvent.class).value() != JmsEvent.None.class) {
+            result = renderType(getAnnotation(parameter, JmsEvent.class)
+                                        .value(), null, null);
         } else {
             result = renderParameterType(parameter);
         }

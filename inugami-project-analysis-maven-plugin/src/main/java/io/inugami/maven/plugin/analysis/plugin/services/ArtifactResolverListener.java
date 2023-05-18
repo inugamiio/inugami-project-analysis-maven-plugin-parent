@@ -86,6 +86,7 @@ public class ArtifactResolverListener implements ResolutionListener {
                   .artifactId(artifact.getArtifactId())
                   .version(artifact.getVersion())
                   .type(artifact.getType())
+                  .scope(artifact.getScope())
                   .build();
     }
 

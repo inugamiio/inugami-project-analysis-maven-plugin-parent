@@ -243,50 +243,10 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
     "type" : "EXPOSE"
   }, {
     "from" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
@@ -299,42 +259,10 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
     "type" : "EXPOSE"
   }, {
     "from" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
@@ -347,14 +275,6 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "98fd69661c0e1b2dda38812ead4dc1cfa8d7221a5c9b3f5df03af9a3fb4e04a0948108a89069eea1b2822ac8af3a03ce8f5f61e16496b30538244a74b252b16e",
     "type" : "EXPOSE"
   }, {
@@ -363,26 +283,10 @@
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "36bf0380b6a150cc2819978ffbadafab8648cc16a70727eea19abf8bf39967d41d52937e9412474ab7b391f56229fa4d80f907bd4bb222ccff71e2451d5e55a0",
     "type" : "EXPOSE"
   }, {
     "from" : "36bf0380b6a150cc2819978ffbadafab8648cc16a70727eea19abf8bf39967d41d52937e9412474ab7b391f56229fa4d80f907bd4bb222ccff71e2451d5e55a0",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "EXPOSE"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   } ],

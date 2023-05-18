@@ -290,6 +290,7 @@ public class CheckMojo extends AbstractMojo {
                   .artifactId(dependency.getArtifactId())
                   .version(dependency.getVersion())
                   .type(dependency.getType())
+                  .scope(dependency.getScope())
                   .build();
     }
 

@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder(toBuilder = true)
+
 public class Gav implements JsonObject, Comparable<Gav> {
 
 
@@ -28,25 +28,32 @@ public class Gav implements JsonObject, Comparable<Gav> {
     @EqualsAndHashCode.Include
     private final String   hash;
     private final String   type;
+    private final String   scope;
     private final Set<Gav> dependencies;
     private       Gav      parent;
+
 
     // =========================================================================
     // CONSTRUCTORS
     // =========================================================================
+    @Builder(toBuilder = true)
     public Gav(final String groupId, final String artifactId, final String version, final String hash,
                final String type,
-               final Set<Gav> dependencies, final Gav parent) {
-        this.groupId      = groupId;
-        this.artifactId   = artifactId;
-        this.version      = version;
-        this.type         = type;
+               final Set<Gav> dependencies,
+               final Gav parent,
+               final String scope) {
+
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.type = type;
+        this.scope = scope;
         this.dependencies = dependencies == null ? new LinkedHashSet<>() : dependencies;
-        this.hash         = String.join(":", List.of(String.valueOf(groupId),
-                                                     String.valueOf(artifactId),
-                                                     String.valueOf(version),
-                                                     String.valueOf(type)));
-        this.parent       = parent;
+        this.hash = String.join(":", List.of(String.valueOf(groupId),
+                                             String.valueOf(artifactId),
+                                             String.valueOf(version),
+                                             String.valueOf(type)));
+        this.parent = parent;
     }
 
     @Override

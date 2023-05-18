@@ -221,7 +221,7 @@ public final class ReflectionService {
         }
     }
 
-    private static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement, final Class<A> annotationClass) {
+    public static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement, final Class<A> annotationClass) {
         final List<Annotation> allAnnotations = new ArrayList<>();
 
         if (annotatedElement.getAnnotations() != null) {
