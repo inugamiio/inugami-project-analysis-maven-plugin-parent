@@ -149,14 +149,42 @@ public final class ReflectionService {
                                                                       final Class<? extends Annotation>... annotations) {
         boolean result = false;
         if (annotatedElement != null && annotations != null) {
+            final List<Class<? extends Annotation>> allAnnotations = extractAllAnnotations(annotatedElement);
             for (final Class<? extends Annotation> annotation : annotations) {
-                result = annotatedElement.getDeclaredAnnotation(annotation) != null;
+                result = listHashAnnotation(allAnnotations, annotation);
                 if (result) {
                     break;
                 }
             }
         }
         return result;
+    }
+
+    private static boolean listHashAnnotation(final List<Class<? extends Annotation>> values, final Class<? extends Annotation> annotation) {
+        if (values == null) {
+            return false;
+        }
+        for (final Class<? extends Annotation> valueClass : values) {
+            if (valueClass.getName().equalsIgnoreCase(annotation.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static <AE extends AnnotatedElement> List<Class<? extends Annotation>> extractAllAnnotations(final AE annotatedElement) {
+        final Set<Class<? extends Annotation>> result = new LinkedHashSet<>();
+        if (annotatedElement.getDeclaredAnnotations() != null) {
+            for (final Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
+                result.add(annotation.annotationType());
+            }
+        }
+        if (annotatedElement.getAnnotations() != null) {
+            for (final Annotation annotation : annotatedElement.getAnnotations()) {
+                result.add(annotation.annotationType());
+            }
+        }
+        return new ArrayList<>(result);
     }
 
 
@@ -187,10 +215,30 @@ public final class ReflectionService {
             final AE annotatedElement,
             final Class<A> annotationClass,
             final Consumer<A> handler) {
-        final A annotation = annotatedElement == null ? null : annotatedElement.getDeclaredAnnotation(annotationClass);
+        final A annotation = annotatedElement == null ? null : getAnnotation(annotatedElement, annotationClass);
         if (annotation != null && handler != null) {
             handler.accept(annotation);
         }
+    }
+
+    private static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement, final Class<A> annotationClass) {
+        final List<Annotation> allAnnotations = new ArrayList<>();
+
+        if (annotatedElement.getAnnotations() != null) {
+            allAnnotations.addAll(Arrays.asList(annotatedElement.getAnnotations()));
+        }
+
+        if (annotatedElement.getDeclaredAnnotations() != null) {
+            allAnnotations.addAll(Arrays.asList(annotatedElement.getDeclaredAnnotations()));
+        }
+
+        for (final Annotation annotation : allAnnotations) {
+            if (annotation.annotationType().getName().equals(annotationClass.getName())) {
+                return (A) Proxy.newProxyInstance(ReflectionService.getClassloader(), new Class[]{annotationClass}, new AnnotationProxyCallback(annotation));
+            }
+        }
+
+        return null;
     }
 
     public static JsonNode renderParameterType(final Parameter parameter) {
