@@ -352,7 +352,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return result;
     }
 
-    private RequestMapping searchRequestMappingInInterface(final Class<?>[] interfaces) {
+    protected RequestMapping searchRequestMappingInInterface(final Class<?>[] interfaces) {
         RequestMapping result = null;
         if (interfaces != null) {
             for (final Class<?> interfaceClass : interfaces) {
@@ -491,9 +491,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
 
     private String renderUri(final String baseContext, final String[] paths) {
-        final List<String> result  = new ArrayList<>();
-        final String       context = baseContext == null ? EMPTY : URI_SEP + baseContext;
-        result.add(context);
+        final List<String> result             = new ArrayList<>();
+        String             currentBaseContext = baseContext == null || baseContext.isEmpty() ? EMPTY : URI_SEP + baseContext;
+        if (baseContext != null && !baseContext.endsWith(URI_SEP)) {
+            currentBaseContext = currentBaseContext + URI_SEP;
+        }
+
+        result.add(currentBaseContext);
         for (final String path : paths) {
             result.add(path);
         }

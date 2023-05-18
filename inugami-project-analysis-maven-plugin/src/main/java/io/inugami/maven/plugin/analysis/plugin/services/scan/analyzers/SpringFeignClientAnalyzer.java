@@ -22,9 +22,9 @@ import io.inugami.maven.plugin.analysis.annotations.FeignClientDefinition;
 import io.inugami.maven.plugin.analysis.annotations.UsingFeignClient;
 import io.inugami.maven.plugin.analysis.api.actions.ClassAnalyzer;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.getAnnotation;
+import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.ifHasAnnotation;
 
 @Slf4j
 public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer implements ClassAnalyzer {
@@ -101,13 +102,24 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
     // =========================================================================
     @Override
     protected String getApiName(final Class<?> clazz) {
-        return ReflectionService
-                .ifHasAnnotation(clazz, FeignClient.class, FeignClient::name, () -> clazz.getSimpleName());
+        return ifHasAnnotation(clazz, FeignClient.class, FeignClient::name, () -> clazz.getSimpleName());
     }
 
     @Override
     protected String getBaseContext(final Class<?> clazz) {
-        return ReflectionService.ifHasAnnotation(clazz, FeignClient.class, FeignClient::path);
+        String result = ifHasAnnotation(clazz, FeignClient.class, FeignClient::path);
+
+        RequestMapping annotation = null;
+        if (result == null) {
+            annotation = getAnnotation(clazz, RequestMapping.class);
+            if (annotation == null) {
+                annotation = searchRequestMappingInInterface(clazz.getInterfaces());
+            }
+        }
+        if (annotation != null && annotation.path() != null && annotation.path().length > 0) {
+            result = annotation.path()[0];
+        }
+        return result;
     }
 
     @Override
