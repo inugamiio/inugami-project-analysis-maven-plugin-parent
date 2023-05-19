@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.front.core.servlet;
 
 import io.inugami.maven.plugin.analysis.front.core.renderers.IndexRenderer;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
+@Slf4j
+@SuppressWarnings({"java:S1989"})
 @AllArgsConstructor
 public class InugamiServlet extends HttpServlet {
 
@@ -45,7 +48,11 @@ public class InugamiServlet extends HttpServlet {
         resp.setStatus(SUCCCESS);
         resp.setContentType(MediaType.TEXT_HTML);
         ServletCommons.setUtf8(resp);
-        resp.getWriter().print(new IndexRenderer(contextPath).render());
+        try {
+            resp.getWriter().print(new IndexRenderer(contextPath).render());
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
 }

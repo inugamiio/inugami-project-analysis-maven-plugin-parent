@@ -60,6 +60,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     public static final  String  COMMIT_UID   = "commitUid";
     public static final  String  AUTHOR       = "author";
     public static final  String  MESSAGE      = "message";
+    public static final  String  PIPE         = "|";
+    public static final  String  EMPTY        = "";
 
     // =========================================================================
     // ACCEPT
@@ -182,7 +184,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         Writer writer = null;
         if (notSplitFile) {
             final File file = FilesUtils
-                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, "" + version + ADOC));
+                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, EMPTY + version + ADOC));
             if (file.exists()) {
                 file.delete();
             }
@@ -271,10 +273,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.line();
 
             for (final Map<String, Object> item : commit) {
-                writer.write("|").write(trim(orEmpty(item, DATE))).line();
-                writer.write("|").write(trim(orEmpty(item, COMMIT_UID))).line();
-                writer.write("|").write(trim(orEmpty(item, AUTHOR))).line();
-                writer.write("|").write(trim(orEmpty(item, MESSAGE))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, DATE))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, COMMIT_UID))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, AUTHOR))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, MESSAGE))).line();
                 writer.line();
 
             }
@@ -288,9 +290,9 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         String result = null;
         if (item != null) {
             final Object value = item.get(key);
-            result = value == null ? "" : String.valueOf(value);
+            result = value == null ? EMPTY : String.valueOf(value);
         }
-        return result;
+        return result == null ? EMPTY : result;
     }
 
 
@@ -315,10 +317,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.write("|Date | Id | Title | Url").line();
             writer.line();
             for (final MergeRequests value : data) {
-                writer.write("|").write(trim(value.getDate())).line();
-                writer.write("|").write(trim(value.getUid())).line();
-                writer.write("|").write(trim(value.getTitle())).line();
-                writer.write("|").write(trim(value.getUrl())).line();
+                writer.write(PIPE).write(trim(value.getDate())).line();
+                writer.write(PIPE).write(trim(value.getUid())).line();
+                writer.write(PIPE).write(trim(value.getTitle())).line();
+                writer.write(PIPE).write(trim(value.getUrl())).line();
                 writer.line();
             }
             writer.write("|===").line();
@@ -350,10 +352,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.write("|Date | Issue | Title | Url").line();
             writer.line();
             for (final Issue value : data) {
-                writer.write("|").write(trim(value.getDate())).line();
-                writer.write("|").write(trim(value.getName())).line();
-                writer.write("|").write(renderLabels(value.getLabels())).line();
-                writer.write("|").write(trim(value.getUrl())).line();
+                writer.write(PIPE).write(trim(value.getDate())).line();
+                writer.write(PIPE).write(trim(value.getName())).line();
+                writer.write(PIPE).write(renderLabels(value.getLabels())).line();
+                writer.write(PIPE).write(trim(value.getUrl())).line();
                 writer.line();
             }
             writer.write("|===").line();
@@ -364,7 +366,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
     private String renderLabels(final Set<String> labels) {
-        String result = "";
+        String result = EMPTY;
         if (result != null) {
             final List<String> data = new ArrayList<>(labels);
             Collections.sort(data);
@@ -383,6 +385,6 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
 
     private String trim(final String value) {
-        return value == "" ? null : value.trim();
+        return EMPTY.equals(value) ? null : value.trim();
     }
 }

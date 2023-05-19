@@ -14,23 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.api.utils.reflection;
+package io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers;
 
-import lombok.*;
+import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder(toBuilder = true)
-@ToString
-@Getter
-@AllArgsConstructor
-public class DescriptionDTO implements Serializable {
-    private static final long                    serialVersionUID = -8260338174990313946L;
-    @EqualsAndHashCode.Include
-    private final        String                  content;
-    private final        String                  example;
-    private final        String                  url;
-    private final        List<PotentialErrorDTO> potentialErrors;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class AnalyzerTestUtils {
+
+    public static ScanNeo4jResult extractResult(final List<JsonObject> data) {
+        assertThat(data).size().isOne();
+        assertThat(data.get(0)).isInstanceOf(ScanNeo4jResult.class);
+        final ScanNeo4jResult neo4jResult = (ScanNeo4jResult) data.get(0);
+        neo4jResult.sort();
+        return neo4jResult;
+    }
 }

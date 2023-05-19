@@ -23,6 +23,8 @@ import java.util.List;
 
 public class DefaultDependenciesCheckService implements DependenciesCheckService {
 
+    public static final String LOG4J_GROUPID = "org.apache.logging.log4j";
+
     @Override
     public DependenciesCheck getDependenciesCheckData() {
         return DependenciesCheck.builder()
@@ -51,7 +53,7 @@ public class DefaultDependenciesCheckService implements DependenciesCheckService
                               .build(),
 
                 DependencyRule.builder()
-                              .groupId("org.apache.logging.log4j")
+                              .groupId(LOG4J_GROUPID)
                               .link("https://search.maven.org/search?q=g:org.apache.logging.log4j")
                               .rules(VersionRules.builder()
                                                  .major(Rule.builder()
@@ -70,7 +72,7 @@ public class DefaultDependenciesCheckService implements DependenciesCheckService
     private List<DependencyRule> buildBan() {
         return List.of(
                 DependencyRule.builder()
-                              .groupId("org.apache.logging.log4j")
+                              .groupId(LOG4J_GROUPID)
                               .link("https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-4483")
                               .comment("CVE-2021-44832 : Log4j2 contains major security issue")
                               .level(Level.critical)
@@ -91,7 +93,7 @@ public class DefaultDependenciesCheckService implements DependenciesCheckService
     private List<DependencyRule> buildSecurityIssue() {
         return List.of(
                 DependencyRule.builder()
-                              .groupId("org.apache.logging.log4j")
+                              .groupId(LOG4J_GROUPID)
                               .link("https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-4483")
                               .comment("banished because of CVE-2021-44832")
                               .level(Level.critical)

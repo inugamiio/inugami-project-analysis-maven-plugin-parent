@@ -38,15 +38,15 @@ public class GavGraph implements JsonObject {
     private       boolean currentProject;
 
     @Builder
-    public GavGraph(final String artifactId, final String groupId, final String type, final String version) {
-        this.artifactId     = artifactId;
-        this.groupId        = groupId;
-        this.type           = type;
-        this.version        = version;
+    public GavGraph(final String artifactId, final String groupId, final String type, final String version, final boolean currentProject) {
+        this.artifactId = artifactId;
+        this.groupId = groupId;
+        this.type = type;
+        this.version = version;
         this.currentProject = currentProject;
-        this.hash           = String.join(":", List.of(String.valueOf(groupId),
-                                                       String.valueOf(artifactId),
-                                                       String.valueOf(version),
-                                                       String.valueOf(type)));
+        this.hash = String.join(":", List.of(String.valueOf(groupId),
+                                             String.valueOf(artifactId),
+                                             String.valueOf(version),
+                                             String.valueOf(type)));
     }
 }

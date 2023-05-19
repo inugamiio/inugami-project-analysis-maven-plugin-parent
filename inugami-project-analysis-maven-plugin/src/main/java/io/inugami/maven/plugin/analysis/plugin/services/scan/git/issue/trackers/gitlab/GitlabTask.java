@@ -77,7 +77,9 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
                 break;
             default:
                 node = processIssue(headers, objectMapper, result);
-                processIssueLinks(headers, objectMapper, node.getUid(), result);
+                if (node != null) {
+                    processIssueLinks(headers, objectMapper, node.getUid(), result);
+                }
                 break;
         }
 

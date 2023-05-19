@@ -211,6 +211,9 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
         if (isNotNull(fields)) {
             issueLinksNode = fields.get(ISSUE_LINKS);
         }
+        if (issueLinksNode == null) {
+            return;
+        }
 
         if (isNotNull(issueLinksNode) && issueLinksNode.isArray()) {
             final Iterator<JsonNode> iterator = issueLinksNode.iterator();
@@ -259,6 +262,9 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
         JsonNode subtasks = null;
         if (isNotNull(fields)) {
             subtasks = fields.get(FIELD_SUBTASKS);
+        }
+        if (subtasks == null) {
+            return;
         }
 
         if (isNotNull(subtasks) && subtasks.isArray()) {

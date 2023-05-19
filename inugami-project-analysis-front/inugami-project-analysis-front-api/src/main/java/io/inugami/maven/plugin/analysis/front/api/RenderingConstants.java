@@ -19,6 +19,7 @@ package io.inugami.maven.plugin.analysis.front.api;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+@SuppressWarnings({"java:S1845"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RenderingConstants {
     public static final String APP_ROOT          = "app-root";

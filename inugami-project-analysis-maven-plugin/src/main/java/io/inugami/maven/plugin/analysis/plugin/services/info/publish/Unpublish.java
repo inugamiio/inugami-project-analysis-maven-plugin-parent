@@ -34,20 +34,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import static io.inugami.maven.plugin.analysis.api.constant.ConstantUtils.*;
+
 @Slf4j
 public class Unpublish implements ProjectInformation {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String GROUP_ID    = "groupId";
-    public static final String ARTIFACT_ID = "artifactId";
-    public static final String TYPE        = "type";
-    public static final String VERSION     = "version";
-    public static final String ENV         = "env";
-    public static final String LEVEL       = "envLevel";
-    public static final String ENV_TYPE    = "envType";
-    public static final String FIELD_TYPE  = "type";
+
 
     // =========================================================================
     // API
@@ -68,12 +63,12 @@ public class Unpublish implements ProjectInformation {
     // BUILDERS
     // =========================================================================
     private ScanNeo4jResult buildData(final ConfigHandler<String, String> configuration, final MavenProject project) {
-        final ScanNeo4jResult result          = new ScanNeo4jResult();
-        final boolean         justThisVersion = Boolean
+        final ScanNeo4jResult result = new ScanNeo4jResult();
+        final boolean justThisVersion = Boolean
                 .parseBoolean(configuration.grabOrDefault("justThisVersion", "false"));
 
-        final Node            artifactNode    = buildArtifactVersion(project, configuration);
-        final Node            env             = buildEnvNode(configuration);
+        final Node artifactNode = buildArtifactVersion(project, configuration);
+        final Node env          = buildEnvNode(configuration);
 
         result.addDeleteScript(buildDeletePublishRelation(artifactNode, env, justThisVersion));
         return result;
@@ -95,8 +90,7 @@ public class Unpublish implements ProjectInformation {
         query.write(" where");
         if (justThisVersion) {
             query.write(" v.name=").valueQuot(artifactNode.getUid());
-        }
-        else {
+        } else {
             query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
             query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
         }
@@ -116,8 +110,7 @@ public class Unpublish implements ProjectInformation {
         query.write(" where");
         if (justThisVersion) {
             query.write(" v.name=").valueQuot(artifactNode.getUid());
-        }
-        else {
+        } else {
             query.write(" v.groupId=").valueQuot(artifactNode.getProperties().get("groupId"));
             query.write(" and v.artifactId=").valueQuot(artifactNode.getProperties().get("artifactId"));
         }
@@ -161,7 +154,7 @@ public class Unpublish implements ProjectInformation {
         final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
 
 
-        final String levelStr = ifNull(configuration.get(LEVEL),
+        final String levelStr = ifNull(configuration.get(ENV_LEVEL),
                                        () -> ConsoleTools.askQuestion("environment level ?", "1"));
         final int level = convertLevel(levelStr);
         properties.put("level", level);
@@ -187,8 +180,7 @@ public class Unpublish implements ProjectInformation {
         int result = 0;
         try {
             result = Integer.parseInt(value);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new UncheckedException("invalid environment level :" + value);
         }
         if (result < 0) {

@@ -21,6 +21,7 @@ import lombok.*;
 
 import java.util.List;
 
+@SuppressWarnings({"java:S1948"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Getter

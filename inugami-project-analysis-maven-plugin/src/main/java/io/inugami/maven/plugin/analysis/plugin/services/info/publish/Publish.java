@@ -35,13 +35,14 @@ public class Publish implements ProjectInformation {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String ENV                   = "env";
-    public static final String LEVEL                 = "envLevel";
-    public static final String ENV_TYPE              = "envType";
-    public static final String FIELD_TYPE            = "type";
-    public static final String DEPLOY                = "DEPLOY";
-    public static final String REL_ENV_TYPE          = "ENV_TYPE";
-    public static final String HAVE_ARTIFACT_VERSION = "HAVE_ARTIFACT_VERSION";
+    public static final String     ENV                   = "env";
+    public static final String     LEVEL                 = "envLevel";
+    public static final String     ENV_TYPE              = "envType";
+    public static final String     FIELD_TYPE            = "type";
+    public static final String     DEPLOY                = "DEPLOY";
+    public static final String     REL_ENV_TYPE          = "ENV_TYPE";
+    public static final String     HAVE_ARTIFACT_VERSION = "HAVE_ARTIFACT_VERSION";
+    public static final ZoneOffset UTC_OFFSET            = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now(ZoneOffset.UTC));
 
     // =========================================================================
     // API
@@ -170,10 +171,9 @@ public class Publish implements ProjectInformation {
 
     private LinkedHashMap<String, Serializable> buildDeployProperties() {
         final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
-        final LocalDateTime             now    = LocalDateTime.now();
+        final LocalDateTime                       now    = LocalDateTime.now();
         result.put("date", DateTimeFormatter.ISO_DATE_TIME.format(now));
-        result.put("timestamp", now.toEpochSecond(
-                ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now(ZoneOffset.UTC))));
+        result.put("timestamp", now.toEpochSecond(UTC_OFFSET));
         result.put("dateUtc", DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now(ZoneOffset.UTC)));
         result.put("timestampUtc", now.toEpochSecond(ZoneOffset.UTC));
         return result;
@@ -188,8 +188,7 @@ public class Publish implements ProjectInformation {
         int result = 0;
         try {
             result = Integer.parseInt(value);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new UncheckedException("invalid environment level :" + value);
         }
         if (result < 0) {

@@ -35,6 +35,7 @@ public class HiddenDependenciesAnalyzer implements ProjectPostAnalyzer {
 
     @Override
     public void shutdown() {
+        // nothing
     }
 
     // =========================================================================
@@ -42,6 +43,6 @@ public class HiddenDependenciesAnalyzer implements ProjectPostAnalyzer {
     // =========================================================================
     @Override
     public void postAnalyze(final ScanConext context, final List<JsonObject> result) {
-
+        // nothing
     }
 }

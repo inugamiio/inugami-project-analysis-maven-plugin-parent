@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+@SuppressWarnings({"java:S5361"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NodeUtils {
 

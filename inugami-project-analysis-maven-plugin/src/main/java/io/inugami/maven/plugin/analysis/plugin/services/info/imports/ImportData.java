@@ -37,6 +37,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@SuppressWarnings({"java:S2259"})
 @Slf4j
 public class ImportData implements ProjectInformation {
 
@@ -67,17 +68,16 @@ public class ImportData implements ProjectInformation {
 
         ScanNeo4jResult data = null;
 
-        if(cypherScript){
+        if (cypherScript) {
             data = ScanNeo4jResult.builder().build();
             data.addCreateScript(importScript);
-        }else{
+        } else {
             data = readJson(importScript);
         }
 
         if (data == null) {
             log.warn("no data to import");
-        }
-        else {
+        } else {
             final Neo4jWriter neo4jWriter = new Neo4jWriter().init(context.getConfiguration());
             neo4jWriter.appendData(data);
             neo4jWriter.write();
@@ -113,8 +113,7 @@ public class ImportData implements ProjectInformation {
         try {
             result = objectMapper.readValue(importScript, new TypeReference<ScanNeo4jResult>() {
             });
-        }
-        catch (final JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             throw new UncheckedException(e.getMessage(), e);
         }
 

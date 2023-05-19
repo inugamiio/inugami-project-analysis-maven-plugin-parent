@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class Neo4jWriterIT {
     @Disabled
     @Test
@@ -35,7 +37,7 @@ class Neo4jWriterIT {
         final Map<String, Object> parameters = Map.ofEntries(
                 Map.entry("name", "Foobar"),
                 Map.entry("value", "hello")
-                                                            );
+        );
         final String query = writer.getDao().buildCreateNodeQuery(Node.builder()
                                                                       .type("Test")
                                                                       .build(), parameters);
@@ -44,7 +46,7 @@ class Neo4jWriterIT {
         final Map<String, Object> parameters2 = Map.ofEntries(
                 Map.entry("name", "Joe"),
                 Map.entry("value", "other ...")
-                                                             );
+        );
         final String query2 = writer.getDao().buildCreateNodeQuery(Node.builder()
                                                                        .type("Test")
                                                                        .build(), parameters2);
@@ -62,6 +64,6 @@ class Neo4jWriterIT {
                                                                                    .properties(properties)
                                                                                    .build());
         writer.getDao().processSave(queryRel);
-
+        assertThat(queryRel).isNotNull();
     }
 }

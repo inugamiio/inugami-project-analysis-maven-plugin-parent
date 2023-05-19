@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.front.core.servlet;
 
 import io.inugami.maven.plugin.analysis.front.core.renderers.PluginsModuleRenderer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
+@SuppressWarnings({"java:S1989"})
 @RequiredArgsConstructor
 public class PluginsModuleServlet extends HttpServlet {
 
@@ -42,10 +45,15 @@ public class PluginsModuleServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
-        
+
         resp.setStatus(SUCCCESS);
         resp.setContentType(APPLICATION_TYPESCRIPT);
         ServletCommons.setUtf8(resp);
-        resp.getWriter().print(new PluginsModuleRenderer().render());
+        try {
+            resp.getWriter().print(new PluginsModuleRenderer().render());
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 }

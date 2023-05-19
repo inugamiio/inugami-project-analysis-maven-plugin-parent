@@ -73,7 +73,7 @@ public final class Neo4jUtils {
                                             final ConfigHandler<String, String> configuration) {
         final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
         final Node artifactNode = useMavenProject ? buildNodeVersion(project)
-                                                  : buildNodeVersion(buildGav(project, configuration));
+                : buildNodeVersion(buildGav(project, configuration));
         return artifactNode;
     }
 
@@ -87,8 +87,7 @@ public final class Neo4jUtils {
                       .version(project.getVersion())
                       .type(project.getPackaging())
                       .build();
-        }
-        else {
+        } else {
             final String groupId = ifNull(configuration.get(GROUP_ID),
                                           () -> ConsoleTools.askQuestion("groupId ?", project.getGroupId()));
 
@@ -113,7 +112,7 @@ public final class Neo4jUtils {
                                                                             final BiConsumer<Map<String, Collection<DataRow>>, Map<String, Object>> consumer) {
 
         final Map<String, Collection<DataRow>> data = new LinkedHashMap<>();
-        if (resultSet != null || !resultSet.isEmpty()) {
+        if (resultSet != null && !resultSet.isEmpty()) {
             for (final Record record : resultSet) {
                 if (record != null) {
                     final Map<String, Object> recordData = record.asMap();
@@ -129,14 +128,12 @@ public final class Neo4jUtils {
         String result = null;
         if (node == null) {
             result = null;
-        }
-        else if (node instanceof org.neo4j.driver.types.Node) {
+        } else if (node instanceof org.neo4j.driver.types.Node) {
             result = retrieve("name", (org.neo4j.driver.types.Node) node);
-        }
-        else if (node instanceof NodeValue) {
+        } else if (node instanceof NodeValue) {
             result = String.valueOf(((NodeValue) node).get("name"));
         }
-        return result == null ? null : result.replaceAll("\"", "");
+        return result == null ? null : result.replace("\"", "");
     }
 
     public static NodeValue extractNode(final String nodeName, final Record record) {
@@ -160,8 +157,7 @@ public final class Neo4jUtils {
         if (node != null && !node.isNull()) {
             if (node instanceof Relationship) {
                 result.add((Relationship) node);
-            }
-            else if (node instanceof ListValue) {
+            } else if (node instanceof ListValue) {
                 final List<Object> nodes = ((ListValue) node).asList();
                 Optional.ofNullable(nodes)
                         .orElse(new ArrayList<>())

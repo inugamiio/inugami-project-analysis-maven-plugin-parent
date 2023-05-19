@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import static io.inugami.maven.plugin.analysis.front.core.tools.JsonMarshallerUtils.OBJECT_MAPPER;
 
+@SuppressWarnings({"java:S1989"})
 @Slf4j
 public class DependenciesCheckServlet extends HttpServlet {
 
@@ -81,10 +82,12 @@ public class DependenciesCheckServlet extends HttpServlet {
             json = DEFUALT_RESPONSE;
         }
 
-
-        resp.getWriter().print(json);
-        resp.setStatus(status);
-
+        try {
+            resp.getWriter().print(json);
+            resp.setStatus(status);
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private String retrieveData() throws JsonProcessingException {

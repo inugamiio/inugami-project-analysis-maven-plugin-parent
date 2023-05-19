@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
+@SuppressWarnings({"java:S1845"})
 @Slf4j
 public class GitHubIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
 
@@ -105,7 +106,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
                 while (matcher.find()) {
                     final String feature    = matcher.group(GRP_FEATURE);
                     final String refFeature = matcher.group(GRP_REF_FEATURE);
-                    processIfNotNull(feature, value -> result.add(value.replaceAll("#", "!")));
+                    processIfNotNull(feature, value -> result.add(value.replace("#", "!")));
                     processIfNotNull(refFeature, value -> result.add("#" + value));
                 }
             } else {

@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
+@SuppressWarnings({"java:S1845"})
 @Slf4j
 public class GitLabIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
     // =========================================================================

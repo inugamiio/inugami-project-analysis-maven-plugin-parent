@@ -52,8 +52,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
     private String  artifactName;
     private String  currentPath;
 
-    @Autowired(required = false)
-    private DependenciesCheckService dependenciesCheckService;
 
     @PostConstruct
     public void init() {
@@ -121,7 +119,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ServletRegistrationBean dependenciesCheckData() {
+    public ServletRegistrationBean dependenciesCheckData(@Autowired(required = false) final DependenciesCheckService dependenciesCheckService) {
         final String basePath = currentPath.substring(0, currentPath.length() - 1);
         final ServletRegistrationBean bean = new ServletRegistrationBean(
                 new DependenciesCheckServlet(dependenciesCheckService), currentPath + "data/dependencies-check.json");

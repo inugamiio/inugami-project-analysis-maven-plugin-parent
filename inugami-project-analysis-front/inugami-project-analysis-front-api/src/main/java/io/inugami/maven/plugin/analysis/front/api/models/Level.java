@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.front.api.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@SuppressWarnings({"java:S115"})
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Level {
     none,

@@ -42,6 +42,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 
+@SuppressWarnings({"java:S5361"})
 @Slf4j
 public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 

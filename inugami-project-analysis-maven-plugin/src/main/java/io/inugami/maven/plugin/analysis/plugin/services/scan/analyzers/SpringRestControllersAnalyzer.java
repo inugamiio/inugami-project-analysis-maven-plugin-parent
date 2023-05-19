@@ -52,6 +52,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S1845", "java:S5361"})
 @Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";

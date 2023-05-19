@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
+@SuppressWarnings({"java:S5361"})
 @Slf4j
 public class GitLogScan implements ProjectScanner {
 
@@ -215,7 +216,7 @@ public class GitLogScan implements ProjectScanner {
 
             final Map<String, AnyObjectId> tags = new LinkedHashMap<>();
             for (final Ref tag : tagsRef) {
-                final String tagName = tag.getName().replaceAll(REFS_TAGS, "");
+                final String tagName = tag.getName().replace(REFS_TAGS, "");
                 tags.put(tagName, tag.getObjectId());
             }
 
@@ -330,11 +331,11 @@ public class GitLogScan implements ProjectScanner {
         commit.write(gitLog.getAuthor());
         commit.write(ConsoleColors.createLine(SPACE, authorSize - gitLog.getAuthor().length()));
         commit.write(CLOSE_SPACE);
-        commit.write(gitLog.getMessage() == null ? "" : gitLog.getMessage().replaceAll("\n", SPACE));
+        commit.write(gitLog.getMessage() == null ? "" : gitLog.getMessage().replace("\n", SPACE));
 
 
         properties.put("commit", commit.toString());
-        properties.put("message", gitLog.getMessage().replaceAll("\n", SPACE));
+        properties.put("message", gitLog.getMessage().replace("\n", SPACE));
         properties.put(COMMIT_UID, commitUid);
         properties.put("author", author);
         properties.put("date", date);
@@ -502,7 +503,7 @@ public class GitLogScan implements ProjectScanner {
     }
 
     private String cleanIssueNumber(final String issue) {
-        return issue.replaceAll("#", "");
+        return issue.replace("#", "");
     }
 
     private List<Node> extractNodeType(final List<Node> nodes, final String nodeType) {

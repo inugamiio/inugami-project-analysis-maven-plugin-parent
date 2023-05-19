@@ -26,9 +26,9 @@ public class FlywayAsciidocWriterTest {
 
     @Test
     public void rendering_withFlywayScripts_shouldrenderingParagraph() {
-        FlywayAsciidocWriter writer = new FlywayAsciidocWriter();
+        final FlywayAsciidocWriter writer = new FlywayAsciidocWriter();
 
-        ReleaseNoteResult data = new ReleaseNoteResult();
+        final ReleaseNoteResult data = new ReleaseNoteResult();
         data.addDifferential(FlywayExtractor.FLYWAY,
                              Differential.buildDifferential(List.of(
                                      FlywayDTO.builder()
@@ -40,7 +40,7 @@ public class FlywayAsciidocWriterTest {
                                                                "    `title` varchar(255) NOT NULL,\n" +
                                                                "    PRIMARY KEY(`id`)\n" +
                                                                "}")
-                                              .projectsUsing(Set.of("io.inugami:example:1.0.0:jar","io.inugami:consumer:1.5.0:jar"))
+                                              .projectsUsing(Set.of("io.inugami:example:1.0.0:jar", "io.inugami:consumer:1.5.0:jar"))
                                               .build(),
                                      FlywayDTO.builder()
                                               .id("06a40c4bcf198ed11529d45ec240d2e991962dd4952c2827f2eb8bd4e7e8965212d4f97406bf1928f6ff151ba429cbf8c8ade5c6ae343b57b5cf459c783aa347")
@@ -61,12 +61,12 @@ public class FlywayAsciidocWriterTest {
                                                                "    add column description varchar(255) null;")
                                               .projectsUsing(Set.of("io.inugami:example:1.0.0:jar"))
                                               .build()
-                                                                   ), null)
-                            );
+                             ), null)
+        );
 
 
-        LinkedHashMap<String, String> result = writer.rendering(data, false, context);
+        final LinkedHashMap<String, String> result = writer.rendering(data, false, context);
         assertText(loadJsonReference("info/release/note/writers/asciidoc/flyway-result.adoc"),
-                   result.get("flyway_new").replaceAll("\\n","\n"));
+                   result.get("flyway_new").replace("\\n", "\n"));
     }
 }

@@ -41,6 +41,7 @@ import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.OUTPUT_DTO;
 
+@SuppressWarnings({"java:S1872", "java:S1452"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
@@ -274,51 +275,56 @@ public final class ReflectionService {
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
         if (result == null) {
-            final Class<?> returnClass = type;
-
-            final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
-            if (returnClass != null && !"void".equals(returnClass.getName())) {
-
-                String     path       = null;
-                final Type returnType = genericReturnType;
-
-                Class<?> currentClass = returnClass;
-                if (returnType != null) {
-                    currentClass = extractGenericType(returnType);
-                }
-
-                if (Collection.class.isAssignableFrom(returnClass)) {
-                    final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
-                    builder.list(true);
-                    path = "[]";
-                    builder.path("[]");
-                    JsonNode structure = null;
-                    if (currentClass != null) {
-                        structure = renderStructureJson(currentClass, path, cursorChildren, strict);
-                    }
-
-                    if (structure != null) {
-                        builder.children(List.of(structure));
-                    }
-                    result = builder.build();
-                } else if (isBasicType(currentClass)) {
-                    final JsonNode.JsonNodeBuilder node = JsonNode.builder()
-                                                                  .type(renderFieldType(currentClass))
-                                                                  .basicType(true);
-                    result = node.build();
-                } else {
-                    result = renderStructureJson(currentClass, null, cursorChildren, strict);
-
-                }
-                Loggers.DEBUG.debug("json structure : {}\n{}", currentClass.getTypeName(), result.convertToJson());
-            }
-
-            if (result != null) {
-                CACHE.put(key, result);
-            }
+            result = processRenderType(type, genericReturnType, strict, key, cursor, result);
 
         }
 
+        return result;
+    }
+
+    private static JsonNode processRenderType(final Class<?> type, final Type genericReturnType, final boolean strict, final String key, final ClassCursor cursor, JsonNode result) {
+        final Class<?> returnClass = type;
+
+        final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
+        if (returnClass != null && !"void".equals(returnClass.getName())) {
+
+            String     path       = null;
+            final Type returnType = genericReturnType;
+
+            Class<?> currentClass = returnClass;
+            if (returnType != null) {
+                currentClass = extractGenericType(returnType);
+            }
+
+            if (Collection.class.isAssignableFrom(returnClass)) {
+                final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
+                builder.list(true);
+                path = "[]";
+                builder.path("[]");
+                JsonNode structure = null;
+                if (currentClass != null) {
+                    structure = renderStructureJson(currentClass, path, cursorChildren, strict);
+                }
+
+                if (structure != null) {
+                    builder.children(List.of(structure));
+                }
+                result = builder.build();
+            } else if (isBasicType(currentClass)) {
+                final JsonNode.JsonNodeBuilder node = JsonNode.builder()
+                                                              .type(renderFieldType(currentClass))
+                                                              .basicType(true);
+                result = node.build();
+            } else {
+                result = renderStructureJson(currentClass, null, cursorChildren, strict);
+
+            }
+            Loggers.DEBUG.debug("json structure : {}\n{}", currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
+        }
+
+        if (result != null) {
+            CACHE.put(key, result);
+        }
         return result;
     }
 

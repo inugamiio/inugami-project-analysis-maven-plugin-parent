@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 
 import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 
+@SuppressWarnings({"java:S5361"})
 public interface ReleaseNoteExtractor {
 
     void extractInformation(final ReleaseNoteResult releaseNoteResult,

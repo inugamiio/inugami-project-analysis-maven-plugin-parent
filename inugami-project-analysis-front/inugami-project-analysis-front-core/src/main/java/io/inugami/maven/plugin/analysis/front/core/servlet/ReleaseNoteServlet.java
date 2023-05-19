@@ -36,6 +36,7 @@ import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.front.core.tools.JsonMarshallerUtils.OBJECT_MAPPER;
 
+@SuppressWarnings({"java:S1989"})
 @Slf4j
 @RequiredArgsConstructor
 public class ReleaseNoteServlet extends HttpServlet {
@@ -64,7 +65,12 @@ public class ReleaseNoteServlet extends HttpServlet {
         resp.setStatus(SUCCCESS);
         ServletCommons.setUtf8(resp);
         resp.setContentType(MediaType.APPLICATION_JSON);
-        resp.getWriter().print(renderJson());
+        try {
+            resp.getWriter().print(renderJson());
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
     // =========================================================================

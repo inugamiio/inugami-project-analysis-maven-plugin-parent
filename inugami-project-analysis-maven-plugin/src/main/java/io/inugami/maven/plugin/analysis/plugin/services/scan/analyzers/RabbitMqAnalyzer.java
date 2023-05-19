@@ -47,6 +47,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 import static org.springframework.core.annotation.AnnotatedElementUtils.hasAnnotation;
 
+@SuppressWarnings({"java:S5361"})
 @Slf4j
 public class RabbitMqAnalyzer implements ClassAnalyzer {
 
@@ -105,74 +106,85 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
         final List<Method> methods = loadAllMethods(clazz);
         for (final Method method : methods) {
-
-            if (ReflectionService.hasAnnotation(method, RabbitListener.class, RabbitHandler.class)) {
-                buildListenerNode(method, rabbitListener, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
-                                               "consume"));
-                });
-            } else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
-                buildSenderNode(method, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
-                                               "produce"));
-                });
-            }
+            processAnalyze(clazz, result, rabbitListener, projectNode, serviceType, method);
         }
 
         return List.of(result);
+    }
+
+    private void processAnalyze(final Class<?> clazz, final ScanNeo4jResult result, final RabbitListener rabbitListener, final Node projectNode, final Node serviceType, final Method method) {
+        if (ReflectionService.hasAnnotation(method, RabbitListener.class, RabbitHandler.class)) {
+            processAnalyzeOnRabbitListener(clazz, result, rabbitListener, projectNode, serviceType, method);
+        } else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
+            processAnalyzeOnRabbitMqSender(clazz, result, projectNode, serviceType, method);
+        }
+    }
+
+    private void processAnalyzeOnRabbitListener(final Class<?> clazz, final ScanNeo4jResult result, final RabbitListener rabbitListener, final Node projectNode, final Node serviceType, final Method method) {
+        buildListenerNode(method, rabbitListener, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                       "consume"));
+        });
+    }
+
+    private void processAnalyzeOnRabbitMqSender(final Class<?> clazz, final ScanNeo4jResult result, final Node projectNode, final Node serviceType, final Method method) {
+        buildSenderNode(method, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                       "produce"));
+        });
     }
 
     // =========================================================================

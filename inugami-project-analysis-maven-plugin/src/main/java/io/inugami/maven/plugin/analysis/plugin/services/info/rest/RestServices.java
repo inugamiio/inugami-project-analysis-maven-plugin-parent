@@ -46,7 +46,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             "META-INF/queries/search_consumers.cql",
             "META-INF/queries/search_produce.cql",
             "META-INF/queries/search_services_rest.cql"
-                                                       );
+    );
 
     // =========================================================================
     // QUERIES
@@ -65,7 +65,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                 Map.entry("artifactId", gav.getArtifactId()),
                 Map.entry("version", gav.getVersion()),
                 Map.entry("serviceType", "Rest")
-                                   ));
+        ));
         return config;
     }
 
@@ -91,10 +91,10 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     private DependencyRest searchConsumedService(final Gav gav, final DefaultNeo4jDao dao,
                                                  final ConfigHandler<String, String> config) {
         //@formatter:off
-        final DependencyRest  result = new DependencyRest();
-        final String          queryPath    = "META-INF/queries/search_consumers.cql";
-        final String          query        = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
-        final List<Record>    resultSet    = dao.search(query);
+        final DependencyRest result    = new DependencyRest();
+        final String         queryPath = "META-INF/queries/search_consumers.cql";
+        final String         query     = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
+        final List<Record>   resultSet = dao.search(query);
         //@formatter:on
 
         if (!resultSet.isEmpty()) {
@@ -123,11 +123,11 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                                                 final ConfigHandler<String, String> config) {
 
         //@formatter:off
-        final DependencyRest  result = new DependencyRest();
-        final String       queryPath    = "META-INF/queries/search_produce.cql";
-        final String       query        = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
+        final DependencyRest result    = new DependencyRest();
+        final String         queryPath = "META-INF/queries/search_produce.cql";
+        final String         query     = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
         log.info(query);
-        final List<Record> resultSet    = dao.search(query);
+        final List<Record> resultSet = dao.search(query);
         //@formatter:on
 
         if (!resultSet.isEmpty()) {
@@ -210,8 +210,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             if (savedDependencies == null) {
                 buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
                                                         appConsumer == null ? null : appConsumer.getName()));
-            }
-            else {
+            } else {
                 savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
                 savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
             }
@@ -232,8 +231,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             if (savedDependencies == null) {
                 buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
                                                         appConsumer == null ? null : appConsumer.getName()));
-            }
-            else {
+            } else {
                 savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
                 savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
             }
@@ -249,8 +247,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
 
         if (endpoints == null || endpoints.isEmpty()) {
             result.write("no endpoint consumed");
-        }
-        else {
+        } else {
             final List<RestEndpoint> endpointsKeySet = new ArrayList<>(endpoints.keySet());
             Collections.sort(endpointsKeySet);
             for (final RestEndpoint endpoint : endpointsKeySet) {
@@ -311,7 +308,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     }
 
     private String spacePayload(final String value, final String space) {
-        return space + value.replaceAll("\n", "\n" + space);
+        return space + value.replace("\n", "\n" + space);
     }
 
     private String encodeColor(final String verb) {

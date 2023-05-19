@@ -24,6 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
 
+@SuppressWarnings({"java:S5542", "java:S3329"})
 @Slf4j
 public class SecurityUtils {
 
@@ -50,8 +51,7 @@ public class SecurityUtils {
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivParams);
             encrypted = cipher.doFinal(value.getBytes());
 
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SecurityException(e.getMessage(), e);
         }
         return encrypted == null ? null : Base64.getEncoder().encodeToString(encrypted);
@@ -79,8 +79,7 @@ public class SecurityUtils {
             final IvParameterSpec ivParamsSpec = new IvParameterSpec(ivByte);
             cipher.init(Cipher.DECRYPT_MODE, key, ivParamsSpec);
             original = cipher.doFinal(Base64.getDecoder().decode(value));
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SecurityException(e.getMessage(), e);
         }
         return original == null ? null : new String(original);

@@ -378,10 +378,12 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public Set<Node> extractFieldProperties(final String path, final Class<?> clazz,
                                             final Field field) {
         final Set<Node> result = new LinkedHashSet<>();
+        if (field == null) {
+            return result;
+        }
 
         final String fullPath = CYCLIC_CLASSES_RESOLVER.buildFullPath(path, field);
-        log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(),
-                  field == null ? null : field.getName());
+        log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(), field.getName());
 
         for (final BeanPropertyTypeResolver resolver : TYPE_RESOLVERS) {
             CYCLIC_CLASSES_RESOLVER.register(fullPath, field);

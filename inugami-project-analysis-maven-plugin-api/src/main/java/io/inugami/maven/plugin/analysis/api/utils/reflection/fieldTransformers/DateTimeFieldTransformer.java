@@ -49,6 +49,9 @@ public class DateTimeFieldTransformer implements FieldTransformer {
                 case NUMBER_INT:
                     result = "long<justDate>";
                     break;
+                default:
+                    result = null;
+                    break;
             }
         }
 
