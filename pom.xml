@@ -61,7 +61,7 @@
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>3.2.0</io.inugami.version>
+        <io.inugami.version>3.2.1-SNAPSHOT</io.inugami.version>
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -88,6 +88,12 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
+        <sonar.exclusions>
+            **/*Exception*,
+            **/*DTO*,
+            **/ConstantUtils*,
+            **/*Test*
+        </sonar.exclusions>
     </properties>
 
 
@@ -515,6 +521,9 @@
                     <excludes>
                         <exclude>**/*DTOBuilder*</exclude>
                         <exclude>**/*EntityBuilder*</exclude>
+                        <exclude>**/*Test*</exclude>
+                        <exclude>**/*Exception</exclude>
+                        <exclude>**/Constants</exclude>
                     </excludes>
                     <formats>
                         <format>XML</format>

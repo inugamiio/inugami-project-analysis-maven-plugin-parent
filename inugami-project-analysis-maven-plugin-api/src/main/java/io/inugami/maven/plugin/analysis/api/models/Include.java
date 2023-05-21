@@ -18,7 +18,7 @@ package io.inugami.maven.plugin.analysis.api.models;
 
 import lombok.*;
 
-@Builder
+@Builder(toBuilder = true)
 @EqualsAndHashCode
 @ToString
 @AllArgsConstructor
@@ -26,6 +26,5 @@ import lombok.*;
 @Setter
 @Getter
 public class Include {
-
     private String include;
 }

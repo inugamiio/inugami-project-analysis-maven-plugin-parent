@@ -18,14 +18,14 @@
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
-      "artifactId" : "basic-artifact",
       "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
       "major" : 1,
       "minor" : 0,
-      "packaging" : "jar",
       "patch" : 0,
-      "tag" : "SNAPSHOT",
-      "version" : "1.0.0-SNAPSHOT"
+      "tag" : "SNAPSHOT"
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"

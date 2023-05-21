@@ -28,6 +28,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AsciidocInfoWriter {
+    String H4         = "==== ";
+    String H6         = "====== ";
+    String LIST_DECO  = "* ";
+    String UNRESOLVED = "unresolved";
+
     String getParagraphName();
 
     LinkedHashMap<String, String> rendering(final ReleaseNoteResult releaseNote,
@@ -42,7 +47,7 @@ public interface AsciidocInfoWriter {
 
     default boolean isEnabled(final ConfigHandler<String, String> configuration) {
         final String featureName = getfeatureName();
-        return featureName == null ? true : Boolean.parseBoolean(configuration.grabOrDefault(featureName,"true"));
+        return featureName == null ? true : Boolean.parseBoolean(configuration.grabOrDefault(featureName, "true"));
     }
 
     default String renderPayload(final String value) {

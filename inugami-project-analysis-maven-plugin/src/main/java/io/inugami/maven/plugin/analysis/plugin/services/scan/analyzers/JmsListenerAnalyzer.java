@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 

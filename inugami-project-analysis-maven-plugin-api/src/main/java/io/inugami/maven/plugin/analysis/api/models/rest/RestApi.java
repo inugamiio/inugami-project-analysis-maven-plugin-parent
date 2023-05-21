@@ -25,15 +25,15 @@ import java.util.List;
 
 @EqualsAndHashCode
 @ToString
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Getter
 @Builder(toBuilder = true)
 public class RestApi implements JsonObject {
-    private static final long serialVersionUID = 2101356331716509852L;
-    private final String name;
-    private final String             description;
-    private final String             baseContext;
-    private final List<RestEndpoint> endpoints;
+    private static final long               serialVersionUID = 2101356331716509852L;
+    private final        String             name;
+    private final        String             description;
+    private final        String             baseContext;
+    private final        List<RestEndpoint> endpoints;
 
     public RestApi orderEndPoint() {
         if (endpoints != null) {
@@ -41,8 +41,7 @@ public class RestApi implements JsonObject {
                 int result = 0;
                 if (value.getUri() != null && value.getUri().equals(ref.getUri())) {
                     result = String.valueOf(value.getVerb()).compareTo(String.valueOf(ref.getVerb()));
-                }
-                else {
+                } else {
                     result = String.valueOf(value.getUri()).compareTo(String.valueOf(ref.getUri()));
                 }
                 return result;

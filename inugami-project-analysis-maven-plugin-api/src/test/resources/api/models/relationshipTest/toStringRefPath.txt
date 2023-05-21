@@ -1,0 +1,1 @@
+Relationship(from=nodeA, to=nodeB, type=has_relationship, properties={color=red, date=2023-05-21})

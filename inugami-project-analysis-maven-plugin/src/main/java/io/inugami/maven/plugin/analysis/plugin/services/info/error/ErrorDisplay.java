@@ -37,6 +37,7 @@ import java.util.*;
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.*;
 
+@SuppressWarnings({"java:S3776"})
 @Slf4j
 public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
@@ -104,56 +105,63 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
     private void buildModels(final Map<String, Collection<DataRow>> data,
                              final List<Record> resultSet) {
 
-        Set<String> knowKeys = null;
+        final Set<String> knowKeys = new LinkedHashSet<>();
         for (final Record record : resultSet) {
-            final Map<String, Object> recordData = record != null ? record.asMap() : null;
-            if (recordData == null) {
-                continue;
-            }
-            final Node dependency = (Node) recordData.get("dependency");
-            final Node error      = (Node) recordData.get("error");
-
-            final String dependencyName = getNodeName(dependency);
-
-            Collection<DataRow> savedDependency = data.get(dependencyName);
-            if (savedDependency == null) {
-                savedDependency = new LinkedHashSet<>();
-                data.put(dependencyName, savedDependency);
-            }
-
-            if (error == null) {
-                continue;
-            }
-
-
-            final DataRow dataRow = new DataRow();
-
-            final String type = retrieve(ERROR_TYPE, error);
-            if (type != null) {
-                applyIfNotNull(resolveColor(type), color -> dataRow.setRowColor(color));
-            }
-
-            final Map<String, Object> properties = error.asMap();
-            knowKeys = orderErrorProperties(properties.keySet(), knowKeys);
-
-            for (final String property : knowKeys) {
-                final Object propertyValueRaw = properties.get(property);
-                Serializable propertyValue    = null;
-                if (propertyValueRaw instanceof Serializable) {
-                    propertyValue = (Serializable) propertyValueRaw;
-                } else if (propertyValueRaw == null) {
-                    propertyValue = "";
-                } else {
-                    propertyValue = String.valueOf(propertyValueRaw);
-                }
-                dataRow.put(property, propertyValue);
-
-            }
-            final String name = getNodeName(error);
-            dataRow.setUid(name == null ? "undefine" : name);
-            savedDependency.add(dataRow);
+            buildModelOnRecord(data, knowKeys, record);
         }
 
+    }
+
+    private void buildModelOnRecord(final Map<String, Collection<DataRow>> data, Set<String> knowKeys, final Record record) {
+        final Map<String, Object> recordData = record != null ? record.asMap() : null;
+        if (recordData == null) {
+            return;
+        }
+        final Node dependency = (Node) recordData.get("dependency");
+        final Node error      = (Node) recordData.get("error");
+
+        final String dependencyName = getNodeName(dependency);
+
+        Collection<DataRow> savedDependency = data.get(dependencyName);
+        if (savedDependency == null) {
+            savedDependency = new LinkedHashSet<>();
+            data.put(dependencyName, savedDependency);
+        }
+
+        if (error == null) {
+            return;
+        }
+
+
+        final DataRow dataRow = new DataRow();
+
+        final String type = retrieve(ERROR_TYPE, error);
+        if (type != null) {
+            applyIfNotNull(resolveColor(type), color -> dataRow.setRowColor(color));
+        }
+
+        final Map<String, Object> properties = error.asMap();
+        knowKeys = orderErrorProperties(properties.keySet(), knowKeys);
+
+        for (final String property : knowKeys) {
+            extractProperty(dataRow, properties, property);
+        }
+        final String name = getNodeName(error);
+        dataRow.setUid(name == null ? "undefine" : name);
+        savedDependency.add(dataRow);
+    }
+
+    private static void extractProperty(final DataRow dataRow, final Map<String, Object> properties, final String property) {
+        final Object propertyValueRaw = properties.get(property);
+        Serializable propertyValue    = null;
+        if (propertyValueRaw instanceof Serializable) {
+            propertyValue = (Serializable) propertyValueRaw;
+        } else if (propertyValueRaw == null) {
+            propertyValue = "";
+        } else {
+            propertyValue = String.valueOf(propertyValueRaw);
+        }
+        dataRow.put(property, propertyValue);
     }
 
     private String resolveColor(final String type) {
@@ -168,6 +176,8 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
             case "CONFIG":
             case "CONFIGURATION":
                 result = ConsoleColors.PURPLE;
+                break;
+            default:
                 break;
         }
         return result;

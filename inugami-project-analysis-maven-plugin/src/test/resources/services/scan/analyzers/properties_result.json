@@ -4,19 +4,19 @@
   "nodes" : [ {
     "name" : "current.enable",
     "properties" : {
-      "defaultValue" : "true",
       "mandatory" : false,
+      "defaultValue" : "true",
       "propertyType" : "Boolean",
-      "matchIfMissing" : false,
-      "useForConditionalBean" : true
+      "useForConditionalBean" : true,
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "current.enable"
   }, {
     "name" : "current.name",
     "properties" : {
-      "defaultValue" : "someBean.value",
       "mandatory" : false,
+      "defaultValue" : "someBean.value",
       "propertyType" : "String"
     },
     "type" : "Property",
@@ -41,8 +41,8 @@
   }, {
     "name" : "current.timeout",
     "properties" : {
-      "defaultValue" : "5000",
       "mandatory" : true,
+      "defaultValue" : "5000",
       "propertyType" : "long",
       "constraintType" : "javax.validation.constraints.NotEmpty"
     },
@@ -67,20 +67,20 @@
   }, {
     "name" : "project.feature.enable",
     "properties" : {
+      "useForConditionalBean" : true,
       "mandatory" : false,
-      "matchIfMissing" : false,
       "propertyType" : "boolean",
-      "useForConditionalBean" : true
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "project.feature.enable"
   }, {
     "name" : "project.service.enable",
     "properties" : {
+      "useForConditionalBean" : true,
       "mandatory" : false,
-      "matchIfMissing" : false,
       "propertyType" : "boolean",
-      "useForConditionalBean" : true
+      "matchIfMissing" : false
     },
     "type" : "Property",
     "uid" : "project.service.enable"

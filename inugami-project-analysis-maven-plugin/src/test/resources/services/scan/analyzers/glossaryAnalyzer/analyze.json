@@ -4,28 +4,28 @@
   "nodes" : [ {
     "name" : "Person_Personne_",
     "properties" : {
-      "label" : "Personne",
-      "value" : "Person"
+      "value" : "Person",
+      "label" : "Personne"
     },
     "type" : "Glossary",
     "uid" : "Person_Personne_"
   }, {
     "name" : "Person_Personne_fr",
     "properties" : {
+      "value" : "Person",
       "label" : "Personne",
-      "language" : "fr",
-      "value" : "Person"
+      "language" : "fr"
     },
     "type" : "Glossary",
     "uid" : "Person_Personne_fr"
   }, {
     "name" : "address_adresse",
     "properties" : {
-      "description" : "lorem ipsum",
+      "value" : "address",
       "label" : "adresse",
       "language" : "fr",
-      "type" : "java.lang.String",
-      "value" : "address"
+      "description" : "lorem ipsum",
+      "type" : "java.lang.String"
     },
     "type" : "Glossary",
     "uid" : "address_adresse"

@@ -26,7 +26,6 @@ import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
@@ -37,8 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.isNotNull;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 
@@ -188,7 +187,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
             final Object shortName = data.get(SHORT_NAME);
             if (shortName != null) {
-                savedIssue.addLabel(String.valueOf(shortName).replaceAll(EMPTY, UNDERSCORE));
+                savedIssue.addLabel(String.valueOf(shortName).replaceAll(SPACE, UNDERSCORE));
             }
 
         }
@@ -205,7 +204,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
         final Map<String, Object> data = node.asMap();
         releaseNote.addAuthor(Author.builder()
                                     .name(retrieveString(SHORT_NAME, data, replacements))
-                                    .email(retrieveString(Constants.EMAIL, data, replacements))
+                                    .email(retrieveString(EMAIL, data, replacements))
                                     .build());
     }
 

@@ -36,18 +36,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jUtils {
-    // =========================================================================
-    // API
-    // =========================================================================
-    public static final String GROUP_ID    = "groupId";
-    public static final String ARTIFACT_ID = "artifactId";
-    public static final String TYPE        = "type";
-    public static final String VERSION     = "version";
 
     // =========================================================================
     // API

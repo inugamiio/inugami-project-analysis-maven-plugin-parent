@@ -4,6 +4,7 @@ import io.inugami.api.models.data.basic.JsonObject;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -11,15 +12,19 @@ import java.util.stream.Collectors;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
+@ToString(onlyExplicitlyIncluded = true)
 @Builder(toBuilder = true)
 @Setter
 @Getter
 public class ScanNeo4jResult implements JsonObject {
     private static final long               serialVersionUID = -1885576008301619055L;
+    @ToString.Include
     private              String             type;
     private              List<String>       nodesToDeletes;
+    @ToString.Include
     private              List<Node>         nodes;
     private              List<String>       createScripts;
+    @ToString.Include
     private              List<Relationship> relationships;
     private              List<Relationship> relationshipsToDeletes;
     private              List<String>       deleteScripts;
@@ -50,13 +55,14 @@ public class ScanNeo4jResult implements JsonObject {
         processIfNotNull(deleteScripts, this.deleteScripts::addAll);
     }
 
-    public void sort() {
+    public ScanNeo4jResult sort() {
         Collections.sort(nodesToDeletes);
         Collections.sort(nodes);
         Collections.sort(createScripts);
         Collections.sort(relationships);
         Collections.sort(relationshipsToDeletes);
         Collections.sort(deleteScripts);
+        return this;
     }
 
     public ScanNeo4jResult addNode(final List<Node> values) {

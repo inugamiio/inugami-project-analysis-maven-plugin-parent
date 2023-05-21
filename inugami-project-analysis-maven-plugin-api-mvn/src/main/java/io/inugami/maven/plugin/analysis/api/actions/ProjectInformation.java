@@ -33,10 +33,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public interface ProjectInformation extends NamedSpi {
-    String GROUP_ID    = Neo4jUtils.GROUP_ID;
-    String ARTIFACT_ID = Neo4jUtils.ARTIFACT_ID;
-    String TYPE        = Neo4jUtils.TYPE;
-    String VERSION     = Neo4jUtils.VERSION;
+
 
     void process(InfoContext context);
 

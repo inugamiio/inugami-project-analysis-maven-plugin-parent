@@ -30,6 +30,9 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
+
+@SuppressWarnings({"java:S3252"})
 public class Publish implements ProjectInformation {
 
     // =========================================================================

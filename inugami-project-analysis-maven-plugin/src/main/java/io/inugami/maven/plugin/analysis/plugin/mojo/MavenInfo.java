@@ -23,10 +23,10 @@ import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.exceptions.ConfigurationException;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -129,8 +129,8 @@ public class MavenInfo extends AbstractMojo {
         if (project.getIssueManagement() != null) {
             assertNotEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
             assertNotEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
-            configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
-            configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
+            configuration.put(IssueTrackerProvider.SYSTEM, project.getIssueManagement().getSystem());
+            configuration.put(IssueTrackerProvider.URL, project.getIssueManagement().getUrl());
         }
         if (secDispatcher instanceof DefaultSecDispatcher) {
             final String securityPath = configuration.getOrDefault("settings.security",

@@ -34,11 +34,12 @@ import java.util.*;
 @Slf4j
 public class DefaultNeo4jDao implements Neo4jDao {
 
+    public static final String                  ERR_MESSAGE = "enable to execute query : \n{}";
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final List<Neo4jValueEncoder> encoders;
-    private final Driver                  driver;
+    private final       List<Neo4jValueEncoder> encoders;
+    private final       Driver                  driver;
 
     // =========================================================================
     // CONSTRUCTORS
@@ -136,29 +137,36 @@ public class DefaultNeo4jDao implements Neo4jDao {
 
     @Override
     public void saveNodes(final List<io.inugami.maven.plugin.analysis.api.models.Node> nodes) {
-        if (nodes != null) {
-            final int size = nodes.size();
-            log.info("{} nodes to create", size);
-            String previous = null;
-            for (int i = 0; i < size; i++) {
-                previous = writeProgression(i, size, previous);
-                final io.inugami.maven.plugin.analysis.api.models.Node node       = nodes.get(i);
-                final Map<String, Object>                              parameters = new LinkedHashMap<>();
-                if (node.getProperties() != null) {
-                    for (final Map.Entry<String, Serializable> entry : node.getProperties().entrySet()) {
-                        if (entry.getKey() != null && entry.getValue() != null) {
-                            parameters.put(entry.getKey(), entry.getValue());
-                        }
-                    }
-                }
-                parameters.put("name", node.getUid());
-                parameters.put("shortName", node.getName());
-                final String cypherQuery = buildCreateNodeQuery(node, parameters);
-
-                processSave(cypherQuery);
-            }
-            log.info("creating nodes done");
+        if (nodes == null) {
+            return;
         }
+        final int size = nodes.size();
+        log.info("{} nodes to create", size);
+        String previous = null;
+        for (int i = 0; i < size; i++) {
+            previous = writeProgression(i, size, previous);
+            final io.inugami.maven.plugin.analysis.api.models.Node node       = nodes.get(i);
+            final Map<String, Object>                              parameters = extractProperties(node);
+
+            parameters.put("name", node.getUid());
+            parameters.put("shortName", node.getName());
+            final String cypherQuery = buildCreateNodeQuery(node, parameters);
+
+            processSave(cypherQuery);
+        }
+        log.info("creating nodes done");
+    }
+
+    private static Map<String, Object> extractProperties(final io.inugami.maven.plugin.analysis.api.models.Node node) {
+        final Map<String, Object> parameters = new LinkedHashMap<>();
+        if (node.getProperties() != null) {
+            for (final Map.Entry<String, Serializable> entry : node.getProperties().entrySet()) {
+                if (entry.getKey() != null && entry.getValue() != null) {
+                    parameters.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return parameters;
     }
 
     @Override
@@ -235,7 +243,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
             });
         } catch (final Exception error) {
             log.error(error.getMessage(), error);
-            log.error("enable to execute query : \n{}", cypherQuery);
+            log.error(ERR_MESSAGE, cypherQuery);
         }
     }
 
@@ -272,7 +280,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
             });
         } catch (final Exception error) {
             log.error(error.getMessage(), error);
-            log.error("enable to execute query : \n{}", query);
+            log.error(ERR_MESSAGE, query);
         }
         return result;
     }
@@ -303,7 +311,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
             });
         } catch (final Exception error) {
             log.error(error.getMessage(), error);
-            log.error("enable to execute query : \n{}", query);
+            log.error(ERR_MESSAGE, query);
         }
         return record;
     }
@@ -413,7 +421,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
 
 
     private String writeProgression(final int cursor, final int size, final String previous) {
-        final int percent = (int) ((Double.valueOf(cursor + 1) / size) * 100);
+        final int percent = (int) (((Double.valueOf(cursor) + 1) / size) * 100);
 
         final String current = new StringBuilder().append(percent).append("%").toString();
         if (!current.equals(previous)) {

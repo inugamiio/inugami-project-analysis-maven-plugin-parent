@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
-import static io.inugami.maven.plugin.analysis.api.constant.ConstantUtils.*;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.ifPropertyNotNull;
 
 @Slf4j
@@ -251,9 +251,9 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         result.put(TYPE_VALUE, type);
         result.put(ID, service.id());
 
-        ifPropertyNotNull(SHORT_NAME, service, (value) -> result.put(SHORT_NAME, String.valueOf(value)));
-        ifPropertyNotNull(PAYLOAD, service, (value) -> result.put(PAYLOAD, String.valueOf(value)));
-        ifPropertyNotNull(RESPONSE_PAYLOAD, service, (value) -> result.put(RESPONSE_PAYLOAD, String.valueOf(value)));
+        ifPropertyNotNull(SHORT_NAME, service, value -> result.put(SHORT_NAME, String.valueOf(value)));
+        ifPropertyNotNull(PAYLOAD, service, value -> result.put(PAYLOAD, String.valueOf(value)));
+        ifPropertyNotNull(RESPONSE_PAYLOAD, service, value -> result.put(RESPONSE_PAYLOAD, String.valueOf(value)));
 
         return result;
     }
@@ -262,8 +262,8 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final Map<String, Serializable> result = new LinkedHashMap<>();
         result.put(TYPE_VALUE, type);
         result.put(ID, service.id());
-        ifPropertyNotNull(SHORT_NAME, service, (value) -> result.put(SHORT_NAME, String.valueOf(value)));
-        ifPropertyNotNull(EVENT, service, (value) -> result.put(PAYLOAD, String.valueOf(value)));
+        ifPropertyNotNull(SHORT_NAME, service, value -> result.put(SHORT_NAME, String.valueOf(value)));
+        ifPropertyNotNull(EVENT, service, value -> result.put(PAYLOAD, String.valueOf(value)));
         return result;
     }
 
@@ -271,8 +271,8 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final Map<String, Serializable> result = new LinkedHashMap<>();
         result.put(TYPE_VALUE, type);
         result.put(ID, service.id());
-        ifPropertyNotNull(SHORT_NAME, service, (value) -> result.put(SHORT_NAME, String.valueOf(value)));
-        ifPropertyNotNull(PAYLOAD, service, (value) -> result.put(PAYLOAD, String.valueOf(value)));
+        ifPropertyNotNull(SHORT_NAME, service, value -> result.put(SHORT_NAME, String.valueOf(value)));
+        ifPropertyNotNull(PAYLOAD, service, value -> result.put(PAYLOAD, String.valueOf(value)));
         return result;
     }
 
@@ -280,7 +280,7 @@ public class VersionEnv implements ProjectInformation, QueryConfigurator {
         final Map<String, Serializable> result = new LinkedHashMap<>();
         result.put(TYPE_VALUE, type);
         result.put(ID, service.id());
-        ifPropertyNotNull(SHORT_NAME, service, (value) -> result.put(SHORT_NAME, String.valueOf(value)));
+        ifPropertyNotNull(SHORT_NAME, service, value -> result.put(SHORT_NAME, String.valueOf(value)));
         return result;
     }
 

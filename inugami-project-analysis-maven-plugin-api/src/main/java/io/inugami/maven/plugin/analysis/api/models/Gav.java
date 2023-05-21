@@ -1,19 +1,18 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
 import io.inugami.api.models.data.basic.JsonObject;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+
 @Setter
 @Getter
+@NoArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class Gav implements JsonObject, Comparable<Gav> {
 
 
@@ -21,16 +20,17 @@ public class Gav implements JsonObject, Comparable<Gav> {
     // ATTRIBUTES
     // =========================================================================
     private static final long   serialVersionUID = -1609343378801778104L;
-    private final        String groupId;
-    private final        String artifactId;
-    private final        String version;
+    private              String groupId;
+    private              String artifactId;
+    private              String version;
 
+    @ToString.Include
     @EqualsAndHashCode.Include
-    private final String   hash;
-    private final String   type;
-    private final String   scope;
-    private final Set<Gav> dependencies;
-    private       Gav      parent;
+    private String   hash;
+    private String   type;
+    private String   scope;
+    private Set<Gav> dependencies;
+    private Gav      parent;
 
 
     // =========================================================================
@@ -69,13 +69,6 @@ public class Gav implements JsonObject, Comparable<Gav> {
         return this;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Gav{");
-        sb.append(hash).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 
     public void addDependencies(final List<Gav> values) {
         if (values != null) {

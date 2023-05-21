@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static io.inugami.maven.plugin.analysis.api.constant.ConstantUtils.*;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 
 @Slf4j
 public class Unpublish implements ProjectInformation {

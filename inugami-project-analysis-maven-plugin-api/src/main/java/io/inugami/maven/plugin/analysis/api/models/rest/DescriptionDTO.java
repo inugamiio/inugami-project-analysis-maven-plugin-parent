@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.api.utils.reflection;
+package io.inugami.maven.plugin.analysis.api.models.rest;
 
 import lombok.*;
 
@@ -25,12 +25,14 @@ import java.util.List;
 @Builder(toBuilder = true)
 @ToString
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class DescriptionDTO implements Serializable {
     private static final long                    serialVersionUID = -8260338174990313946L;
     @EqualsAndHashCode.Include
-    private final        String                  content;
-    private final        String                  example;
-    private final        String                  url;
-    private final        List<PotentialErrorDTO> potentialErrors;
+    private              String                  content;
+    private              String                  example;
+    private              String                  url;
+    private              List<PotentialErrorDTO> potentialErrors;
 }

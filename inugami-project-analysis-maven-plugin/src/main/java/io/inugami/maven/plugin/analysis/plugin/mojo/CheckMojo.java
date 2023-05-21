@@ -24,11 +24,11 @@ import io.inugami.api.tools.ConsoleColors;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.*;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
@@ -255,8 +255,8 @@ public class CheckMojo extends AbstractMojo {
         if (project.getIssueManagement() != null) {
             assertNotEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
             assertNotEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
-            configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
-            configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
+            configuration.put(IssueTrackerProvider.SYSTEM, project.getIssueManagement().getSystem());
+            configuration.put(IssueTrackerProvider.URL, project.getIssueManagement().getUrl());
         }
         if (secDispatcher instanceof DefaultSecDispatcher) {
             final String securityPath = configuration.getOrDefault("settings.security",

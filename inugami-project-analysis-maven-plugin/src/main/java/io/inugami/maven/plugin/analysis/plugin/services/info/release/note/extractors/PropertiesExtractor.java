@@ -24,7 +24,6 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Di
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.PropertyDTO;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
@@ -34,6 +33,7 @@ import org.neo4j.driver.types.Node;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
 
@@ -88,7 +88,7 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
                 final Node propertyNode = property.asNode();
                 result.add(PropertyDTO.builder()
                                       .artifact(buildArtifact(extractNode(ARTIFACT, record)))
-                                      .name(retrieve(Constants.NAME, propertyNode))
+                                      .name(retrieve(NAME, propertyNode))
                                       .defaultValue(retrieve(DEFAULT_VALUE, propertyNode))
                                       .propertyType(retrieve(PROPERTY_TYPE, propertyNode))
                                       .constraintType(retrieve(CONSTRAINT_TYPE, propertyNode))
@@ -108,8 +108,7 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
         if (value != null && !value.isNull()) {
             try {
                 result = value.asBoolean(false);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
             }
 
         }
@@ -120,9 +119,9 @@ public class PropertiesExtractor implements ReleaseNoteExtractor {
         String result = null;
         if (artifact != null && !artifact.isNull()) {
             final Node node = artifact.asNode();
-            result = String.join(Constants.EMPTY,
-                                 retrieve(Constants.GROUP_ID, node),
-                                 retrieve(Constants.ARTIFACT_ID, node));
+            result = String.join(SPACE,
+                                 retrieve(GROUP_ID, node),
+                                 retrieve(ARTIFACT_ID, node));
         }
 
         return result;

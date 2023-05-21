@@ -17,13 +17,14 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.tools.StringComparator;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
+
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortProperties;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
@@ -43,7 +44,7 @@ public class Node implements JsonObject, Comparable<Node> {
 
     @Override
     public int compareTo(final Node other) {
-        return buildHash().compareTo(other.buildHash());
+        return StringComparator.compareTo(buildHash(), other == null ? null : other.buildHash());
     }
 
     private String buildHash() {
@@ -61,15 +62,26 @@ public class Node implements JsonObject, Comparable<Node> {
     public static class NodeBuilder {
         private LinkedHashMap<String, Serializable> properties;
 
-        public NodeBuilder properties(final LinkedHashMap<String, Serializable> properties) {
-            if (properties != null) {
+        public NodeBuilder addProperty(final String key, final Serializable value) {
+            if (this.properties == null) {
                 this.properties = new LinkedHashMap<>();
-                final List<String> keys = new ArrayList<>(properties.keySet());
-                Collections.sort(keys);
-                for (final String key : keys) {
-                    this.properties.put(key, properties.get(key));
-                }
             }
+            if (key != null && value != null) {
+                this.properties.put(key, value);
+            }
+            this.properties = sortProperties(properties);
+            return this;
+        }
+
+
+        public NodeBuilder properties(final Map<String, Serializable> properties) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (properties != null) {
+                this.properties.putAll(properties);
+            }
+            sortProperties(this.properties);
             return this;
         }
     }

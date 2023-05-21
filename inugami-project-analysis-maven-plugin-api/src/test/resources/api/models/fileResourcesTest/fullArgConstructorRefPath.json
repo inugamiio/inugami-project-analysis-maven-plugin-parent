@@ -1,0 +1,8 @@
+{
+  "properties" : {
+    "name" : "joe"
+  },
+  "target" : "target",
+  "template" : "basic template",
+  "templatePath" : "/path/for/template.txt"
+}

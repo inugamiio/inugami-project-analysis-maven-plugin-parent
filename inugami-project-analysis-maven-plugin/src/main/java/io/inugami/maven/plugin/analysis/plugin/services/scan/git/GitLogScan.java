@@ -25,7 +25,7 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.api.utils.NodeUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.AllArgsConstructor;
@@ -383,30 +383,19 @@ public class GitLogScan implements ProjectScanner {
 
 
     private IssueResult buildIssues(final List<GitLog> gitLogs, final Node versionNode, final ScanConext context) {
-        final List<IssueTackerProvider> providers = SpiLoader.getInstance()
-                                                             .loadSpiServicesByPriority(IssueTackerProvider.class);
+        final List<IssueTrackerProvider> providers = SpiLoader.getInstance()
+                                                              .loadSpiServicesByPriority(IssueTrackerProvider.class);
 
-        final List<IssueTackerProvider> providersEnabled = providers.stream()
-                                                                    .filter(provider -> provider.enable(context))
-                                                                    .collect(Collectors.toList());
+        final List<IssueTrackerProvider> providersEnabled = providers.stream()
+                                                                     .filter(provider -> provider.enable(context))
+                                                                     .collect(Collectors.toList());
 
-        final Map<IssueTackerProvider, Set<String>> issues    = new LinkedHashMap<>();
-        final Map<GitLog, Set<String>>              gitIssues = new LinkedHashMap<>();
+        final Map<IssueTrackerProvider, Set<String>> issues    = new LinkedHashMap<>();
+        final Map<GitLog, Set<String>>               gitIssues = new LinkedHashMap<>();
 
         for (final GitLog gitLog : gitLogs) {
-            for (final IssueTackerProvider provider : providersEnabled) {
-                if (provider.enable(context)) {
-                    final Set<String> extractedTicketsNumber = provider.extractTicketNumber(gitLog.getMessage());
-                    if (extractedTicketsNumber != null && !extractedTicketsNumber.isEmpty()) {
-                        Set<String> providerIssues = issues.get(provider);
-                        if (providerIssues == null) {
-                            providerIssues = new LinkedHashSet<>();
-                            issues.put(provider, providerIssues);
-                        }
-                        providerIssues.addAll(extractedTicketsNumber);
-                        gitIssues.put(gitLog, extractedTicketsNumber);
-                    }
-                }
+            for (final IssueTrackerProvider provider : providersEnabled) {
+                buildIssuesOnIssueTracker(context, issues, gitIssues, gitLog, provider);
             }
         }
 
@@ -416,13 +405,28 @@ public class GitLogScan implements ProjectScanner {
                           .build();
     }
 
+    private static void buildIssuesOnIssueTracker(final ScanConext context, final Map<IssueTrackerProvider, Set<String>> issues, final Map<GitLog, Set<String>> gitIssues, final GitLog gitLog, final IssueTrackerProvider provider) {
+        if (provider.enable(context)) {
+            final Set<String> extractedTicketsNumber = provider.extractTicketNumber(gitLog.getMessage());
+            if (extractedTicketsNumber != null && !extractedTicketsNumber.isEmpty()) {
+                Set<String> providerIssues = issues.get(provider);
+                if (providerIssues == null) {
+                    providerIssues = new LinkedHashSet<>();
+                    issues.put(provider, providerIssues);
+                }
+                providerIssues.addAll(extractedTicketsNumber);
+                gitIssues.put(gitLog, extractedTicketsNumber);
+            }
+        }
+    }
+
 
     private synchronized ScanNeo4jResult getNeo4jResult(final Node versionNode, final ScanConext context,
-                                                        final Map<IssueTackerProvider, Set<String>> issues) {
+                                                        final Map<IssueTrackerProvider, Set<String>> issues) {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (!issues.isEmpty()) {
-            for (final Map.Entry<IssueTackerProvider, Set<String>> entry : issues.entrySet()) {
-                final IssueTackerProvider provider = entry.getKey();
+            for (final Map.Entry<IssueTrackerProvider, Set<String>> entry : issues.entrySet()) {
+                final IssueTrackerProvider provider = entry.getKey();
                 provider.postConstruct(context.getConfiguration());
                 try {
                     final ScanNeo4jResult providerResult = provider.buildNodes(entry.getValue(), versionNode.getUid());
@@ -431,7 +435,7 @@ public class GitLogScan implements ProjectScanner {
                     log.error(error.getMessage(), error);
                 }
             }
-            for (final IssueTackerProvider provider : issues.keySet()) {
+            for (final IssueTrackerProvider provider : issues.keySet()) {
                 try {
                     provider.shutdown();
                 } catch (final Exception error) {

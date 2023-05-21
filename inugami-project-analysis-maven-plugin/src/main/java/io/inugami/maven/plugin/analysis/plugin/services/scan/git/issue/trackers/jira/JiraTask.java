@@ -358,38 +358,43 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
         JsonNode result = CacheUtils.get(fullUrl);
 
         if (result == null) {
-            HttpConnectorResult      httpResult = null;
-            final HttpBasicConnector http       = httpConnectorBuilder.buildHttpConnector();
-            try {
-                log.info("calling {}", fullUrl);
-
-                httpResult = http.get(fullUrl, headers);
-            } catch (final Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                          httpResult == null ? 0 : httpResult.getDelais());
-                http.close();
-            }
-
-            if (httpResult == null || httpResult.getStatusCode() != 200) {
-                log.error("can't call : {}", fullUrl);
-            } else {
-                try {
-                    final ObjectMapper objectMapper = ObjectMapperBuilder.build();
-                    final String       content      = extractContent(httpResult);
-                    result = objectMapper.readTree(content);
-                } catch (final JsonProcessingException e) {
-                    log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
-                }
-            }
-            if (result != null) {
-                CacheUtils.put(fullUrl, result);
-            }
+            result = processInvokeHttp(fullUrl, headers, result);
         } else {
             log.info("loading jira information from cache");
         }
 
+        return result;
+    }
+
+    private JsonNode processInvokeHttp(final String fullUrl, final Map<String, String> headers, JsonNode result) {
+        HttpConnectorResult      httpResult = null;
+        final HttpBasicConnector http       = httpConnectorBuilder.buildHttpConnector();
+        try {
+            log.info("calling {}", fullUrl);
+
+            httpResult = http.get(fullUrl, headers);
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
+                      httpResult == null ? 0 : httpResult.getDelais());
+            http.close();
+        }
+
+        if (httpResult == null || httpResult.getStatusCode() != 200) {
+            log.error("can't call : {}", fullUrl);
+        } else {
+            try {
+                final ObjectMapper objectMapper = ObjectMapperBuilder.build();
+                final String       content      = extractContent(httpResult);
+                result = objectMapper.readTree(content);
+            } catch (final JsonProcessingException e) {
+                log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
+            }
+        }
+        if (result != null) {
+            CacheUtils.put(fullUrl, result);
+        }
         return result;
     }
 

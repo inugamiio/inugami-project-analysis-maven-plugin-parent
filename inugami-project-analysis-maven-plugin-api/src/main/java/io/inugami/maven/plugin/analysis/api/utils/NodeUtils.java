@@ -21,7 +21,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.*;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"java:S5361"})
@@ -31,6 +31,24 @@ public class NodeUtils {
     // =========================================================================
     // API
     // =========================================================================
+    public static <K extends Comparable<K>, V> LinkedHashMap<K, V> sortProperties(final Map<K, V> properties) {
+        final LinkedHashMap<K, V> result = new LinkedHashMap<>();
+        if (properties == null) {
+            return result;
+        }
+
+        final LinkedHashMap<K, V> buffer = new LinkedHashMap<>();
+        buffer.putAll(properties);
+
+
+        final List<K> keys = new ArrayList(buffer.keySet());
+        Collections.sort(keys);
+        for (final K key : keys) {
+            result.put(key, buffer.get(key));
+        }
+        return result;
+    }
+
 
     public static <T> void processIfNotNull(final T value, final Consumer<T> consumer) {
         if (value != null && consumer != null) {

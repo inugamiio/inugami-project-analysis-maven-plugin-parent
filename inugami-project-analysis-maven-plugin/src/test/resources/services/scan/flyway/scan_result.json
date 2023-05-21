@@ -11,8 +11,8 @@
   }, {
     "name" : "c14ace5a1a549b588877cdbf6b5346309ef76796263f8ceea89fd50435a92872e1d75ec1f8e957dd88b061aa9e2ca345c13314e47f765c552df7769942349e7a",
     "properties" : {
-      "content" : "create table issue{\n    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n    `title` varchar(255) NOT NULL,\n    PRIMARY KEY(`id`)\n}",
-      "dbType" : "MySql"
+      "dbType" : "MySql",
+      "content" : "create table issue{\n    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n    `title` varchar(255) NOT NULL,\n    PRIMARY KEY(`id`)\n}"
     },
     "type" : "FlywayContent",
     "uid" : "c14ace5a1a549b588877cdbf6b5346309ef76796263f8ceea89fd50435a92872e1d75ec1f8e957dd88b061aa9e2ca345c13314e47f765c552df7769942349e7a"
@@ -26,8 +26,8 @@
   }, {
     "name" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56",
     "properties" : {
-      "content" : "alter table issue\n    add column description varchar(255) null;",
-      "dbType" : "MySql"
+      "dbType" : "MySql",
+      "content" : "alter table issue\n    add column description varchar(255) null;"
     },
     "type" : "FlywayContent",
     "uid" : "f023882724599b67c4cf54e878dac3519f4dd35fcefe7fa00602bd015b9f16ddd6e79bc52482fd1495cace0245c82007cea6fdfe49c2c9ca5e84f92677d97e56"

@@ -6,7 +6,7 @@ import io.inugami.api.tools.ConsoleColors;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
-import io.inugami.maven.plugin.analysis.api.constant.ConstantUtils;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
@@ -23,7 +23,7 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.Function;
 
-import static io.inugami.maven.plugin.analysis.api.constant.ConstantUtils.*;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
 
 @Slf4j
@@ -50,9 +50,9 @@ public class Properties implements ProjectInformation, QueryConfigurator {
                                                    final ConfigHandler<String, String> configuration) {
         final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
         config.putAll(Map.ofEntries(
-                Map.entry(ConstantUtils.GROUP_ID, gav.getGroupId()),
-                Map.entry(ConstantUtils.ARTIFACT_ID, gav.getArtifactId()),
-                Map.entry(ConstantUtils.VERSION, gav.getVersion())
+                Map.entry(Constants.GROUP_ID, gav.getGroupId()),
+                Map.entry(Constants.ARTIFACT_ID, gav.getArtifactId()),
+                Map.entry(Constants.VERSION, gav.getVersion())
         ));
         return config;
     }
@@ -97,8 +97,8 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
         for (final Record record : resultSet) {
             final Map<String, Object> data     = record.asMap();
-            final Node                artifact = (Node) data.get(ConstantUtils.ARTIFACT);
-            final Node                property = (Node) data.get(ConstantUtils.PROPERTY);
+            final Node                artifact = (Node) data.get(Constants.ARTIFACT);
+            final Node                property = (Node) data.get(Constants.PROPERTY);
 
             mapResultSet(properties, artifact, property);
         }

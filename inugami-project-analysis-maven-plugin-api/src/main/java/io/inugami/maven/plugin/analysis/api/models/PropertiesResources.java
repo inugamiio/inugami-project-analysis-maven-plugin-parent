@@ -18,19 +18,54 @@ package io.inugami.maven.plugin.analysis.api.models;
 
 import lombok.*;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortProperties;
+
+@Builder(toBuilder = true)
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class PropertiesResources {
-    private String              type;
-    private String              encoding;
-    private String              propertiesPath;
-    private String              propertiesUrl;
-    private String              propertiesUrlAuthorization;
-    private Map<String, String> properties;
+
+    @EqualsAndHashCode.Include
+    private String type;
+
+    private String                        encoding;
+    @EqualsAndHashCode.Include
+    private String                        propertiesPath;
+    private String                        propertiesUrl;
+    @ToString.Exclude
+    private String                        propertiesUrlAuthorization;
+    @ToString.Exclude
+    private LinkedHashMap<String, String> properties;
+
+    public static class PropertiesResourcesBuilder {
+
+        PropertiesResourcesBuilder properties(final Map<String, String> properties) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (properties != null) {
+                this.properties.putAll(properties);
+            }
+            this.properties = sortProperties(this.properties);
+            return this;
+        }
+
+        PropertiesResourcesBuilder addProperty(final String key, final String value) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (key != null && value != null) {
+                this.properties.put(key, value);
+            }
+            this.properties = sortProperties(this.properties);
+            return this;
+        }
+    }
 }

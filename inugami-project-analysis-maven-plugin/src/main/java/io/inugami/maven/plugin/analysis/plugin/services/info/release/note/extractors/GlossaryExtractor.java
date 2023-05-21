@@ -34,8 +34,8 @@ import org.neo4j.driver.internal.value.NodeValue;
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_GLOSSARY;
 
 public class GlossaryExtractor implements ReleaseNoteExtractor {

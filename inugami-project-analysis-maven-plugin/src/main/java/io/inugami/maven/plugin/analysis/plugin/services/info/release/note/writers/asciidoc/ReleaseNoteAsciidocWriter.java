@@ -21,6 +21,7 @@ import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.files.FilesUtils;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteWriter;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
@@ -28,7 +29,6 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Is
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S899"})
 @Slf4j
 public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
@@ -131,25 +132,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         for (final AsciidocInfoWriter writerInfo : infoWriters) {
             if (writerInfo.isEnabled(context.getConfiguration())) {
-                log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
-                final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
-                if (content != null) {
-                    if (content.size() == 1) {
-                        write(content.get(new ArrayList<>(content.keySet()).get(0)),
-                              writer,
-                              writerInfo.getParagraphName(),
-                              version,
-                              baseDocFolder);
-                    } else {
-                        for (final Map.Entry<String, String> entry : content.entrySet()) {
-                            write(entry.getValue(),
-                                  writer,
-                                  String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
-                                  version,
-                                  baseDocFolder);
-                        }
-                    }
-                }
+                renderOnWriterInfo(releaseNote, baseDocFolder, context, version, notSplitFile, writer, writerInfo);
             } else {
                 log.info("asciidoc writer disabled : {}", writerInfo.getClass().getName());
             }
@@ -157,6 +140,28 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         if (writer != null) {
             writer.close();
+        }
+    }
+
+    protected void renderOnWriterInfo(final ReleaseNoteResult releaseNote, final File baseDocFolder, final InfoContext context, final String version, final boolean notSplitFile, final Writer writer, final AsciidocInfoWriter writerInfo) throws IOException {
+        log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
+        final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
+        if (content != null) {
+            if (content.size() == 1) {
+                write(content.get(new ArrayList<>(content.keySet()).get(0)),
+                      writer,
+                      writerInfo.getParagraphName(),
+                      version,
+                      baseDocFolder);
+            } else {
+                for (final Map.Entry<String, String> entry : content.entrySet()) {
+                    write(entry.getValue(),
+                          writer,
+                          String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
+                          version,
+                          baseDocFolder);
+                }
+            }
         }
     }
 

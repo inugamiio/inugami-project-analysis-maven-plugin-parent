@@ -1,0 +1,9 @@
+{
+  "from" : "nodeA",
+  "properties" : {
+    "color" : "red",
+    "date" : "2023-05-21"
+  },
+  "to" : "nodeB",
+  "type" : "has_relationship"
+}

@@ -34,9 +34,9 @@ import org.neo4j.driver.internal.value.NodeValue;
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getNodeName;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_FLYWAY;
 
 public class FlywayExtractor implements ReleaseNoteExtractor {
@@ -109,7 +109,7 @@ public class FlywayExtractor implements ReleaseNoteExtractor {
             if (dto == null) {
                 continue;
             }
-            
+
             final int index = result.indexOf(dto);
             if (index == -1) {
                 dto.addProjectUsing(artifact).addProjectUsing(dependency);

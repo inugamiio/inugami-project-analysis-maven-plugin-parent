@@ -41,7 +41,7 @@ import static io.inugami.api.exceptions.Asserts.assertTrue;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_EXISTS;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_READABLE;
 
-@SuppressWarnings({"java:S2095"})
+@SuppressWarnings({"java:S2095", "java:S899"})
 @Slf4j
 public class BasicBuildService {
 

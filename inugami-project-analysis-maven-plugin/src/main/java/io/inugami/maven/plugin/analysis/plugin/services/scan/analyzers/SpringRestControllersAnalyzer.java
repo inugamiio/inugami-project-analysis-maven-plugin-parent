@@ -25,12 +25,12 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.models.rest.DescriptionDTO;
+import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer;
 import io.swagger.annotations.Api;
@@ -47,12 +47,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
-@SuppressWarnings({"java:S1845", "java:S5361"})
+@SuppressWarnings({"java:S1845", "java:S5361", "java:S115"})
 @Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
@@ -123,67 +123,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
             for (final RestEndpoint endpoint : restApi.getEndpoints()) {
-
-                final Node endpointNode = convertEndpointToNeo4j(endpoint);
-                if (endpointNode != null) {
-                    if (existingNode(endpointNode, context.getNeo4jDao())) {
-                        existingNodes.add(endpointNode.getUid());
-                    } else {
-                        result.addNode(endpointNode);
-                    }
-
-                    if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail().getPotentialErrors() != null) {
-                        for (final PotentialErrorDTO potentialError : endpoint.getDescriptionDetail().getPotentialErrors()) {
-                            final Node potentialErrorNode = buildPotentialErrorNode(potentialError);
-                            final Node errorCode          = ErrorCodeAnalyzer.buildErrorCodeNode(potentialError.getErrorCode());
-                            potentialErrors.add(potentialErrorNode);
-                            potentialErrors.add(errorCode);
-
-                            result.addRelationship(Relationship.builder()
-                                                               .from(endpointNode.getUid())
-                                                               .to(potentialErrorNode.getUid())
-                                                               .type(HAS_ERROR_POTENTIAL)
-                                                               .build());
-                            result.addRelationship(Relationship.builder()
-                                                               .from(potentialErrorNode.getUid())
-                                                               .to(endpointNode.getUid())
-                                                               .type(HAS_ENDPOINT)
-                                                               .build());
-
-                            result.addRelationship(Relationship.builder()
-                                                               .from(potentialErrorNode.getUid())
-                                                               .to(errorCode.getUid())
-                                                               .type(HAS_ERROR)
-                                                               .build());
-                            result.addRelationship(Relationship.builder()
-                                                               .from(errorCode.getUid())
-                                                               .to(potentialErrorNode.getUid())
-                                                               .type(HAS_POTENTIAL_ERROR)
-                                                               .build());
-                        }
-                    }
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(endpointNode.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                    final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(endpointNode.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                }
-
-
+                analyzeOnEndpoint(context, existingNodes, potentialErrors, result, endpoint);
             }
         }
 
@@ -191,19 +131,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         if (!result.getNodes().isEmpty()) {
             final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(REST).name(REST).build();
             for (final Node service : result.getNodes()) {
-                if (service.getType().equals(SERVICE)) {
-                    result.addRelationship(Relationship.builder()
-                                                       .from(versionNode.getUid())
-                                                       .to(service.getUid())
-                                                       .type(getRelationshipType())
-                                                       .build(),
-
-                                           Relationship.builder()
-                                                       .from(service.getUid())
-                                                       .to(serviceType.getUid())
-                                                       .type(SERVICE_TYPE_RELATIONSHIP)
-                                                       .build());
-                }
+                createServiceRelationship(result, versionNode, serviceType, service);
             }
 
             result.addNode(versionNode, serviceType);
@@ -219,6 +147,83 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         }
         result.addNode(potentialErrors);
         return List.of(result);
+    }
+
+    protected void createServiceRelationship(final ScanNeo4jResult result, final Node versionNode, final Node serviceType, final Node service) {
+        if (service.getType().equals(SERVICE)) {
+            result.addRelationship(Relationship.builder()
+                                               .from(versionNode.getUid())
+                                               .to(service.getUid())
+                                               .type(getRelationshipType())
+                                               .build(),
+
+                                   Relationship.builder()
+                                               .from(service.getUid())
+                                               .to(serviceType.getUid())
+                                               .type(SERVICE_TYPE_RELATIONSHIP)
+                                               .build());
+        }
+    }
+
+    protected void analyzeOnEndpoint(final ScanConext context, final List<String> existingNodes, final List<Node> potentialErrors, final ScanNeo4jResult result, final RestEndpoint endpoint) {
+        final Node endpointNode = convertEndpointToNeo4j(endpoint);
+        if (endpointNode != null) {
+            if (existingNode(endpointNode, context.getNeo4jDao())) {
+                existingNodes.add(endpointNode.getUid());
+            } else {
+                result.addNode(endpointNode);
+            }
+
+            if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail().getPotentialErrors() != null) {
+                for (final PotentialErrorDTO potentialError : endpoint.getDescriptionDetail().getPotentialErrors()) {
+                    final Node potentialErrorNode = buildPotentialErrorNode(potentialError);
+                    final Node errorCode          = ErrorCodeAnalyzer.buildErrorCodeNode(potentialError.getErrorCode());
+                    potentialErrors.add(potentialErrorNode);
+                    potentialErrors.add(errorCode);
+
+                    result.addRelationship(Relationship.builder()
+                                                       .from(endpointNode.getUid())
+                                                       .to(potentialErrorNode.getUid())
+                                                       .type(HAS_ERROR_POTENTIAL)
+                                                       .build());
+                    result.addRelationship(Relationship.builder()
+                                                       .from(potentialErrorNode.getUid())
+                                                       .to(endpointNode.getUid())
+                                                       .type(HAS_ENDPOINT)
+                                                       .build());
+
+                    result.addRelationship(Relationship.builder()
+                                                       .from(potentialErrorNode.getUid())
+                                                       .to(errorCode.getUid())
+                                                       .type(HAS_ERROR)
+                                                       .build());
+                    result.addRelationship(Relationship.builder()
+                                                       .from(errorCode.getUid())
+                                                       .to(potentialErrorNode.getUid())
+                                                       .type(HAS_POTENTIAL_ERROR)
+                                                       .build());
+                }
+            }
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(endpointNode.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+            final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(endpointNode.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+        }
     }
 
     private Node buildPotentialErrorNode(final PotentialErrorDTO potentialError) {

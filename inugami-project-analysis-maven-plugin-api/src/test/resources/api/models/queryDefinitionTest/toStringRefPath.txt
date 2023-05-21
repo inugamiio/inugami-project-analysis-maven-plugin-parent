@@ -1,0 +1,1 @@
+QueryDefinition(name=search_release_note_simple, type=cql, path=META-INF/queries/search_release_note_simple.cql)

@@ -40,7 +40,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_FULL_CQL;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 

@@ -220,30 +220,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
         for (final Method method : methods) {
-            if (TO_MAP.equalsIgnoreCase(method.getName())) {
-                continue;
-            }
-            final String key   = method.getName();
-            Serializable value = null;
-
-            if (method.getParameters().length == 0 && !errorCodeClass.isAssignableFrom(method.getReturnType())) {
-                try {
-                    final Object rawValue = method.invoke(instance);
-                    if (rawValue instanceof Serializable) {
-                        value = (Serializable) rawValue;
-                    }
-                } catch (final Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.error("instance : {} on retrieve value from method : {}", instance.getClass(),
-                                  method.getName());
-                        log.error(e.getMessage(), e);
-                    }
-                }
-            }
-
-            if (key != null && value != null) {
-                properties.put(cleanAccessor(key), value);
-            }
+            buildNodeOnMethod(instance, properties, method);
         }
 
         final String uid = properties.get(errorCodeFieldName) == null ? instance.toString() : String
@@ -254,6 +231,33 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         node.properties(properties);
         return node.build();
+    }
+
+    private void buildNodeOnMethod(final Object instance, final LinkedHashMap<String, Serializable> properties, final Method method) {
+        if (TO_MAP.equalsIgnoreCase(method.getName())) {
+            return;
+        }
+        final String key   = method.getName();
+        Serializable value = null;
+
+        if (method.getParameters().length == 0 && !errorCodeClass.isAssignableFrom(method.getReturnType())) {
+            try {
+                final Object rawValue = method.invoke(instance);
+                if (rawValue instanceof Serializable) {
+                    value = (Serializable) rawValue;
+                }
+            } catch (final Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.error("instance : {} on retrieve value from method : {}", instance.getClass(),
+                              method.getName());
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
+
+        if (key != null && value != null) {
+            properties.put(cleanAccessor(key), value);
+        }
     }
 
 

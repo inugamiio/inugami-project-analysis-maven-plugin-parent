@@ -1,0 +1,17 @@
+{
+  "artifactId" : "some-artifact",
+  "dependencies" : [ {
+    "artifactId" : "other-artifact",
+    "dependencies" : [ ],
+    "groupId" : "io.inugami",
+    "hash" : "io.inugami:other-artifact:1.0.0:jar",
+    "scope" : "compile",
+    "type" : "jar",
+    "version" : "1.0.0"
+  } ],
+  "groupId" : "io.inugami",
+  "hash" : "io.inugami:some-artifact:1.0.0:jar",
+  "scope" : "compile",
+  "type" : "jar",
+  "version" : "1.0.0"
+}

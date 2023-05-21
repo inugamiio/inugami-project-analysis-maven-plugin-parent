@@ -1,0 +1,16 @@
+{
+  "excludes" : [ {
+    "exclude" : "some value"
+  } ],
+  "filtering" : true,
+  "gav" : "io.inugami:some-artifact",
+  "includes" : [ {
+    "include" : "value"
+  } ],
+  "path" : "/some/path",
+  "properties" : {
+    "color" : "red",
+    "date" : "2023-05-21"
+  },
+  "target" : "target"
+}

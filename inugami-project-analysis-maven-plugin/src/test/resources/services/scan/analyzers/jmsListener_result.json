@@ -57,8 +57,8 @@
   }, {
     "name" : "create.user.queue",
     "properties" : {
-      "containerFactory" : "myContainerFactory",
       "destination" : "${my.activeMq.onUserCreated.queue}",
+      "containerFactory" : "myContainerFactory",
       "event" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\"\n}"
     },
     "type" : "Service",
@@ -76,8 +76,8 @@
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener",
       "method" : "onCreate",
-      "parameters" : "comment<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>",
-      "returnType" : "void"
+      "returnType" : "void",
+      "parameters" : "comment<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>"
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>)"
@@ -86,8 +86,8 @@
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener",
       "method" : "onUserCreate",
-      "parameters" : "user<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>",
-      "returnType" : "void"
+      "returnType" : "void",
+      "parameters" : "user<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>"
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onUserCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)"
@@ -96,22 +96,22 @@
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener",
       "method" : "sendCreateUser",
-      "parameters" : "someParameter<String>,user<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>",
-      "returnType" : "void"
+      "returnType" : "void",
+      "parameters" : "someParameter<String>,user<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>"
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)"
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
-      "artifactId" : "basic-artifact",
       "groupId" : "io.inugami.test",
+      "artifactId" : "basic-artifact",
+      "version" : "1.0.0-SNAPSHOT",
+      "packaging" : "jar",
       "major" : 1,
       "minor" : 0,
-      "packaging" : "jar",
       "patch" : 0,
-      "tag" : "SNAPSHOT",
-      "version" : "1.0.0-SNAPSHOT"
+      "tag" : "SNAPSHOT"
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
@@ -150,11 +150,11 @@
   }, {
     "name" : "onCreateComment",
     "properties" : {
-      "containerFactory" : "myContainerFactory",
       "destination" : "${my.activeMq.onCreated.queue}",
-      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}",
+      "containerFactory" : "myContainerFactory",
+      "subscription" : "${my.activeMq.subscription}",
       "selector" : "${my.activeMq.selector}",
-      "subscription" : "${my.activeMq.subscription}"
+      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}"
     },
     "type" : "Service",
     "uid" : "onCreateComment"

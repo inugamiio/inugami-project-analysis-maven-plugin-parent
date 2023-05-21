@@ -201,40 +201,40 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                                         final Map<String, Object> queryNodes) {
         final RestEndpoint endpoint = RestEndpointConvertor.build((Node) queryNodes.get("serviceConsume"));
 
-        if (endpoint != null) {
-            final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
-            final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
-
-            final DependencyRest savedDependencies = buffer.get(endpoint);
-
-            if (savedDependencies == null) {
-                buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
-                                                        appConsumer == null ? null : appConsumer.getName()));
-            } else {
-                savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
-                savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
-            }
+        if (endpoint == null) {
+            return;
         }
 
+        final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
+        final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+
+        final DependencyRest savedDependencies = buffer.get(endpoint);
+
+        if (savedDependencies == null) {
+            buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
+                                                    appConsumer == null ? null : appConsumer.getName()));
+        } else {
+            savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
+            savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
+        }
     }
 
     private void extractExposedEndpoint(final Map<RestEndpoint, DependencyRest> buffer,
                                         final Map<String, Object> queryNodes) {
         final RestEndpoint endpoint = RestEndpointConvertor.build((Node) queryNodes.get("service"));
-        if (endpoint != null) {
-            final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
-            final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+        if (endpoint == null) {
+            return;
+        }
+        final VersionNode    appProducer       = VersionConvertor.build((Node) queryNodes.get("depProducer"));
+        final VersionNode    appConsumer       = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+        final DependencyRest savedDependencies = buffer.get(endpoint);
 
-
-            final DependencyRest savedDependencies = buffer.get(endpoint);
-
-            if (savedDependencies == null) {
-                buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
-                                                        appConsumer == null ? null : appConsumer.getName()));
-            } else {
-                savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
-                savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
-            }
+        if (savedDependencies == null) {
+            buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
+                                                    appConsumer == null ? null : appConsumer.getName()));
+        } else {
+            savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
+            savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
         }
     }
 
@@ -329,6 +329,8 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                     break;
                 case "OPTION":
                     result = ConsoleColors.PURPLE_BOLD;
+                    break;
+                default:
                     break;
             }
         }
