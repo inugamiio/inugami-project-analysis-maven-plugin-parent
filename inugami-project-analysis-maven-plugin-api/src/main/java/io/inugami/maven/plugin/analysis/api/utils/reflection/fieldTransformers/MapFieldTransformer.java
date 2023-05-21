@@ -7,6 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+@SuppressWarnings({"java:S1854"})
 public class MapFieldTransformer implements FieldTransformer {
 
 
@@ -40,19 +41,16 @@ public class MapFieldTransformer implements FieldTransformer {
 
                 if (cursor.isPresentInParents(subType)) {
                     builder.type(ReflectionService.renderFieldTypeRecursive(subType));
-                }
-                else {
+                } else {
                     builder.mapValue(ReflectionService.renderStructureJson(subType, currentPath + ".{}",
                                                                            cursor.createNewContext(subType)));
                 }
 
-            }
-            else {
+            } else {
                 buildDefault(builder);
             }
 
-        }
-        else {
+        } else {
             buildDefault(builder);
         }
 

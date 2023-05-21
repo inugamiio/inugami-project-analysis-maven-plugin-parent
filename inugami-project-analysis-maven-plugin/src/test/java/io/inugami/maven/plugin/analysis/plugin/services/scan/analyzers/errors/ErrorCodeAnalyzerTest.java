@@ -52,7 +52,7 @@ class ErrorCodeAnalyzerTest {
     // TESTS
     // =========================================================================
     @Test
-    public void accept_withEnumOrClass_shouldAccept() {
+    void accept_withEnumOrClass_shouldAccept() {
         final ErrorCodeAnalyzer analyzer = new ErrorCodeAnalyzer();
         analyzer.initialize(context);
         assertThat(analyzer.accept(ErrorCodeAnalyzerTest.EnumErrors.class, context)).isTrue();
@@ -60,7 +60,7 @@ class ErrorCodeAnalyzerTest {
     }
 
     @Test
-    public void analyze_withEnum_shouldFoundErrors() {
+    void analyze_withEnum_shouldFoundErrors() {
         final ErrorCodeAnalyzer analyzer = new ErrorCodeAnalyzer();
         analyzer.initialize(context);
         final ScanNeo4jResult neo4jResult = extractResult(
@@ -70,7 +70,7 @@ class ErrorCodeAnalyzerTest {
     }
 
     @Test
-    public void analyze_withClass_shouldFoundErrors() {
+    void analyze_withClass_shouldFoundErrors() {
         final ErrorCodeAnalyzer analyzer = new ErrorCodeAnalyzer();
         analyzer.initialize(context);
         final ScanNeo4jResult neo4jResult = extractResult(

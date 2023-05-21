@@ -32,12 +32,16 @@ import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ERRORS_CQL;
 
+@SuppressWarnings({"java:S6213"})
 public class ErrorCodeExtractor implements ReleaseNoteExtractor {
     // =========================================================================
     // ATTRIBUTES
@@ -62,41 +66,6 @@ public class ErrorCodeExtractor implements ReleaseNoteExtractor {
         releaseNoteResult.addDifferential(ERROR_CODES, Differential.buildDifferential(currentErrorCodes, previousErrorCodes));
     }
 
-
-    private List<ErrorCodeDTO> resolveNewErrorCodes(final Set<ErrorCodeDTO> currentErrorCodes,
-                                                    final Set<ErrorCodeDTO> previousErrorCodes) {
-        final List<ErrorCodeDTO> result = new ArrayList<>();
-
-        for (final ErrorCodeDTO errorCode : currentErrorCodes) {
-            if (!previousErrorCodes.contains(errorCode)) {
-                result.add(errorCode);
-            }
-        }
-
-        return result;
-    }
-
-    private List<ErrorCodeDTO> resolveDeletedErrorCodes(final Set<ErrorCodeDTO> currentErrorCodes,
-                                                        final Set<ErrorCodeDTO> previousErrorCodes) {
-        final List<ErrorCodeDTO> result = new ArrayList<>();
-        for (final ErrorCodeDTO errorCode : previousErrorCodes) {
-            if (!currentErrorCodes.contains(errorCode)) {
-                result.add(errorCode);
-            }
-        }
-        return result;
-    }
-
-    private List<ErrorCodeDTO> resolveSameErrorCodes(final Set<ErrorCodeDTO> currentErrorCodes,
-                                                     final List<ErrorCodeDTO> newErrorCodes) {
-        final List<ErrorCodeDTO> result = new ArrayList<>();
-        for (final ErrorCodeDTO errorCode : currentErrorCodes) {
-            if (!newErrorCodes.contains(errorCode)) {
-                result.add(errorCode);
-            }
-        }
-        return result;
-    }
 
     private Set<JsonObject> searchErrorCode(final Gav gav, final ConfigHandler<String, String> configuration,
                                             final Neo4jDao dao) {

@@ -18,13 +18,13 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.specifics;
 
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.DataRow;
 import io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class SpecificsQuery implements ProjectInformation {
     // =========================================================================
@@ -59,8 +60,7 @@ public class SpecificsQuery implements ProjectInformation {
 
         if (templatePath == null) {
             log.info("no query define");
-        }
-        else {
+        } else {
             final Map<String, String> properties = new LinkedHashMap<>(context.getConfiguration());
             properties.put("artifactId", gav.getArtifactId());
             properties.put("groupId", gav.getGroupId());
@@ -73,9 +73,8 @@ public class SpecificsQuery implements ProjectInformation {
             String result = null;
             if (resultSet == null || resultSet.isEmpty()) {
                 result = "no result";
-            }
-            else {
-                result = renderResultSet(resultSet, skipRegex,context.getConfiguration());
+            } else {
+                result = renderResultSet(resultSet, skipRegex, context.getConfiguration());
             }
             log.info("\n{}", result);
         }
@@ -114,7 +113,7 @@ public class SpecificsQuery implements ProjectInformation {
     // =========================================================================
     // RENDERING
     // =========================================================================
-    private String renderResultSet(final List<Record> resultSet, final Pattern skipRegex,final ConfigHandler<String, String> configuration) {
+    private String renderResultSet(final List<Record> resultSet, final Pattern skipRegex, final ConfigHandler<String, String> configuration) {
         final Map<String, Collection<DataRow>> data          = new LinkedHashMap<>();
         final Collection<DataRow>              nodes         = new LinkedHashSet<>();
         final Collection<DataRow>              relationships = new LinkedHashSet<>();
@@ -126,8 +125,7 @@ public class SpecificsQuery implements ProjectInformation {
 
                     if (element instanceof Node) {
                         nodes.add(renderNodes((Node) element, skipRegex));
-                    }
-                    else if (element instanceof InternalRelationship) {
+                    } else if (element instanceof InternalRelationship) {
                         relationships.add(renderRelationships((InternalRelationship) element, skipRegex));
                     }
                 }
@@ -138,7 +136,7 @@ public class SpecificsQuery implements ProjectInformation {
 
         data.put("nodes", nodes);
         data.put("relationships", relationships);
-        return Neo4jRenderingUtils.rendering(data,configuration,"specificQuery");
+        return Neo4jRenderingUtils.rendering(data, configuration, "specificQuery");
     }
 
 
@@ -190,8 +188,7 @@ public class SpecificsQuery implements ProjectInformation {
 
                 if (entry.getValue() instanceof Serializable) {
                     result.put(entry.getKey(), (Serializable) entry.getValue());
-                }
-                else {
+                } else {
                     result.put(entry.getKey(), String.valueOf(entry.getValue()));
                 }
             }
@@ -203,8 +200,7 @@ public class SpecificsQuery implements ProjectInformation {
         boolean result = true;
         if (key == null) {
             result = false;
-        }
-        else if (skipRegex != null) {
+        } else if (skipRegex != null) {
             result = !skipRegex.matcher(key).matches();
         }
         return result;

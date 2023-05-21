@@ -24,14 +24,12 @@ public interface PropertiesConvertorSpi {
 
     Map<String, String> convert(final String content);
 
-    default boolean matchType(String type, List<String> acceptedTypes) {
+    default boolean matchType(final String type, final List<String> acceptedTypes) {
         if (type == null || acceptedTypes == null) {
             return false;
         }
 
         return acceptedTypes.stream()
-                            .filter(acceptedType -> acceptedType.equalsIgnoreCase(type))
-                            .findFirst()
-                            .isPresent();
+                            .anyMatch(acceptedType -> acceptedType.equalsIgnoreCase(type));
     }
 }

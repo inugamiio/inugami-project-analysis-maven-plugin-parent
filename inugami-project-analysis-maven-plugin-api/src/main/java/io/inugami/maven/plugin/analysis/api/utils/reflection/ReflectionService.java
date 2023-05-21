@@ -23,6 +23,7 @@ import io.inugami.api.tools.ReflectionUtils;
 import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.Node;
+import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -38,9 +39,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.INPUT_DTO;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.OUTPUT_DTO;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.INPUT_DTO;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.OUTPUT_DTO;
 
+@SuppressWarnings({"java:S1872", "java:S1452", "java:S1181", "java:S3011"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
@@ -149,14 +151,42 @@ public final class ReflectionService {
                                                                       final Class<? extends Annotation>... annotations) {
         boolean result = false;
         if (annotatedElement != null && annotations != null) {
+            final List<Class<? extends Annotation>> allAnnotations = extractAllAnnotations(annotatedElement);
             for (final Class<? extends Annotation> annotation : annotations) {
-                result = annotatedElement.getDeclaredAnnotation(annotation) != null;
+                result = listHashAnnotation(allAnnotations, annotation);
                 if (result) {
                     break;
                 }
             }
         }
         return result;
+    }
+
+    private static boolean listHashAnnotation(final List<Class<? extends Annotation>> values, final Class<? extends Annotation> annotation) {
+        if (values == null) {
+            return false;
+        }
+        for (final Class<? extends Annotation> valueClass : values) {
+            if (valueClass.getName().equalsIgnoreCase(annotation.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static <AE extends AnnotatedElement> List<Class<? extends Annotation>> extractAllAnnotations(final AE annotatedElement) {
+        final Set<Class<? extends Annotation>> result = new LinkedHashSet<>();
+        if (annotatedElement.getDeclaredAnnotations() != null) {
+            for (final Annotation annotation : annotatedElement.getDeclaredAnnotations()) {
+                result.add(annotation.annotationType());
+            }
+        }
+        if (annotatedElement.getAnnotations() != null) {
+            for (final Annotation annotation : annotatedElement.getAnnotations()) {
+                result.add(annotation.annotationType());
+            }
+        }
+        return new ArrayList<>(result);
     }
 
 
@@ -183,14 +213,34 @@ public final class ReflectionService {
     }
 
 
-    public static <T, A extends Annotation, AE extends AnnotatedElement> void processOnAnnotation(
+    public static <A extends Annotation, AE extends AnnotatedElement> void processOnAnnotation(
             final AE annotatedElement,
             final Class<A> annotationClass,
             final Consumer<A> handler) {
-        final A annotation = annotatedElement == null ? null : annotatedElement.getDeclaredAnnotation(annotationClass);
+        final A annotation = annotatedElement == null ? null : getAnnotation(annotatedElement, annotationClass);
         if (annotation != null && handler != null) {
             handler.accept(annotation);
         }
+    }
+
+    public static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement, final Class<A> annotationClass) {
+        final List<Annotation> allAnnotations = new ArrayList<>();
+
+        if (annotatedElement.getAnnotations() != null) {
+            allAnnotations.addAll(Arrays.asList(annotatedElement.getAnnotations()));
+        }
+
+        if (annotatedElement.getDeclaredAnnotations() != null) {
+            allAnnotations.addAll(Arrays.asList(annotatedElement.getDeclaredAnnotations()));
+        }
+
+        for (final Annotation annotation : allAnnotations) {
+            if (annotation.annotationType().getName().equals(annotationClass.getName())) {
+                return (A) Proxy.newProxyInstance(ReflectionService.getClassloader(), new Class[]{annotationClass}, new AnnotationProxyCallback(annotation));
+            }
+        }
+
+        return null;
     }
 
     public static JsonNode renderParameterType(final Parameter parameter) {
@@ -226,49 +276,63 @@ public final class ReflectionService {
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
         if (result == null) {
-            final Class<?> returnClass = type;
+            result = processRenderType(type, genericReturnType, strict, key, cursor, result);
 
-            final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
-            if (returnClass != null && !"void".equals(returnClass.getName())) {
+        }
 
-                String     path       = null;
-                final Type returnType = genericReturnType;
+        return result;
+    }
 
-                Class<?> currentClass = returnClass;
-                if (returnType != null) {
-                    currentClass = extractGenericType(returnType);
-                }
+    private static JsonNode processRenderType(final Class<?> type, final Type genericReturnType, final boolean strict, final String key, final ClassCursor cursor, JsonNode result) {
+        final Class<?> returnClass = type;
 
-                if (Collection.class.isAssignableFrom(returnClass)) {
-                    final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
-                    builder.list(true);
-                    path = "[]";
-                    builder.path("[]");
-                    JsonNode structure = null;
-                    if (currentClass != null) {
-                        structure = renderStructureJson(currentClass, path, cursorChildren, strict);
-                    }
+        final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
+        if (returnClass != null && !"void".equals(returnClass.getName())) {
 
-                    if (structure != null) {
-                        builder.children(List.of(structure));
-                    }
-                    result = builder.build();
-                } else if (isBasicType(currentClass)) {
-                    final JsonNode.JsonNodeBuilder node = JsonNode.builder()
-                                                                  .type(renderFieldType(currentClass))
-                                                                  .basicType(true);
-                    result = node.build();
-                } else {
-                    result = renderStructureJson(currentClass, null, cursorChildren, strict);
+            result = processRenderingGenericType(genericReturnType, strict, returnClass, cursorChildren);
+        }
 
-                }
-                Loggers.DEBUG.debug("json structure : {}\n{}", currentClass.getTypeName(), result.convertToJson());
+        if (result != null) {
+            CACHE.put(key, result);
+        }
+        return result;
+    }
+
+    private static JsonNode processRenderingGenericType(final Type genericReturnType, final boolean strict, final Class<?> returnClass, final ClassCursor cursorChildren) {
+        final JsonNode result;
+        String         path       = null;
+        final Type     returnType = genericReturnType;
+
+        Class<?> currentClass = returnClass;
+        if (returnType != null) {
+            currentClass = extractGenericType(returnType);
+        }
+
+        if (Collection.class.isAssignableFrom(returnClass)) {
+            final JsonNode.JsonNodeBuilder builder = JsonNode.builder();
+            builder.list(true);
+            path = "[]";
+            builder.path("[]");
+            JsonNode structure = null;
+            if (currentClass != null) {
+                structure = renderStructureJson(currentClass, path, cursorChildren, strict);
             }
 
-            if (result != null) {
-                CACHE.put(key, result);
+            if (structure != null) {
+                builder.children(List.of(structure));
             }
+            result = builder.build();
+        } else if (isBasicType(currentClass)) {
+            final JsonNode.JsonNodeBuilder node = JsonNode.builder()
+                                                          .type(renderFieldType(currentClass))
+                                                          .basicType(true);
+            result = node.build();
+        } else {
+            result = renderStructureJson(currentClass, null, cursorChildren, strict);
 
+        }
+        if (Loggers.DEBUG.isDebugEnabled()) {
+            Loggers.DEBUG.debug("json structure : {}\n{}", currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
         }
 
         return result;
@@ -344,15 +408,16 @@ public final class ReflectionService {
 
 
         for (final FieldTransformer transformer : FIELD_TRANSFORMERS) {
-            if (transformer.accept(field, fieldClass, genericType, currentPath)) {
-                try {
-                } catch (final Exception error) {
-                    log.error(error.getMessage(), error);
-                }
+            if (!transformer.accept(field, fieldClass, genericType, currentPath)) {
+                continue;
+            }
+            try {
                 transformer.transform(field, fieldClass, genericType, result, currentPath, cursor);
                 if (transformer.stop(field, fieldClass, genericType, currentPath)) {
                     break;
                 }
+            } catch (final Exception error) {
+                log.error(error.getMessage(), error);
             }
         }
 
@@ -451,7 +516,7 @@ public final class ReflectionService {
                 final JsonNode payloadNode = renderType(paramClass, null, null, true);
                 final String   payload     = payloadNode == null ? null : payloadNode.convertToJson();
 
-                if (parameter == null || parameter.getName() == null || payload == null) {
+                if (parameter.getName() == null || payload == null) {
                     continue;
                 }
                 final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();

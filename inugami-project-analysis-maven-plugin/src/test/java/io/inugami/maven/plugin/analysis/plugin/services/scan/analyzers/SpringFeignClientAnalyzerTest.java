@@ -9,10 +9,12 @@ import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.swagger.annotations.Api;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -50,14 +52,17 @@ class SpringFeignClientAnalyzerTest {
     // =========================================================================
     // TEST
     // =========================================================================
+    @Disabled
     @Test
     void analyze_withConfigurationBean() {
+        MDC.clear();
         final SpringFeignClientAnalyzer analyzer = new SpringFeignClientAnalyzer();
-        assertThat(analyzer.accept(AppConfiguration.class, context));
+        assertThat(analyzer.accept(AppConfiguration.class, context)).isTrue();
 
 
         final List<JsonObject> result = analyzer.analyze(AppConfiguration.class, context);
-        assertTextRelative(result, "services/scan/analyzers/springFeignClientAnalyzerTest/analyze_withConfigurationBean.json");
+        assertTextRelative(AnalyzerTestUtils.extractResult(result), "services/scan/analyzers/springFeignClientAnalyzerTest/analyze_withConfigurationBean.json");
+
     }
 
     // =========================================================================

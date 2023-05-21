@@ -29,7 +29,7 @@ public class ReleaseNoteAsciidocWriterTest {
 
 
     @Test
-    public void renderAuthors_withValues_shouldRenderParagraph() {
+    void renderAuthors_withValues_shouldRenderParagraph() {
         final ReleaseNoteAsciidocWriter writer = new ReleaseNoteAsciidocWriter();
         final Set<Author> authors = new LinkedHashSet(List.of(Author.builder()
                                                                     .name("Joe Foobar")
@@ -48,7 +48,7 @@ public class ReleaseNoteAsciidocWriterTest {
     }
 
     @Test
-    public void renderCommit_withValues_shouldRenderParagraph() {
+    void renderCommit_withValues_shouldRenderParagraph() {
         final ReleaseNoteAsciidocWriter writer = new ReleaseNoteAsciidocWriter();
         final Set<Map<String, Object>> commit = new LinkedHashSet(List.of(buildCommit("2019-07-23T19:16:11",
                                                                                       "24133ed1b100e0a61bbda19a90653ec415a87fe1",
@@ -119,7 +119,7 @@ public class ReleaseNoteAsciidocWriterTest {
     }
 
     @Test
-    public void renderMergeRequest_withValues_shouldRenderParagraph() {
+    void renderMergeRequest_withValues_shouldRenderParagraph() {
         final ReleaseNoteAsciidocWriter writer = new ReleaseNoteAsciidocWriter();
         final List<MergeRequests> mergeRequests = List.of(
                 MergeRequests.builder()
@@ -151,7 +151,7 @@ public class ReleaseNoteAsciidocWriterTest {
     }
 
     @Test
-    public void renderIssues_withValues_shouldRenderParagraph() {
+    void renderIssues_withValues_shouldRenderParagraph() {
         final ReleaseNoteAsciidocWriter writer = new ReleaseNoteAsciidocWriter();
         final List<Issue> issues = List.of(
                 Issue.builder()

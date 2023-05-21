@@ -31,18 +31,20 @@ import org.neo4j.driver.types.Node;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_DEPENDENCIES_CQL;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL;
 
+@SuppressWarnings({"java:S6213"})
 public class DependenciesExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String TYPE = "dependencies";
+    public static final String TYPE         = "dependencies";
     public static final String TYPE_PROJECT = "dependencies_project";
-    public static final String PACKAGING = "packaging";
+    public static final String PACKAGING    = "packaging";
 
     // =========================================================================
     // API
@@ -107,7 +109,7 @@ public class DependenciesExtractor implements ReleaseNoteExtractor {
                               .version(retrieve(VERSION, propertyNode))
                               .type(retrieve(PACKAGING, propertyNode))
                               .build()
-                          );
+                );
             }
         }
         return result;

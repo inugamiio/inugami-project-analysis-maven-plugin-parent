@@ -77,7 +77,9 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
                 break;
             default:
                 node = processIssue(headers, objectMapper, result);
-                processIssueLinks(headers, objectMapper, node.getUid(), result);
+                if (node != null) {
+                    processIssueLinks(headers, objectMapper, node.getUid(), result);
+                }
                 break;
         }
 
@@ -244,36 +246,41 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
         JsonNode result = CacheUtils.get(fullUrl);
 
         if (result == null) {
-            HttpConnectorResult      httpResult = null;
-            final HttpBasicConnector http       = new HttpBasicConnector();
-            try {
-                log.info("calling {}", fullUrl);
-
-                httpResult = http.get(fullUrl, headers);
-            } catch (final Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                          httpResult == null ? 0 : httpResult.getDelais());
-                http.close();
-            }
-
-            if (httpResult == null || httpResult.getStatusCode() != 200) {
-                log.error("can't call : {}", fullUrl);
-            } else {
-                try {
-                    result = objectMapper.readTree(new String(httpResult.getData()));
-                } catch (final JsonProcessingException e) {
-                    log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
-                }
-            }
-            if (result != null) {
-                CacheUtils.put(fullUrl, result);
-            }
+            result = processCallGitLab(fullUrl, headers, objectMapper, result);
         } else {
             log.info("loading gitlab information from cache");
         }
 
+        return result;
+    }
+
+    protected static JsonNode processCallGitLab(final String fullUrl, final Map<String, String> headers, final ObjectMapper objectMapper, JsonNode result) {
+        HttpConnectorResult      httpResult = null;
+        final HttpBasicConnector http       = new HttpBasicConnector();
+        try {
+            log.info("calling {}", fullUrl);
+
+            httpResult = http.get(fullUrl, headers);
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
+                      httpResult == null ? 0 : httpResult.getDelais());
+            http.close();
+        }
+
+        if (httpResult == null || httpResult.getStatusCode() != 200) {
+            log.error("can't call : {}", fullUrl);
+        } else {
+            try {
+                result = objectMapper.readTree(new String(httpResult.getData()));
+            } catch (final JsonProcessingException e) {
+                log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
+            }
+        }
+        if (result != null) {
+            CacheUtils.put(fullUrl, result);
+        }
         return result;
     }
 }

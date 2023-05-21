@@ -1,22 +1,25 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
+@Setter
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class QueryDefinition {
-
-    private final String       name;
-    private final String       type;
+    @ToString.Include
+    private String       name;
+    @ToString.Include
     @EqualsAndHashCode.Include
-    private final String       path;
-    private final String       description;
-    private final List<String> parameters;
+    private String       type;
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String       path;
+    private String       description;
+    private List<String> parameters;
 }

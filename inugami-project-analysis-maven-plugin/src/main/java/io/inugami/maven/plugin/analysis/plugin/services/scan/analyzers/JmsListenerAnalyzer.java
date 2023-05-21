@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
@@ -102,71 +102,84 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
         result.addNode(projectNode, serviceType);
 
         for (final Method method : methods) {
-            if (hasAnnotation(method, JmsListener.class)) {
-                buildListenerNode(method, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
-                                               "consume"));
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                });
-
-            } else if (hasAnnotation(method, JmsSender.class)) {
-                buildSenderNode(method, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, EXPOSE, projectNode, serviceType, methodNode, properties,
-                                               "produce"));
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                });
-            }
+            processAnalyze(clazz, result, projectNode, serviceType, method);
 
         }
 
         return List.of(result);
+    }
+
+    private void processAnalyze(final Class<?> clazz, final ScanNeo4jResult result, final Node projectNode, final Node serviceType, final Method method) {
+        if (hasAnnotation(method, JmsListener.class)) {
+            processAnalyzeOnJmsListenerAnnotation(clazz, result, projectNode, serviceType, method);
+
+        } else if (hasAnnotation(method, JmsSender.class)) {
+            processAnalyzeOnJmsSender(clazz, result, projectNode, serviceType, method);
+        }
+    }
+
+
+    private void processAnalyzeOnJmsListenerAnnotation(final Class<?> clazz, final ScanNeo4jResult result, final Node projectNode, final Node serviceType, final Method method) {
+        buildListenerNode(method, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                       "consume"));
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+        });
+    }
+
+    private void processAnalyzeOnJmsSender(final Class<?> clazz, final ScanNeo4jResult result, final Node projectNode, final Node serviceType, final Method method) {
+        buildSenderNode(method, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, EXPOSE, projectNode, serviceType, methodNode, properties,
+                                       "produce"));
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+        });
     }
 
     // =========================================================================
@@ -272,10 +285,9 @@ public class JmsListenerAnalyzer implements ClassAnalyzer {
 
     private String buildEventPayload(final Parameter parameter) {
         JsonNode result = null;
-        if (hasAnnotation(parameter, JmsEvent.class) && parameter.getAnnotation(JmsEvent.class)
-                                                                 .value() != JmsEvent.None.class) {
-            result = renderType(parameter.getAnnotation(JmsEvent.class)
-                                         .value(), null, null);
+        if (hasAnnotation(parameter, JmsEvent.class) && getAnnotation(parameter, JmsEvent.class).value() != JmsEvent.None.class) {
+            result = renderType(getAnnotation(parameter, JmsEvent.class)
+                                        .value(), null, null);
         } else {
             result = renderParameterType(parameter);
         }

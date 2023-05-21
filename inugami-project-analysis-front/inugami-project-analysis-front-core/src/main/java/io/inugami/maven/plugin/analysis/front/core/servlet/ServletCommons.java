@@ -1,8 +1,12 @@
 package io.inugami.maven.plugin.analysis.front.core.servlet;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import javax.servlet.http.HttpServletResponse;
 
-public class ServletCommons {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ServletCommons {
     private static final String UTF_8 = "utf-8";
 
     public static void setUtf8(final HttpServletResponse response) {

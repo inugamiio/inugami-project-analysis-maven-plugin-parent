@@ -137,11 +137,11 @@ public class PropertiesLoader {
             http.close();
         }
 
-        if (response.getStatusCode() >= 400) {
+        if (response == null || response.getStatusCode() >= 400) {
             throw new FatalException(String.format("[HTTP-%s] error on calling %s : %s",
-                                                   response.getStatusCode(),
+                                                   response == null ? 500 : response.getStatusCode(),
                                                    propertiesResources.getPropertiesUrl(),
-                                                   response.getMessage()));
+                                                   response == null ? "undefined error" : response.getMessage()));
         }
 
         return ResponseContentType.builder()

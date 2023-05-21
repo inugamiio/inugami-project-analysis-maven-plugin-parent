@@ -1,7 +1,99 @@
-[ {
+{
   "createScripts" : [ ],
   "deleteScripts" : [ ],
   "nodes" : [ {
+    "name" : "[GET]/users/headers/{name}",
+    "properties" : {
+      "header" : "correlationId,requestId",
+      "identifier" : "'verb':'GET','uri':'/users/headers/{name}','header':'correlationId,requestId','accept':'','contentType':'','responsePayload':'[  {    'name':'String'  }]',",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveUserInformation",
+      "responsePayload" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
+      "uri" : "/users/headers/{name}",
+      "verb" : "GET"
+    },
+    "type" : "Service",
+    "uid" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37"
+  }, {
+    "name" : "Void",
+    "properties" : {
+      "payload" : "Void"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf"
+  }, {
+    "name" : "[GET]/uids",
+    "properties" : {
+      "identifier" : "'verb':'GET','uri':'/uids','header':'','accept':'','contentType':'','responsePayload':'[    'Long']',",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.getAllUids",
+      "responsePayload" : "[\n    \"Long\"\n]",
+      "uri" : "/uids",
+      "verb" : "GET"
+    },
+    "type" : "Service",
+    "uid" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9"
+  }, {
+    "name" : "comment",
+    "properties" : {
+      "payload" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\"<<Comment>>\"],\n  \"publishDate\":\"yyyy-MM-dd\"\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220"
+  }, {
+    "name" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
+    "properties" : {
+      "payload" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237"
+  }, {
+    "name" : "[GET]/health",
+    "properties" : {
+      "identifier" : "'verb':'GET','uri':'/health','header':'','accept':'','contentType':'','responsePayload':'String',",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.process",
+      "responsePayload" : "String",
+      "uri" : "/health",
+      "verb" : "GET"
+    },
+    "type" : "Service",
+    "uid" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1"
+  }, {
+    "name" : "Rest",
+    "properties" : { },
+    "type" : "ServiceType",
+    "uid" : "Rest"
+  }, {
+    "name" : "[GET]/users/{name}",
+    "properties" : {
+      "identifier" : "'verb':'GET','uri':'/users/{name}','header':'','accept':'','contentType':'','responsePayload':'{  'name':'String'}',",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveInformation",
+      "responsePayload" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
+      "uri" : "/users/{name}",
+      "verb" : "GET"
+    },
+    "type" : "Service",
+    "uid" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade"
+  }, {
+    "name" : "[\n  {\n  }\n]",
+    "properties" : {
+      "payload" : "[\n  {\n  }\n]"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
+  }, {
+    "name" : "[\n  {\n  }\n]",
+    "properties" : {
+      "payload" : "[\n  {\n  }\n]"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
+  }, {
+    "name" : "[\n  {\n  }\n]",
+    "properties" : {
+      "payload" : "[\n  {\n  }\n]"
+    },
+    "type" : "OUTPUT_DTO",
+    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
+  }, {
     "name" : "[GET]/users/{name}/process",
     "properties" : {
       "identifier" : "'verb':'GET','uri':'/users/{name}/process','header':'','accept':'','contentType':'',",
@@ -19,12 +111,44 @@
     "type" : "INPUT_DTO",
     "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
   }, {
-    "name" : "Void",
+    "name" : "name",
     "properties" : {
-      "payload" : "Void"
+      "payload" : "String"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "name",
+    "properties" : {
+      "payload" : "String"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "name",
+    "properties" : {
+      "payload" : "String"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "String",
+    "properties" : {
+      "payload" : "String"
     },
     "type" : "OUTPUT_DTO",
-    "uid" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf"
+    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
+  }, {
+    "name" : "[GET]/users",
+    "properties" : {
+      "identifier" : "'verb':'GET','uri':'/users','header':'','accept':'','contentType':'','responsePayload':'[  {    'name':'String'  }]',",
+      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveAllInformation",
+      "responsePayload" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
+      "uri" : "/users",
+      "verb" : "GET"
+    },
+    "type" : "Service",
+    "uid" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1"
   }, {
     "name" : "[POST]/users/{name}/comments",
     "properties" : {
@@ -40,131 +164,12 @@
     "type" : "Service",
     "uid" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0"
   }, {
-    "name" : "name",
-    "properties" : {
-      "payload" : "String"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
-  }, {
-    "name" : "comment",
-    "properties" : {
-      "payload" : "{\n  \"title\":\"String\",\n  \"description\":\"String\",\n  \"comments\":[\"<<Comment>>\"],\n  \"publishDate\":\"yyyy-MM-dd\"\n}"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220"
-  }, {
     "name" : "{\n  \"status\":\"Object\",\n  \"EMPTY\":\"null\",\n  \"headers\":{\n    \"<<object>>\":\n\"<object>\"\n    },\n  \"body\":\"null\"\n}",
     "properties" : {
       "payload" : "{\n  \"status\":\"Object\",\n  \"EMPTY\":\"null\",\n  \"headers\":{\n    \"<<object>>\":\n\"<object>\"\n    },\n  \"body\":\"null\"\n}"
     },
     "type" : "OUTPUT_DTO",
     "uid" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c"
-  }, {
-    "name" : "[GET]/users/{name}",
-    "properties" : {
-      "identifier" : "'verb':'GET','uri':'/users/{name}','header':'','accept':'','contentType':'','responsePayload':'{  'name':'String'}',",
-      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveInformation",
-      "responsePayload" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
-      "uri" : "/users/{name}",
-      "verb" : "GET"
-    },
-    "type" : "Service",
-    "uid" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade"
-  }, {
-    "name" : "name",
-    "properties" : {
-      "payload" : "String"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
-  }, {
-    "name" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}",
-    "properties" : {
-      "payload" : "{\n  \"name\":\"String\",\n  \"comments\":[\n    {\n      \"title\":\"String\",\n      \"description\":\"String\",\n      \"comments\":[\"<<Comment>>\"],\n      \"publishDate\":\"yyyy-MM-dd\"\n    }\n  ],\n  \"data\":{\n    \"<String>\":\n      {\n        \"title\":\"String\",\n        \"publishedDate\":\"long\",\n        \"data\":{\n          \"<String>\":\"<<Data>>\"\n          },\n        \"parent\":\"<<Data>>\"\n      }\n    },\n  \"uid\":\"String\"\n}"
-    },
-    "type" : "OUTPUT_DTO",
-    "uid" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237"
-  }, {
-    "name" : "[GET]/users/headers/{name}",
-    "properties" : {
-      "header" : "correlationId,requestId",
-      "identifier" : "'verb':'GET','uri':'/users/headers/{name}','header':'correlationId,requestId','accept':'','contentType':'','responsePayload':'[  {    'name':'String'  }]',",
-      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveUserInformation",
-      "responsePayload" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
-      "uri" : "/users/headers/{name}",
-      "verb" : "GET"
-    },
-    "type" : "Service",
-    "uid" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37"
-  }, {
-    "name" : "name",
-    "properties" : {
-      "payload" : "String"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
-  }, {
-    "name" : "[\n  {\n  }\n]",
-    "properties" : {
-      "payload" : "[\n  {\n  }\n]"
-    },
-    "type" : "OUTPUT_DTO",
-    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
-  }, {
-    "name" : "[GET]/users",
-    "properties" : {
-      "identifier" : "'verb':'GET','uri':'/users','header':'','accept':'','contentType':'','responsePayload':'[  {    'name':'String'  }]',",
-      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.retrieveAllInformation",
-      "responsePayload" : "[\n  {\n    \"name\":\"String\",\n    \"comments\":[\n      {\n        \"title\":\"String\",\n        \"description\":\"String\",\n        \"comments\":[\"<<Comment>>\"],\n        \"publishDate\":\"yyyy-MM-dd\"\n      }\n    ],\n    \"data\":{\n      \"<String>\":\n        {\n          \"title\":\"String\",\n          \"publishedDate\":\"long\",\n          \"data\":{\n            \"<String>\":\"<<Data>>\"\n            },\n          \"parent\":\"<<Data>>\"\n        }\n      },\n    \"uid\":\"String\"\n  }\n]",
-      "uri" : "/users",
-      "verb" : "GET"
-    },
-    "type" : "Service",
-    "uid" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1"
-  }, {
-    "name" : "[\n  {\n  }\n]",
-    "properties" : {
-      "payload" : "[\n  {\n  }\n]"
-    },
-    "type" : "OUTPUT_DTO",
-    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
-  }, {
-    "name" : "[GET]/uids",
-    "properties" : {
-      "identifier" : "'verb':'GET','uri':'/uids','header':'','accept':'','contentType':'','responsePayload':'[    'Long']',",
-      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.getAllUids",
-      "responsePayload" : "[\n    \"Long\"\n]",
-      "uri" : "/uids",
-      "verb" : "GET"
-    },
-    "type" : "Service",
-    "uid" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9"
-  }, {
-    "name" : "[\n  {\n  }\n]",
-    "properties" : {
-      "payload" : "[\n  {\n  }\n]"
-    },
-    "type" : "OUTPUT_DTO",
-    "uid" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e"
-  }, {
-    "name" : "[GET]/health",
-    "properties" : {
-      "identifier" : "'verb':'GET','uri':'/health','header':'','accept':'','contentType':'','responsePayload':'String',",
-      "method" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.SpringFeignClientAnalyzerTest$RestClient.process",
-      "responsePayload" : "String",
-      "uri" : "/health",
-      "verb" : "GET"
-    },
-    "type" : "Service",
-    "uid" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1"
-  }, {
-    "name" : "String",
-    "properties" : {
-      "payload" : "String"
-    },
-    "type" : "OUTPUT_DTO",
-    "uid" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5"
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
@@ -179,212 +184,138 @@
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"
-  }, {
-    "name" : "Rest",
-    "type" : "ServiceType",
-    "uid" : "Rest"
   } ],
   "nodesToDeletes" : [ ],
   "relationships" : [ {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
-    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
-    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
-    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
-    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1",
-    "type" : "HAS_INPUT_DTO"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
-    "type" : "CONSUME"
-  }, {
-    "from" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "CONSUME"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
-    "type" : "CONSUME"
-  }, {
-    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
-    "type" : "CONSUME"
-  }, {
-    "from" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "CONSUME"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
-    "type" : "CONSUME"
-  }, {
-    "from" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
-    "type" : "CONSUME"
-  }, {
-    "from" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
-    "type" : "CONSUME"
-  }, {
-    "from" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "CONSUME"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
-    "type" : "CONSUME"
-  }, {
-    "from" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
-    "type" : "CONSUME"
-  }, {
     "from" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "type" : "CONSUME"
-  }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "CONSUME"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
-    "type" : "CONSUME"
-  }, {
-    "from" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "CONSUME"
-  }, {
-    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9",
-    "type" : "CONSUME"
+    "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "properties" : { },
+    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
+    "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
-    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
-    "type" : "CONSUME"
+    "from" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
+    "properties" : { },
+    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
+    "properties" : { },
+    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1",
+    "properties" : { },
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
+    "properties" : { },
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
   }, {
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
+    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
+    "to" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
+    "to" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
+    "properties" : { },
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
+    "properties" : { },
+    "to" : "Rest",
+    "type" : "SERVICE_TYPE"
+  }, {
+    "from" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
+    "properties" : { },
+    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
+    "type" : "HAS_INPUT_DTO"
+  }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
+    "to" : "023806ee54db22a4ce090599cbd8ae41df72337f577e3d413d9f0a5021a5d35f8ea29c0c9c8ec833dc1ee5a3ac78c9002ccb417ad5cc31f9ddb43eadb164ff37",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
+    "to" : "1df61a194d068ab4bffc771f8a4354383a5f484a68338a08c83fd96436526253906c9feab238c848643e35df2eb74e55944a07d6dbd823fb6097bdef843695c9",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1",
     "type" : "CONSUME"
   }, {
-    "from" : "9de1643f0e1e016de78f814bcb2581f01aad53568e8a6c424db4bdb1fcb33c1d61868aef2204b2b446d39f81e6df9ebeeee1f647186f5f9b643a297404a913c1",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
-  }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
-    "to" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
+    "to" : "b62590e89de773713de2cb9544f9bdc4850fde89eaaaf889b2b090c58d81f3f98d36b218374df4b166d3e09d4fab218ab809f27bcced2f22d970eb54b3065ade",
     "type" : "CONSUME"
   }, {
-    "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
-    "to" : "Rest",
-    "type" : "SERVICE_TYPE"
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
+    "to" : "c789b8a63dc4eb1fa8079ee56741cbbec3ef830d3ff1c371efa085f3f83b63003c0b6a188872550213b09f24096f0893cc52875795e05ffaa043f76a59e9de5e",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
+    "to" : "de5d3fed8aeae32ff502c779c9c8a49daa6fa709eef8cf1a754260d64d2944e317d7e7aa758075a17f2d181f28e885ddad0f178bb589b0de77f6ecb99b453be1",
+    "type" : "CONSUME"
+  }, {
+    "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
+    "to" : "e33bc483228be735f422fa9fbc670f4a9ce6cdf1e0a2b1ab7b1cd9917dfb23d476453e3fde15cdc17da31845d7c45637f9b7e24f4a5d4b3f650562d01e1edbd0",
+    "type" : "CONSUME"
   } ],
   "relationshipsToDeletes" : [ ]
-} ]
+}

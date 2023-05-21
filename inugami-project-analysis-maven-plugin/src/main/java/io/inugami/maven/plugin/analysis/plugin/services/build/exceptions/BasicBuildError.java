@@ -18,8 +18,11 @@ package io.inugami.maven.plugin.analysis.plugin.services.build.exceptions;
 
 import io.inugami.api.exceptions.DefaultErrorCode;
 import io.inugami.api.exceptions.ErrorCode;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public class BasicBuildError {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class BasicBuildError {
     public static final ErrorCode PROPERTIES_RESOURCES_REQUIRED = DefaultErrorCode
             .builder()
             .errorCode("BASIC_BUILD_1")

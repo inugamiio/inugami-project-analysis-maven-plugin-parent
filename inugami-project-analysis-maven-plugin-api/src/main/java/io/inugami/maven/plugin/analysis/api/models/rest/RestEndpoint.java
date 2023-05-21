@@ -18,45 +18,42 @@ package io.inugami.maven.plugin.analysis.api.models.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.inugami.api.models.data.basic.JsonObject;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
+import io.inugami.api.tools.StringComparator;
 import lombok.*;
 
 import java.lang.reflect.Method;
 
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Setter
 @Builder(toBuilder = true)
 public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
     private static final long           serialVersionUID = -6556991122270585469L;
-    private final        String         nickname;
-    private final        String         uri;
-    private final        String         verb;
-    private final        String         headers;
-    private final        String         body;
-    private final        String         bodyRequireOnly;
-    private final        String         consume;
-    private final        String         produce;
-    private final        String         description;
-    private final        String         responseType;
-    private final        String         responseTypeRequireOnly;
-    private final        String         uid;
-    private final        String         method;
-    private final        DescriptionDTO descriptionDetail;
-    private final        boolean        deprecated;
+    private              String         nickname;
+    private              String         uri;
+    private              String         verb;
+    private              String         headers;
+    private              String         body;
+    private              String         bodyRequireOnly;
+    private              String         consume;
+    private              String         produce;
+    private              String         description;
+    private              String         responseType;
+    private              String         responseTypeRequireOnly;
+    private              String         uid;
+    private              String         method;
+    private              DescriptionDTO descriptionDetail;
+    private              boolean        deprecated;
 
     @JsonIgnore
-    private final transient Method javaMethod;
+    private transient Method javaMethod;
 
     @Override
     public int compareTo(final RestEndpoint value) {
-        int result = 0;
-        if (value.getUri().equals(this.getUri())) {
-            result = value.getVerb().compareTo(this.getVerb());
-        } else {
-            result = value.getUri().compareTo(this.getUri());
-        }
-        return result;
+        final String current = "" + this.getUri() + "" + this.getVerb();
+        final String other   = value == null ? null : "" + value.getUri() + "" + value.getVerb();
+        return StringComparator.compareTo(current, other);
     }
 }

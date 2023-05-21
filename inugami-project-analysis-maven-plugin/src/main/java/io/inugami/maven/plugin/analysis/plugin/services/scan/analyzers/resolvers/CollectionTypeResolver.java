@@ -28,24 +28,24 @@ public class CollectionTypeResolver implements BeanPropertyTypeResolver {
 
         Set<Node> result = null;
         if (Collection.class.isAssignableFrom(field.getType())) {
-            result = processResolve(path, field, fieldType, clazz, springPropertiesAnalyzer);
+            result = processResolve(path, field, springPropertiesAnalyzer);
         }
         return result;
     }
 
-    private Set<Node> processResolve(final String path, final Field field, final Class<?> fieldType,
-                                     final Class<?> clazz, final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
+    private Set<Node> processResolve(final String path, final Field field,
+                                     final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
 
         Set<Node>      result      = null;
         final String   uid         = buildFullPath(path, field);
         final Class<?> genericType = extractGenericType(field.getGenericType());
 
         if (ReflectionService.isBasicType(genericType)) {
-            final String type    = springPropertiesAnalyzer.setShortName(genericType) ? genericType
+            final String type = springPropertiesAnalyzer.setShortName(genericType) ? genericType
                     .getSimpleName() : genericType.getName();
             final String                              nodeUid        = uid + "[].<" + type + ">";
             final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
-            additionalInfo.put(PROPERTY_TYPE,type);
+            additionalInfo.put(PROPERTY_TYPE, type);
 
             final Node node = Node.builder()
                                   .uid(nodeUid)
@@ -56,8 +56,7 @@ public class CollectionTypeResolver implements BeanPropertyTypeResolver {
 
             springPropertiesAnalyzer.resolveConstraints(node, field.getDeclaredAnnotations());
             result = Set.of(node);
-        }
-        else {
+        } else {
             final Field fakeField = buildField(genericType, "[]");
             result = springPropertiesAnalyzer.extractFieldProperties(uid, genericType, fakeField);
         }

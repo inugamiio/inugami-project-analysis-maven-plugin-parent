@@ -34,11 +34,12 @@ import org.neo4j.driver.internal.value.NodeValue;
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getNodeName;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_FLYWAY;
 
+@SuppressWarnings({"java:S6213"})
 public class FlywayExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================
@@ -52,7 +53,7 @@ public class FlywayExtractor implements ReleaseNoteExtractor {
     public static final String SHORT_NAME          = "shortName";
     public static final String DB_TYPE             = "dbType";
     public static final String CONTENT             = "content";
-    public static final String NAME = "name";
+    public static final String NAME                = "name";
 
 
     // =========================================================================
@@ -84,7 +85,7 @@ public class FlywayExtractor implements ReleaseNoteExtractor {
                 Map.entry(GROUP_ID, gav.getGroupId()),
                 Map.entry(ARTIFACT_ID, gav.getArtifactId()),
                 Map.entry(VERSION, gav.getVersion())
-                                   ));
+        ));
         final String query = TemplateRendering.render(QueriesLoader.getQuery(QUERIES_SEARCH_FLYWAY),
                                                       config);
         final List<Record> resultSet = dao.search(query);
@@ -105,14 +106,16 @@ public class FlywayExtractor implements ReleaseNoteExtractor {
             final NodeValue flywayContent = extractNode(FLYWAY_CONTENT_NODE, record);
 
 
-            FlywayDTO dto = buildDto(flyway, flywayContent);
+            final FlywayDTO dto = buildDto(flyway, flywayContent);
+            if (dto == null) {
+                continue;
+            }
 
             final int index = result.indexOf(dto);
             if (index == -1) {
                 dto.addProjectUsing(artifact).addProjectUsing(dependency);
                 result.add(dto);
-            }
-            else {
+            } else {
                 result.get(index)
                       .addProjectUsing(artifact)
                       .addProjectUsing(dependency);

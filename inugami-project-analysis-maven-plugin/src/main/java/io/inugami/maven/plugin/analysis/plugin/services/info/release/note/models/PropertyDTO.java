@@ -17,7 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models;
 
 import io.inugami.api.models.data.basic.JsonObject;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

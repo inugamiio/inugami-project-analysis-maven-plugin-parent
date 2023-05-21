@@ -20,7 +20,7 @@ import io.inugami.api.processors.ConfigHandler;
 import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.settings.Server;
@@ -35,8 +35,9 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395", "java:S1068"})
 @Slf4j
-public class GitHubIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
+public class GitHubIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
 
     // =========================================================================
@@ -83,7 +84,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url = configuration.grab(IssueTackerProvider.URL);
+        url = configuration.grab(IssueTrackerProvider.URL);
         urlPr = configuration.grabOrDefault(PR_URL, url);
         token = configuration.grab(SERVER_TOKEN);
         timeout = configuration.grabLong(TIMEOUT, 30000L);
@@ -105,7 +106,7 @@ public class GitHubIssueTrackerProvider implements IssueTackerProvider, Properti
                 while (matcher.find()) {
                     final String feature    = matcher.group(GRP_FEATURE);
                     final String refFeature = matcher.group(GRP_REF_FEATURE);
-                    processIfNotNull(feature, value -> result.add(value.replaceAll("#", "!")));
+                    processIfNotNull(feature, value -> result.add(value.replace("#", "!")));
                     processIfNotNull(refFeature, value -> result.add("#" + value));
                 }
             } else {

@@ -35,8 +35,7 @@ import java.util.Set;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotEmpty;
-import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.hasAnnotation;
-import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.loadAllFields;
+import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
 @Slf4j
 public class GlossaryAnalyzer implements ClassAnalyzer {
@@ -96,13 +95,13 @@ public class GlossaryAnalyzer implements ClassAnalyzer {
 
         for (final Field field : fields) {
             if (hasAnnotation(field, Glossary.class)) {
-                nodes.add(buildNode(field, field.getAnnotation(Glossary.class)));
+                nodes.add(buildNode(field, getAnnotation(field, Glossary.class)));
 
             } else if (hasAnnotation(field, Glossaries.class)) {
-                final Glossaries glossaries = field.getAnnotation(Glossaries.class);
+                final Glossaries glossaries = getAnnotation(field, Glossaries.class);
                 if (glossaries.value() != null) {
                     for (final Glossary glossary : glossaries.value()) {
-                        nodes.add(buildNode(field, field.getAnnotation(Glossary.class)));
+                        nodes.add(buildNode(field, getAnnotation(field, Glossary.class)));
                     }
                 }
             }
@@ -123,11 +122,11 @@ public class GlossaryAnalyzer implements ClassAnalyzer {
         final List<Node> result = new ArrayList<>();
 
         if (hasAnnotation(clazz, Glossary.class)) {
-            final Glossary glossary = clazz.getAnnotation(Glossary.class);
+            final Glossary glossary = getAnnotation(clazz, Glossary.class);
             result.add(buildNode(clazz, glossary));
 
         } else if (hasAnnotation(clazz, Glossaries.class)) {
-            final Glossaries glossaries = clazz.getAnnotation(Glossaries.class);
+            final Glossaries glossaries = getAnnotation(clazz, Glossaries.class);
             if (glossaries.value() != null) {
                 for (final Glossary glossary : glossaries.value()) {
                     result.add(buildNode(clazz, glossary));

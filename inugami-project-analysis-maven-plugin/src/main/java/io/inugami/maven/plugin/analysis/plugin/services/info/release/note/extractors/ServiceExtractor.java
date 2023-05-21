@@ -43,6 +43,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getNodeName;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ALL_CONSUMED_SERVICES;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ALL_EXPOSED_SERVICES;
 
+@SuppressWarnings("java:S6213")
 @Slf4j
 public class ServiceExtractor implements ReleaseNoteExtractor {
 
@@ -85,15 +86,14 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                    final Gav previousVersion, final Neo4jDao dao, final List<Replacement> replacements,
                                    final InfoContext context) {
 
-        manageExposeServices(releaseNoteResult, currentVersion, previousVersion, dao, replacements, context);
-        manageConsumeServices(releaseNoteResult, currentVersion, previousVersion, dao, replacements, context);
+        manageExposeServices(releaseNoteResult, currentVersion, previousVersion, dao, context);
+        manageConsumeServices(releaseNoteResult, currentVersion, previousVersion, dao, context);
 
     }
 
 
     private void manageExposeServices(final ReleaseNoteResult releaseNoteResult, final Gav currentVersion,
                                       final Gav previousVersion, final Neo4jDao dao,
-                                      final List<Replacement> replacements,
                                       final InfoContext context) {
 
         final List<JsonObject> currentServices = search(QUERIES_SEARCH_ALL_EXPOSED_SERVICES, currentVersion,
@@ -113,7 +113,6 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
 
     private void manageConsumeServices(final ReleaseNoteResult releaseNoteResult, final Gav currentVersion,
                                        final Gav previousVersion, final Neo4jDao dao,
-                                       final List<Replacement> replacements,
                                        final InfoContext context) {
 
         final List<JsonObject> currentServices = search(QUERIES_SEARCH_ALL_CONSUMED_SERVICES, currentVersion,
@@ -165,8 +164,7 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                     buffer.get(itemResult.getName()).mergeConsumers(itemResult.getConsumers());
                     buffer.get(itemResult.getName()).mergeProducers(itemResult.getProducers());
                     buffer.get(itemResult.getName()).mergeMethods(itemResult.getMethods());
-                }
-                else {
+                } else {
                     buffer.put(itemResult.getName(), itemResult);
                 }
             }
@@ -185,8 +183,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                           final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .name(String.valueOf(properties.get(NAME)))
@@ -210,8 +208,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
     private ServiceDto convertJMSService(final Map<String, Object> properties, final Record record, final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .type(type)
@@ -229,8 +227,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                               final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         final String binding        = String.valueOf(properties.get(BINDINGS));
         String       additionalInfo = null;
@@ -238,8 +236,7 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
             try {
                 final JsonNode jsonNode = OBJECT_MAPPER.readTree(binding);
                 additionalInfo = OBJECT_MAPPER.writeValueAsString(jsonNode);
-            }
-            catch (final JsonProcessingException e) {
+            } catch (final JsonProcessingException e) {
                 log.error("{} :{}", e.getMessage(), binding, e);
             }
         }
@@ -260,8 +257,8 @@ public class ServiceExtractor implements ReleaseNoteExtractor {
                                              final String type) {
         final String serviceExpose  = getNodeName(extractNode(NODE_SERVICE_EXPOSE, record));
         final String serviceConsume = getNodeName(extractNode(NODE_SERVICE_CONSUMER, record));
-        final String method         = buildMethod(extractNode(NODE_METHOD, record),
-                                                  extractNode(METHOD_ARTIFACT, record));
+        final String method = buildMethod(extractNode(NODE_METHOD, record),
+                                          extractNode(METHOD_ARTIFACT, record));
 
         return ServiceDto.builder()
                          .type(type)

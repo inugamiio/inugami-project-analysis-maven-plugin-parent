@@ -19,7 +19,10 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.publish;
 import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
-import io.inugami.maven.plugin.analysis.api.models.*;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
+import io.inugami.maven.plugin.analysis.api.models.Node;
+import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.Neo4jWriter;
 import org.apache.maven.project.MavenProject;
@@ -30,18 +33,20 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 
+@SuppressWarnings({"java:S3252"})
 public class Publish implements ProjectInformation {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final String ENV                   = "env";
-    public static final String LEVEL                 = "envLevel";
-    public static final String ENV_TYPE              = "envType";
-    public static final String FIELD_TYPE            = "type";
-    public static final String DEPLOY                = "DEPLOY";
-    public static final String REL_ENV_TYPE          = "ENV_TYPE";
-    public static final String HAVE_ARTIFACT_VERSION = "HAVE_ARTIFACT_VERSION";
+    public static final String     ENV                   = "env";
+    public static final String     LEVEL                 = "envLevel";
+    public static final String     ENV_TYPE              = "envType";
+    public static final String     FIELD_TYPE            = "type";
+    public static final String     DEPLOY                = "DEPLOY";
+    public static final String     REL_ENV_TYPE          = "ENV_TYPE";
+    public static final String     HAVE_ARTIFACT_VERSION = "HAVE_ARTIFACT_VERSION";
+    public static final ZoneOffset UTC_OFFSET            = ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now(ZoneOffset.UTC));
 
     // =========================================================================
     // API
@@ -109,26 +114,6 @@ public class Publish implements ProjectInformation {
     }
 
 
-    private Gav buildGav(final ConfigHandler<String, String> configuration, final MavenProject project) {
-        final String groupId = ifNull(configuration.get(GROUP_ID),
-                                      () -> ConsoleTools.askQuestion("groupId ?", project.getGroupId()));
-
-        final String artifactId = ifNull(configuration.get(ARTIFACT_ID),
-                                         () -> ConsoleTools.askQuestion("artifactId ?", project.getArtifactId()));
-
-        final String type = ifNull(configuration.get(TYPE),
-                                   () -> ConsoleTools.askQuestion("type ?", project.getPackaging()));
-
-        final String version = ifNull(configuration.get(VERSION),
-                                      () -> ConsoleTools.askQuestion("version ?", project.getVersion()));
-        return Gav.builder()
-                  .groupId(groupId)
-                  .artifactId(artifactId)
-                  .version(version)
-                  .type(type)
-                  .build();
-    }
-
     private Node buildEnvNode(final ConfigHandler<String, String> configuration) {
         final Node.NodeBuilder builder = Node.builder();
         builder.type("Env");
@@ -170,10 +155,9 @@ public class Publish implements ProjectInformation {
 
     private LinkedHashMap<String, Serializable> buildDeployProperties() {
         final LinkedHashMap<String, Serializable> result = new LinkedHashMap<>();
-        final LocalDateTime             now    = LocalDateTime.now();
+        final LocalDateTime                       now    = LocalDateTime.now();
         result.put("date", DateTimeFormatter.ISO_DATE_TIME.format(now));
-        result.put("timestamp", now.toEpochSecond(
-                ZoneOffset.systemDefault().getRules().getOffset(LocalDateTime.now(ZoneOffset.UTC))));
+        result.put("timestamp", now.toEpochSecond(UTC_OFFSET));
         result.put("dateUtc", DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now(ZoneOffset.UTC)));
         result.put("timestampUtc", now.toEpochSecond(ZoneOffset.UTC));
         return result;
@@ -188,8 +172,7 @@ public class Publish implements ProjectInformation {
         int result = 0;
         try {
             result = Integer.parseInt(value);
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new UncheckedException("invalid environment level :" + value);
         }
         if (result < 0) {

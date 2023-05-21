@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteExtractor;
@@ -24,7 +25,6 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Di
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Replacement;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.EntityDTO;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
@@ -39,6 +39,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ENTITIES;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer.LOCAL_ENTITY;
 
+@SuppressWarnings({"java:S6213"})
 public class EntitiesExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================
@@ -87,27 +88,7 @@ public class EntitiesExtractor implements ReleaseNoteExtractor {
             final NodeValue dependencyNode    = extractNode(NODE_DEPENDENCY, record);
             final NodeValue dependencyRefNode = extractNode(NODE_DEPENDENCY_REF, record);
             if (isNotNull(entityNode)) {
-                final Node   propertyNode = entityNode.asNode();
-                final String nodeName     = cleanName(retrieve(SHORT_NAME, propertyNode));
-                EntityDTO    entity       = null;
-                if (buffer.containsKey(nodeName)) {
-                    entity = buffer.get(nodeName);
-                } else {
-                    entity = EntityDTO.builder()
-                                      .name(nodeName)
-                                      .payload(retrieve(PAYLOAD, propertyNode))
-                                      .build();
-                    buffer.put(nodeName, entity);
-                }
-                final String dependency    = dependencyNode == null ? null : buildArtifact(dependencyNode);
-                final String dependencyRef = dependencyRefNode == null ? null : buildArtifact(dependencyRefNode);
-
-                if (dependency != null) {
-                    entity.addProjectUsing(dependency);
-                }
-                if (dependencyRef != null) {
-                    entity.addProjectUsing(dependencyRef);
-                }
+                convertOnRecord(buffer, entityNode, dependencyNode, dependencyRefNode);
             }
 
 
@@ -116,6 +97,30 @@ public class EntitiesExtractor implements ReleaseNoteExtractor {
                      .stream()
                      .map(Map.Entry::getValue)
                      .collect(Collectors.toList());
+    }
+
+    protected void convertOnRecord(final Map<String, EntityDTO> buffer, final NodeValue entityNode, final NodeValue dependencyNode, final NodeValue dependencyRefNode) {
+        final Node   propertyNode = entityNode.asNode();
+        final String nodeName     = cleanName(retrieve(SHORT_NAME, propertyNode));
+        EntityDTO    entity       = null;
+        if (buffer.containsKey(nodeName)) {
+            entity = buffer.get(nodeName);
+        } else {
+            entity = EntityDTO.builder()
+                              .name(nodeName)
+                              .payload(retrieve(PAYLOAD, propertyNode))
+                              .build();
+            buffer.put(nodeName, entity);
+        }
+        final String dependency    = dependencyNode == null ? null : buildArtifact(dependencyNode);
+        final String dependencyRef = dependencyRefNode == null ? null : buildArtifact(dependencyRefNode);
+
+        if (dependency != null) {
+            entity.addProjectUsing(dependency);
+        }
+        if (dependencyRef != null) {
+            entity.addProjectUsing(dependencyRef);
+        }
     }
 
     private String cleanName(final String name) {

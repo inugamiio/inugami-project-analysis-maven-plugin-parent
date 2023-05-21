@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class GitHubIssueTrackerProviderTest {
     @Test
-    public void extractTicketNumber_withTicketsInCommit_shouldExtractThese() {
+    void extractTicketNumber_withTicketsInCommit_shouldExtractThese() {
         final GitHubIssueTrackerProvider service = new GitHubIssueTrackerProvider();
 
         assertThat(service.extractTicketNumber("Dev/104 create kafka provider"))

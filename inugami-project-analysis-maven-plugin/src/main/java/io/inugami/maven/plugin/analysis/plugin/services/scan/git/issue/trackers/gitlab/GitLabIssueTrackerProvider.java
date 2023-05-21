@@ -21,7 +21,7 @@ import io.inugami.commons.security.EncryptionUtils;
 import io.inugami.commons.threads.RunAndCloseService;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.settings.Server;
@@ -36,8 +36,9 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395"})
 @Slf4j
-public class GitLabIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
+public class GitLabIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
@@ -84,7 +85,7 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url = configuration.grab(IssueTackerProvider.URL);
+        url = configuration.grab(IssueTrackerProvider.URL);
         urlPr = configuration.grabOrDefault(PR_URL, url);
         token = configuration.grab(SERVER_TOKEN);
         timeout = configuration.grabLong(TIMEOUT, 30000L);
@@ -151,7 +152,7 @@ public class GitLabIssueTrackerProvider implements IssueTackerProvider, Properti
 
     private ScanNeo4jResult retrieveNodeInformation(final ScanNeo4jResult result,
                                                     final List<Callable<ScanNeo4jResult>> tasks) {
-        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(GITLAB, timeout, nbThreads, tasks).run();
+        final List<ScanNeo4jResult> resultSet = new RunAndCloseService<>(GITLAB, timeout, nbThreads, tasks).run();
 
         for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
             if (itemResult != null) {

@@ -143,32 +143,7 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
 
             final JsonNode labels = json.get(FIELD_LABELS);
             if (labels != null && labels.isArray()) {
-                final List<String> labelNames = new ArrayList<>();
-                labels.spliterator().forEachRemaining(item -> {
-                    if (!item.isNull()) {
-                        final String labelName = extractLabelName(item);
-                        if (labelName != null) {
-                            labelNames.add(StringTools.convertToAscii(labelName).trim().toLowerCase());
-                        }
-                    }
-                });
-
-                processIfNotNull(extract(FIELD_LABELS, json), value -> properties.put(FIELD_LABELS, value));
-
-                for (final String label : labelNames) {
-                    resultNeo4J.addNode(Node.builder()
-                                            .type(IssueTrackerCommons.TicketType.ISSUE_LABEL.getNodeType())
-                                            .uid(IssueTrackerCommons.TicketType.ISSUE_LABEL.getNodePrefix() + label)
-                                            .name(label)
-                                            .build());
-
-                    resultNeo4J.addRelationship(Relationship.builder()
-                                                            .from(uid)
-                                                            .to(IssueTrackerCommons.TicketType.ISSUE_LABEL
-                                                                        .getNodePrefix() + label)
-                                                            .type(HAS_LABEL)
-                                                            .build());
-                }
+                vuildIssueNodeLabels(json, resultNeo4J, uid, properties, labels);
             }
 
             result = Node.builder().type(TicketType.ISSUE.getNodeType())
@@ -179,6 +154,35 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
         }
 
         return result;
+    }
+
+    protected void vuildIssueNodeLabels(final JsonNode json, final ScanNeo4jResult resultNeo4J, final String uid, final LinkedHashMap<String, Serializable> properties, final JsonNode labels) {
+        final List<String> labelNames = new ArrayList<>();
+        labels.spliterator().forEachRemaining(item -> {
+            if (!item.isNull()) {
+                final String labelName = extractLabelName(item);
+                if (labelName != null) {
+                    labelNames.add(StringTools.convertToAscii(labelName).trim().toLowerCase());
+                }
+            }
+        });
+
+        processIfNotNull(extract(FIELD_LABELS, json), value -> properties.put(FIELD_LABELS, value));
+
+        for (final String label : labelNames) {
+            resultNeo4J.addNode(Node.builder()
+                                    .type(TicketType.ISSUE_LABEL.getNodeType())
+                                    .uid(TicketType.ISSUE_LABEL.getNodePrefix() + label)
+                                    .name(label)
+                                    .build());
+
+            resultNeo4J.addRelationship(Relationship.builder()
+                                                    .from(uid)
+                                                    .to(TicketType.ISSUE_LABEL
+                                                                .getNodePrefix() + label)
+                                                    .type(HAS_LABEL)
+                                                    .build());
+        }
     }
 
 
@@ -311,43 +315,48 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     private JsonNode callGitHub(final String fullUrl, final Map<String, String> headers) {
         JsonNode result = CacheUtils.get(fullUrl);
         if (result == null) {
-            HttpConnectorResult      httpResult = null;
-            final HttpBasicConnector http       = new HttpBasicConnector(TIMEOUT, TIMEOUT, MAX_CONNECTIONS, MAX_CONNECTIONS, TIMEOUT);
-
-            try {
-                log.info("calling {}", fullUrl);
-
-                httpResult = http.get(HttpRequest.builder()
-                                                 .verb("GET")
-                                                 .url(fullUrl)
-                                                 .headers(headers)
-                                                 .build());
-
-            } catch (final Exception e) {
-                log.error(e.getMessage(), e);
-            } finally {
-                log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                          httpResult == null ? 0 : httpResult.getDelais());
-                http.close();
-            }
-
-            if (httpResult == null || httpResult.getStatusCode() != 200) {
-                log.error("can't call : {}", fullUrl);
-            } else {
-                try {
-                    result = OBJECT_MAPPER.readTree(new String(httpResult.getData()));
-                } catch (final JsonProcessingException e) {
-                    log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
-                }
-            }
-            if (result != null) {
-                CacheUtils.put(fullUrl, result);
-            }
+            result = processCallGitHub(fullUrl, headers, result);
         } else {
             log.info("loading github information from cache");
         }
 
 
+        return result;
+    }
+
+    protected static JsonNode processCallGitHub(final String fullUrl, final Map<String, String> headers, JsonNode result) {
+        HttpConnectorResult      httpResult = null;
+        final HttpBasicConnector http       = new HttpBasicConnector(TIMEOUT, TIMEOUT, MAX_CONNECTIONS, MAX_CONNECTIONS, TIMEOUT);
+
+        try {
+            log.info("calling {}", fullUrl);
+
+            httpResult = http.get(HttpRequest.builder()
+                                             .verb("GET")
+                                             .url(fullUrl)
+                                             .headers(headers)
+                                             .build());
+
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
+                      httpResult == null ? 0 : httpResult.getDelais());
+            http.close();
+        }
+
+        if (httpResult == null || httpResult.getStatusCode() != 200) {
+            log.error("can't call : {}", fullUrl);
+        } else {
+            try {
+                result = OBJECT_MAPPER.readTree(new String(httpResult.getData()));
+            } catch (final JsonProcessingException e) {
+                log.error("can't read response from : {}\npayload:{}", fullUrl, new String(httpResult.getData()));
+            }
+        }
+        if (result != null) {
+            CacheUtils.put(fullUrl, result);
+        }
         return result;
     }
 

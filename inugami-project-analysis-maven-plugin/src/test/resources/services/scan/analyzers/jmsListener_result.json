@@ -45,6 +45,7 @@
     "uid" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8"
   }, {
     "name" : "JMS",
+    "properties" : { },
     "type" : "ServiceType",
     "uid" : "JMS"
   }, {
@@ -162,38 +163,47 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "0a4db429edbe873deab233de58379dae8f8bc6dec443490dcdb0c2a99295af0d343472a91ffe59eff4b95894c4017e1046568b5ed55659f0f07290c36b2cd8c0",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "0a4db429edbe873deab233de58379dae8f8bc6dec443490dcdb0c2a99295af0d343472a91ffe59eff4b95894c4017e1046568b5ed55659f0f07290c36b2cd8c0",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "properties" : { },
     "to" : "onCreateComment",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8",
+    "properties" : { },
     "to" : "onCreateComment",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "create.user.queue",
+    "properties" : { },
     "to" : "JMS",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "create.user.queue",
+    "properties" : { },
     "to" : "JMS",
     "type" : "SERVICE_TYPE"
   }, {
@@ -212,46 +222,57 @@
     "type" : "USE_BY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "CONSUME"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "onCreateComment",
     "type" : "CONSUME"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "create.user.queue",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$CommentEvent>)",
     "type" : "HAS_METHOD"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.onUserCreate(<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "HAS_METHOD"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "HAS_METHOD"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "my.activeMq.onCreated.queue",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "my.activeMq.onUserCreated.queue",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "my.activeMq.selector",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "my.activeMq.subscription",
     "type" : "USE_PROPERTY"
   }, {
     "from" : "onCreateComment",
+    "properties" : { },
     "to" : "JMS",
     "type" : "SERVICE_TYPE"
   }, {

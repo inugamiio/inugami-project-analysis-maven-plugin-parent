@@ -52,13 +52,13 @@ class EntitiesAnalyzerTest {
     // TESTS
     // =========================================================================
     @Test
-    public void accept_withJmsListenerOrSender_shouldAccept() {
+    void accept_withJmsListenerOrSender_shouldAccept() {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
         assertThat(analyzer.accept(EntitiesAnalyzerTest.User.class, context)).isTrue();
     }
 
     @Test
-    public void analyze_withEntity_shouldFindIt() {
+    void analyze_withEntity_shouldFindIt() {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
         final ScanNeo4jResult neo4jResult = extractResult(
                 analyzer.analyze(EntitiesAnalyzerTest.User.class, context));
@@ -66,7 +66,7 @@ class EntitiesAnalyzerTest {
     }
 
     @Test
-    public void normalizeEntityName_withEntity_shouldNormalizeName() {
+    void normalizeEntityName_withEntity_shouldNormalizeName() {
         final EntitiesAnalyzer analyzer = new EntitiesAnalyzer();
 
         assertThat(analyzer.normalizeEntityName("SQL_MAIN_DATABASE_APP_USER")).isEqualTo("SQL_MAIN_DATABASE_APP_USER");

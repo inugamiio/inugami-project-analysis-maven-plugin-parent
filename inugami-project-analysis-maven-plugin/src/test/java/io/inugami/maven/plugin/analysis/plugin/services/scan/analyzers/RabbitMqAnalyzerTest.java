@@ -61,14 +61,14 @@ class RabbitMqAnalyzerTest {
     // TESTS
     // =========================================================================
     @Test
-    public void accept_withRabbitListenerOrSender_shouldAccept() {
+    void accept_withRabbitListenerOrSender_shouldAccept() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
         assertThat(analyzer.accept(RabbitMqAnalyzerTest.ClassListener.class, context)).isTrue();
         assertThat(analyzer.accept(RabbitMqAnalyzerTest.MethodListener.class, context)).isTrue();
     }
 
     @Test
-    public void analyze_withRabbitListenerOrSender_shouldFindServices() {
+    void analyze_withRabbitListenerOrSender_shouldFindServices() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
 
         final ScanNeo4jResult neo4jResult = extractResult(
@@ -77,7 +77,7 @@ class RabbitMqAnalyzerTest {
     }
 
     @Test
-    public void analyze_withRabbitMethodListenerOrSender_shouldFindServices() {
+    void analyze_withRabbitMethodListenerOrSender_shouldFindServices() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
 
         final ScanNeo4jResult neo4jResult = extractResult(
@@ -86,7 +86,7 @@ class RabbitMqAnalyzerTest {
     }
 
     @Test
-    public void analyze_withRabbitSender_shouldFindServices() {
+    void analyze_withRabbitSender_shouldFindServices() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
 
         final ScanNeo4jResult neo4jResult = extractResult(
@@ -95,7 +95,7 @@ class RabbitMqAnalyzerTest {
     }
 
     @Test
-    public void analyze_withRabbitSenderOneParam_shouldFindServices() {
+    void analyze_withRabbitSenderOneParam_shouldFindServices() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
 
         final ScanNeo4jResult neo4jResult = extractResult(
@@ -104,7 +104,7 @@ class RabbitMqAnalyzerTest {
     }
 
     @Test
-    public void cleanValue_withProperty_shouldCleanValue() {
+    void cleanValue_withProperty_shouldCleanValue() {
         final RabbitMqAnalyzer analyzer = new RabbitMqAnalyzer();
 
         assertThat(analyzer.cleanValue("${my.property}")).isEqualTo("my.property");

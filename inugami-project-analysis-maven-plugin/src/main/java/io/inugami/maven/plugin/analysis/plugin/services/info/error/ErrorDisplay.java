@@ -34,8 +34,10 @@ import org.neo4j.driver.types.Node;
 import java.io.Serializable;
 import java.util.*;
 
+import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.*;
 
+@SuppressWarnings({"java:S3776", "java:S6213"})
 @Slf4j
 public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
@@ -47,7 +49,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
     public static final  String       PAYLOAD     = "payload";
     private static final List<String> QUERIES     = List.of(
             "META-INF/queries/search_errors.cql"
-                                                           );
+    );
     public static final  String       SHORT_NAME  = "shortName";
     public static final  String       ERROR_TYPE  = "errorType";
     public static final  String       STATUS_CODE = "statusCode";
@@ -68,7 +70,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
                 Map.entry("groupId", gav.getGroupId()),
                 Map.entry("artifactId", gav.getArtifactId()),
                 Map.entry("version", gav.getVersion())
-                                   ));
+        ));
         return config;
     }
 
@@ -88,10 +90,10 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
         final List<Record> resultSet = dao.search(query);
 
         final Map<String, Collection<DataRow>> data = new LinkedHashMap<>();
-        if (resultSet != null || !resultSet.isEmpty()) {
+        if (resultSet != null && !resultSet.isEmpty()) {
             buildModels(data, resultSet);
         }
-        log.info("\n{}", rendering(data,context.getConfiguration(),"errorCodes"));
+        log.info("\n{}", rendering(data, context.getConfiguration(), "errorCodes"));
 
         dao.shutdown();
     }
@@ -103,69 +105,82 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
     private void buildModels(final Map<String, Collection<DataRow>> data,
                              final List<Record> resultSet) {
 
-        Set<String> knowKeys = null;
+        final Set<String> knowKeys = new LinkedHashSet<>();
         for (final Record record : resultSet) {
-            final Map<String, Object> recordData = record != null ? record.asMap() : null;
-            if (recordData == null) {
-                continue;
-            }
-            final Node dependency = (Node) recordData.get("dependency");
-            final Node error      = (Node) recordData.get("error");
-
-            final String dependencyName = getNodeName(dependency);
-
-            Collection<DataRow> savedDependency = data.get(dependencyName);
-            if (savedDependency == null) {
-                savedDependency = new LinkedHashSet<>();
-                data.put(dependencyName, savedDependency);
-            }
-
-            if (error != null) {
-                final DataRow dataRow = new DataRow();
-
-                final String type = retrieve(ERROR_TYPE, error);
-                if (type != null) {
-                    switch (type.toUpperCase()) {
-                        case "TECHNICAL":
-                            dataRow.setRowColor(ConsoleColors.RED);
-                            break;
-                        case "SECURITY":
-                            dataRow.setRowColor(ConsoleColors.YELLOW);
-                            break;
-                        case "CONFIG":
-                        case "CONFIGURATION":
-                            dataRow.setRowColor(ConsoleColors.PURPLE);
-                            break;
-                    }
-                }
-
-                final Map<String, Object> properties = error.asMap();
-                knowKeys = orderErrorProperties(properties.keySet(), knowKeys);
-
-                for (final String property : knowKeys) {
-                    final Object propertyValueRaw = properties.get(property);
-                    Serializable propertyValue    = null;
-                    if (propertyValueRaw instanceof Serializable) {
-                        propertyValue = (Serializable) propertyValueRaw;
-                    }
-                    else if (propertyValueRaw == null) {
-                        propertyValue = "";
-                    }
-                    else {
-                        propertyValue = String.valueOf(propertyValueRaw);
-                    }
-                    dataRow.put(property, propertyValue);
-
-                }
-                final String name = getNodeName(error);
-                dataRow.setUid(name == null ? "undefine" : name);
-                savedDependency.add(dataRow);
-
-            }
-
-
+            buildModelOnRecord(data, knowKeys, record);
         }
 
+    }
+
+    private void buildModelOnRecord(final Map<String, Collection<DataRow>> data, Set<String> knowKeys, final Record record) {
+        final Map<String, Object> recordData = record != null ? record.asMap() : null;
+        if (recordData == null) {
+            return;
+        }
+        final Node dependency = (Node) recordData.get("dependency");
+        final Node error      = (Node) recordData.get("error");
+
+        final String dependencyName = getNodeName(dependency);
+
+        Collection<DataRow> savedDependency = data.get(dependencyName);
+        if (savedDependency == null) {
+            savedDependency = new LinkedHashSet<>();
+            data.put(dependencyName, savedDependency);
+        }
+
+        if (error == null) {
+            return;
+        }
+
+
+        final DataRow dataRow = new DataRow();
+
+        final String type = retrieve(ERROR_TYPE, error);
+        if (type != null) {
+            applyIfNotNull(resolveColor(type), color -> dataRow.setRowColor(color));
+        }
+
+        final Map<String, Object> properties = error.asMap();
+        knowKeys = orderErrorProperties(properties.keySet(), knowKeys);
+
+        for (final String property : knowKeys) {
+            extractProperty(dataRow, properties, property);
+        }
+        final String name = getNodeName(error);
+        dataRow.setUid(name == null ? "undefine" : name);
+        savedDependency.add(dataRow);
+    }
+
+    private static void extractProperty(final DataRow dataRow, final Map<String, Object> properties, final String property) {
+        final Object propertyValueRaw = properties.get(property);
+        Serializable propertyValue    = null;
+        if (propertyValueRaw instanceof Serializable) {
+            propertyValue = (Serializable) propertyValueRaw;
+        } else if (propertyValueRaw == null) {
+            propertyValue = "";
+        } else {
+            propertyValue = String.valueOf(propertyValueRaw);
+        }
+        dataRow.put(property, propertyValue);
+    }
+
+    private String resolveColor(final String type) {
+        String result = null;
+        switch (type.toUpperCase()) {
+            case "TECHNICAL":
+                result = ConsoleColors.RED;
+                break;
+            case "SECURITY":
+                result = ConsoleColors.YELLOW;
+                break;
+            case "CONFIG":
+            case "CONFIGURATION":
+                result = ConsoleColors.PURPLE;
+                break;
+            default:
+                break;
+        }
+        return result;
     }
 
     private Set<String> orderErrorProperties(final Set<String> keys, final Set<String> knowKeys) {
@@ -208,8 +223,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
                     result.add(key);
                 }
             }
-        }
-        else {
+        } else {
             result.addAll(firstPass);
         }
         return result;

@@ -25,12 +25,12 @@ import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
+import io.inugami.maven.plugin.analysis.api.models.rest.DescriptionDTO;
+import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestApi;
 import io.inugami.maven.plugin.analysis.api.models.rest.RestEndpoint;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.DescriptionDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.JsonNode;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.PotentialErrorDTO;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.errors.ErrorCodeAnalyzer;
 import io.swagger.annotations.Api;
@@ -38,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -47,11 +46,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S1845", "java:S5361", "java:S115"})
 @Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
@@ -80,33 +80,31 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String PUT    = "PUT";
     public static final String DELETE = "DELETE";
 
-    private static final Class<? extends Annotation> restControllerAnnotation = null;
-    private static final Boolean                     springContext            = null;
-    public static final  String                      IDENTIFIER               = "identifier";
-    public static final  String                      EMPTY                    = "";
-    public static final  String                      DOUBLE_URL_SEP           = "//";
-    public static final  String                      UNDERSCORE               = "_";
-    public static final  String                      QUOT                     = "\"";
-    public static final  String                      LINE                     = "\n";
-    public static final  String                      TAB                      = "\t";
-    public static final  String                      SIMPLE_QUOT              = "'";
-    public static final  String                      MESSAGE                  = "message";
-    public static final  String                      MESSAGE_DETAIL           = "messageDetail";
-    public static final  String                      ERROR_DESCRIPTION        = "description";
-    public static final  String                      EXAMPLE                  = "example";
-    public static final  String                      STATUS_CODE              = "statusCode";
-    public static final  String                      PAYLOAD                  = "payload";
-    public static final  String                      HAS_ERROR_POTENTIAL      = "HAS_ERROR_POTENTIAL";
-    public static final  String                      HAS_ENDPOINT             = "HAS_ENDPOINT";
-    public static final  String                      HAS_ERROR                = "HAS_ERROR";
-    public static final  String                      HAS_POTENTIAL_ERROR      = "HAS_POTENTIAL_ERROR";
+    public static final String IDENTIFIER          = "identifier";
+    public static final String EMPTY               = "";
+    public static final String DOUBLE_URL_SEP      = "//";
+    public static final String UNDERSCORE          = "_";
+    public static final String QUOT                = "\"";
+    public static final String LINE                = "\n";
+    public static final String TAB                 = "\t";
+    public static final String SIMPLE_QUOT         = "'";
+    public static final String MESSAGE             = "message";
+    public static final String MESSAGE_DETAIL      = "messageDetail";
+    public static final String ERROR_DESCRIPTION   = "description";
+    public static final String EXAMPLE             = "example";
+    public static final String STATUS_CODE         = "statusCode";
+    public static final String PAYLOAD             = "payload";
+    public static final String HAS_ERROR_POTENTIAL = "HAS_ERROR_POTENTIAL";
+    public static final String HAS_ENDPOINT        = "HAS_ENDPOINT";
+    public static final String HAS_ERROR           = "HAS_ERROR";
+    public static final String HAS_POTENTIAL_ERROR = "HAS_POTENTIAL_ERROR";
 
     // =========================================================================
     // API
     // =========================================================================
     @Override
     public boolean accept(final Class<?> clazz, final ScanConext context) {
-        return isEnable(FEATURE, context, true) && clazz.getAnnotation(RestController.class) != null;
+        return isEnable(FEATURE, context, true) && getAnnotation(clazz, RestController.class) != null;
     }
 
 
@@ -122,67 +120,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         final ScanNeo4jResult result = ScanNeo4jResult.builder().build();
         if (restApi != null && restApi.getEndpoints() != null) {
             for (final RestEndpoint endpoint : restApi.getEndpoints()) {
-
-                final Node endpointNode = convertEndpointToNeo4j(endpoint);
-                if (endpointNode != null) {
-                    if (existingNode(endpointNode, context.getNeo4jDao())) {
-                        existingNodes.add(endpointNode.getUid());
-                    } else {
-                        result.addNode(endpointNode);
-                    }
-
-                    if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail().getPotentialErrors() != null) {
-                        for (final PotentialErrorDTO potentialError : endpoint.getDescriptionDetail().getPotentialErrors()) {
-                            final Node potentialErrorNode = buildPotentialErrorNode(potentialError);
-                            final Node errorCode          = ErrorCodeAnalyzer.buildErrorCodeNode(potentialError.getErrorCode());
-                            potentialErrors.add(potentialErrorNode);
-                            potentialErrors.add(errorCode);
-
-                            result.addRelationship(Relationship.builder()
-                                                               .from(endpointNode.getUid())
-                                                               .to(potentialErrorNode.getUid())
-                                                               .type(HAS_ERROR_POTENTIAL)
-                                                               .build());
-                            result.addRelationship(Relationship.builder()
-                                                               .from(potentialErrorNode.getUid())
-                                                               .to(endpointNode.getUid())
-                                                               .type(HAS_ENDPOINT)
-                                                               .build());
-
-                            result.addRelationship(Relationship.builder()
-                                                               .from(potentialErrorNode.getUid())
-                                                               .to(errorCode.getUid())
-                                                               .type(HAS_ERROR)
-                                                               .build());
-                            result.addRelationship(Relationship.builder()
-                                                               .from(errorCode.getUid())
-                                                               .to(potentialErrorNode.getUid())
-                                                               .type(HAS_POTENTIAL_ERROR)
-                                                               .build());
-                        }
-                    }
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
-                    result.addNode(inputDto);
-                    for (final Node input : inputDto) {
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(endpointNode.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                    final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
-                    if (outputDto != null) {
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(endpointNode.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-                }
-
-
+                analyzeOnEndpoint(context, existingNodes, potentialErrors, result, endpoint);
             }
         }
 
@@ -190,17 +128,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         if (!result.getNodes().isEmpty()) {
             final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(REST).name(REST).build();
             for (final Node service : result.getNodes()) {
-                result.addRelationship(Relationship.builder()
-                                                   .from(versionNode.getUid())
-                                                   .to(service.getUid())
-                                                   .type(getRelationshipType())
-                                                   .build(),
-
-                                       Relationship.builder()
-                                                   .from(service.getUid())
-                                                   .to(serviceType.getUid())
-                                                   .type(SERVICE_TYPE_RELATIONSHIP)
-                                                   .build());
+                createServiceRelationship(result, versionNode, serviceType, service);
             }
 
             result.addNode(versionNode, serviceType);
@@ -216,6 +144,83 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         }
         result.addNode(potentialErrors);
         return List.of(result);
+    }
+
+    protected void createServiceRelationship(final ScanNeo4jResult result, final Node versionNode, final Node serviceType, final Node service) {
+        if (service.getType().equals(SERVICE)) {
+            result.addRelationship(Relationship.builder()
+                                               .from(versionNode.getUid())
+                                               .to(service.getUid())
+                                               .type(getRelationshipType())
+                                               .build(),
+
+                                   Relationship.builder()
+                                               .from(service.getUid())
+                                               .to(serviceType.getUid())
+                                               .type(SERVICE_TYPE_RELATIONSHIP)
+                                               .build());
+        }
+    }
+
+    protected void analyzeOnEndpoint(final ScanConext context, final List<String> existingNodes, final List<Node> potentialErrors, final ScanNeo4jResult result, final RestEndpoint endpoint) {
+        final Node endpointNode = convertEndpointToNeo4j(endpoint);
+        if (endpointNode != null) {
+            if (existingNode(endpointNode, context.getNeo4jDao())) {
+                existingNodes.add(endpointNode.getUid());
+            } else {
+                result.addNode(endpointNode);
+            }
+
+            if (endpoint.getDescriptionDetail() != null && endpoint.getDescriptionDetail().getPotentialErrors() != null) {
+                for (final PotentialErrorDTO potentialError : endpoint.getDescriptionDetail().getPotentialErrors()) {
+                    final Node potentialErrorNode = buildPotentialErrorNode(potentialError);
+                    final Node errorCode          = ErrorCodeAnalyzer.buildErrorCodeNode(potentialError.getErrorCode());
+                    potentialErrors.add(potentialErrorNode);
+                    potentialErrors.add(errorCode);
+
+                    result.addRelationship(Relationship.builder()
+                                                       .from(endpointNode.getUid())
+                                                       .to(potentialErrorNode.getUid())
+                                                       .type(HAS_ERROR_POTENTIAL)
+                                                       .build());
+                    result.addRelationship(Relationship.builder()
+                                                       .from(potentialErrorNode.getUid())
+                                                       .to(endpointNode.getUid())
+                                                       .type(HAS_ENDPOINT)
+                                                       .build());
+
+                    result.addRelationship(Relationship.builder()
+                                                       .from(potentialErrorNode.getUid())
+                                                       .to(errorCode.getUid())
+                                                       .type(HAS_ERROR)
+                                                       .build());
+                    result.addRelationship(Relationship.builder()
+                                                       .from(errorCode.getUid())
+                                                       .to(potentialErrorNode.getUid())
+                                                       .type(HAS_POTENTIAL_ERROR)
+                                                       .build());
+                }
+            }
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(endpoint.getJavaMethod());
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(endpointNode.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+            final Node outputDto = ReflectionService.extractOutputDto(endpoint.getJavaMethod());
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(endpointNode.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+        }
     }
 
     private Node buildPotentialErrorNode(final PotentialErrorDTO potentialError) {
@@ -322,11 +327,11 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     // =========================================================================
     protected RestApi analyseClass(final Class<?> clazz) {
         final String name        = getApiName(clazz);
-        final String baseContext = getBaseContext(clazz);
+        final String rootContext = getBaseContext(clazz);
         return RestApi.builder()
                       .name(name)
-                      .baseContext(URI_SEP + baseContext)
-                      .endpoints(resolveEndpoints(clazz, baseContext, true))
+                      .baseContext(rootContext == null ? URI_SEP : URI_SEP + rootContext)
+                      .endpoints(resolveEndpoints(clazz, rootContext == null ? EMPTY : rootContext))
                       .build()
                       .orderEndPoint();
     }
@@ -334,27 +339,27 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     protected String getBaseContext(final Class<?> clazz) {
         String result = EMPTY;
 
-        RequestMapping annotation = clazz.getDeclaredAnnotation(RequestMapping.class);
+        RequestMapping annotation = getAnnotation(clazz, RequestMapping.class);
         if (annotation == null) {
             annotation = searchRequestMappingInInterface(clazz.getInterfaces());
         }
 
         if (annotation != null) {
-            if (annotation.value() != null && annotation.value().length > 0) {
+            if (annotation.value().length > 0) {
                 result = annotation.value()[0];
             }
-            if (result.isEmpty() && annotation.path() != null && annotation.path().length > 0) {
+            if (result.isEmpty() && annotation.path().length > 0) {
                 result = annotation.path()[0];
             }
         }
         return result;
     }
 
-    private RequestMapping searchRequestMappingInInterface(final Class<?>[] interfaces) {
+    protected RequestMapping searchRequestMappingInInterface(final Class<?>[] interfaces) {
         RequestMapping result = null;
         if (interfaces != null) {
             for (final Class<?> interfaceClass : interfaces) {
-                result = interfaceClass.getDeclaredAnnotation(RequestMapping.class);
+                result = getAnnotation(interfaceClass, RequestMapping.class);
                 if (result != null) {
                     break;
                 }
@@ -368,12 +373,12 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
 
-    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext, final boolean strict) {
+    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext) {
         final List<RestEndpoint> result = new ArrayList<>();
         for (final Method method : extractMethods(clazz)) {
             if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
                               DeleteMapping.class)) {
-                result.add(resolveEndpoint(method, baseContext, clazz, strict));
+                result.add(resolveEndpoint(method, baseContext, clazz));
             }
         }
         return result;
@@ -392,8 +397,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return result.toArray(new Method[]{});
     }
 
-    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,
-                                         final boolean strict) {
+    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
         processOnAnnotation(method, RequestMapping.class, (annotation) -> {
@@ -446,17 +450,16 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     private DescriptionDTO resolveDescription(final Method method) {
-        final Description description = method.getAnnotation(Description.class);
+        final Description description = getAnnotation(method, Description.class);
         DescriptionDTO    result      = null;
         if (description != null) {
-            result = buildDescription(method, description);
+            result = buildDescription(description);
         }
         return result;
     }
 
-    private DescriptionDTO buildDescription(final Method method, final Description description) {
-        final String                  example         = null;
-        final List<PotentialErrorDTO> potentialErrors = new ArrayList<>();
+    private DescriptionDTO buildDescription(final Description description) {
+        final String example = null;
 
         return DescriptionDTO.builder()
                              .url(description.url())
@@ -489,9 +492,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
 
 
     private String renderUri(final String baseContext, final String[] paths) {
-        final List<String> result  = new ArrayList<>();
-        final String       context = baseContext == null ? EMPTY : URI_SEP + baseContext;
-        result.add(context);
+        final List<String> result             = new ArrayList<>();
+        String             currentBaseContext = baseContext == null || baseContext.isEmpty() ? EMPTY : URI_SEP + baseContext;
+        if (baseContext != null && !baseContext.endsWith(URI_SEP)) {
+            currentBaseContext = currentBaseContext + URI_SEP;
+        }
+
+        result.add(currentBaseContext);
         for (final String path : paths) {
             result.add(path);
         }

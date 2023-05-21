@@ -27,16 +27,18 @@ import static io.inugami.maven.plugin.analysis.front.api.RenderingConstants.*;
 import static io.inugami.maven.plugin.analysis.front.api.utils.HtmlRenderingUtils.*;
 
 public class DefaultIndexLoadingContent implements IndexHtmlLoadingContentSpi {
-    
+
+    public static final String CLASS = "class";
+
     @Override
     public String getLoadingContent(final String contextPath, final List<FrontPluginSpi> plugins) {
         final JsonBuilder result = new JsonBuilder();
-        result.write(openTag(DIV, HtmlAttribute.build("class", "loading")));
-        result.write(openTag(DIV, HtmlAttribute.build("class", "info")));
+        result.write(openTag(DIV, HtmlAttribute.build(CLASS, "loading")));
+        result.write(openTag(DIV, HtmlAttribute.build(CLASS, "info")));
 
         result.write(tag(H1, () -> buildPluginTitle(plugins)));
         result.write(tag(H2, () -> "loading ..."));
-        result.write(openTag(DIV, HtmlAttribute.build("class", "icon-loading")));
+        result.write(openTag(DIV, HtmlAttribute.build(CLASS, "icon-loading")));
         result.write(autoClosableTag(IMG, HtmlAttribute.build("src",
                                                               buildPath(contextPath,
                                                                         buildPluginLoadingImage(plugins)))));

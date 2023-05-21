@@ -1,0 +1,8 @@
+{
+  "getProperties" : {
+    "name" : "joe"
+  },
+  "getTarget" : "target",
+  "getTemplate" : "basic template",
+  "getTemplatePath" : "/path/for/template.txt"
+}

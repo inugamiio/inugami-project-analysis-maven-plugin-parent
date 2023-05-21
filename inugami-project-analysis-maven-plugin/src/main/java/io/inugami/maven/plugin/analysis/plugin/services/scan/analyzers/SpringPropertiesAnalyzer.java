@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S6397", "java:S6395"})
 @Slf4j
 public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
@@ -194,7 +195,6 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     private void searchInConstructors(final Class<?> clazz,
                                       final Set<Node> nodes) {
-        final Set<Node>           result       = new LinkedHashSet<>();
         final Set<Constructor<?>> constructors = loadAllConstructors(clazz);
 
         for (final Constructor<?> constructor : constructors) {
@@ -217,19 +217,23 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         final List<Method> methods = loadAllMethods(clazz);
 
         for (final Method method : methods) {
-            final Set<Node> nodesConditionals = ifHasAnnotation(method, ConditionalOnProperty.class,
-                                                                annotation -> this.mapToNode(annotation));
-            if (nodesConditionals != null) {
-                conditionalProperties.addAll(nodesConditionals);
-            }
-            if (method.getParameterCount() > 0) {
-                for (final Parameter parameter : method.getParameters()) {
-                    final Node node = ifHasAnnotation(parameter, Value.class,
-                                                      annotation -> this.mapToNode(annotation, parameter.getType()));
-                    if (node != null) {
-                        resolveConstraints(node, parameter.getDeclaredAnnotations());
-                        nodes.add(node);
-                    }
+            searchInMethod(nodes, conditionalProperties, method);
+        }
+    }
+
+    private void searchInMethod(final Set<Node> nodes, final Set<Node> conditionalProperties, final Method method) {
+        final Set<Node> nodesConditionals = ifHasAnnotation(method, ConditionalOnProperty.class,
+                                                            annotation -> this.mapToNode(annotation));
+        if (nodesConditionals != null) {
+            conditionalProperties.addAll(nodesConditionals);
+        }
+        if (method.getParameterCount() > 0) {
+            for (final Parameter parameter : method.getParameters()) {
+                final Node node = ifHasAnnotation(parameter, Value.class,
+                                                  annotation -> this.mapToNode(annotation, parameter.getType()));
+                if (node != null) {
+                    resolveConstraints(node, parameter.getDeclaredAnnotations());
+                    nodes.add(node);
                 }
             }
         }
@@ -239,7 +243,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // MAPPER
     // =========================================================================
-    private <A extends Annotation> Set<Node> mapToNode(final ConditionalOnProperty annotation) {
+    protected Set<Node> mapToNode(final ConditionalOnProperty annotation) {
         final Set<Node> result = new LinkedHashSet<>();
         final String[]  values = annotation.value();
         final String[]  names  = annotation.name();
@@ -259,30 +263,34 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
                 currentNames.addAll(Arrays.asList(names));
             }
 
-            for (final String name : currentNames) {
-                if (stringNotEmpty(name)) {
-
-                    final String                              valueFull      = (prefix == null ? "" : prefix + ".") + name;
-                    final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
-
-                    additionalInfo.put(USE_FOR_CONDITIONAL_BEAN, Boolean.TRUE);
-                    additionalInfo.put(MANDATORY, Boolean.FALSE);
-                    additionalInfo.put(PROPERTY_TYPE, resolveType(havingValue));
-                    additionalInfo.put(MATCH_IF_MISSING, matchIfMissing);
-                    result.add(Node.builder()
-                                   .type(PROPERTY)
-                                   .name(valueFull)
-                                   .uid(valueFull)
-                                   .properties(additionalInfo)
-                                   .build());
-                }
-            }
+            createNodes(result, prefix, havingValue, matchIfMissing, currentNames);
         }
         return result;
     }
 
+    protected void createNodes(final Set<Node> result, final String prefix, final String havingValue, final boolean matchIfMissing, final Set<String> currentNames) {
+        for (final String name : currentNames) {
+            if (stringNotEmpty(name)) {
 
-    private String resolveType(final String havingValue) {
+                final String                              valueFull      = (prefix == null ? "" : prefix + ".") + name;
+                final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
+
+                additionalInfo.put(USE_FOR_CONDITIONAL_BEAN, Boolean.TRUE);
+                additionalInfo.put(MANDATORY, Boolean.FALSE);
+                additionalInfo.put(PROPERTY_TYPE, resolveType(havingValue));
+                additionalInfo.put(MATCH_IF_MISSING, matchIfMissing);
+                result.add(Node.builder()
+                               .type(PROPERTY)
+                               .name(valueFull)
+                               .uid(valueFull)
+                               .properties(additionalInfo)
+                               .build());
+            }
+        }
+    }
+
+
+    protected String resolveType(final String havingValue) {
         String result = "undefine";
 
         if (havingValue != null) {
@@ -301,8 +309,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         return result;
     }
 
-    private <A extends Annotation> Node mapToNode(final Value annotation,
-                                                  final Class<?> type) {
+    protected Node mapToNode(final Value annotation,
+                             final Class<?> type) {
         final String value = annotation.value();
         return buildPropertyNode(type, value);
     }
@@ -343,7 +351,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // BEAN PROPERTIES
     // =========================================================================
-    private Set<Node> mapToBeanPropertyNode(final ConfigurationProperties annotation, final Class<?> clazz) {
+    protected Set<Node> mapToBeanPropertyNode(final ConfigurationProperties annotation, final Class<?> clazz) {
 
         final StringBuilder fullPrefix = new StringBuilder();
         if (stringNotEmpty(annotation.prefix())) {
@@ -378,10 +386,12 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public Set<Node> extractFieldProperties(final String path, final Class<?> clazz,
                                             final Field field) {
         final Set<Node> result = new LinkedHashSet<>();
+        if (field == null) {
+            return result;
+        }
 
         final String fullPath = CYCLIC_CLASSES_RESOLVER.buildFullPath(path, field);
-        log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(),
-                  field == null ? null : field.getName());
+        log.debug("extractFieldProperties : {} | {} | {}", fullPath, clazz == null ? null : clazz.getName(), field.getName());
 
         for (final BeanPropertyTypeResolver resolver : TYPE_RESOLVERS) {
             CYCLIC_CLASSES_RESOLVER.register(fullPath, field);
@@ -405,18 +415,22 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     public void resolveConstraints(final Node node, final Annotation[] annotations) {
         if (annotations != null) {
             for (final Annotation annotation : annotations) {
-                if (hasAnnotation(annotation.annotationType(), Constraint.class)) {
+                resolveContraintOnAnnotation(node, annotation);
+            }
+        }
+    }
 
-                    if (annotation instanceof NotNull || annotation instanceof NotEmpty || annotation instanceof NotBlank) {
-                        node.getProperties().put(MANDATORY, Boolean.TRUE);
-                    }
-                    node.getProperties().put(CONSTRAINT_TYPE, annotation.annotationType().getName());
+    protected static void resolveContraintOnAnnotation(final Node node, final Annotation annotation) {
+        if (hasAnnotation(annotation.annotationType(), Constraint.class)) {
 
-                    for (final ConstraintInformationResolver constraintsInfoResolver : CONSTRAINTS_INFO_RESOLVERS) {
-                        if (constraintsInfoResolver.accept(annotation)) {
-                            constraintsInfoResolver.appendInformation(node.getProperties(), annotation);
-                        }
-                    }
+            if (annotation instanceof NotNull || annotation instanceof NotEmpty || annotation instanceof NotBlank) {
+                node.getProperties().put(MANDATORY, Boolean.TRUE);
+            }
+            node.getProperties().put(CONSTRAINT_TYPE, annotation.annotationType().getName());
+
+            for (final ConstraintInformationResolver constraintsInfoResolver : CONSTRAINTS_INFO_RESOLVERS) {
+                if (constraintsInfoResolver.accept(annotation)) {
+                    constraintsInfoResolver.appendInformation(node.getProperties(), annotation);
                 }
             }
         }
@@ -430,30 +444,33 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     }
 
 
-    private void fusion(final Set<Node> nodes, final Set<Node> conditionalProperties) {
+    protected void fusion(final Set<Node> nodes, final Set<Node> conditionalProperties) {
         if (nodes == null) {
             return;
         }
         if (conditionalProperties != null) {
             final List<Node> classicProperties = new ArrayList<>(nodes);
             for (final Node conditionalNode : conditionalProperties) {
-                if (classicProperties.contains(conditionalNode)) {
-                    final Node node = classicProperties
-                            .get(classicProperties.indexOf(conditionalNode));
-                    final Map<String, Serializable> additionalProperties = conditionalNode.getProperties();
-                    for (final Map.Entry<String, Serializable> entry : conditionalNode.getProperties().entrySet()) {
-                        if (!PROPERTY_TYPE.equals(entry.getKey())) {
-                            node.getProperties().put(entry.getKey(), entry.getValue());
-                        }
-                    }
-                } else {
-                    nodes.add(conditionalNode);
-                }
+                fusionOnNode(nodes, classicProperties, conditionalNode);
             }
         }
     }
 
-    private boolean stringNotEmpty(final String value) {
+    protected static void fusionOnNode(final Set<Node> nodes, final List<Node> classicProperties, final Node conditionalNode) {
+        if (classicProperties.contains(conditionalNode)) {
+            final Node node = classicProperties.get(classicProperties.indexOf(conditionalNode));
+            
+            for (final Map.Entry<String, Serializable> entry : conditionalNode.getProperties().entrySet()) {
+                if (!PROPERTY_TYPE.equals(entry.getKey())) {
+                    node.getProperties().put(entry.getKey(), entry.getValue());
+                }
+            }
+        } else {
+            nodes.add(conditionalNode);
+        }
+    }
+
+    protected boolean stringNotEmpty(final String value) {
         return value != null && !"".equals(value.trim());
     }
 }

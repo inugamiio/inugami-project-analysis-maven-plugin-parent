@@ -53,8 +53,7 @@ public final class Neo4jRenderingUtils {
             result = processRendering(data);
             try {
                 processExport(data, configuration, context);
-            }
-            catch (final Exception error) {
+            } catch (final Exception error) {
                 Loggers.DEBUG.error(error.getMessage(), error);
             }
 
@@ -87,8 +86,7 @@ public final class Neo4jRenderingUtils {
 
         if (inputData == null || inputData.isEmpty()) {
             writer.write("no result").line();
-        }
-        else {
+        } else {
             final List<DataRow> data = new ArrayList<>(inputData);
             data.sort((ref, value) -> {
                 final String refUid   = ref == null || ref.getUid() == null ? "null" : ref.getUid();
@@ -110,32 +108,40 @@ public final class Neo4jRenderingUtils {
             writer.write(ConsoleColors.createLine("-", displaySize));
             writer.line();
 
-            for (final DataRow row : data) {
-                if (row.getRowColor() != null) {
-                    writer.write(row.getRowColor());
-                }
-                int cursor = 0;
-                for (final Map.Entry<String, Integer> header : columnsSize.entrySet()) {
-                    final Serializable value = row.getProperties().get(header.getKey());
-                    if (value == null) {
-                        writer.write(ConsoleColors.createLine(" ", header.getValue()));
-                        writer.write(COLUMN_SEP);
-                    }
-                    else {
-                        final String renderedValue = processRenderingValue(value, cursor,
-                                                                           columnsSize.get(header.getKey()));
-                        writer.write(renderedValue);
-                        writer.write(ConsoleColors.createLine(" ", columnsSize.get(header.getKey()) - renderedValue
-                                .length()));
-                        writer.write(COLUMN_SEP);
-                    }
-                    cursor += columnsSize.get(header.getKey()) + COLUMN_SEP.length();
-                }
-                writer.write(ConsoleColors.RESET);
-                writer.line();
-            }
+            renderRows(writer, data, columnsSize);
         }
         return writer.toString();
+    }
+
+    private static void renderRows(final JsonBuilder writer, final List<DataRow> data, final Map<String, Integer> columnsSize) {
+        for (final DataRow row : data) {
+            if (row.getRowColor() != null) {
+                writer.write(row.getRowColor());
+            }
+            int cursor = 0;
+            for (final Map.Entry<String, Integer> header : columnsSize.entrySet()) {
+                cursor = renderRow(writer, columnsSize, row, cursor, header);
+            }
+            writer.write(ConsoleColors.RESET);
+            writer.line();
+        }
+    }
+
+    private static int renderRow(final JsonBuilder writer, final Map<String, Integer> columnsSize, final DataRow row, int cursor, final Map.Entry<String, Integer> header) {
+        final Serializable value = row.getProperties().get(header.getKey());
+        if (value == null) {
+            writer.write(ConsoleColors.createLine(" ", header.getValue()));
+            writer.write(COLUMN_SEP);
+        } else {
+            final String renderedValue = processRenderingValue(value, cursor,
+                                                               columnsSize.get(header.getKey()));
+            writer.write(renderedValue);
+            writer.write(ConsoleColors.createLine(" ", columnsSize.get(header.getKey()) - renderedValue
+                    .length()));
+            writer.write(COLUMN_SEP);
+        }
+        cursor += columnsSize.get(header.getKey()) + COLUMN_SEP.length();
+        return cursor;
     }
 
     private static String processRenderingValue(final Serializable value, final int tab, final int columnSize) {
@@ -154,21 +160,26 @@ public final class Neo4jRenderingUtils {
         if (data != null) {
             for (final DataRow item : data) {
                 if (item != null) {
-                    for (final Map.Entry<String, Serializable> entry : item.getProperties().entrySet()) {
-                        final String  value        = String.valueOf(entry.getValue());
-                        final int     maxValueSize = computeMaxValueSize(value);
-                        final Integer resultItem   = result.get(entry.getKey());
-                        if (resultItem == null || resultItem < maxValueSize) {
-                            result.put(entry.getKey(),
-                                       value.length() < entry.getKey().length() ? entry.getKey()
-                                                                                       .length() : maxValueSize);
-                        }
-                    }
+                    processComputeColumnSize(result, item);
                 }
             }
         }
 
         return result;
+    }
+
+    private static void processComputeColumnSize(final Map<String, Integer> result, final DataRow item) {
+        for (final Map.Entry<String, Serializable> entry : item.getProperties().entrySet()) {
+            final String  value        = String.valueOf(entry.getValue());
+            final int     maxValueSize = computeMaxValueSize(value);
+            final Integer resultItem   = result.get(entry.getKey());
+            final int     valueLength  = value == null ? 0 : value.length();
+            if (resultItem == null || resultItem < maxValueSize) {
+                result.put(entry.getKey(),
+                           valueLength < entry.getKey().length() ? entry.getKey()
+                                                                        .length() : maxValueSize);
+            }
+        }
     }
 
     private static int computeMaxValueSize(final String value) {
@@ -239,14 +250,13 @@ public final class Neo4jRenderingUtils {
             writer.write(csv.toString());
             writer.flush();
             Loggers.IO.info("write file : {}", file.getAbsolutePath());
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             Loggers.DEBUG.error(e.getMessage(), e);
         }
     }
 
     private static String cleanFileName(final String value) {
-        return value.replaceAll(" ", "").replaceAll(":","_");
+        return value.replace(" ", "").replace(":", "_");
     }
 
 
@@ -285,9 +295,9 @@ public final class Neo4jRenderingUtils {
         }
 
         final String value = String.valueOf(serializable);
-        return value.replaceAll("\n", "")
-                    .replaceAll("\t", " ")
-                    .replaceAll("\"", "\\\"");
+        return value.replace("\n", "")
+                    .replace("\t", " ")
+                    .replace("\"", "\\\"");
     }
 
     // =========================================================================
@@ -317,7 +327,7 @@ public final class Neo4jRenderingUtils {
         return Neo4jUtils.retrieve(key, node);
     }
 
-    public static <T> void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
+    public static void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
         Neo4jUtils.ifPropertyNotNull(key, node, consumer);
     }
 }

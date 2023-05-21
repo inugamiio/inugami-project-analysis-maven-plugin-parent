@@ -7,7 +7,7 @@ import static io.inugami.commons.test.UnitTestHelper.loadJsonReference;
 
 public class PluginsModuleRendererTest {
     @Test
-    public void render_nominal() {
+    void render_nominal() {
         final PluginsModuleRenderer renderer = new PluginsModuleRenderer();
 
         final String indexHtml = renderer.render();

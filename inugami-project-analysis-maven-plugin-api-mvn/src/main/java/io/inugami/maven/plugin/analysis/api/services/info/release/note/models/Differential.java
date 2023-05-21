@@ -33,19 +33,18 @@ public class Differential {
     final List<JsonObject> deletedValues = new ArrayList<>();
     final List<JsonObject> sameValues    = new ArrayList<>();
 
-    public static Differential buildDifferential(final Collection<JsonObject> currents, final Collection<JsonObject> previous) {
-        final Differential result = new Differential();
+    public static Differential buildDifferential(final Collection<JsonObject> inputCurrents, final Collection<JsonObject> inputPrevious) {
+        final Differential           result   = new Differential();
+        final Collection<JsonObject> currents = inputCurrents == null ? List.of() : inputCurrents;
+        final Collection<JsonObject> previous = inputPrevious == null ? List.of() : inputPrevious;
 
         if (empty(currents) && !empty(previous)) {
             result.addDeletedValues(previous);
-        }
-        else if (!empty(currents) && empty(previous)) {
+        } else if (!empty(currents) && empty(previous)) {
             result.addNewValues(currents);
-        }
-        else if (empty(currents) && empty(previous)) {
+        } else if (empty(currents) && empty(previous)) {
             //nothing to do
-        }
-        else {
+        } else {
             result.addNewValues(resolveNewValues(currents, previous));
             result.addDeletedValues(resolveDeleteValues(currents, previous));
             result.addSameValues(resolveSameValues(currents, result.getNewValues(), result.getDeletedValues()));
@@ -144,6 +143,6 @@ public class Differential {
 
 
     private static boolean empty(final Collection<JsonObject> values) {
-        return values == null || values.isEmpty();
+        return values.isEmpty();
     }
 }

@@ -22,7 +22,8 @@ import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 
 import java.util.Set;
 
-public interface IssueTackerProvider {
+@SuppressWarnings({"java:S1845"})
+public interface IssueTrackerProvider {
 
     String SYSTEM = "project.issue.management.system";
     String URL    = "project.issue.management.url";

@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.front.api.RenderingConstants.*;
 
+@SuppressWarnings({"java:S6395"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HtmlRenderingUtils {
@@ -48,7 +49,7 @@ public class HtmlRenderingUtils {
                              final Supplier<String> appender,
                              final HtmlAttribute... attributes) {
         final JsonBuilder result = new JsonBuilder();
-        if (result == null || tagName == null) {
+        if (tagName == null) {
             return result.toString();
         }
         result.write(TAG_OPEN).append(tagName);
@@ -140,8 +141,7 @@ public class HtmlRenderingUtils {
                 while ((line = br.readLine()) != null) {
                     resultStringBuilder.append(line).append("\n");
                 }
-            }
-            catch (final IOException e) {
+            } catch (final IOException e) {
                 log.error(e.getMessage(), e);
             }
 
@@ -153,7 +153,7 @@ public class HtmlRenderingUtils {
 
     public static String loadSvg(final String resourcePath, final int width, final int height) {
         final String   content = loadResource(resourcePath);
-        final String[] lines   = content.split(">");
+        final String[] lines   = content == null ? new String[]{} : content.split(">");
 
         final List<String> buffer = new ArrayList<>();
         for (int i = 0; i < lines.length; i++) {
@@ -161,13 +161,11 @@ public class HtmlRenderingUtils {
             String       newContent = replaceSize(line, width, height);
             if (line.length() < 120) {
                 newContent = line;
-            }
-            else {
+            } else {
                 final Matcher matcher = XML_ATTRIBUTE.matcher(newContent);
                 if (matcher.find()) {
                     newContent = splitXmlLine(newContent, matcher);
-                }
-                else {
+                } else {
                     newContent = String.join("\n", newContent.split(" "));
                 }
             }
@@ -181,7 +179,7 @@ public class HtmlRenderingUtils {
         }
 
 
-        return (String.join(">", buffer) + ">").replaceAll("\n\n", "\n");
+        return (String.join(">", buffer) + ">").replace("\n\n", "\n");
     }
 
     private static String replaceSize(final String line, final int width, final int height) {
@@ -206,8 +204,8 @@ public class HtmlRenderingUtils {
                                                           .filter(l -> l.contains("inkscape:"))
                                                           .replacement(s -> "")
                                                           .build()
-                                      )
-                        .replaceAll("\n", " ");
+                )
+                        .replace("\n", " ");
             }
         }
         return content;

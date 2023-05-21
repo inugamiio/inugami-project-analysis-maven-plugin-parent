@@ -18,23 +18,55 @@ package io.inugami.maven.plugin.analysis.api.models;
 
 import lombok.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Builder
-@EqualsAndHashCode
-@ToString
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortProperties;
+
+@Builder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class Resource {
-
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private String              target;
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private String              path;
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private String              gav;
     private List<Include>       includes;
     private List<Exclude>       excludes;
     private boolean             filtering;
     private Map<String, String> properties;
+
+    public static class ResourceBuilder {
+        ResourceBuilder property(final String key, final String value) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (key != null && value != null) {
+                this.properties.put(key, value);
+            }
+            this.properties = sortProperties(this.properties);
+            return this;
+        }
+
+        ResourceBuilder properties(final Map<String, String> properties) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (properties != null) {
+                this.properties.putAll(properties);
+            }
+            this.properties = sortProperties(this.properties);
+            return this;
+        }
+    }
 }

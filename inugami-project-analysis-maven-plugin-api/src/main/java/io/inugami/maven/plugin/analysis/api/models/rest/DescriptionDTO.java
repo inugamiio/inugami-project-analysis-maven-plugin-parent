@@ -14,9 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.scan.parents;
+package io.inugami.maven.plugin.analysis.api.models.rest;
 
-public class ScanParentTest {
+import lombok.*;
 
+import java.io.Serializable;
+import java.util.List;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder(toBuilder = true)
+@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class DescriptionDTO implements Serializable {
+    private static final long                    serialVersionUID = -8260338174990313946L;
+    @EqualsAndHashCode.Include
+    private              String                  content;
+    private              String                  example;
+    private              String                  url;
+    private              List<PotentialErrorDTO> potentialErrors;
 }

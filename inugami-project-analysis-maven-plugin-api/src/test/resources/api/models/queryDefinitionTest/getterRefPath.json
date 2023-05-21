@@ -1,0 +1,7 @@
+{
+  "getDescription" : "Allow to retrieve release note information",
+  "getName" : "search_release_note_simple",
+  "getParameters" : [ "param" ],
+  "getPath" : "META-INF/queries/search_release_note_simple.cql",
+  "getType" : "cql"
+}

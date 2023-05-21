@@ -41,6 +41,7 @@ import static io.inugami.api.exceptions.Asserts.assertTrue;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_EXISTS;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_READABLE;
 
+@SuppressWarnings({"java:S2095", "java:S899", "java:S1068", "java:S4042", "java:S107"})
 @Slf4j
 public class BasicBuildService {
 
@@ -360,11 +361,9 @@ public class BasicBuildService {
             ZipEntry entry;
             do {
                 entry = zip.getNextEntry();
-                if (entry != null) {
-                    if (!targetFile.getAbsolutePath().contains(MACOSX_DELETED)) {
-                        unzipFile(targetFile, zip, entry, properties, mavenProperties, filtering, mavenFiltering,
-                                  textFiles);
-                    }
+                if (entry != null && !targetFile.getAbsolutePath().contains(MACOSX_DELETED)) {
+                    unzipFile(targetFile, zip, entry, properties, mavenProperties, filtering, mavenFiltering,
+                              textFiles);
                 }
             } while (entry != null);
 
@@ -410,12 +409,12 @@ public class BasicBuildService {
                                                                      mavenProperties, properties, mavenFiltering);
                 FilesUtils.write(realContent, newFile);
             } else {
-                final FileOutputStream fos = new FileOutputStream(newFile);
-                int                    len;
-                while ((len = zip.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
+                try (final FileOutputStream fos = new FileOutputStream(newFile)) {
+                    int len;
+                    while ((len = zip.read(buffer)) > 0) {
+                        fos.write(buffer, 0, len);
+                    }
                 }
-                close(() -> fos.close());
             }
 
         }

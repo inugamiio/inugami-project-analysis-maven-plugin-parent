@@ -16,6 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.front.api;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +53,18 @@ public interface FrontPluginSpi {
     }
 
     default List<String> getJavaScriptLink() {
-        return null;
+        return new ArrayList<>();
     }
 
     default List<String> getCssFiles() {
-        return null;
+        return new ArrayList<>();
     }
 
     default List<String> getMessageProperties() {
-        return null;
+        return new ArrayList<>();
     }
 
     default Map<String, String> getVendorModulesMap() {
-        return null;
+        return new LinkedHashMap<>();
     }
 }

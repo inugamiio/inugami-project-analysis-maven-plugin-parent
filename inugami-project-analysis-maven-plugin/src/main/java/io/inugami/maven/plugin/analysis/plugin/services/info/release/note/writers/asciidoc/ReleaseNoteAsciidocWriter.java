@@ -21,6 +21,7 @@ import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.files.FilesUtils;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.ReleaseNoteWriter;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Author;
@@ -28,7 +29,6 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Is
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.MergeRequests;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
@@ -38,8 +38,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S899", "java:S4042"})
 @Slf4j
 public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
@@ -50,16 +50,15 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     public static final String FEATURE_NAME    = "inugami.maven.plugin.analysis.display.release.note.asciidoc";
     public static final String BASE_DOC_FOLDER = FEATURE_NAME + ".baseDir";
     public static final String SPLIT_FILE      = FEATURE_NAME + ".splitFile";
-
-    private static final Pattern COMMIT_REGEX = Pattern
-            .compile("(?:\\[([^]]+)\\])(?:\\[([^]]+)\\])(?:\\[([^]]+)\\])(.*)");
-    public static final  String  RELEASE_NOTE = "release-note";
-    public static final  String  ADOC         = ".adoc";
-    public static final  String  DELIMITER    = "-";
-    public static final  String  DATE         = "date";
-    public static final  String  COMMIT_UID   = "commitUid";
-    public static final  String  AUTHOR       = "author";
-    public static final  String  MESSAGE      = "message";
+    public static final String RELEASE_NOTE    = "release-note";
+    public static final String ADOC            = ".adoc";
+    public static final String DELIMITER       = "-";
+    public static final String DATE            = "date";
+    public static final String COMMIT_UID      = "commitUid";
+    public static final String AUTHOR          = "author";
+    public static final String MESSAGE         = "message";
+    public static final String PIPE            = "|";
+    public static final String EMPTY           = "";
 
     // =========================================================================
     // ACCEPT
@@ -129,25 +128,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         for (final AsciidocInfoWriter writerInfo : infoWriters) {
             if (writerInfo.isEnabled(context.getConfiguration())) {
-                log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
-                final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
-                if (content != null) {
-                    if (content.size() == 1) {
-                        write(content.get(new ArrayList<>(content.keySet()).get(0)),
-                              writer,
-                              writerInfo.getParagraphName(),
-                              version,
-                              baseDocFolder);
-                    } else {
-                        for (final Map.Entry<String, String> entry : content.entrySet()) {
-                            write(entry.getValue(),
-                                  writer,
-                                  String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
-                                  version,
-                                  baseDocFolder);
-                        }
-                    }
-                }
+                renderOnWriterInfo(releaseNote, baseDocFolder, context, version, notSplitFile, writer, writerInfo);
             } else {
                 log.info("asciidoc writer disabled : {}", writerInfo.getClass().getName());
             }
@@ -155,6 +136,28 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
         if (writer != null) {
             writer.close();
+        }
+    }
+
+    protected void renderOnWriterInfo(final ReleaseNoteResult releaseNote, final File baseDocFolder, final InfoContext context, final String version, final boolean notSplitFile, final Writer writer, final AsciidocInfoWriter writerInfo) throws IOException {
+        log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
+        final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
+        if (content != null) {
+            if (content.size() == 1) {
+                write(content.get(new ArrayList<>(content.keySet()).get(0)),
+                      writer,
+                      writerInfo.getParagraphName(),
+                      version,
+                      baseDocFolder);
+            } else {
+                for (final Map.Entry<String, String> entry : content.entrySet()) {
+                    write(entry.getValue(),
+                          writer,
+                          String.join(Constants.UNDERSCORE, writerInfo.getParagraphName(), entry.getKey()),
+                          version,
+                          baseDocFolder);
+                }
+            }
         }
     }
 
@@ -182,7 +185,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         Writer writer = null;
         if (notSplitFile) {
             final File file = FilesUtils
-                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, "" + version + ADOC));
+                    .buildFile(baseDocFolder, String.join(DELIMITER, RELEASE_NOTE, EMPTY + version + ADOC));
             if (file.exists()) {
                 file.delete();
             }
@@ -271,10 +274,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.line();
 
             for (final Map<String, Object> item : commit) {
-                writer.write("|").write(trim(orEmpty(item, DATE))).line();
-                writer.write("|").write(trim(orEmpty(item, COMMIT_UID))).line();
-                writer.write("|").write(trim(orEmpty(item, AUTHOR))).line();
-                writer.write("|").write(trim(orEmpty(item, MESSAGE))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, DATE))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, COMMIT_UID))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, AUTHOR))).line();
+                writer.write(PIPE).write(trim(orEmpty(item, MESSAGE))).line();
                 writer.line();
 
             }
@@ -288,9 +291,9 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         String result = null;
         if (item != null) {
             final Object value = item.get(key);
-            result = value == null ? "" : String.valueOf(value);
+            result = value == null ? EMPTY : String.valueOf(value);
         }
-        return result;
+        return result == null ? EMPTY : result;
     }
 
 
@@ -315,10 +318,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.write("|Date | Id | Title | Url").line();
             writer.line();
             for (final MergeRequests value : data) {
-                writer.write("|").write(trim(value.getDate())).line();
-                writer.write("|").write(trim(value.getUid())).line();
-                writer.write("|").write(trim(value.getTitle())).line();
-                writer.write("|").write(trim(value.getUrl())).line();
+                writer.write(PIPE).write(trim(value.getDate())).line();
+                writer.write(PIPE).write(trim(value.getUid())).line();
+                writer.write(PIPE).write(trim(value.getTitle())).line();
+                writer.write(PIPE).write(trim(value.getUrl())).line();
                 writer.line();
             }
             writer.write("|===").line();
@@ -350,10 +353,10 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             writer.write("|Date | Issue | Title | Url").line();
             writer.line();
             for (final Issue value : data) {
-                writer.write("|").write(trim(value.getDate())).line();
-                writer.write("|").write(trim(value.getName())).line();
-                writer.write("|").write(renderLabels(value.getLabels())).line();
-                writer.write("|").write(trim(value.getUrl())).line();
+                writer.write(PIPE).write(trim(value.getDate())).line();
+                writer.write(PIPE).write(trim(value.getName())).line();
+                writer.write(PIPE).write(renderLabels(value.getLabels())).line();
+                writer.write(PIPE).write(trim(value.getUrl())).line();
                 writer.line();
             }
             writer.write("|===").line();
@@ -364,8 +367,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     }
 
     private String renderLabels(final Set<String> labels) {
-        String result = "";
-        if (result != null) {
+        String result = EMPTY;
+        if (labels != null) {
             final List<String> data = new ArrayList<>(labels);
             Collections.sort(data);
             result = String.join(" ", data);
@@ -383,6 +386,6 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
 
     private String trim(final String value) {
-        return value == "" ? null : value.trim();
+        return EMPTY.equals(value) ? null : value.trim();
     }
 }

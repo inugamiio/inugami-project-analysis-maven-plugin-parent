@@ -61,13 +61,13 @@ class JmsListenerAnalyzerTest {
     // TESTS
     // =========================================================================
     @Test
-    public void accept_withJmsListenerOrSender_shouldAccept() {
+    void accept_withJmsListenerOrSender_shouldAccept() {
         final JmsListenerAnalyzer analyzer = new JmsListenerAnalyzer();
         assertThat(analyzer.accept(Listener.class, context)).isTrue();
     }
 
     @Test
-    public void analyze_withJmsListenerOrSender_shouldFindServices() {
+    void analyze_withJmsListenerOrSender_shouldFindServices() {
         final JmsListenerAnalyzer analyzer = new JmsListenerAnalyzer();
 
         final List<JsonObject> result = analyzer.analyze(Listener.class, context);
@@ -80,7 +80,7 @@ class JmsListenerAnalyzerTest {
 
 
     @Test
-    public void analyze_withJSenderOnly_shouldFindServices() {
+    void analyze_withJSenderOnly_shouldFindServices() {
         final JmsListenerAnalyzer analyzer = new JmsListenerAnalyzer();
 
         final List<JsonObject> result = analyzer.analyze(SenderOnly.class, context);

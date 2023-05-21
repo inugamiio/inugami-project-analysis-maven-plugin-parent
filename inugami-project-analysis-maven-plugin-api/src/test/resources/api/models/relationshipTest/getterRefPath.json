@@ -1,0 +1,9 @@
+{
+  "getFrom" : "nodeA",
+  "getProperties" : {
+    "color" : "red",
+    "date" : "2023-05-21"
+  },
+  "getTo" : "nodeB",
+  "getType" : "has_relationship"
+}

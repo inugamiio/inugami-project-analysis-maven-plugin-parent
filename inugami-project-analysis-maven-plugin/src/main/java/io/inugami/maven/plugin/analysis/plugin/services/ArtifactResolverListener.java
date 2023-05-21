@@ -43,7 +43,7 @@ public class ArtifactResolverListener implements ResolutionListener {
     // =========================================================================
     @Override
     public void testArtifact(final Artifact node) {
-
+        //nothing to do
     }
 
 
@@ -86,6 +86,7 @@ public class ArtifactResolverListener implements ResolutionListener {
                   .artifactId(artifact.getArtifactId())
                   .version(artifact.getVersion())
                   .type(artifact.getType())
+                  .scope(artifact.getScope())
                   .build();
     }
 
@@ -95,37 +96,37 @@ public class ArtifactResolverListener implements ResolutionListener {
     // =========================================================================
     @Override
     public void omitForNearer(final Artifact omitted, final Artifact kept) {
-
+        //nothing to do
     }
 
     @Override
     public void updateScope(final Artifact artifact, final String scope) {
-
+        //nothing to do
     }
 
     @Override
     public void manageArtifact(final Artifact artifact, final Artifact replacement) {
-
+        //nothing to do
     }
 
     @Override
     public void omitForCycle(final Artifact artifact) {
-
+        //nothing to do
     }
 
     @Override
     public void updateScopeCurrentPom(final Artifact artifact, final String ignoredScope) {
-
+        //nothing to do
     }
 
     @Override
     public void selectVersionFromRange(final Artifact artifact) {
-
+        //nothing to do
     }
 
     @Override
     public void restrictRange(final Artifact artifact, final Artifact replacement, final VersionRange newRange) {
-
+        //nothing to do
     }
 
 

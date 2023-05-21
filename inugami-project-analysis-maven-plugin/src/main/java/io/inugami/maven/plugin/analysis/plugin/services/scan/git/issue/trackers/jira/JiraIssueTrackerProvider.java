@@ -22,7 +22,7 @@ import io.inugami.commons.threads.RunAndCloseService;
 import io.inugami.maven.plugin.analysis.api.actions.PropertiesInitialization;
 import io.inugami.maven.plugin.analysis.api.connectors.HttpConnectorBuilder;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.JiraCustomFieldsAppender;
 import org.apache.maven.settings.Server;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -35,7 +35,8 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-public class JiraIssueTrackerProvider implements IssueTackerProvider, PropertiesInitialization {
+@SuppressWarnings({"java:S1845", "java:S6397"})
+public class JiraIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
 
     // =========================================================================
@@ -84,7 +85,7 @@ public class JiraIssueTrackerProvider implements IssueTackerProvider, Properties
 
     @Override
     public void postConstruct(final ConfigHandler<String, String> configuration) {
-        url = configuration.grab(IssueTackerProvider.URL);
+        url = configuration.grab(IssueTrackerProvider.URL);
         username = configuration.grab(SERVER_USER);
         password = configuration.grab(SERVER_PASSWORD);
         timeout = configuration.grabLong(TIMEOUT, 30000L);
@@ -128,7 +129,7 @@ public class JiraIssueTrackerProvider implements IssueTackerProvider, Properties
             }
         }
 
-        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(JIRA, timeout, nbThreads, tasks).run();
+        final List<ScanNeo4jResult> resultSet = new RunAndCloseService<>(JIRA, timeout, nbThreads, tasks).run();
         for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
             if (itemResult != null) {
                 ScanNeo4jResult.merge(itemResult, result);

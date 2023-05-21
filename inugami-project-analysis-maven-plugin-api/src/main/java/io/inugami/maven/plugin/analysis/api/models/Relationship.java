@@ -17,13 +17,14 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
 import io.inugami.api.models.data.basic.JsonObject;
+import io.inugami.api.tools.StringComparator;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Map;
+
+import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortProperties;
 
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -43,9 +44,13 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     private String                              type;
     private LinkedHashMap<String, Serializable> properties;
 
+    public void sort() {
+        properties = sortProperties(properties);
+    }
+
     @Override
     public int compareTo(final Relationship other) {
-        return buildHash().compareTo(other.buildHash());
+        return StringComparator.compareTo(buildHash(), other == null ? null : other.buildHash());
     }
 
     protected String buildHash() {
@@ -58,15 +63,25 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     public static class RelationshipBuilder {
         private LinkedHashMap<String, Serializable> properties;
 
-        public Relationship.RelationshipBuilder properties(final LinkedHashMap<String, Serializable> properties) {
-            if (properties != null) {
+        public Relationship.RelationshipBuilder property(final String key, final Serializable value) {
+            if (this.properties == null) {
                 this.properties = new LinkedHashMap<>();
-                final List<String> keys = new ArrayList<>(properties.keySet());
-                Collections.sort(keys);
-                for (final String key : keys) {
-                    this.properties.put(key, properties.get(key));
-                }
             }
+            if (key != null && value != null) {
+                this.properties.put(key, value);
+            }
+            this.properties = sortProperties(this.properties);
+            return this;
+        }
+
+        public Relationship.RelationshipBuilder properties(final Map<String, Serializable> properties) {
+            if (this.properties == null) {
+                this.properties = new LinkedHashMap<>();
+            }
+            if (properties != null) {
+                this.properties.putAll(properties);
+            }
+            this.properties = sortProperties(this.properties);
             return this;
         }
     }

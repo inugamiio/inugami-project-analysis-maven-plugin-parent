@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 
-
+@SuppressWarnings({"java:S5998", "java:S5361"})
 @Getter
 public class TagRefName implements Comparable<TagRefName> {
 
@@ -31,6 +31,7 @@ public class TagRefName implements Comparable<TagRefName> {
     // ATTRIBUTES
     // =========================================================================
     private static final Pattern VERSION_REGEX = Pattern.compile("^([a-zA-Z-_.]*)((?:[0-9]+[._-]{0,1})+)(.*)$");
+    public static final  int     MAX_TAG_NAME  = 256;
     private final        String  tagName;
     private              String  tagVersion;
     private              int     tagMajorVersion;
@@ -43,13 +44,13 @@ public class TagRefName implements Comparable<TagRefName> {
     // =========================================================================
     public TagRefName(final String tagName) {
         this.tagName = tagName;
-        if (tagName != null) {
+        if (tagName != null && tagName.length() < MAX_TAG_NAME) {
             final Matcher matcher = VERSION_REGEX.matcher(tagName);
             if (matcher.matches()) {
-                tagVersion        = cleanVersion(matcher.group(2)) + matcher.group(3);
-                tagMajorVersion   = extractMajorVersion(tagVersion);
-                tagMinorVersion   = extractMinorVersion(tagVersion);
-                tagPatchVersion   = extractPatchVersion(tagVersion);
+                tagVersion = cleanVersion(matcher.group(2)) + matcher.group(3);
+                tagMajorVersion = extractMajorVersion(tagVersion);
+                tagMinorVersion = extractMinorVersion(tagVersion);
+                tagPatchVersion = extractPatchVersion(tagVersion);
                 tagProjectTagFlag = extractTag(tagVersion);
             }
         }
@@ -72,12 +73,12 @@ public class TagRefName implements Comparable<TagRefName> {
         int result = 0;
         if (other == null) {
             result = 1;
-        }
-        else if (tagVersion == null && other.getTagVersion() != null) {
+        } else if (tagVersion == null && other.getTagVersion() != null) {
             result = -1;
-        }
-        else {
-            result = tagVersion.compareTo(other.getTagVersion());
+        } else if (tagVersion == null && other.getTagVersion() == null) {
+            result = 0;
+        } else {
+            result = tagVersion == null ? -1 : tagVersion.compareTo(other.getTagVersion());
         }
         return result;
     }

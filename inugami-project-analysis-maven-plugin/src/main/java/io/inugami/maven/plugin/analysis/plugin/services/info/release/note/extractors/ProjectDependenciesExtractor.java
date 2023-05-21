@@ -31,9 +31,11 @@ import org.neo4j.driver.types.Relationship;
 
 import java.util.*;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL;
 
+@SuppressWarnings({"java:S6213", "java:S3824"})
 @Slf4j
 public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
 
@@ -52,24 +54,24 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
                                    final Gav previousVersion, final Neo4jDao dao, final List<Replacement> replacements,
                                    final InfoContext context) {
 
-        extractProjectDependencies(releaseNoteResult, currentVersion, previousVersion, dao, context);
+        extractProjectDependencies(releaseNoteResult, currentVersion, dao, context);
     }
 
     private void extractProjectDependencies(final ReleaseNoteResult releaseNoteResult, final Gav currentVersion,
-                                            final Gav previousVersion, final Neo4jDao dao, final InfoContext context) {
+                                            final Neo4jDao dao, final InfoContext context) {
         final List<JsonObject> currentValues = search(QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL, currentVersion,
                                                       context.getConfiguration(), dao,
                                                       (resultSet) -> this.convert(resultSet, currentVersion));
 
         if (currentValues != null && !currentValues.isEmpty()) {
 
-            JsonObjects<GavGraph> artifacts = (JsonObjects<GavGraph>) currentValues.get(0);
+            final JsonObjects<GavGraph> artifacts = (JsonObjects<GavGraph>) currentValues.get(0);
 
             final ProjectDependenciesGraph.ProjectDependenciesGraphBuilder builder = ProjectDependenciesGraph.builder();
             builder.artifacts(artifacts.getData());
 
             if (currentValues.size() > 1) {
-                JsonObjects<Graph> graph = (JsonObjects<Graph>) currentValues.get(1);
+                final JsonObjects<Graph> graph = (JsonObjects<Graph>) currentValues.get(1);
                 builder.graph(graph.getData());
             }
 
@@ -91,54 +93,7 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
 
         for (final Record record : resultSet) {
 
-            final GavGraph dependency    = extractGav("dependency", record, currentVersion);
-            Long           dependencyId  = null;
-            final GavGraph depProducer   = extractGav("depProducer", record, currentVersion);
-            Long           depProducerId = null;
-            final GavGraph depConsumer   = extractGav("depConsumer", record, currentVersion);
-            Long           depConsumerId = null;
-
-            final String serviceConsumedType = extractServiceType("serviceConsumedType", record);
-            final String serviceProducedType = extractServiceType("serviceProducedType", record);
-
-
-            if (dependency != null) {
-                artifacts.add(dependency);
-                dependencyId = extractNodeId("dependency", record);
-                nodeRefs.put(dependencyId, dependency);
-            }
-            if (depProducer != null) {
-                artifacts.add(depProducer);
-                depProducerId = extractNodeId("depProducer", record);
-                nodeRefs.put(depProducerId, dependency);
-            }
-            if (depConsumer != null) {
-                artifacts.add(depConsumer);
-                depConsumerId = extractNodeId("depConsumer", record);
-                nodeRefs.put(depConsumerId, depConsumer);
-            }
-
-
-            final List<Relationship> libLinks = extractRelationships("dependencyLink", record);
-            for (final Relationship relationship : libLinks) {
-                final Set<Long> currentRelationship = retrieveRelationships(relationship.endNodeId(), "lib",
-                                                                            relationships);
-                currentRelationship.add(relationship.startNodeId());
-
-            }
-
-            if (depProducerId != null) {
-                final Set<Long> currentRelationship = retrieveRelationships(dependencyId, serviceConsumedType,
-                                                                            relationships);
-                currentRelationship.add(depProducerId);
-            }
-
-            if (depConsumerId != null) {
-                final Set<Long> currentRelationship = retrieveRelationships(depConsumerId, serviceProducedType,
-                                                                            relationships);
-                currentRelationship.add(dependencyId);
-            }
-            log.info("record : {}", record);
+            convertOnRecord(currentVersion, nodeRefs, relationships, artifacts, record);
         }
 
         final Set<GavGraph> artifactBuffer = new LinkedHashSet<>();
@@ -154,16 +109,66 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
         return result;
     }
 
-    private JsonObjects<Graph> convertToJsonObject(final Map<Long, GavGraph> nodeRefs,
-                                                   final Map<Long, Map<String, Set<Long>>> relationships) {
-        final List<Graph>                      result = new ArrayList<>();
-        Map<String, Map<String, List<String>>> buffer = resolveDependenciesGraph(nodeRefs, relationships);
+    protected void convertOnRecord(final Gav currentVersion, final Map<Long, GavGraph> nodeRefs, final Map<Long, Map<String, Set<Long>>> relationships, final Set<GavGraph> artifacts, final Record record) {
+        final GavGraph dependency    = extractGav("dependency", record, currentVersion);
+        Long           dependencyId  = null;
+        final GavGraph depProducer   = extractGav("depProducer", record, currentVersion);
+        Long           depProducerId = null;
+        final GavGraph depConsumer   = extractGav("depConsumer", record, currentVersion);
+        Long           depConsumerId = null;
 
-        for (Map.Entry<String, Map<String, List<String>>> artifactEntry : buffer.entrySet()) {
-            final Graph.GraphBuilder builder      = Graph.builder().hash(artifactEntry.getKey());
-            List<GraphDependency>    dependencies = new ArrayList<>();
+        final String serviceConsumedType = extractServiceType("serviceConsumedType", record);
+        final String serviceProducedType = extractServiceType("serviceProducedType", record);
 
-            for (Map.Entry<String, List<String>> dependency : artifactEntry.getValue().entrySet()) {
+        if (dependency != null) {
+            artifacts.add(dependency);
+            dependencyId = extractNodeId("dependency", record);
+            nodeRefs.put(dependencyId, dependency);
+        }
+        if (depProducer != null) {
+            artifacts.add(depProducer);
+            depProducerId = extractNodeId("depProducer", record);
+            nodeRefs.put(depProducerId, dependency);
+        }
+        if (depConsumer != null) {
+            artifacts.add(depConsumer);
+            depConsumerId = extractNodeId("depConsumer", record);
+            nodeRefs.put(depConsumerId, depConsumer);
+        }
+
+
+        final List<Relationship> libLinks = extractRelationships("dependencyLink", record);
+        for (final Relationship relationship : libLinks) {
+            final Set<Long> currentRelationship = retrieveRelationships(relationship.endNodeId(), "lib",
+                                                                        relationships);
+            currentRelationship.add(relationship.startNodeId());
+
+        }
+
+        if (depProducerId != null) {
+            final Set<Long> currentRelationship = retrieveRelationships(dependencyId, serviceConsumedType,
+                                                                        relationships);
+            currentRelationship.add(depProducerId);
+        }
+
+        if (depConsumerId != null) {
+            final Set<Long> currentRelationship = retrieveRelationships(depConsumerId, serviceProducedType,
+                                                                        relationships);
+            currentRelationship.add(dependencyId);
+        }
+        log.info("record : {}", record);
+    }
+
+    protected JsonObjects<Graph> convertToJsonObject(final Map<Long, GavGraph> nodeRefs,
+                                                     final Map<Long, Map<String, Set<Long>>> relationships) {
+        final List<Graph>                            result = new ArrayList<>();
+        final Map<String, Map<String, List<String>>> buffer = resolveDependenciesGraph(nodeRefs, relationships);
+
+        for (final Map.Entry<String, Map<String, List<String>>> artifactEntry : buffer.entrySet()) {
+            final Graph.GraphBuilder    builder      = Graph.builder().hash(artifactEntry.getKey());
+            final List<GraphDependency> dependencies = new ArrayList<>();
+
+            for (final Map.Entry<String, List<String>> dependency : artifactEntry.getValue().entrySet()) {
                 dependencies.add(GraphDependency.builder()
                                                 .hash(dependency.getKey())
                                                 .consume(dependency.getValue())
@@ -175,42 +180,46 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
         return new JsonObjects<Graph>(result);
     }
 
-    private Map<String, Map<String, List<String>>> resolveDependenciesGraph(final Map<Long, GavGraph> nodeRefs,
-                                                                            final Map<Long, Map<String, Set<Long>>> relationships) {
+    protected Map<String, Map<String, List<String>>> resolveDependenciesGraph(final Map<Long, GavGraph> nodeRefs,
+                                                                              final Map<Long, Map<String, Set<Long>>> relationships) {
 
-        Map<String, Map<String, List<String>>> result = new LinkedHashMap<>();
+        final Map<String, Map<String, List<String>>> result = new LinkedHashMap<>();
 
-        for (Map.Entry<Long, Map<String, Set<Long>>> artifactEntry : relationships.entrySet()) {
+        for (final Map.Entry<Long, Map<String, Set<Long>>> artifactEntry : relationships.entrySet()) {
 
             final GavGraph dependencyHash = nodeRefs.get(artifactEntry.getKey());
 
-            for (Map.Entry<String, Set<Long>> entry : artifactEntry.getValue().entrySet()) {
-                final String relationship = entry.getKey();
-                for (Long id : entry.getValue()) {
-                    final GavGraph artifactHash = nodeRefs.get(id);
-                    log.debug("{}-[{}]->{}", dependencyHash.getHash(), relationship, artifactHash.getHash());
-
-
-                    Map<String, List<String>> artifactBuffer = result.get(artifactHash.getHash());
-                    if (artifactBuffer == null) {
-                        artifactBuffer = new LinkedHashMap<>();
-                        result.put(artifactHash.getHash(), artifactBuffer);
-                    }
-
-                    List<String> dependencyBuffer = artifactBuffer.get(dependencyHash.getHash());
-                    if (dependencyBuffer == null) {
-                        dependencyBuffer = new ArrayList<>();
-                        artifactBuffer.put(dependencyHash.getHash(), dependencyBuffer);
-                    }
-
-                    if (!dependencyBuffer.contains(relationship)) {
-                        dependencyBuffer.add(relationship);
-                    }
-
-                }
+            for (final Map.Entry<String, Set<Long>> entry : artifactEntry.getValue().entrySet()) {
+                resolveDependenciesGraphOnRelationship(nodeRefs, result, dependencyHash, entry);
             }
         }
         return result;
+    }
+
+    protected static void resolveDependenciesGraphOnRelationship(final Map<Long, GavGraph> nodeRefs, final Map<String, Map<String, List<String>>> result, final GavGraph dependencyHash, final Map.Entry<String, Set<Long>> entry) {
+        final String relationship = entry.getKey();
+        for (final Long id : entry.getValue()) {
+            final GavGraph artifactHash = nodeRefs.get(id);
+            log.debug("{}-[{}]->{}", dependencyHash.getHash(), relationship, artifactHash.getHash());
+
+
+            Map<String, List<String>> artifactBuffer = result.get(artifactHash.getHash());
+            if (artifactBuffer == null) {
+                artifactBuffer = new LinkedHashMap<>();
+                result.put(artifactHash.getHash(), artifactBuffer);
+            }
+
+            List<String> dependencyBuffer = artifactBuffer.get(dependencyHash.getHash());
+            if (dependencyBuffer == null) {
+                dependencyBuffer = new ArrayList<>();
+                artifactBuffer.put(dependencyHash.getHash(), dependencyBuffer);
+            }
+
+            if (!dependencyBuffer.contains(relationship)) {
+                dependencyBuffer.add(relationship);
+            }
+
+        }
     }
 
 

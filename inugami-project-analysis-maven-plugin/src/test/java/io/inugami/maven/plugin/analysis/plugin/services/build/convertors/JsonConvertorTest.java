@@ -8,8 +8,8 @@ import java.util.Map;
 public class JsonConvertorTest {
 
     @Test
-    public void convert_nominal_shouldConvertToMap() {
-        String content = UnitTestHelper.loadJsonReference("build/convertors/json.convertor.ref.json");
+    void convert_nominal_shouldConvertToMap() {
+        final String content = UnitTestHelper.loadJsonReference("build/convertors/json.convertor.ref.json");
 
         final Map<String, String> result = new JsonConvertor().convert(content);
 

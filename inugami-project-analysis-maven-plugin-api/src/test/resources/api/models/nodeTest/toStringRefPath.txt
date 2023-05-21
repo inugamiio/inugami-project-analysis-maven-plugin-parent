@@ -1,0 +1,1 @@
+Node(type=Version, name=artifact, uid=uid, properties={color=blue, date=2023-05-21})

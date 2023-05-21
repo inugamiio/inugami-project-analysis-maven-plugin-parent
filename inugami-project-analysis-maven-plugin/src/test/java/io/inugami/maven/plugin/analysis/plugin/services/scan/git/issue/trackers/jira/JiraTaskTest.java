@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 
+@SuppressWarnings({"java:S5976"})
 @ExtendWith(MockitoExtension.class)
 class JiraTaskTest {
 
@@ -71,7 +72,7 @@ class JiraTaskTest {
     // TESTS
     // =========================================================================
     @Test
-    public void call_withEpic_shouldBuildNodes() throws Exception {
+    void call_withEpic_shouldBuildNodes() throws Exception {
         final JiraTask        task   = buildTask("INU-1");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
@@ -79,7 +80,7 @@ class JiraTaskTest {
     }
 
     @Test
-    public void call_withIssue_shouldBuildNodes() throws Exception {
+    void call_withIssue_shouldBuildNodes() throws Exception {
         final JiraTask        task   = buildTask("INU-2");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();
@@ -87,7 +88,7 @@ class JiraTaskTest {
     }
 
     @Test
-    public void call_withSubTask_shouldBuildNodes() throws Exception {
+    void call_withSubTask_shouldBuildNodes() throws Exception {
         final JiraTask        task   = buildTask("INU-4");
         final ScanNeo4jResult result = task.call();
         assertThat(result).isNotNull();

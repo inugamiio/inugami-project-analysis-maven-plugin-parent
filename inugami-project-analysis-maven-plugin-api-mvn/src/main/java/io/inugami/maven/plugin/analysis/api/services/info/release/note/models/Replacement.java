@@ -20,6 +20,7 @@ import lombok.*;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S1700"})
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +28,6 @@ import java.util.regex.Pattern;
 @Getter
 @Builder
 public class Replacement {
-    private  Pattern pattern;
-    private  String  replacement;
+    private Pattern pattern;
+    private String  replacement;
 }

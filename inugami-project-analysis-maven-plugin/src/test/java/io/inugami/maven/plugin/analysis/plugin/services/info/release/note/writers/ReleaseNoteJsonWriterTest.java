@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReleaseNoteJsonWriterTest {
 
     @Test
-    public void sortReleasesNotes_nominal_shouldSortDesc() {
+    void sortReleasesNotes_nominal_shouldSortDesc() {
         final ReleaseNoteJsonWriter writer = new ReleaseNoteJsonWriter();
 
         final String first  = "spring-boot-training.0.0.1-SNAPSHOT.json";

@@ -22,6 +22,7 @@ import io.inugami.maven.plugin.analysis.annotations.RabbitMqEvent;
 import io.inugami.maven.plugin.analysis.annotations.RabbitMqHandlerInfo;
 import io.inugami.maven.plugin.analysis.annotations.RabbitMqSender;
 import io.inugami.maven.plugin.analysis.api.actions.ClassAnalyzer;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
@@ -40,13 +41,14 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildMethodNode;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.HAS_INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 import static org.springframework.core.annotation.AnnotatedElementUtils.hasAnnotation;
 
+@SuppressWarnings({"java:S5361", "java:S3776"})
 @Slf4j
 public class RabbitMqAnalyzer implements ClassAnalyzer {
 
@@ -54,15 +56,20 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String                   FEATURE_NAME              = "inugami.maven.plugin.analysis.analyzer.jms";
-    public static final  String                   FEATURE                   = FEATURE_NAME + ".enable";
-    private static final String                   SERVICE_TYPE              = "ServiceType";
-    public static final  String                   SERVICE                   = "Service";
-    private static final String                   RABBIT_MQ                 = "rabbitMq";
-    private static final String                   EXPOSE                    = "EXPOSE";
-    private static final String                   CONSUME                   = "CONSUME";
+    public static final  String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.jms";
+    public static final  String FEATURE      = FEATURE_NAME + ".enable";
+    private static final String SERVICE_TYPE = "ServiceType";
+    public static final  String SERVICE      = "Service";
+    private static final String RABBIT_MQ    = "rabbitMq";
+
     private static final String                   SERVICE_TYPE_RELATIONSHIP = "SERVICE_TYPE";
     private static final SpringPropertiesAnalyzer PROPERTIES_ANALYZER       = new SpringPropertiesAnalyzer();
+
+    public static final String DELIMITER   = "_";
+    public static final String LISTENER_ID = "listenerId";
+
+    public static final String QUEUE_DELIMITER = ";";
+
 
     // =========================================================================
     // ACCEPT
@@ -96,7 +103,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     public List<JsonObject> analyze(final Class<?> clazz, final ScanConext context) {
         log.info("{} : {}", FEATURE_NAME, clazz);
         final ScanNeo4jResult result         = ScanNeo4jResult.builder().build();
-        final RabbitListener  rabbitListener = clazz.getAnnotation(RabbitListener.class);
+        final RabbitListener  rabbitListener = getAnnotation(clazz, RabbitListener.class);
 
         final Node projectNode = buildNodeVersion(context.getProject());
         final Node serviceType = Node.builder().type(SERVICE_TYPE).uid(RABBIT_MQ).name(RABBIT_MQ).build();
@@ -105,75 +112,85 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
         final List<Method> methods = loadAllMethods(clazz);
         for (final Method method : methods) {
-
-            if (ReflectionService.hasAnnotation(method, RabbitListener.class, RabbitHandler.class)) {
-                buildListenerNode(method, rabbitListener, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for(Node input : inputDto){
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if(outputDto!=null){
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
-                                               "consume"));
-                });
-            }
-            else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
-                buildSenderNode(method, (node, properties) -> {
-                    result.addNode(node);
-                    result.addNode(properties);
-
-                    final List<Node> inputDto = ReflectionService.extractInputDto(method);
-                    result.addNode(inputDto);
-                    for(Node input : inputDto){
-                        result.addRelationship(Relationship.builder()
-                                                           .from(input.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node outputDto = ReflectionService.extractOutputDto(method);
-                    if(outputDto!=null){
-                        result.addNode(outputDto);
-                        result.addRelationship(Relationship.builder()
-                                                           .from(outputDto.getUid())
-                                                           .to(node.getUid())
-                                                           .type(HAS_INPUT_DTO)
-                                                           .build());
-                    }
-
-                    final Node methodNode = buildMethodNode(clazz, method);
-                    result.addNode(methodNode);
-                    result.addRelationship(
-                            buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
-                                               "produce"));
-                });
-            }
+            processAnalyze(clazz, result, rabbitListener, projectNode, serviceType, method);
         }
 
         return List.of(result);
+    }
+
+    private void processAnalyze(final Class<?> clazz, final ScanNeo4jResult result, final RabbitListener rabbitListener, final Node projectNode, final Node serviceType, final Method method) {
+        if (ReflectionService.hasAnnotation(method, RabbitListener.class, RabbitHandler.class)) {
+            processAnalyzeOnRabbitListener(clazz, result, rabbitListener, projectNode, serviceType, method);
+        } else if (ReflectionService.hasAnnotation(method, RabbitMqSender.class)) {
+            processAnalyzeOnRabbitMqSender(clazz, result, projectNode, serviceType, method);
+        }
+    }
+
+    private void processAnalyzeOnRabbitListener(final Class<?> clazz, final ScanNeo4jResult result, final RabbitListener rabbitListener, final Node projectNode, final Node serviceType, final Method method) {
+        buildListenerNode(method, rabbitListener, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                       CONSUME_RELATIONSHIP));
+        });
+    }
+
+    private void processAnalyzeOnRabbitMqSender(final Class<?> clazz, final ScanNeo4jResult result, final Node projectNode, final Node serviceType, final Method method) {
+        buildSenderNode(method, (node, properties) -> {
+            result.addNode(node);
+            result.addNode(properties);
+
+            final List<Node> inputDto = ReflectionService.extractInputDto(method);
+            result.addNode(inputDto);
+            for (final Node input : inputDto) {
+                result.addRelationship(Relationship.builder()
+                                                   .from(input.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node outputDto = ReflectionService.extractOutputDto(method);
+            if (outputDto != null) {
+                result.addNode(outputDto);
+                result.addRelationship(Relationship.builder()
+                                                   .from(outputDto.getUid())
+                                                   .to(node.getUid())
+                                                   .type(HAS_INPUT_DTO)
+                                                   .build());
+            }
+
+            final Node methodNode = buildMethodNode(clazz, method);
+            result.addNode(methodNode);
+            result.addRelationship(
+                    buildRelationships(node, CONSUME, projectNode, serviceType, methodNode, properties,
+                                       PRODUCE_RELATIONSHIP));
+        });
     }
 
     // =========================================================================
@@ -182,19 +199,18 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private void buildSenderNode(final Method method,
                                  final BiConsumer<Node, List<Node>> onData) {
 
-        final RabbitMqSender                      sender         = method.getAnnotation(RabbitMqSender.class);
+        final RabbitMqSender                      sender         = getAnnotation(method, RabbitMqSender.class);
         final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         final Set<Node>                           properties     = new LinkedHashSet<>();
 
         String uid = null;
         if (hasText(sender.id())) {
             uid = cleanValue(sender.id());
-        }
-        else {
+        } else {
 
             final String prefix = notNullValue(sender.echangeName()).isEmpty() ? notNullValue(
                     sender.queue()) : notNullValue(sender.echangeName());
-            uid = String.join("_",
+            uid = String.join(DELIMITER,
                               cleanValue(prefix),
                               cleanValue(notNullValue(sender.routingKey())));
         }
@@ -205,7 +221,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
                      method.getName());
         }
         final String eventPayload = event == null ? null : buildEventPayload(event);
-        processIfNotNull(eventPayload, value -> additionalInfo.put("payload", value));
+        processIfNotNull(eventPayload, value -> additionalInfo.put(Constants.PAYLOAD, value));
 
         final Node result = Node.builder()
                                 .type(SERVICE)
@@ -254,12 +270,11 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private void buildListenerNode(final Method method,
                                    final RabbitListener parentRabbitListener,
                                    final BiConsumer<Node, List<Node>> onData) {
-
-        final List<Node>                          properties       = new ArrayList<>();
+        
         final LinkedHashMap<String, Serializable> additionalInfo   = new LinkedHashMap<>();
-        final RabbitListener                      methodAnnotation = method.getAnnotation(RabbitListener.class);
+        final RabbitListener                      methodAnnotation = getAnnotation(method, RabbitListener.class);
         final RabbitListener                      rabbit           = methodAnnotation == null ? parentRabbitListener : methodAnnotation;
-        final RabbitMqHandlerInfo                 handlerInfo      = method.getAnnotation(RabbitMqHandlerInfo.class);
+        final RabbitMqHandlerInfo                 handlerInfo      = getAnnotation(method, RabbitMqHandlerInfo.class);
 
         if (handlerInfo == null && log.isDebugEnabled()) {
             log.warn("cann't resolve all rabbitMQ information without RabbitMqHandlerInfo on method : {},{}",
@@ -273,28 +288,26 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         final String eventPayload = buildEventPayload(event);
 
         //@formatter:off
-        processIfNotNull(eventPayload,                          value -> additionalInfo.put("payload", value));
-        processIfNotEmpty(rabbit.id(),                          value -> additionalInfo.put("listenerId", value));
-        processIfNotEmpty(rabbit.containerFactory(),            value -> additionalInfo.put("containerFactory", value));
-        processIfNotNull(rabbit.queues(),                       value -> additionalInfo.put("queue", String.join(";", value)));
-        processIfNotNull(rabbit.queuesToDeclare(),              value -> additionalInfo.put("queuesToDeclare", renderQueuesToDeclare(value)));
-        processIfNotNull(rabbit.exclusive(),                    value -> additionalInfo.put("exclusive", value));
-        processIfNotEmpty(rabbit.priority(),                    value -> additionalInfo.put("priority", value));
-        processIfNotEmpty(rabbit.admin(),                       value -> additionalInfo.put("admin", value));
-        processIfNotEmpty(rabbit.group(),                       value -> additionalInfo.put("group", value));
-        processIfNotEmpty(rabbit.returnExceptions(),            value -> additionalInfo.put("returnExceptions", value));
-        processIfNotEmpty(rabbit.errorHandler(),                value -> additionalInfo.put("errorHandler", value));
-        processIfNotEmpty(rabbit.concurrency(),                 value -> additionalInfo.put("concurrency", value));
-        processIfNotEmpty(rabbit.errorHandler(),                value -> additionalInfo.put("errorHandler", value));
-        processIfNotEmpty(rabbit.concurrency(),                 value -> additionalInfo.put("concurrency", value));
-        processIfNotEmpty(rabbit.autoStartup(),                 value -> additionalInfo.put("autoStartup", value));
-        processIfNotEmpty(rabbit.executor(),                    value -> additionalInfo.put("executor", value));
-        processIfNotEmpty(rabbit.ackMode(),                     value -> additionalInfo.put("ackMode", value));
-        processIfNotEmpty(rabbit.replyPostProcessor(),          value -> additionalInfo.put("replyPostProcessor", value));
-        processIfNotEmpty(rabbit.messageConverter(),            value -> additionalInfo.put("messageConverter", value));
-        processIfNotEmpty(rabbit.replyContentType(),            value -> additionalInfo.put("replyContentType", value));
-        processIfNotEmpty(rabbit.converterWinsContentType(),    value -> additionalInfo.put("converterWinsContentType", value));
-        processIfNotNull(rabbit.bindings(),                     value -> additionalInfo.put("bindings", renderBinding(value)));
+        processIfNotNull(eventPayload, value -> additionalInfo.put(Constants.PAYLOAD, value));
+        processIfNotEmpty(rabbit.id(), value -> additionalInfo.put(LISTENER_ID, value));
+        processIfNotEmpty(rabbit.containerFactory(), value -> additionalInfo.put(CONTAINER_FACTORY, value));
+        processIfNotNull(rabbit.queues(), value -> additionalInfo.put(QUEUE, String.join(QUEUE_DELIMITER, value)));
+        processIfNotNull(rabbit.queuesToDeclare(), value -> additionalInfo.put(QUEUES_TO_DECLARE, renderQueuesToDeclare(value)));
+        processIfNotNull(rabbit.exclusive(), value -> additionalInfo.put(EXCLUSIVE, value));
+        processIfNotEmpty(rabbit.priority(), value -> additionalInfo.put(PRIORITY, value));
+        processIfNotEmpty(rabbit.admin(), value -> additionalInfo.put(ADMIN, value));
+        processIfNotEmpty(rabbit.group(), value -> additionalInfo.put(GROUP, value));
+        processIfNotEmpty(rabbit.returnExceptions(), value -> additionalInfo.put(RETURN_EXCEPTIONS, value));
+        processIfNotEmpty(rabbit.errorHandler(), value -> additionalInfo.put(ERROR_HANDLER, value));
+        processIfNotEmpty(rabbit.concurrency(), value -> additionalInfo.put(CONCURRENCY, value));
+        processIfNotEmpty(rabbit.autoStartup(), value -> additionalInfo.put(AUTO_STARTUP, value));
+        processIfNotEmpty(rabbit.executor(), value -> additionalInfo.put(EXECUTOR, value));
+        processIfNotEmpty(rabbit.ackMode(), value -> additionalInfo.put(ACK_MODE, value));
+        processIfNotEmpty(rabbit.replyPostProcessor(), value -> additionalInfo.put(REPLY_POST_PROCESSOR, value));
+        processIfNotEmpty(rabbit.messageConverter(), value -> additionalInfo.put(MESSAGE_CONVERTER, value));
+        processIfNotEmpty(rabbit.replyContentType(), value -> additionalInfo.put(REPLY_CONTENT_TYPE, value));
+        processIfNotEmpty(rabbit.converterWinsContentType(), value -> additionalInfo.put(CONVERTER_WINS_CONTENT_TYPE, value));
+        processIfNotNull(rabbit.bindings(), value -> additionalInfo.put(BINDINGS, renderBinding(value)));
         //@formatter:on
 
         final Node result = Node.builder()
@@ -334,10 +347,10 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
             }
         }
 
-        final String prefix = echanges.isEmpty() ? String.join(";", queues) : String.join(";", echanges);
-        return String.join("_",
+        final String prefix = echanges.isEmpty() ? String.join(QUEUE_DELIMITER, queues) : String.join(QUEUE_DELIMITER, echanges);
+        return String.join(DELIMITER,
                            prefix,
-                           routingKey == null ? String.join(";", routingKeys) : cleanValue(routingKey));
+                           routingKey == null ? String.join(QUEUE_DELIMITER, routingKeys) : cleanValue(routingKey));
     }
 
     private List<Node> buildProperties(final RabbitListener rabbit, final RabbitMqHandlerInfo handlerInfo) {
@@ -495,13 +508,11 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
 
     private String buildEventPayload(final Parameter parameter) {
         JsonNode result = null;
-        if (ReflectionService.hasAnnotation(parameter, RabbitMqEvent.class) && parameter
-                .getAnnotation(RabbitMqEvent.class)
+        if (ReflectionService.hasAnnotation(parameter, RabbitMqEvent.class) && getAnnotation(parameter, RabbitMqEvent.class)
                 .value() != RabbitMqEvent.None.class) {
-            result = renderType(parameter.getAnnotation(RabbitMqEvent.class)
-                                         .value(), null, null);
-        }
-        else {
+            result = renderType(getAnnotation(parameter, RabbitMqEvent.class)
+                                        .value(), null, null);
+        } else {
             result = renderParameterType(parameter);
         }
         return result == null ? null : result.convertToJson();
@@ -520,20 +531,19 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         while (iterator.hasNext()) {
             final Queue queue = iterator.next();
             json.openObject();
-            json.addField("name").valueQuot(queue.name()).addSeparator();
-            json.addField("value").valueQuot(queue.value()).addSeparator();
-            json.addField("name").valueQuot(queue.name()).addSeparator();
-            json.addField("durable").valueQuot(queue.durable()).addSeparator();
-            json.addField("exclusive").valueQuot(queue.exclusive()).addSeparator();
-            json.addField("autoDelete").valueQuot(queue.autoDelete()).addSeparator();
-            json.addField("ignoreDeclarationExceptions").valueQuot(queue.ignoreDeclarationExceptions()).addSeparator();
-            json.addField("declare").valueQuot(queue.declare()).addSeparator();
+            json.addField(Constants.NAME).valueQuot(queue.name()).addSeparator();
+            json.addField(VALUE).valueQuot(queue.value()).addSeparator();
+            json.addField(DURABLE).valueQuot(queue.durable()).addSeparator();
+            json.addField(EXCLUSIVE).valueQuot(queue.exclusive()).addSeparator();
+            json.addField(AUTO_DELETE).valueQuot(queue.autoDelete()).addSeparator();
+            json.addField(IGNORE_DECLARATION_EXCEPTIONS).valueQuot(queue.ignoreDeclarationExceptions()).addSeparator();
+            json.addField(DECLARE).valueQuot(queue.declare()).addSeparator();
 
-            json.addField("arguments");
+            json.addField(ARGUMENTS);
             json.write(renderAgrs(queue.arguments()));
             json.addSeparator();
 
-            json.addField("admins");
+            json.addField(ADMINS);
             json.write(renderStringArray(queue.admins()));
             json.closeObject();
             if (iterator.hasNext()) {
@@ -552,12 +562,12 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         while (iterator.hasNext()) {
             final QueueBinding queue = iterator.next();
             json.openObject();
-            json.addField("queue").write(renderQueue(queue.value())).addSeparator();
-            json.addField("key").write(renderStringArray(queue.key())).addSeparator();
-            json.addField("exchange").write(renderEchange(queue.exchange())).addSeparator();
-            json.addField("declare").valueQuot(queue.declare()).addSeparator();
-            json.addField("ignoreDeclarationExceptions").valueQuot(queue.ignoreDeclarationExceptions()).addSeparator();
-            json.addField("admins").write(renderStringArray(queue.admins()));
+            json.addField(QUEUE).write(renderQueue(queue.value())).addSeparator();
+            json.addField(KEY).write(renderStringArray(queue.key())).addSeparator();
+            json.addField(EXCHANGE).write(renderEchange(queue.exchange())).addSeparator();
+            json.addField(DECLARE).valueQuot(queue.declare()).addSeparator();
+            json.addField(IGNORE_DECLARATION_EXCEPTIONS).valueQuot(queue.ignoreDeclarationExceptions()).addSeparator();
+            json.addField(ADMINS).write(renderStringArray(queue.admins()));
             json.closeObject();
             if (iterator.hasNext()) {
                 json.addSeparator();
@@ -572,23 +582,22 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         final JsonBuilder json = new JsonBuilder();
         if (exchange == null) {
             json.valueNull();
-        }
-        else {
+        } else {
             json.openObject();
-            json.addField("name").valueQuot(hasText(exchange.name()) ? exchange.name() : exchange.value());
+            json.addField(Constants.NAME).valueQuot(hasText(exchange.name()) ? exchange.name() : exchange.value());
             json.addSeparator();
-            json.addField("type").valueQuot(exchange.type()).addSeparator();
-            json.addField("durable").valueQuot(exchange.durable()).addSeparator();
-            json.addField("autoDelete").valueQuot(exchange.autoDelete()).addSeparator();
-            json.addField("internal").valueQuot(exchange.internal()).addSeparator();
-            json.addField("ignoreDeclarationExceptions").valueQuot(exchange.ignoreDeclarationExceptions());
+            json.addField(TYPE).valueQuot(exchange.type()).addSeparator();
+            json.addField(DURABLE).valueQuot(exchange.durable()).addSeparator();
+            json.addField(AUTO_DELETE).valueQuot(exchange.autoDelete()).addSeparator();
+            json.addField(INTERNAL).valueQuot(exchange.internal()).addSeparator();
+            json.addField(IGNORE_DECLARATION_EXCEPTIONS).valueQuot(exchange.ignoreDeclarationExceptions());
             json.addSeparator();
-            json.addField("delayed").valueQuot(exchange.delayed()).addSeparator();
-            json.addField("declare").valueQuot(exchange.declare()).addSeparator();
-            json.addField("arguments");
+            json.addField(DELAYED).valueQuot(exchange.delayed()).addSeparator();
+            json.addField(DECLARE).valueQuot(exchange.declare()).addSeparator();
+            json.addField(ARGUMENTS);
             json.write(renderAgrs(exchange.arguments()));
             json.addSeparator();
-            json.addField("admins");
+            json.addField(ADMINS);
             json.write(renderStringArray(exchange.admins()));
             json.closeObject();
         }
@@ -598,18 +607,18 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private String renderQueue(final Queue value) {
         final JsonBuilder json = new JsonBuilder();
         json.openObject();
-        json.addField("name").valueQuot(hasText(value.name()) ? value.name() : value.value()).addSeparator();
-        json.addField("durable").valueQuot(value.durable()).addSeparator();
-        json.addField("exclusive").valueQuot(value.exclusive()).addSeparator();
-        json.addField("autoDelete").valueQuot(value.autoDelete()).addSeparator();
-        json.addField("ignoreDeclarationExceptions").valueQuot(value.ignoreDeclarationExceptions()).addSeparator();
-        json.addField("declare").valueQuot(value.declare()).addSeparator();
+        json.addField(Constants.NAME).valueQuot(hasText(value.name()) ? value.name() : value.value()).addSeparator();
+        json.addField(DURABLE).valueQuot(value.durable()).addSeparator();
+        json.addField(EXCLUSIVE).valueQuot(value.exclusive()).addSeparator();
+        json.addField(AUTO_DELETE).valueQuot(value.autoDelete()).addSeparator();
+        json.addField(IGNORE_DECLARATION_EXCEPTIONS).valueQuot(value.ignoreDeclarationExceptions()).addSeparator();
+        json.addField(DECLARE).valueQuot(value.declare()).addSeparator();
 
-        json.addField("arguments");
+        json.addField(ARGUMENTS);
         json.write(renderAgrs(value.arguments()));
         json.addSeparator();
 
-        json.addField("admins");
+        json.addField(ADMINS);
         json.write(renderStringArray(value.admins()));
         json.closeObject();
         return json.toString();
@@ -620,16 +629,15 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         final JsonBuilder json = new JsonBuilder();
         if (values == null || values.length == 0) {
             json.valueNull();
-        }
-        else {
+        } else {
             json.openList();
             final Iterator<Argument> iterator = Arrays.asList(values).iterator();
             while (iterator.hasNext()) {
                 final Argument arg = iterator.next();
                 json.openObject();
-                json.addField("name").valueQuot(arg.name()).addSeparator();
-                json.addField("value").valueQuot(arg.value()).addSeparator();
-                json.addField("type").valueQuot(arg.type());
+                json.addField(Constants.NAME).valueQuot(arg.name()).addSeparator();
+                json.addField(VALUE).valueQuot(arg.value()).addSeparator();
+                json.addField(TYPE).valueQuot(arg.type());
                 json.closeObject();
                 if (iterator.hasNext()) {
                     json.addSeparator();
@@ -644,8 +652,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
         final JsonBuilder json = new JsonBuilder();
         if (values == null || values.length == 0) {
             json.valueNull();
-        }
-        else {
+        } else {
             json.openList();
             final Iterator<String> iterator = Arrays.asList(values).iterator();
             while (iterator.hasNext()) {

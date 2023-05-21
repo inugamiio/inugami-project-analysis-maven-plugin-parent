@@ -1,0 +1,16 @@
+{
+  "getExcludes" : [ {
+    "exclude" : "some value"
+  } ],
+  "getGav" : "io.inugami:some-artifact",
+  "getIncludes" : [ {
+    "include" : "value"
+  } ],
+  "getPath" : "/some/path",
+  "getProperties" : {
+    "color" : "red",
+    "date" : "2023-05-21"
+  },
+  "getTarget" : "target",
+  "isFiltering" : true
+}

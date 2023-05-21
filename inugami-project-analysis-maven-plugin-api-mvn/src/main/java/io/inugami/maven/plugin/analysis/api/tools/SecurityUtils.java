@@ -16,6 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
@@ -24,8 +26,10 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Base64;
 
+@SuppressWarnings({"java:S5542", "java:S3329"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class SecurityUtils {
+public final class SecurityUtils {
 
 
     public static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
@@ -50,8 +54,7 @@ public class SecurityUtils {
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivParams);
             encrypted = cipher.doFinal(value.getBytes());
 
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SecurityException(e.getMessage(), e);
         }
         return encrypted == null ? null : Base64.getEncoder().encodeToString(encrypted);
@@ -79,8 +82,7 @@ public class SecurityUtils {
             final IvParameterSpec ivParamsSpec = new IvParameterSpec(ivByte);
             cipher.init(Cipher.DECRYPT_MODE, key, ivParamsSpec);
             original = cipher.doFinal(Base64.getDecoder().decode(value));
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             throw new SecurityException(e.getMessage(), e);
         }
         return original == null ? null : new String(original);

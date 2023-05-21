@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S5361", "java:S6395"})
 public class TemplateRenderer {
 
 
@@ -72,7 +73,7 @@ public class TemplateRenderer {
 
     private Map<String, Object> buildData(final Map<String, String> properties,
                                           final Map<String, String> additionalProperties) {
-        Map<String, Object> result = new LinkedHashMap<>();
+        final Map<String, Object> result = new LinkedHashMap<>();
 
         if (properties != null) {
             result.putAll(properties);

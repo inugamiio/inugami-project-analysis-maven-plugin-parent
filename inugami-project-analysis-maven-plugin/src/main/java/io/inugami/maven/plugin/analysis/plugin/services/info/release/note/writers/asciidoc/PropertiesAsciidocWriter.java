@@ -23,13 +23,17 @@ import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.ReleaseNoteResult;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.PropertiesExtractor;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.PropertyDTO;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.EMPTY;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.SPACE;
+
+;
 
 public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
 
@@ -60,9 +64,9 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
         if (releaseNote != null && releaseNote.getDifferentials().containsKey(PropertiesExtractor.TYPE)) {
             final Differential differential = releaseNote.getDifferentials().get(PropertiesExtractor.TYPE);
             //@formatter:off
-            result.put("new_properties", renderingProperties(notNull(differential.getNewValues()),"New properties", notSplitFile));
-            result.put("deleted_properties", renderingProperties(notNull(differential.getDeletedValues()),"Deleted properties", notSplitFile));
-            result.put("properties", renderingProperties(notNull(differential.getSameValues()),"Properties", notSplitFile));
+            result.put("new_properties", renderingProperties(notNull(differential.getNewValues()), "New properties", notSplitFile));
+            result.put("deleted_properties", renderingProperties(notNull(differential.getDeletedValues()), "Deleted properties", notSplitFile));
+            result.put("properties", renderingProperties(notNull(differential.getSameValues()), "Properties", notSplitFile));
             //@formatter:on
         }
 
@@ -108,7 +112,7 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
             writer.write("|").write(notNull(property.getDefaultValue())).line();
             writer.write("|").write(notNull(property.getConstraintType())).line();
             writer.write("|").write(notNull(property.getConstraintDetail())).line();
-            writer.write("|").write(property.isUseForConditionalBean() ? true : Constants.EMPTY).line();
+            writer.write("|").write(property.isUseForConditionalBean() ? true : SPACE).line();
             writer.write("|").write(notNull(property.getArtifact())).line();
             writer.line();
         }
@@ -134,7 +138,7 @@ public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
     }
 
     private String notNull(final String value) {
-        return value == null ? Constants.EMPTY : value;
+        return value == null ? EMPTY : value;
     }
 
 }

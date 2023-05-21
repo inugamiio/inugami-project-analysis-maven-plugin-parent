@@ -18,16 +18,16 @@ package io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j;
 
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class Neo4jWriterIT {
-    @Disabled
-    @Test
+
+    //@Test
     void processSave() {
         final Neo4jWriter writer = new Neo4jWriter();
         writer.initializeNeo4jDriver("bolt://localhost:7687", "neo4j", "password");
@@ -35,7 +35,7 @@ class Neo4jWriterIT {
         final Map<String, Object> parameters = Map.ofEntries(
                 Map.entry("name", "Foobar"),
                 Map.entry("value", "hello")
-                                                            );
+        );
         final String query = writer.getDao().buildCreateNodeQuery(Node.builder()
                                                                       .type("Test")
                                                                       .build(), parameters);
@@ -44,7 +44,7 @@ class Neo4jWriterIT {
         final Map<String, Object> parameters2 = Map.ofEntries(
                 Map.entry("name", "Joe"),
                 Map.entry("value", "other ...")
-                                                             );
+        );
         final String query2 = writer.getDao().buildCreateNodeQuery(Node.builder()
                                                                        .type("Test")
                                                                        .build(), parameters2);
@@ -62,6 +62,6 @@ class Neo4jWriterIT {
                                                                                    .properties(properties)
                                                                                    .build());
         writer.getDao().processSave(queryRel);
-
+        assertThat(queryRel).isNotNull();
     }
 }

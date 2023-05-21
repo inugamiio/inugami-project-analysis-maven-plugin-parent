@@ -1,19 +1,18 @@
 package io.inugami.maven.plugin.analysis.api.models;
 
 import io.inugami.api.models.data.basic.JsonObject;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings({"java:S107"})
 @Setter
 @Getter
+@NoArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder(toBuilder = true)
 public class Gav implements JsonObject, Comparable<Gav> {
 
 
@@ -21,32 +20,40 @@ public class Gav implements JsonObject, Comparable<Gav> {
     // ATTRIBUTES
     // =========================================================================
     private static final long   serialVersionUID = -1609343378801778104L;
-    private final        String groupId;
-    private final        String artifactId;
-    private final        String version;
+    private              String groupId;
+    private              String artifactId;
+    private              String version;
 
+    @ToString.Include
     @EqualsAndHashCode.Include
-    private final String   hash;
-    private final String   type;
-    private final Set<Gav> dependencies;
-    private       Gav      parent;
+    private String   hash;
+    private String   type;
+    private String   scope;
+    private Set<Gav> dependencies;
+    private Gav      parent;
+
 
     // =========================================================================
     // CONSTRUCTORS
     // =========================================================================
+    @Builder(toBuilder = true)
     public Gav(final String groupId, final String artifactId, final String version, final String hash,
                final String type,
-               final Set<Gav> dependencies, final Gav parent) {
-        this.groupId      = groupId;
-        this.artifactId   = artifactId;
-        this.version      = version;
-        this.type         = type;
+               final Set<Gav> dependencies,
+               final Gav parent,
+               final String scope) {
+
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.type = type;
+        this.scope = scope;
         this.dependencies = dependencies == null ? new LinkedHashSet<>() : dependencies;
-        this.hash         = String.join(":", List.of(String.valueOf(groupId),
-                                                     String.valueOf(artifactId),
-                                                     String.valueOf(version),
-                                                     String.valueOf(type)));
-        this.parent       = parent;
+        this.hash = String.join(":", List.of(String.valueOf(groupId),
+                                             String.valueOf(artifactId),
+                                             String.valueOf(version),
+                                             String.valueOf(type)));
+        this.parent = parent;
     }
 
     @Override
@@ -62,13 +69,6 @@ public class Gav implements JsonObject, Comparable<Gav> {
         return this;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Gav{");
-        sb.append(hash).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 
     public void addDependencies(final List<Gav> values) {
         if (values != null) {

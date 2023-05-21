@@ -24,11 +24,11 @@ import io.inugami.api.tools.ConsoleColors;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.*;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.ScanConext;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener;
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
 
 import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 
-
+@SuppressWarnings({"java:S1854"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Mojo(name = "check", defaultPhase = LifecyclePhase.INSTALL)
@@ -255,8 +255,8 @@ public class CheckMojo extends AbstractMojo {
         if (project.getIssueManagement() != null) {
             assertNotEmpty("no issue management system defined!", project.getIssueManagement().getSystem());
             assertNotEmpty("no issue management url defined!", project.getIssueManagement().getUrl());
-            configuration.put(IssueTackerProvider.SYSTEM, project.getIssueManagement().getSystem());
-            configuration.put(IssueTackerProvider.URL, project.getIssueManagement().getUrl());
+            configuration.put(IssueTrackerProvider.SYSTEM, project.getIssueManagement().getSystem());
+            configuration.put(IssueTrackerProvider.URL, project.getIssueManagement().getUrl());
         }
         if (secDispatcher instanceof DefaultSecDispatcher) {
             final String securityPath = configuration.getOrDefault("settings.security",
@@ -290,6 +290,7 @@ public class CheckMojo extends AbstractMojo {
                   .artifactId(dependency.getArtifactId())
                   .version(dependency.getVersion())
                   .type(dependency.getType())
+                  .scope(dependency.getScope())
                   .build();
     }
 
@@ -299,7 +300,7 @@ public class CheckMojo extends AbstractMojo {
         try {
 
             final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
-            final Set<String>    dependencies            = new LinkedHashSet(getDependentClasspathElements());
+            final Set<String>    dependencies            = new LinkedHashSet<>(getDependentClasspathElements());
             final URL[]          urls                    = new URL[dependencies.size()];
             final int            index                   = 0;
             for (final String dependency : dependencies) {

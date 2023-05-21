@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NodeUtilsTest {
     @Test
-    public void testCleanLines() {
+    void testCleanLines() {
         assertThat(cleanLines("\"test\"")).isEqualTo("\\\"test\\\"");
     }
 }

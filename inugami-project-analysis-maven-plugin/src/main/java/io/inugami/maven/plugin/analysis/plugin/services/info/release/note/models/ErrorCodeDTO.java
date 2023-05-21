@@ -19,7 +19,8 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.model
 import io.inugami.api.models.data.basic.JsonObject;
 import lombok.*;
 
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.UNDERSCORE;
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.UNDERSCORE;
+
 
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

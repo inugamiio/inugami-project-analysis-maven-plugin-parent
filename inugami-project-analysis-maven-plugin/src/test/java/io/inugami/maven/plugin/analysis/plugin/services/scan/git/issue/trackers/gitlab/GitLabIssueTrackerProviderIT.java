@@ -18,7 +18,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers
 
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
-import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTackerProvider;
+import io.inugami.maven.plugin.analysis.api.scan.issue.tracker.IssueTrackerProvider;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -33,8 +33,8 @@ public class GitLabIssueTrackerProviderIT {
         final GitLabIssueTrackerProvider    provider = new GitLabIssueTrackerProvider();
         final ConfigHandler<String, String> config   = new ConfigHandlerHashMap();
         config.put(GitLabIssueTrackerProvider.SERVER_TOKEN, System.getProperty("project.token"));
-        config.put(IssueTackerProvider.SYSTEM, GitLabIssueTrackerProvider.GITLAB);
-        config.put(IssueTackerProvider.URL, System.getProperty("project.issue.url"));
+        config.put(IssueTrackerProvider.SYSTEM, GitLabIssueTrackerProvider.GITLAB);
+        config.put(IssueTrackerProvider.URL, System.getProperty("project.issue.url"));
         provider.postConstruct(config);
 
         provider.buildNodes(new LinkedHashSet<>(List.of("#1")), "project:app:0.0.1:jar");

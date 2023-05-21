@@ -1,0 +1,1 @@
+Gav(hash=io.inugami:some-artifact:1.0.0:jar)

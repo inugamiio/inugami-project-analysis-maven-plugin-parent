@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import static io.inugami.maven.plugin.analysis.front.core.tools.JsonMarshallerUtils.OBJECT_MAPPER;
 
+@SuppressWarnings({"java:S1989"})
 @Slf4j
 public class DependenciesCheckServlet extends HttpServlet {
 
@@ -39,7 +40,6 @@ public class DependenciesCheckServlet extends HttpServlet {
     // =========================================================================
     private static final int                      SUCCCESS               = 200;
     private static final int                      ERROR                  = 500;
-    private static final String                   UTF_8                  = "UTF-8";
     private static final long                     serialVersionUID       = -4097614303888347284L;
     public static final  String                   APPLICATION_TYPESCRIPT = "application/x-typescript";
     public static final  String                   DEFUALT_RESPONSE       = "{}";
@@ -81,10 +81,12 @@ public class DependenciesCheckServlet extends HttpServlet {
             json = DEFUALT_RESPONSE;
         }
 
-
-        resp.getWriter().print(json);
-        resp.setStatus(status);
-
+        try {
+            resp.getWriter().print(json);
+            resp.setStatus(status);
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private String retrieveData() throws JsonProcessingException {

@@ -28,14 +28,14 @@ import java.util.Set;
 @Setter
 @Getter
 public class ServiceDto implements JsonObject, Comparable<ServiceDto> {
-    private static final long serialVersionUID = -6151404690187054191L;
+    private static final long        serialVersionUID = -6151404690187054191L;
     @EqualsAndHashCode.Include
-    private String      name;
-    private String      shortName;
-    private String      type;
-    private Set<String> consumers = new LinkedHashSet<>();
-    private Set<String> producers = new LinkedHashSet<>();
-    private Set<String> methods = new LinkedHashSet<>();
+    private              String      name;
+    private              String      shortName;
+    private              String      type;
+    private              Set<String> consumers        = new LinkedHashSet<>();
+    private              Set<String> producers        = new LinkedHashSet<>();
+    private              Set<String> methods          = new LinkedHashSet<>();
 
     private String uri;
     private String contentType;
@@ -66,6 +66,7 @@ public class ServiceDto implements JsonObject, Comparable<ServiceDto> {
         }
         return this;
     }
+
     public ServiceDto addMethod(final String value) {
         if (methods == null) {
             methods = new LinkedHashSet<>();
@@ -75,11 +76,12 @@ public class ServiceDto implements JsonObject, Comparable<ServiceDto> {
         }
         return this;
     }
+
     public ServiceDto mergeConsumers(final Set<String> values) {
         if (this.consumers == null) {
             this.consumers = new LinkedHashSet<>();
         }
-        if(values!=null){
+        if (values != null) {
             consumers.addAll(values);
         }
         return this;
@@ -89,22 +91,22 @@ public class ServiceDto implements JsonObject, Comparable<ServiceDto> {
         if (this.producers == null) {
             this.producers = new LinkedHashSet<>();
         }
-        if(values!=null){
+        if (values != null) {
             producers.addAll(values);
         }
         return this;
     }
+
     public ServiceDto mergeMethods(final Set<String> values) {
         if (this.methods == null) {
             this.methods = new LinkedHashSet<>();
         }
-        if(methods!=null){
-            methods.addAll(values);
-        }
+        methods.addAll(values);
         return this;
     }
+
     @Override
     public int compareTo(final ServiceDto other) {
-        return String.valueOf(name).compareTo(String.valueOf(other==null?null:other.getName()));
+        return String.valueOf(name).compareTo(String.valueOf(other == null ? null : other.getName()));
     }
 }

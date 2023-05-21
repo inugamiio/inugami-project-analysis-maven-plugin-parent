@@ -30,7 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
@@ -75,7 +77,7 @@ public class FlywayScan implements ProjectScanner {
 
 
         if (!paths.isEmpty()) {
-            final String defaultDb = context.getConfiguration().grabOrDefault(DEFAULT_DB,null);
+            final String defaultDb = context.getConfiguration().grabOrDefault(DEFAULT_DB, null);
             final List<String> fileTypes = Arrays
                     .asList(context.getConfiguration().grabOrDefault(SCRIPT_TYPES, "sql").split(SEPARATOR))
                     .stream()
@@ -83,13 +85,13 @@ public class FlywayScan implements ProjectScanner {
                     .collect(Collectors.toList());
 
             final Node projectNode = buildNodeVersion(context.getProject());
-            for (File file : paths) {
+            for (final File file : paths) {
                 if (file.isDirectory()) {
-                    List<File> files = Arrays.asList(file.list())
-                                             .stream()
-                                             .map(fileName -> new File(
+                    final List<File> files = Arrays.asList(file.list())
+                                                   .stream()
+                                                   .map(fileName -> new File(
                                                      file.getAbsolutePath() + File.separator + fileName))
-                                             .collect(Collectors.toList());
+                                                   .collect(Collectors.toList());
                     scanFolder(defaultDb, file.getName(), files, fileTypes, result, projectNode);
                 }
             }
@@ -107,7 +109,7 @@ public class FlywayScan implements ProjectScanner {
                             final ScanNeo4jResult result,
                             final Node projectNode) {
 
-        for (File script : scripts) {
+        for (final File script : scripts) {
             final String extension = resolveExtension(script.getName());
             if (fileTypes.contains(extension)) {
                 buildFlywayNode(script, dbName, defaultDb, result, projectNode);
@@ -121,19 +123,19 @@ public class FlywayScan implements ProjectScanner {
                                  final String defaultDb,
                                  final ScanNeo4jResult result,
                                  final Node projectNode) {
-        String content     = loadScriptContent(script);
-        String contentSha1 = encodeSha1(content == null ? "" : content);
-        String uid         = encodeSha1(String.join(SEPARATOR, script.getName(), contentSha1));
+        final String content     = loadScriptContent(script);
+        final String contentSha1 = encodeSha1(content == null ? "" : content);
+        final String uid         = encodeSha1(String.join(SEPARATOR, script.getName(), contentSha1));
 
-        LinkedHashMap<String, Serializable> flywayNodeProperties = new LinkedHashMap<>();
+        final LinkedHashMap<String, Serializable> flywayNodeProperties = new LinkedHashMap<>();
         flywayNodeProperties.put(DB_TYPE, defaultDb == null ? dbName : defaultDb);
 
-        Node flywayNode = Node.builder()
-                              .type(NODE_FLYWAY)
-                              .uid(uid)
-                              .name(script.getName())
-                              .properties(flywayNodeProperties)
-                              .build();
+        final Node flywayNode = Node.builder()
+                                    .type(NODE_FLYWAY)
+                                    .uid(uid)
+                                    .name(script.getName())
+                                    .properties(flywayNodeProperties)
+                                    .build();
         result.addNode(flywayNode);
         result.addRelationship(Relationship.builder()
                                            .from(projectNode.getUid())
@@ -141,14 +143,13 @@ public class FlywayScan implements ProjectScanner {
                                            .type(HAS_FLYWAY)
                                            .build());
         if (content != null) {
-            LinkedHashMap<String, Serializable> flywayNodeContentProperties = new LinkedHashMap<>();
             flywayNodeProperties.put(CONTENT, content);
-            Node flywayNodeContent = Node.builder()
-                                         .type(NODE_FLYWAY_CONTENT)
-                                         .uid(contentSha1)
-                                         .name(contentSha1)
-                                         .properties(flywayNodeProperties)
-                                         .build();
+            final Node flywayNodeContent = Node.builder()
+                                               .type(NODE_FLYWAY_CONTENT)
+                                               .uid(contentSha1)
+                                               .name(contentSha1)
+                                               .properties(flywayNodeProperties)
+                                               .build();
 
             result.addNode(flywayNodeContent);
             result.addRelationship(Relationship.builder()
@@ -166,8 +167,7 @@ public class FlywayScan implements ProjectScanner {
         String result = null;
         try {
             result = FilesUtils.readContent(script);
-        }
-        catch (IOException e) {
+        } catch (final IOException e) {
             log.error(e.getMessage(), e);
         }
         return result;

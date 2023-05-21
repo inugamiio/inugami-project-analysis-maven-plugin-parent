@@ -39,6 +39,7 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class RestServices implements ProjectInformation, QueryConfigurator {
 
@@ -46,7 +47,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             "META-INF/queries/search_consumers.cql",
             "META-INF/queries/search_produce.cql",
             "META-INF/queries/search_services_rest.cql"
-                                                       );
+    );
 
     // =========================================================================
     // QUERIES
@@ -65,7 +66,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                 Map.entry("artifactId", gav.getArtifactId()),
                 Map.entry("version", gav.getVersion()),
                 Map.entry("serviceType", "Rest")
-                                   ));
+        ));
         return config;
     }
 
@@ -91,10 +92,10 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     private DependencyRest searchConsumedService(final Gav gav, final DefaultNeo4jDao dao,
                                                  final ConfigHandler<String, String> config) {
         //@formatter:off
-        final DependencyRest  result = new DependencyRest();
-        final String          queryPath    = "META-INF/queries/search_consumers.cql";
-        final String          query        = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
-        final List<Record>    resultSet    = dao.search(query);
+        final DependencyRest result    = new DependencyRest();
+        final String         queryPath = "META-INF/queries/search_consumers.cql";
+        final String         query     = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
+        final List<Record>   resultSet = dao.search(query);
         //@formatter:on
 
         if (!resultSet.isEmpty()) {
@@ -102,7 +103,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractConsumeEndpoint);
-                if (localeEndpoints != null) {
+                if (!localeEndpoints.isEmpty()) {
                     localeEndpoints.entrySet().forEach((entry -> {
                         result.addProducers(entry.getValue().getProducers());
                         result.addConsumers(entry.getValue().getConsumers());
@@ -123,11 +124,11 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                                                 final ConfigHandler<String, String> config) {
 
         //@formatter:off
-        final DependencyRest  result = new DependencyRest();
-        final String       queryPath    = "META-INF/queries/search_produce.cql";
-        final String       query        = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
+        final DependencyRest result    = new DependencyRest();
+        final String         queryPath = "META-INF/queries/search_produce.cql";
+        final String         query     = TemplateRendering.render(QueriesLoader.getQuery(queryPath), configure(queryPath, gav, config));
         log.info(query);
-        final List<Record> resultSet    = dao.search(query);
+        final List<Record> resultSet = dao.search(query);
         //@formatter:on
 
         if (!resultSet.isEmpty()) {
@@ -136,7 +137,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractExposedEndpoint);
-                if (localeEndpoints != null) {
+                if (!localeEndpoints.isEmpty()) {
                     localeEndpoints.entrySet().forEach((entry -> {
                         result.addProducers(entry.getValue().getProducers());
                         result.addConsumers(entry.getValue().getConsumers());
@@ -201,42 +202,40 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                                         final Map<String, Object> queryNodes) {
         final RestEndpoint endpoint = RestEndpointConvertor.build((Node) queryNodes.get("serviceConsume"));
 
-        if (endpoint != null) {
-            final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
-            final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
-
-            final DependencyRest savedDependencies = buffer.get(endpoint);
-
-            if (savedDependencies == null) {
-                buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
-                                                        appConsumer == null ? null : appConsumer.getName()));
-            }
-            else {
-                savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
-                savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
-            }
+        if (endpoint == null) {
+            return;
         }
 
+        final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
+        final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+
+        final DependencyRest savedDependencies = buffer.get(endpoint);
+
+        if (savedDependencies == null) {
+            buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
+                                                    appConsumer == null ? null : appConsumer.getName()));
+        } else {
+            savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
+            savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
+        }
     }
 
     private void extractExposedEndpoint(final Map<RestEndpoint, DependencyRest> buffer,
                                         final Map<String, Object> queryNodes) {
         final RestEndpoint endpoint = RestEndpointConvertor.build((Node) queryNodes.get("service"));
-        if (endpoint != null) {
-            final VersionNode appProducer = VersionConvertor.build((Node) queryNodes.get("depProducer"));
-            final VersionNode appConsumer = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+        if (endpoint == null) {
+            return;
+        }
+        final VersionNode    appProducer       = VersionConvertor.build((Node) queryNodes.get("depProducer"));
+        final VersionNode    appConsumer       = VersionConvertor.build((Node) queryNodes.get("depConsumer"));
+        final DependencyRest savedDependencies = buffer.get(endpoint);
 
-
-            final DependencyRest savedDependencies = buffer.get(endpoint);
-
-            if (savedDependencies == null) {
-                buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
-                                                        appConsumer == null ? null : appConsumer.getName()));
-            }
-            else {
-                savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
-                savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
-            }
+        if (savedDependencies == null) {
+            buffer.put(endpoint, new DependencyRest(appProducer == null ? null : appProducer.getName(),
+                                                    appConsumer == null ? null : appConsumer.getName()));
+        } else {
+            savedDependencies.addConsumer(appProducer == null ? null : appProducer.getName());
+            savedDependencies.addConsumer(appConsumer == null ? null : appConsumer.getName());
         }
     }
 
@@ -249,8 +248,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
 
         if (endpoints == null || endpoints.isEmpty()) {
             result.write("no endpoint consumed");
-        }
-        else {
+        } else {
             final List<RestEndpoint> endpointsKeySet = new ArrayList<>(endpoints.keySet());
             Collections.sort(endpointsKeySet);
             for (final RestEndpoint endpoint : endpointsKeySet) {
@@ -311,7 +309,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
     }
 
     private String spacePayload(final String value, final String space) {
-        return space + value.replaceAll("\n", "\n" + space);
+        return space + value.replace("\n", "\n" + space);
     }
 
     private String encodeColor(final String verb) {
@@ -332,6 +330,8 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
                     break;
                 case "OPTION":
                     result = ConsoleColors.PURPLE_BOLD;
+                    break;
+                default:
                     break;
             }
         }

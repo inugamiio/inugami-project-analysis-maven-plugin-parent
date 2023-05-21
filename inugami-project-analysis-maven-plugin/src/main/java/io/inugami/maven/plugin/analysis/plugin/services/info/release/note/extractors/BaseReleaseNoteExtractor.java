@@ -26,7 +26,6 @@ import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
 import io.inugami.maven.plugin.analysis.api.tools.TemplateRendering;
-import io.inugami.maven.plugin.analysis.api.utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.internal.value.NodeValue;
@@ -37,11 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.isNotNull;
-import static io.inugami.maven.plugin.analysis.api.utils.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 
+@SuppressWarnings({"java:S5361", "java:S6213"})
 @Slf4j
 public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
@@ -115,7 +115,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
                                     final Map<String, Serializable> cache,
                                     final List<Replacement> replacements) {
         //@formatter:off
-        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value -> addScm(releaseNote, value, cache, replacements));
+        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value -> addScm(releaseNote, value, cache));
         processIfNotNull(Neo4jUtils.extractNode(MERGE_REQUEST, record), value -> addMergeRequest(releaseNote, value, cache));
         processIfNotNull(Neo4jUtils.extractNode(ISSUE, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LABEL)));
         processIfNotNull(Neo4jUtils.extractNode(ISSUE_LINK, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LINK_LABEL)));
@@ -125,8 +125,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
 
     private void addScm(final ReleaseNoteResult releaseNote, final NodeValue scm,
-                        final Map<String, Serializable> cache,
-                        final List<Replacement> replacements) {
+                        final Map<String, Serializable> cache) {
 
         final String cacheKey = skipNode(scm, cache, SCM);
         if (cacheKey == null) {
@@ -187,7 +186,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
             final Object shortName = data.get(SHORT_NAME);
             if (shortName != null) {
-                savedIssue.addLabel(String.valueOf(shortName).replaceAll(EMPTY, UNDERSCORE));
+                savedIssue.addLabel(String.valueOf(shortName).replaceAll(SPACE, UNDERSCORE));
             }
 
         }
@@ -204,7 +203,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
         final Map<String, Object> data = node.asMap();
         releaseNote.addAuthor(Author.builder()
                                     .name(retrieveString(SHORT_NAME, data, replacements))
-                                    .email(retrieveString(Constants.EMAIL, data, replacements))
+                                    .email(retrieveString(EMAIL, data, replacements))
                                     .build());
     }
 

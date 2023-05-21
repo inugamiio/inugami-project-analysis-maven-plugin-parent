@@ -20,7 +20,7 @@ import lombok.*;
 
 import java.util.Map;
 
-@Builder
+@Builder(toBuilder = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @AllArgsConstructor
@@ -32,5 +32,6 @@ public class FileResources {
     private String              target;
     private String              template;
     private String              templatePath;
+    @ToString.Exclude
     private Map<String, String> properties;
 }

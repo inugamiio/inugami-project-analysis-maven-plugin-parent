@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"java:S5361"})
 @Slf4j
 public class ClassesScan implements ProjectScanner {
     // =========================================================================

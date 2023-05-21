@@ -1,0 +1,13 @@
+{
+  "description" : "some description",
+  "errorCode" : "ERR-0",
+  "errorCodeClass" : "io.inugami.api.exceptions.UncheckedException",
+  "errorMessage" : "some error",
+  "errorMessageDetail" : "can't process action",
+  "example" : "use other value",
+  "httpStatus" : 500,
+  "payload" : "[]",
+  "throwsAs" : "io.inugami.api.exceptions.UncheckedException",
+  "type" : "technical",
+  "url" : "http://mock"
+}

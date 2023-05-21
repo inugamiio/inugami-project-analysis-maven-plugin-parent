@@ -26,7 +26,6 @@ import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -35,6 +34,7 @@ import java.util.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S3011"})
 @Slf4j
 public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
@@ -137,7 +137,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
             nodes = scanErrorOnClass(clazz);
         }
 
-        if (nodes != null && !nodes.isEmpty()) {
+        if (!nodes.isEmpty()) {
             final Node artifactNode = buildNodeVersion(context.getProject());
             result.addNode(artifactNode);
 
@@ -220,30 +220,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
         for (final Method method : methods) {
-            if (TO_MAP.equalsIgnoreCase(method.getName())) {
-                continue;
-            }
-            final String key   = method.getName();
-            Serializable value = null;
-
-            if (method.getParameters().length == 0 && !errorCodeClass.isAssignableFrom(method.getReturnType())) {
-                try {
-                    final Object rawValue = method.invoke(instance);
-                    if (rawValue instanceof Serializable) {
-                        value = (Serializable) rawValue;
-                    }
-                } catch (final Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.error("instance : {} on retrieve value from method : {}", instance.getClass(),
-                                  method.getName());
-                        log.error(e.getMessage(), e);
-                    }
-                }
-            }
-
-            if (key != null && value != null) {
-                properties.put(cleanAccessor(key), value);
-            }
+            buildNodeOnMethod(instance, properties, method);
         }
 
         final String uid = properties.get(errorCodeFieldName) == null ? instance.toString() : String
@@ -254,6 +231,33 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
         node.properties(properties);
         return node.build();
+    }
+
+    private void buildNodeOnMethod(final Object instance, final LinkedHashMap<String, Serializable> properties, final Method method) {
+        if (TO_MAP.equalsIgnoreCase(method.getName())) {
+            return;
+        }
+        final String key   = method.getName();
+        Serializable value = null;
+
+        if (method.getParameters().length == 0 && !errorCodeClass.isAssignableFrom(method.getReturnType())) {
+            try {
+                final Object rawValue = method.invoke(instance);
+                if (rawValue instanceof Serializable) {
+                    value = (Serializable) rawValue;
+                }
+            } catch (final Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.error("instance : {} on retrieve value from method : {}", instance.getClass(),
+                              method.getName());
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
+
+        if (key != null && value != null) {
+            properties.put(cleanAccessor(key), value);
+        }
     }
 
 
@@ -276,22 +280,10 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
                    .name(errorType)
                    .build();
     }
+
     // =========================================================================
     // TOOLS
     // =========================================================================
-
-    private Object buildInstance(final Class<?> clazz) {
-        Constructor<?> defaultConstructor = null;
-
-
-        try {
-            defaultConstructor = clazz.getConstructor();
-        } catch (final NoSuchMethodException e) {
-            log.error("no default constructor found on class : {}", clazz.getName());
-        }
-        return null;
-    }
-
     private String cleanAccessor(final String value) {
         String result = value;
         if (result != null) {

@@ -6,6 +6,7 @@ import io.inugami.api.tools.ConsoleColors;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
 import io.inugami.maven.plugin.analysis.api.actions.QueryConfigurator;
+import io.inugami.maven.plugin.analysis.api.constant.Constants;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.tools.QueriesLoader;
@@ -22,8 +23,10 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.Function;
 
+import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROPERTIES_CQL;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class Properties implements ProjectInformation, QueryConfigurator {
 
@@ -32,7 +35,8 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     private static final List<String> QUERIES = List.of(
             QUERIES_SEARCH_PROPERTIES_CQL
-                                                       );
+    );
+
 
     // =========================================================================
     // QUERIES
@@ -47,10 +51,10 @@ public class Properties implements ProjectInformation, QueryConfigurator {
                                                    final ConfigHandler<String, String> configuration) {
         final ConfigHandler<String, String> config = new ConfigHandlerHashMap(configuration);
         config.putAll(Map.ofEntries(
-                Map.entry("groupId", gav.getGroupId()),
-                Map.entry("artifactId", gav.getArtifactId()),
-                Map.entry("version", gav.getVersion())
-                                   ));
+                Map.entry(Constants.GROUP_ID, gav.getGroupId()),
+                Map.entry(Constants.ARTIFACT_ID, gav.getArtifactId()),
+                Map.entry(Constants.VERSION, gav.getVersion())
+        ));
         return config;
     }
 
@@ -71,8 +75,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
         if (resultSet == null || resultSet.isEmpty()) {
             renderingNotResult();
-        }
-        else {
+        } else {
             rendering(resultSet);
         }
 
@@ -95,8 +98,8 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
         for (final Record record : resultSet) {
             final Map<String, Object> data     = record.asMap();
-            final Node                artifact = (Node) data.get("artifact");
-            final Node                property = (Node) data.get("property");
+            final Node                artifact = (Node) data.get(Constants.ARTIFACT);
+            final Node                property = (Node) data.get(Constants.PROPERTY);
 
             mapResultSet(properties, artifact, property);
         }
@@ -110,9 +113,9 @@ public class Properties implements ProjectInformation, QueryConfigurator {
             for (final String artifactName : artifactKeys) {
                 writer.line();
                 writer.write(ConsoleColors.CYAN);
-                writer.write(ConsoleColors.createLine("-", 80)).line();
+                writer.write(ConsoleColors.createLine(DECO, 80)).line();
                 writer.write(artifactName).line();
-                writer.write(ConsoleColors.createLine("-", 80)).line();
+                writer.write(ConsoleColors.createLine(DECO, 80)).line();
                 writer.write(ConsoleColors.RESET);
 
                 final List<PropertyDto> propertyData = properties.get(artifactName);
@@ -142,8 +145,8 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
     private void mapResultSet(final Map<String, List<PropertyDto>> properties, final Node artifact,
                               final Node property) {
-        if(artifact!=null){
-            final String artifactName = artifact.get("name").asString();
+        if (artifact != null) {
+            final String artifactName = artifact.get(NAME).asString();
 
             List<PropertyDto> artifactProperties = properties.get(artifactName);
             if (artifactProperties == null) {
@@ -154,15 +157,15 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
             //@formatter:off
             artifactProperties.add(PropertyDto.builder()
-                                              .name(property.get("name").asString())
-                                              .type(property.get("propertyType").asString())
-                                              .defaultValue(notNull(property.get("defaultValue")) ? property.get("defaultValue").asString() : null)
-                                              .mandatory(notNull(property.get("mandatory")) ?property.get("mandatory").asBoolean() : false)
-                                              .constraintType(notNull(property.get("constraintType")) ? property.get("constraintType").asString() : null)
-                                              .constraintDetail(notNull(property.get("constraintDetail")) ? property.get("constraintDetail").asString() : null)
+                                              .name(property.get(NAME).asString())
+                                              .type(property.get(PROPERTY_TYPE).asString())
+                                              .defaultValue(notNull(property.get(DEFAULT_VALUE)) ? property.get(DEFAULT_VALUE).asString() : null)
+                                              .mandatory(notNull(property.get(MANDATORY)) ? property.get(MANDATORY).asBoolean() : false)
+                                              .constraintType(notNull(property.get(CONSTRAINT_TYPE)) ? property.get(CONSTRAINT_TYPE).asString() : null)
+                                              .constraintDetail(notNull(property.get(CONSTRAINT_DETAIL)) ? property.get(CONSTRAINT_DETAIL).asString() : null)
 
-                                              .useForConditionalBean(notNull(property.get("useForConditionalBean")) ?property.get("useForConditionalBean").asBoolean() : false)
-                                              .matchIfMissing(notNull(property.get("matchIfMissing")) ?property.get("matchIfMissing").asBoolean() : false)
+                                              .useForConditionalBean(notNull(property.get(USE_FOR_CONDITIONAL_BEAN)) ? property.get(USE_FOR_CONDITIONAL_BEAN).asBoolean() : false)
+                                              .matchIfMissing(notNull(property.get(MATCH_IF_MISSING)) ? property.get(MATCH_IF_MISSING).asBoolean() : false)
                                               .build());
             //@formatter:on
         }
@@ -175,48 +178,46 @@ public class Properties implements ProjectInformation, QueryConfigurator {
         if (property.isMandatory()) {
             writer.write(ConsoleColors.RED);
             writer.write("* ");
-        }
-        else if (property.useForConditionalBean) {
+        } else if (property.useForConditionalBean) {
             writer.write(ConsoleColors.YELLOW);
             writer.write("! ");
-        }
-        else {
+        } else {
             writer.write("  ");
         }
 
         writer.write(property.getName());
-        writer.write(ConsoleColors.createLine(" ", propertyColSize - property.getName().length()));
+        writer.write(ConsoleColors.createLine(SPACE, propertyColSize - property.getName().length()));
 
         writer.write(" | ");
         writer.write(property.getType());
-        writer.write(ConsoleColors.createLine(" ", typeColSize - property.getType().length()));
+        writer.write(ConsoleColors.createLine(SPACE, typeColSize - property.getType().length()));
 
         if (property.getDefaultValue() != null) {
             writer.write(" | default : ");
             writer.write(property.getDefaultValue());
-        }else{
+        } else {
             writer.write(" | default : null");
         }
 
         final int detailTab = propertyColSize + typeColSize + 6;
         if (property.isUseForConditionalBean()) {
             writer.line()
-                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write(ConsoleColors.createLine(SPACE, detailTab))
                   .write("| use for conditional bean :").write("true");
         }
         if (property.isMatchIfMissing()) {
             writer.line()
-                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write(ConsoleColors.createLine(SPACE, detailTab))
                   .write("| match if missing : ").write(property.isMatchIfMissing());
         }
         if (property.getConstraintType() != null) {
             writer.line()
-                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write(ConsoleColors.createLine(SPACE, detailTab))
                   .write("| constraint :").write(property.getConstraintType());
         }
         if (property.getConstraintDetail() != null) {
             writer.line()
-                  .write(ConsoleColors.createLine(" ", detailTab))
+                  .write(ConsoleColors.createLine(SPACE, detailTab))
                   .write("| constraint detail :").write(property.getConstraintDetail());
         }
 
@@ -225,7 +226,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
 
     private boolean isMandatory(final Node property) {
         boolean     result = false;
-        final Value value  = property.get("mandatory");
+        final Value value  = property.get(MANDATORY);
         if (notNull(value)) {
             result = value.asBoolean();
         }
@@ -233,7 +234,7 @@ public class Properties implements ProjectInformation, QueryConfigurator {
     }
 
     private boolean notNull(final Value value) {
-        return value != null && !"null".equals(String.valueOf(value.asObject()));
+        return value != null && !NULL_VALUE.equals(String.valueOf(value.asObject()));
     }
 
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)

@@ -26,16 +26,17 @@ import lombok.ToString;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings({"java:S3776"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Getter
 @Builder
 public class JsonNode implements JsonObject {
-    private static final long serialVersionUID = -8448971914950919949L;
+    private static final long    serialVersionUID = -8448971914950919949L;
     @EqualsAndHashCode.Include
-    private final String  path;
-    private final boolean list;
-    private final boolean structure;
+    private final        String  path;
+    private final        boolean list;
+    private final        boolean structure;
 
     private final boolean map;
     private final String  fieldName;
@@ -64,27 +65,24 @@ public class JsonNode implements JsonObject {
             if (type != null) {
                 json.write(type);
             }
-        }
-        else if(basicType){
-            if(level>0){
+        } else if (basicType) {
+            if (level > 0) {
                 final String currentFieldIndentation = buildIndentation(level);
                 json.write(currentFieldIndentation);
-                if(fieldName!=null){
+                if (fieldName != null) {
                     json.addField(fieldName);
                 }
                 json.valueQuot(type);
-            }else{
+            } else {
                 json.write(type);
             }
-        }
-        else if (structure) {
+        } else if (structure) {
             if (fieldName != null) {
                 json.addField(fieldName);
             }
             json.openObject();
 
-        }
-        else if (map) {
+        } else if (map) {
             final String currentFieldIndentation = buildIndentation(level + 1);
             json.addField(fieldName);
             json.openObject().line();
@@ -94,16 +92,14 @@ public class JsonNode implements JsonObject {
             if (type == null) {
                 json.line();
                 json.write(mapValue == null ? null : mapValue.convertToJson());
-            }
-            else {
+            } else {
                 json.write(type);
             }
 
             json.line();
             json.write(currentFieldIndentation);
             json.closeObject();
-        }
-        else {
+        } else {
             json.addField(fieldName);
             json.valueQuot(type);
         }

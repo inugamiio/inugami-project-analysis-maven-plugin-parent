@@ -1,0 +1,9 @@
+{
+  "getName" : "artifact",
+  "getProperties" : {
+    "color" : "blue",
+    "date" : "2023-05-21"
+  },
+  "getType" : "Version",
+  "getUid" : "uid"
+}
