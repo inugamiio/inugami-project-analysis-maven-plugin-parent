@@ -28,13 +28,12 @@ public class MapTypeResolver implements BeanPropertyTypeResolver {
 
         Set<Node> result = null;
         if (Map.class.isAssignableFrom(field.getType())) {
-            result = processResolve(path, field, fieldType, clazz, springPropertiesAnalyzer);
+            result = processResolve(path, field, springPropertiesAnalyzer);
         }
         return result;
     }
 
-    private Set<Node> processResolve(final String path, final Field field, final Class<?> fieldType,
-                                     final Class<?> clazz, final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
+    private Set<Node> processResolve(final String path, final Field field, final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
 
         Set<Node>      result    = null;
         final Class<?> keyType   = extractGenericType(field.getGenericType());
@@ -46,8 +45,7 @@ public class MapTypeResolver implements BeanPropertyTypeResolver {
         fieldName.append('<');
         if (springPropertiesAnalyzer.setShortName(keyType)) {
             fieldName.append(keyType.getSimpleName());
-        }
-        else {
+        } else {
             fieldName.append(keyType.getName());
         }
         fieldName.append('>');
@@ -72,8 +70,7 @@ public class MapTypeResolver implements BeanPropertyTypeResolver {
 
             springPropertiesAnalyzer.resolveConstraints(node, field.getDeclaredAnnotations());
             result = Set.of(node);
-        }
-        else {
+        } else {
             final Field fakeField = buildField(valueType, fieldName.toString());
             result = springPropertiesAnalyzer.extractFieldProperties(currentPath, valueType, fakeField);
         }

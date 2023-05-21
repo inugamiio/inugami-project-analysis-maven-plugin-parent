@@ -19,7 +19,10 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.publish;
 import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectInformation;
-import io.inugami.maven.plugin.analysis.api.models.*;
+import io.inugami.maven.plugin.analysis.api.models.InfoContext;
+import io.inugami.maven.plugin.analysis.api.models.Node;
+import io.inugami.maven.plugin.analysis.api.models.Relationship;
+import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import io.inugami.maven.plugin.analysis.api.tools.ConsoleTools;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.Neo4jWriter;
 import org.apache.maven.project.MavenProject;
@@ -29,8 +32,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
-
-import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 
 @SuppressWarnings({"java:S3252"})
 public class Publish implements ProjectInformation {
@@ -112,26 +113,6 @@ public class Publish implements ProjectInformation {
         return result;
     }
 
-
-    private Gav buildGav(final ConfigHandler<String, String> configuration, final MavenProject project) {
-        final String groupId = ifNull(configuration.get(GROUP_ID),
-                                      () -> ConsoleTools.askQuestion("groupId ?", project.getGroupId()));
-
-        final String artifactId = ifNull(configuration.get(ARTIFACT_ID),
-                                         () -> ConsoleTools.askQuestion("artifactId ?", project.getArtifactId()));
-
-        final String type = ifNull(configuration.get(TYPE),
-                                   () -> ConsoleTools.askQuestion("type ?", project.getPackaging()));
-
-        final String version = ifNull(configuration.get(VERSION),
-                                      () -> ConsoleTools.askQuestion("version ?", project.getVersion()));
-        return Gav.builder()
-                  .groupId(groupId)
-                  .artifactId(artifactId)
-                  .version(version)
-                  .type(type)
-                  .build();
-    }
 
     private Node buildEnvNode(final ConfigHandler<String, String> configuration) {
         final Node.NodeBuilder builder = Node.builder();

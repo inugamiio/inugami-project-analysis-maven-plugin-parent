@@ -58,22 +58,22 @@
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodSender",
       "method" : "fireEvent",
-      "returnType" : "void",
-      "parameters" : "someValue<String>,event<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>"
+      "parameters" : "someValue<String>,event<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>",
+      "returnType" : "void"
     },
     "type" : "Method",
     "uid" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$MethodSender.fireEvent(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$UserCreatedEvent>)"
   }, {
     "name" : "1.0.0-SNAPSHOT",
     "properties" : {
-      "groupId" : "io.inugami.test",
       "artifactId" : "basic-artifact",
-      "version" : "1.0.0-SNAPSHOT",
-      "packaging" : "jar",
+      "groupId" : "io.inugami.test",
       "major" : 1,
       "minor" : 0,
+      "packaging" : "jar",
       "patch" : 0,
-      "tag" : "SNAPSHOT"
+      "tag" : "SNAPSHOT",
+      "version" : "1.0.0-SNAPSHOT"
     },
     "type" : "Version",
     "uid" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar"

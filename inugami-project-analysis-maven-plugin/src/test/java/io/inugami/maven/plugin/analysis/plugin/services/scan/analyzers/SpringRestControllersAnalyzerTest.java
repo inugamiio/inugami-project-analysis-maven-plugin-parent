@@ -104,6 +104,7 @@ class SpringRestControllersAnalyzerTest {
 
     }
 
+
     @Disabled
     @Test
     void analyze_nominal() {
@@ -111,6 +112,7 @@ class SpringRestControllersAnalyzerTest {
         final List<JsonObject>              result   = analyzer.analyze(BasicRestController.class, context);
         assertTextRelative(AnalyzerTestUtils.extractResult(result), "/services/scan/analyzers/analyze_nominal.json");
     }
+
 
     @Disabled
     @Test

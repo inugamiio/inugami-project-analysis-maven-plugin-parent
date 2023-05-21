@@ -39,6 +39,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_ENTITIES;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.EntitiesAnalyzer.LOCAL_ENTITY;
 
+@SuppressWarnings({"java:S6213"})
 public class EntitiesExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================

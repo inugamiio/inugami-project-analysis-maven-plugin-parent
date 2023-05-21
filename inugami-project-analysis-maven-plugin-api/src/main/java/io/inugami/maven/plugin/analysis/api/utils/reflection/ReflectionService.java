@@ -42,7 +42,7 @@ import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.OUTPUT_DTO;
 
-@SuppressWarnings({"java:S1872", "java:S1452"})
+@SuppressWarnings({"java:S1872", "java:S1452", "java:S1181", "java:S3011"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
@@ -213,7 +213,7 @@ public final class ReflectionService {
     }
 
 
-    public static <T, A extends Annotation, AE extends AnnotatedElement> void processOnAnnotation(
+    public static <A extends Annotation, AE extends AnnotatedElement> void processOnAnnotation(
             final AE annotatedElement,
             final Class<A> annotationClass,
             final Consumer<A> handler) {
@@ -331,7 +331,10 @@ public final class ReflectionService {
             result = renderStructureJson(currentClass, null, cursorChildren, strict);
 
         }
-        Loggers.DEBUG.debug("json structure : {}\n{}", currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
+        if (Loggers.DEBUG.isDebugEnabled()) {
+            Loggers.DEBUG.debug("json structure : {}\n{}", currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
+        }
+
         return result;
     }
 
@@ -405,15 +408,16 @@ public final class ReflectionService {
 
 
         for (final FieldTransformer transformer : FIELD_TRANSFORMERS) {
-            if (transformer.accept(field, fieldClass, genericType, currentPath)) {
-                try {
-                } catch (final Exception error) {
-                    log.error(error.getMessage(), error);
-                }
+            if (!transformer.accept(field, fieldClass, genericType, currentPath)) {
+                continue;
+            }
+            try {
                 transformer.transform(field, fieldClass, genericType, result, currentPath, cursor);
                 if (transformer.stop(field, fieldClass, genericType, currentPath)) {
                     break;
                 }
+            } catch (final Exception error) {
+                log.error(error.getMessage(), error);
             }
         }
 
@@ -512,7 +516,7 @@ public final class ReflectionService {
                 final JsonNode payloadNode = renderType(paramClass, null, null, true);
                 final String   payload     = payloadNode == null ? null : payloadNode.convertToJson();
 
-                if (parameter == null || parameter.getName() == null || payload == null) {
+                if (parameter.getName() == null || payload == null) {
                     continue;
                 }
                 final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();

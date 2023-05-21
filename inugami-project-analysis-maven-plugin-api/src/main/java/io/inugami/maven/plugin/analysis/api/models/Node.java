@@ -58,6 +58,9 @@ public class Node implements JsonObject, Comparable<Node> {
                                   .toString();
     }
 
+    public void sort() {
+        properties = sortProperties(properties);
+    }
 
     public static class NodeBuilder {
         private LinkedHashMap<String, Serializable> properties;
@@ -81,7 +84,7 @@ public class Node implements JsonObject, Comparable<Node> {
             if (properties != null) {
                 this.properties.putAll(properties);
             }
-            sortProperties(this.properties);
+            this.properties = sortProperties(this.properties);
             return this;
         }
     }

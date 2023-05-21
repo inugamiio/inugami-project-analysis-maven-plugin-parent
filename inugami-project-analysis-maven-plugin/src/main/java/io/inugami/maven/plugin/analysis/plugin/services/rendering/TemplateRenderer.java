@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-@SuppressWarnings({"java:S5361"})
+@SuppressWarnings({"java:S5361", "java:S6395"})
 public class TemplateRenderer {
 
 

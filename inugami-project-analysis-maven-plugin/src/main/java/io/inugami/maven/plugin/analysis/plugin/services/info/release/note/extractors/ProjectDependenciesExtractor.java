@@ -35,6 +35,7 @@ import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL;
 
+@SuppressWarnings({"java:S6213", "java:S3824"})
 @Slf4j
 public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
 
@@ -53,11 +54,11 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
                                    final Gav previousVersion, final Neo4jDao dao, final List<Replacement> replacements,
                                    final InfoContext context) {
 
-        extractProjectDependencies(releaseNoteResult, currentVersion, previousVersion, dao, context);
+        extractProjectDependencies(releaseNoteResult, currentVersion, dao, context);
     }
 
     private void extractProjectDependencies(final ReleaseNoteResult releaseNoteResult, final Gav currentVersion,
-                                            final Gav previousVersion, final Neo4jDao dao, final InfoContext context) {
+                                            final Neo4jDao dao, final InfoContext context) {
         final List<JsonObject> currentValues = search(QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL, currentVersion,
                                                       context.getConfiguration(), dao,
                                                       (resultSet) -> this.convert(resultSet, currentVersion));

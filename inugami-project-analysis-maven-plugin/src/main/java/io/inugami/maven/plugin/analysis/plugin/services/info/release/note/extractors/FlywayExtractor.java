@@ -39,6 +39,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getNodeName;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_FLYWAY;
 
+@SuppressWarnings({"java:S6213"})
 public class FlywayExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================

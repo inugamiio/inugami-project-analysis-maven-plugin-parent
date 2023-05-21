@@ -11,16 +11,16 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class TemplateRenderingTest {
 
     @Test
-    public void rendering_nominal_shouldRendered() {
-        TemplateRenderer renderer = new TemplateRenderer();
-        String           template = UnitTestHelper.loadJsonReference("rendering/rendering.with.maven.filtering.txt");
+    void rendering_nominal_shouldRendered() {
+        final TemplateRenderer renderer = new TemplateRenderer();
+        final String           template = UnitTestHelper.loadJsonReference("rendering/rendering.with.maven.filtering.txt");
 
-        Map<String, String> mavenProperties = new LinkedHashMap<>();
+        final Map<String, String> mavenProperties = new LinkedHashMap<>();
         mavenProperties.put("project.groupId", "io.inugami");
         mavenProperties.put("project.artifactId", "inugami-project-analysis-maven-plugin");
         mavenProperties.put("project.version", "1.6.3-SNAPSHOT");
 
-        Map<String, String> additionalProperties = new LinkedHashMap<>();
+        final Map<String, String> additionalProperties = new LinkedHashMap<>();
         additionalProperties.put("title", "hello the world");
 
         final String result = renderer.render("test1", template, mavenProperties, additionalProperties, true);
@@ -31,16 +31,16 @@ public class TemplateRenderingTest {
     }
 
     @Test
-    public void rendering_withoutMavenProperties_shouldRendered() {
-        TemplateRenderer renderer = new TemplateRenderer();
-        String           template = UnitTestHelper.loadJsonReference("rendering/rendering.with.maven.filtering.txt");
+    void rendering_withoutMavenProperties_shouldRendered() {
+        final TemplateRenderer renderer = new TemplateRenderer();
+        final String           template = UnitTestHelper.loadJsonReference("rendering/rendering.with.maven.filtering.txt");
 
-        Map<String, String> mavenProperties = new LinkedHashMap<>();
+        final Map<String, String> mavenProperties = new LinkedHashMap<>();
         mavenProperties.put("project.groupId", "io.inugami");
         mavenProperties.put("project.artifactId", "inugami-project-analysis-maven-plugin");
         mavenProperties.put("project.version", "1.6.3-SNAPSHOT");
 
-        Map<String, String> additionalProperties = new LinkedHashMap<>();
+        final Map<String, String> additionalProperties = new LinkedHashMap<>();
         additionalProperties.put("title", "hello the world");
 
         final String result = renderer.render("test1", template, mavenProperties, additionalProperties, false);
@@ -51,8 +51,8 @@ public class TemplateRenderingTest {
     }
 
     @Test
-    public void replaceMavenProperties_withMavenProperties_shouldReplace() {
-        TemplateRenderer renderer = new TemplateRenderer();
+    void replaceMavenProperties_withMavenProperties_shouldReplace() {
+        final TemplateRenderer renderer = new TemplateRenderer();
         assertThat(renderer.replaceMavenProperties("hello ${foobar}")).isEqualTo("hello {{foobar}}");
     }
 }

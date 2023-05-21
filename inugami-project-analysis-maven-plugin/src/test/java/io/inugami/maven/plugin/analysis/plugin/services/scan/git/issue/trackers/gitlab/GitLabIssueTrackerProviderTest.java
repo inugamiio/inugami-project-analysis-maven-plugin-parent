@@ -12,7 +12,7 @@ class GitLabIssueTrackerProviderTest {
 
 
     @Test
-    public void extractTicketNumber_withTicketsInCommit_shouldExtractThese() {
+    void extractTicketNumber_withTicketsInCommit_shouldExtractThese() {
         final GitLabIssueTrackerProvider service = new GitLabIssueTrackerProvider();
 
         assertThat(service.extractTicketNumber("MergeCommand.FastForwardMode.Merge branch '#21 my_feature' into 'dev' fix front See merge request project/internal/spring-boot-training!14 and !15"))

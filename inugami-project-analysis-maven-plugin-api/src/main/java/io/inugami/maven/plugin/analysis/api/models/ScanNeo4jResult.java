@@ -62,6 +62,10 @@ public class ScanNeo4jResult implements JsonObject {
         Collections.sort(relationships);
         Collections.sort(relationshipsToDeletes);
         Collections.sort(deleteScripts);
+
+        nodes.stream().forEach(Node::sort);
+        relationships.stream().forEach(Relationship::sort);
+        relationshipsToDeletes.stream().forEach(Relationship::sort);
         return this;
     }
 

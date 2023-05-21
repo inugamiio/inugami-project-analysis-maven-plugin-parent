@@ -36,6 +36,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.*;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_DEPENDENCIES_CQL;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_PROJECT_DEPENDENCIES_CQL;
 
+@SuppressWarnings({"java:S6213"})
 public class DependenciesExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================

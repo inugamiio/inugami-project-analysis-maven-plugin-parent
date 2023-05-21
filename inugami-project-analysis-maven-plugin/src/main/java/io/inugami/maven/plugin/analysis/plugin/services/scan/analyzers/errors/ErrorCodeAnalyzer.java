@@ -26,7 +26,6 @@ import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -35,6 +34,7 @@ import java.util.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S3011"})
 @Slf4j
 public class ErrorCodeAnalyzer implements ClassAnalyzer {
 
@@ -137,7 +137,7 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
             nodes = scanErrorOnClass(clazz);
         }
 
-        if (nodes != null && !nodes.isEmpty()) {
+        if (!nodes.isEmpty()) {
             final Node artifactNode = buildNodeVersion(context.getProject());
             result.addNode(artifactNode);
 
@@ -280,22 +280,10 @@ public class ErrorCodeAnalyzer implements ClassAnalyzer {
                    .name(errorType)
                    .build();
     }
+
     // =========================================================================
     // TOOLS
     // =========================================================================
-
-    private Object buildInstance(final Class<?> clazz) {
-        Constructor<?> defaultConstructor = null;
-
-
-        try {
-            defaultConstructor = clazz.getConstructor();
-        } catch (final NoSuchMethodException e) {
-            log.error("no default constructor found on class : {}", clazz.getName());
-        }
-        return null;
-    }
-
     private String cleanAccessor(final String value) {
         String result = value;
         if (result != null) {

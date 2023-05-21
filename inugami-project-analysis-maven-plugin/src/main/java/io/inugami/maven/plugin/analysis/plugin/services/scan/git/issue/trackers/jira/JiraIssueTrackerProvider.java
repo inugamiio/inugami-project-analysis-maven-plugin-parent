@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-@SuppressWarnings({"java:S1845"})
+@SuppressWarnings({"java:S1845", "java:S6397"})
 public class JiraIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
 
@@ -129,7 +129,7 @@ public class JiraIssueTrackerProvider implements IssueTrackerProvider, Propertie
             }
         }
 
-        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(JIRA, timeout, nbThreads, tasks).run();
+        final List<ScanNeo4jResult> resultSet = new RunAndCloseService<>(JIRA, timeout, nbThreads, tasks).run();
         for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
             if (itemResult != null) {
                 ScanNeo4jResult.merge(itemResult, result);

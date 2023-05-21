@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@SuppressWarnings({"java:S6213", "java:S3824"})
 @Slf4j
 public class EnvInfo implements ProjectInformation, QueryConfigurator {
 
@@ -62,9 +63,7 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
         log.info("query:\n{}", query);
         final Map<String, Long> envs = new LinkedHashMap<>();
         final Map<String, Collection<DataRow>> firstPass = extractDataFromResultSet(dao.search(query),
-                                                                                    (data, record) -> this
-                                                                                            .buildModels(data, record,
-                                                                                                         envs));
+                                                                                    (data, record) -> buildModels(data, record, envs));
 
         final Map<String, Collection<DataRow>> data = VERSION_ENV.sortData(firstPass, envs, null);
 
@@ -76,15 +75,15 @@ public class EnvInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // BUILDER
     // =========================================================================
-    public void buildModels(final Map<String, Collection<DataRow>> data,
-                            final Map<String, Object> record,
-                            final Map<String, Long> envs) {
+    public static void buildModels(final Map<String, Collection<DataRow>> data,
+                                   final Map<String, Object> record,
+                                   final Map<String, Long> envs) {
 
         log.debug("record : {}", record);
-        Collection<DataRow> lines = data.get(VERSION_ENV.ENVIRONMENTS);
+        Collection<DataRow> lines = data.get(VersionEnv.ENVIRONMENTS);
         if (lines == null) {
             lines = new ArrayList<>();
-            data.put(VERSION_ENV.ENVIRONMENTS, lines);
+            data.put(VersionEnv.ENVIRONMENTS, lines);
         }
 
         VERSION_ENV.buildLine("version", "env", "deploy", data, record, envs);

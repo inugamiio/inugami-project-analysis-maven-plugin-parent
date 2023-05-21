@@ -109,13 +109,11 @@ public class MavenInfo extends AbstractMojo {
             handler = SpiLoader.getInstance().loadSpiService(String.valueOf(action), ProjectInformation.class, true);
             try {
                 handler.process(context);
+            } catch (final ConfigurationException e) {
+                log.error(e.getMessage());
+                throw e;
             } catch (final Exception e) {
-                if (e instanceof ConfigurationException) {
-                    log.error(e.getMessage());
-                } else {
-                    log.error(e.getMessage(), e);
-                }
-
+                log.error(e.getMessage(), e);
                 throw e;
             } finally {
                 handler.shutdown();

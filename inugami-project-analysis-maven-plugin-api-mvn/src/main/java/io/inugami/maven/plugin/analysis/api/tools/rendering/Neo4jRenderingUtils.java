@@ -327,7 +327,7 @@ public final class Neo4jRenderingUtils {
         return Neo4jUtils.retrieve(key, node);
     }
 
-    public static <T> void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
+    public static void ifPropertyNotNull(final String key, final Node node, final Consumer<Object> consumer) {
         Neo4jUtils.ifPropertyNotNull(key, node, consumer);
     }
 }

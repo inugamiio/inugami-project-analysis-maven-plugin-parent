@@ -18,6 +18,7 @@ package io.inugami.maven.plugin.analysis.api.models;
 
 import lombok.*;
 
+@SuppressWarnings({"java:S1700"})
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 @ToString

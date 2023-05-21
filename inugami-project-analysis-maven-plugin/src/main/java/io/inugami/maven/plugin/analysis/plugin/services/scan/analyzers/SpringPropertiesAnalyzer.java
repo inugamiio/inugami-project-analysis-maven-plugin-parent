@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
+@SuppressWarnings({"java:S6397", "java:S6395"})
 @Slf4j
 public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
@@ -194,7 +195,6 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     private void searchInConstructors(final Class<?> clazz,
                                       final Set<Node> nodes) {
-        final Set<Node>           result       = new LinkedHashSet<>();
         final Set<Constructor<?>> constructors = loadAllConstructors(clazz);
 
         for (final Constructor<?> constructor : constructors) {
@@ -243,7 +243,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     // MAPPER
     // =========================================================================
-    protected <A extends Annotation> Set<Node> mapToNode(final ConditionalOnProperty annotation) {
+    protected Set<Node> mapToNode(final ConditionalOnProperty annotation) {
         final Set<Node> result = new LinkedHashSet<>();
         final String[]  values = annotation.value();
         final String[]  names  = annotation.name();
@@ -309,8 +309,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
         return result;
     }
 
-    protected <A extends Annotation> Node mapToNode(final Value annotation,
-                                                    final Class<?> type) {
+    protected Node mapToNode(final Value annotation,
+                             final Class<?> type) {
         final String value = annotation.value();
         return buildPropertyNode(type, value);
     }
@@ -458,9 +458,8 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     protected static void fusionOnNode(final Set<Node> nodes, final List<Node> classicProperties, final Node conditionalNode) {
         if (classicProperties.contains(conditionalNode)) {
-            final Node node = classicProperties
-                    .get(classicProperties.indexOf(conditionalNode));
-            final Map<String, Serializable> additionalProperties = conditionalNode.getProperties();
+            final Node node = classicProperties.get(classicProperties.indexOf(conditionalNode));
+            
             for (final Map.Entry<String, Serializable> entry : conditionalNode.getProperties().entrySet()) {
                 if (!PROPERTY_TYPE.equals(entry.getKey())) {
                     node.getProperties().put(entry.getKey(), entry.getValue());

@@ -270,8 +270,7 @@ public class RabbitMqAnalyzer implements ClassAnalyzer {
     private void buildListenerNode(final Method method,
                                    final RabbitListener parentRabbitListener,
                                    final BiConsumer<Node, List<Node>> onData) {
-
-        final List<Node>                          properties       = new ArrayList<>();
+        
         final LinkedHashMap<String, Serializable> additionalInfo   = new LinkedHashMap<>();
         final RabbitListener                      methodAnnotation = getAnnotation(method, RabbitListener.class);
         final RabbitListener                      rabbit           = methodAnnotation == null ? parentRabbitListener : methodAnnotation;

@@ -11,7 +11,7 @@ class VersionEnvTest {
 
 
     @Test
-    public void sortEnvironment_withEnvs_shouldSort() {
+    void sortEnvironment_withEnvs_shouldSort() {
         final VersionEnv service = new VersionEnv();
 
         assertThat(service.sortEnvironment(Map.ofEntries(
@@ -19,7 +19,7 @@ class VersionEnvTest {
                 Map.entry("DEV", 1L),
                 Map.entry("PREP2", 3L),
                 Map.entry("INT", 2L)
-                                                        )))
+        )))
                 .isEqualTo(List.of("DEV", "INT", "PREP1", "PREP2"));
     }
 }

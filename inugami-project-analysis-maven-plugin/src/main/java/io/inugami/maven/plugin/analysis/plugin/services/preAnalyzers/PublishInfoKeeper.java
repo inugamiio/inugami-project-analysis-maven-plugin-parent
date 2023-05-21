@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getRelationship;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator {
 
@@ -103,11 +104,9 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
             for (final Map.Entry<String, Object> entry : properties.entrySet()) {
                 if (entry.getValue() == null) {
                     continue;
-                }
-                else if (entry.getValue() instanceof Serializable) {
+                } else if (entry.getValue() instanceof Serializable) {
                     result.put(entry.getKey(), (Serializable) entry.getValue());
-                }
-                else {
+                } else {
                     result.put(entry.getKey(), String.valueOf(entry.getValue()));
                 }
             }

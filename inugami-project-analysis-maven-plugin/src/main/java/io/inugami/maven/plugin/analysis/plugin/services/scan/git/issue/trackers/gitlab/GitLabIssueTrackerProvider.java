@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
-@SuppressWarnings({"java:S1845"})
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395"})
 @Slf4j
 public class GitLabIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
     // =========================================================================
@@ -152,7 +152,7 @@ public class GitLabIssueTrackerProvider implements IssueTrackerProvider, Propert
 
     private ScanNeo4jResult retrieveNodeInformation(final ScanNeo4jResult result,
                                                     final List<Callable<ScanNeo4jResult>> tasks) {
-        final List<ScanNeo4jResult> resultSet = new RunAndCloseService(GITLAB, timeout, nbThreads, tasks).run();
+        final List<ScanNeo4jResult> resultSet = new RunAndCloseService<>(GITLAB, timeout, nbThreads, tasks).run();
 
         for (final ScanNeo4jResult itemResult : Optional.ofNullable(resultSet).orElse(new ArrayList<>())) {
             if (itemResult != null) {

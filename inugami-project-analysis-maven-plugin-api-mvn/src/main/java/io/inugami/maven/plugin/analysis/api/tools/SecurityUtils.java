@@ -16,6 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.api.tools;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
@@ -25,8 +27,9 @@ import java.security.Key;
 import java.util.Base64;
 
 @SuppressWarnings({"java:S5542", "java:S3329"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class SecurityUtils {
+public final class SecurityUtils {
 
 
     public static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";

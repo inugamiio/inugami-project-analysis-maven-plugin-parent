@@ -71,7 +71,7 @@ import java.util.stream.Collectors;
 
 import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 
-
+@SuppressWarnings({"java:S1854"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Mojo(name = "check", defaultPhase = LifecyclePhase.INSTALL)
@@ -300,7 +300,7 @@ public class CheckMojo extends AbstractMojo {
         try {
 
             final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
-            final Set<String>    dependencies            = new LinkedHashSet(getDependentClasspathElements());
+            final Set<String>    dependencies            = new LinkedHashSet<>(getDependentClasspathElements());
             final URL[]          urls                    = new URL[dependencies.size()];
             final int            index                   = 0;
             for (final String dependency : dependencies) {

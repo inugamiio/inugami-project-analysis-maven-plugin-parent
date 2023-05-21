@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
-@SuppressWarnings({"java:S1845"})
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395", "java:S1068"})
 @Slf4j
 public class GitHubIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 

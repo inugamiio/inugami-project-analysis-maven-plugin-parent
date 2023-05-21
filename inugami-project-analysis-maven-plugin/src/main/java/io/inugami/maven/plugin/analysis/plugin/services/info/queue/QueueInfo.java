@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
@@ -87,7 +88,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
         final List<ArtifactService> data = searchService(gav, dao, context.getConfiguration());
 
         if (data != null) {
-            render(gav, data);
+            render(data);
         }
         dao.shutdown();
     }
@@ -217,7 +218,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     // =========================================================================
     // RENDERING
     // =========================================================================
-    private void render(final Gav gav, final List<ArtifactService> data) {
+    private void render(final List<ArtifactService> data) {
         final JsonBuilder writer = new JsonBuilder();
         data.sort((ref, value) -> {
             int result = 0;
@@ -291,7 +292,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     }
 
     private List<String> orderKeys(final Collection<String> keySet) {
-        final List<String> result = new ArrayList(keySet);
+        final List<String> result = new ArrayList<>(keySet);
         result.sort((ref, value) -> ref.compareTo(value));
         return result;
     }

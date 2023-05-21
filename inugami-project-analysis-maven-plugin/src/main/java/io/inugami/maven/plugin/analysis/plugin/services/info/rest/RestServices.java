@@ -39,6 +39,7 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class RestServices implements ProjectInformation, QueryConfigurator {
 
@@ -102,7 +103,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractConsumeEndpoint);
-                if (localeEndpoints != null) {
+                if (!localeEndpoints.isEmpty()) {
                     localeEndpoints.entrySet().forEach((entry -> {
                         result.addProducers(entry.getValue().getProducers());
                         result.addConsumers(entry.getValue().getConsumers());
@@ -136,7 +137,7 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
             for (final Record record : resultSet) {
                 final Map<RestEndpoint, DependencyRest> localeEndpoints = extractAllEndpoint(resultSet,
                                                                                              this::extractExposedEndpoint);
-                if (localeEndpoints != null) {
+                if (!localeEndpoints.isEmpty()) {
                     localeEndpoints.entrySet().forEach((entry -> {
                         result.addProducers(entry.getValue().getProducers());
                         result.addConsumers(entry.getValue().getConsumers());

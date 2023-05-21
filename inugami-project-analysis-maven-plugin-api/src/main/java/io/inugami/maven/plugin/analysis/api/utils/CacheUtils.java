@@ -16,31 +16,21 @@
  */
 package io.inugami.maven.plugin.analysis.api.utils;
 
-import io.inugami.api.exceptions.Asserts;
 import io.inugami.api.loggers.Loggers;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
-import org.ehcache.config.Configuration;
-import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.impl.internal.concurrent.ConcurrentHashMap;
-import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
-import org.ehcache.xml.XmlConfiguration;
 
-import java.io.Serializable;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CacheUtils {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private static final Map<String, Object> CACHES   = new ConcurrentHashMap<>();
+    private static final Map<String, Object> CACHES = new ConcurrentHashMap<>();
 
     // =========================================================================
     // API

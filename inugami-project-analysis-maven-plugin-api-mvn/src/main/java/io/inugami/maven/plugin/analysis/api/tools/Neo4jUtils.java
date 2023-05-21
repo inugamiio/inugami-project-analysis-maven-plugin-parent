@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Neo4jUtils {
@@ -121,7 +122,7 @@ public final class Neo4jUtils {
     public static String getNodeName(final Object node) {
         String result = null;
         if (node == null) {
-            result = null;
+            //nothing
         } else if (node instanceof org.neo4j.driver.types.Node) {
             result = retrieve("name", (org.neo4j.driver.types.Node) node);
         } else if (node instanceof NodeValue) {

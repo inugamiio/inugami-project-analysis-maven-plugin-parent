@@ -39,6 +39,7 @@ import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.ifPropertyNotNull;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class VersionEnv implements ProjectInformation, QueryConfigurator {
 

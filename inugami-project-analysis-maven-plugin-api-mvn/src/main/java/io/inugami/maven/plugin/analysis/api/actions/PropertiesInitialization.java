@@ -25,6 +25,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
+@SuppressWarnings({"java:S112"})
 public interface PropertiesInitialization {
     String URL = "url";
 
@@ -38,8 +39,7 @@ public interface PropertiesInitialization {
             final Xpp3Dom serverConfig = getDom(server.getConfiguration());
             try {
                 processInitialization(server, configuration, secDispatcher, serverConfig);
-            }
-            catch (final Exception e) {
+            } catch (final Exception e) {
                 throw new ConfigurationException(e.getMessage());
             }
         }
@@ -61,6 +61,7 @@ public interface PropertiesInitialization {
                                        final ConfigHandler<String, String> configuration,
                                        final SecDispatcher secDispatcher,
                                        final Xpp3Dom serverConfig) throws Exception {
+        //nothing
     }
 
     default String getDecryptedValue(final String value,

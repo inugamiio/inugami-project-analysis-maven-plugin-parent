@@ -40,7 +40,6 @@ public class DependenciesCheckServlet extends HttpServlet {
     // =========================================================================
     private static final int                      SUCCCESS               = 200;
     private static final int                      ERROR                  = 500;
-    private static final String                   UTF_8                  = "UTF-8";
     private static final long                     serialVersionUID       = -4097614303888347284L;
     public static final  String                   APPLICATION_TYPESCRIPT = "application/x-typescript";
     public static final  String                   DEFUALT_RESPONSE       = "{}";

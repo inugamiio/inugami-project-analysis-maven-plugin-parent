@@ -25,24 +25,24 @@ public class ObjectTypeResolver implements BeanPropertyTypeResolver {
         if (!ReflectionService.isBasicType(fieldType)
                 && !Collection.class.isAssignableFrom(fieldType)
                 && !Map.class.isAssignableFrom(fieldType)) {
-            result = processResolve(path, field, fieldType, clazz, springPropertiesAnalyzer);
+            result = processResolve(path, field, fieldType, springPropertiesAnalyzer);
         }
         return result;
     }
 
-    private Set<Node> processResolve(final String path, final Field field, final Class<?> fieldType,
-                                     final Class<?> clazz, final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
+    private Set<Node> processResolve(final String path, final Field field,
+                                     final Class<?> fieldType,
+                                     final SpringPropertiesAnalyzer springPropertiesAnalyzer) {
 
         final String currentPath = buildFullPath(path, field);
         return processResolveOnClass(currentPath, fieldType, springPropertiesAnalyzer);
     }
 
     public Set<Node> processResolveOnClass(final String path, final Class<?> fieldType,
-                                            final SpringPropertiesAnalyzer springPropertiesAnalyzer
-                                            ) {
+                                           final SpringPropertiesAnalyzer springPropertiesAnalyzer
+    ) {
         final Set<Node>  result = new LinkedHashSet<>();
         final Set<Field> fields = ReflectionService.loadAllFields(fieldType);
-
 
 
         for (final Field innerField : fields) {

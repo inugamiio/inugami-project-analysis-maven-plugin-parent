@@ -29,9 +29,9 @@
   }, {
     "name" : "INU-4",
     "properties" : {
+      "description" : "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
       "issueType" : "sub-task",
       "title" : "add http connector",
-      "description" : "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
       "url" : "http://localhost/browse/INU-4"
     },
     "type" : "Issue",
@@ -39,9 +39,9 @@
   }, {
     "name" : "INU-2",
     "properties" : {
+      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac. Curabitur leo est, malesuada vitae orci nec, lacinia mollis neque. Ut dictum augue ac diam scelerisque fringilla. Duis posuere nulla sed ipsum aliquet placerat. Sed interdum quis enim eget suscipit. Vivamus ullamcorper lacus ac eros accumsan, eget auctor ipsum posuere. Maecenas sagittis risus in ullamcorper imperdiet.",
       "issueType" : "story",
       "title" : "Add task to retrieve Jira information",
-      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac. Curabitur leo est, malesuada vitae orci nec, lacinia mollis neque. Ut dictum augue ac diam scelerisque fringilla. Duis posuere nulla sed ipsum aliquet placerat. Sed interdum quis enim eget suscipit. Vivamus ullamcorper lacus ac eros accumsan, eget auctor ipsum posuere. Maecenas sagittis risus in ullamcorper imperdiet.",
       "url" : "http://localhost/browse/INU-2"
     },
     "type" : "Issue",

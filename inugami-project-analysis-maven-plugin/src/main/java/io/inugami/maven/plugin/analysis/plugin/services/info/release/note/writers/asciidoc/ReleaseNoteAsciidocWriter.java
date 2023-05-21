@@ -38,9 +38,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Pattern;
 
-@SuppressWarnings({"java:S899"})
+@SuppressWarnings({"java:S899", "java:S4042"})
 @Slf4j
 public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
@@ -51,18 +50,15 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
     public static final String FEATURE_NAME    = "inugami.maven.plugin.analysis.display.release.note.asciidoc";
     public static final String BASE_DOC_FOLDER = FEATURE_NAME + ".baseDir";
     public static final String SPLIT_FILE      = FEATURE_NAME + ".splitFile";
-
-    private static final Pattern COMMIT_REGEX = Pattern
-            .compile("(?:\\[([^]]+)\\])(?:\\[([^]]+)\\])(?:\\[([^]]+)\\])(.*)");
-    public static final  String  RELEASE_NOTE = "release-note";
-    public static final  String  ADOC         = ".adoc";
-    public static final  String  DELIMITER    = "-";
-    public static final  String  DATE         = "date";
-    public static final  String  COMMIT_UID   = "commitUid";
-    public static final  String  AUTHOR       = "author";
-    public static final  String  MESSAGE      = "message";
-    public static final  String  PIPE         = "|";
-    public static final  String  EMPTY        = "";
+    public static final String RELEASE_NOTE    = "release-note";
+    public static final String ADOC            = ".adoc";
+    public static final String DELIMITER       = "-";
+    public static final String DATE            = "date";
+    public static final String COMMIT_UID      = "commitUid";
+    public static final String AUTHOR          = "author";
+    public static final String MESSAGE         = "message";
+    public static final String PIPE            = "|";
+    public static final String EMPTY           = "";
 
     // =========================================================================
     // ACCEPT
@@ -372,7 +368,7 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
 
     private String renderLabels(final Set<String> labels) {
         String result = EMPTY;
-        if (result != null) {
+        if (labels != null) {
             final List<String> data = new ArrayList<>(labels);
             Collections.sort(data);
             result = String.join(" ", data);

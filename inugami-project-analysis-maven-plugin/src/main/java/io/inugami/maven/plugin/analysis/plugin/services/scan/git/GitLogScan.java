@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-@SuppressWarnings({"java:S5361"})
+@SuppressWarnings({"java:S5361", "java:S3824"})
 @Slf4j
 public class GitLogScan implements ProjectScanner {
 
@@ -491,7 +491,7 @@ public class GitLogScan implements ProjectScanner {
 
     private List<Node> searchIssueNodes(final Collection<String> issues, final List<Node> nodeIssues) {
         if (issues == null || nodeIssues == null) {
-            return null;
+            return new ArrayList<>();
         }
         final Set<Node> result = new LinkedHashSet<>();
 
@@ -514,20 +514,6 @@ public class GitLogScan implements ProjectScanner {
         return nodes.stream()
                     .filter(node -> node.getType().equals(nodeType))
                     .collect(Collectors.toList());
-    }
-
-    private List<Relationship> buildIssueRelationship(final List<Node> issues, final Node versionNode) {
-        final List<Relationship> result = new ArrayList<>();
-
-        for (final Node issue : issues) {
-            result.add(Relationship
-                               .builder()
-                               .from(issue.getUid())
-                               .to(versionNode.getUid())
-                               .type(RELATIONSHIP_FIX_VERSION)
-                               .build());
-        }
-        return result;
     }
 
     @Builder

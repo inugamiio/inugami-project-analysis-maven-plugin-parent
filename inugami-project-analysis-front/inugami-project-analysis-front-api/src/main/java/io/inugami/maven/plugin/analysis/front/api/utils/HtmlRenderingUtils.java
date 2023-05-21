@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.front.api.RenderingConstants.*;
 
+@SuppressWarnings({"java:S6395"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HtmlRenderingUtils {
@@ -48,7 +49,7 @@ public class HtmlRenderingUtils {
                              final Supplier<String> appender,
                              final HtmlAttribute... attributes) {
         final JsonBuilder result = new JsonBuilder();
-        if (result == null || tagName == null) {
+        if (tagName == null) {
             return result.toString();
         }
         result.write(TAG_OPEN).append(tagName);

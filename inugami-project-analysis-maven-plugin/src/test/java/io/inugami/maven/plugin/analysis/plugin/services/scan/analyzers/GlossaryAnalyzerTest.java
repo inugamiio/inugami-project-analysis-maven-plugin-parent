@@ -44,7 +44,7 @@ public class GlossaryAnalyzerTest {
     // ANALYSE
     // =========================================================================
     @Test
-    public void analyze() {
+    void analyze() {
         final GlossaryAnalyzer analyzer = new GlossaryAnalyzer();
 
         final List<JsonObject> result = analyzer.analyze(Person.class, context);

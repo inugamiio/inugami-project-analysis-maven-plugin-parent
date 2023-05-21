@@ -12,9 +12,9 @@
   }, {
     "name" : "INU-1",
     "properties" : {
+      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac",
       "issueType" : "epic",
       "title" : "Add jira connector on git analyzer",
-      "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et tortor velit. Suspendisse dapibus ipsum non magna commodo porttitor. Quisque scelerisque molestie nisi, vitae egestas mauris fermentum ac",
       "url" : "http://localhost/browse/INU-1"
     },
     "type" : "Issue",

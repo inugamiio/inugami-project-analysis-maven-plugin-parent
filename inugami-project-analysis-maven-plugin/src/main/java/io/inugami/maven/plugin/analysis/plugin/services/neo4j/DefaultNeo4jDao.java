@@ -24,6 +24,8 @@ import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.services.neo4j.Neo4jDao;
 import io.inugami.maven.plugin.analysis.api.tools.SecurityUtils;
 import io.inugami.maven.plugin.analysis.plugin.services.writer.neo4j.DefaultNeo4jEncoder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
 import org.neo4j.driver.types.Node;
@@ -31,6 +33,9 @@ import org.neo4j.driver.types.Node;
 import java.io.Serializable;
 import java.util.*;
 
+@SuppressWarnings({"java:S1604", "java:S6213"})
+@Builder
+@AllArgsConstructor
 @Slf4j
 public class DefaultNeo4jDao implements Neo4jDao {
 
@@ -117,7 +122,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
     @Override
     public void deleteNode(final String uid) {
         final Session session = driver.session();
-        final Node result = session.writeTransaction(new TransactionWork<Node>() {
+        session.writeTransaction(new TransactionWork<Node>() {
             @Override
             public Node execute(final Transaction tx) {
                 final Result statementResult = tx.run(buildDeleteNodeQuery(uid));
@@ -222,7 +227,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
         final Session session = driver.session();
 
         try {
-            final Node result = session.writeTransaction(new TransactionWork<Node>() {
+            session.writeTransaction(new TransactionWork<Node>() {
                 @Override
                 public Node execute(final Transaction tx) {
                     final Result statementResult = tx.run(cypherQuery);
@@ -355,7 +360,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
             }
         }
 
-        query.append(String.format("})", action, node.getType()));
+        query.append("})");
         query.append(" return n");
         return query.toString();
     }
@@ -425,7 +430,7 @@ public class DefaultNeo4jDao implements Neo4jDao {
 
         final String current = new StringBuilder().append(percent).append("%").toString();
         if (!current.equals(previous)) {
-            System.out.println(current);
+            log.info(current);
         }
         return current;
     }

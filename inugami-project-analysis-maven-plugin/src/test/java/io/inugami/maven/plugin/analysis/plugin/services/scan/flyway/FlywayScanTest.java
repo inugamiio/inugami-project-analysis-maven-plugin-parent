@@ -70,29 +70,30 @@ public class FlywayScanTest {
                         Map.entry(FlywayScan.FEATURE_ENABLED, "true"),
                         Map.entry(FlywayScan.SCRIPTS_PATHS, dir.getAbsolutePath()),
                         Map.entry(FlywayScan.DEFAULT_DB, "MySql")
-                             )
+                )
         );
         lenient().when(context.getConfiguration()).thenReturn(configuration);
     }
+
     // =========================================================================
     // API
     // =========================================================================
     @Test
-    public void scan_withScript_shouldCreateNodes(){
-        FlywayScan flywayScan = new  FlywayScan();
+    void scan_withScript_shouldCreateNodes() {
+        final FlywayScan flywayScan = new FlywayScan();
 
         final List<JsonObject> result = flywayScan.scan(context);
         assertThat(result).size().isEqualTo(1);
 
-        ScanNeo4jResult nodes = (ScanNeo4jResult)result.get(0);
+        final ScanNeo4jResult nodes = (ScanNeo4jResult) result.get(0);
         Collections.sort(nodes.getNodes());
         Collections.sort(nodes.getRelationships());
-        assertText(nodes,loadJsonReference("services/scan/flyway/scan_result.json"));
+        assertText(nodes, loadJsonReference("services/scan/flyway/scan_result.json"));
     }
 
     @Test
-    public void resolveExtension_nominal_shouldResolveExtension(){
-        FlywayScan flywayScan = new  FlywayScan();
+    void resolveExtension_nominal_shouldResolveExtension() {
+        final FlywayScan flywayScan = new FlywayScan();
 
         assertThat(flywayScan.resolveExtension("v1_0_1_init_issue_table.sql")).isEqualTo("sql");
         assertThat(flywayScan.resolveExtension("v1.0.1.init_issue_table.json")).isEqualTo("json");

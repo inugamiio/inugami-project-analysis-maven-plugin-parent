@@ -41,7 +41,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.isNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_RELEASE_NOTE_SIMPLE_CQL;
 
-@SuppressWarnings({"java:S5361"})
+@SuppressWarnings({"java:S5361", "java:S6213"})
 @Slf4j
 public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
@@ -115,7 +115,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
                                     final Map<String, Serializable> cache,
                                     final List<Replacement> replacements) {
         //@formatter:off
-        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value -> addScm(releaseNote, value, cache, replacements));
+        processIfNotNull(Neo4jUtils.extractNode(SCM, record), value -> addScm(releaseNote, value, cache));
         processIfNotNull(Neo4jUtils.extractNode(MERGE_REQUEST, record), value -> addMergeRequest(releaseNote, value, cache));
         processIfNotNull(Neo4jUtils.extractNode(ISSUE, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LABEL)));
         processIfNotNull(Neo4jUtils.extractNode(ISSUE_LINK, record), value -> addIssues(releaseNote, value, (NodeValue) record.get(ISSUE_LINK_LABEL)));
@@ -125,8 +125,7 @@ public class BaseReleaseNoteExtractor implements ReleaseNoteExtractor {
 
 
     private void addScm(final ReleaseNoteResult releaseNote, final NodeValue scm,
-                        final Map<String, Serializable> cache,
-                        final List<Replacement> replacements) {
+                        final Map<String, Serializable> cache) {
 
         final String cacheKey = skipNode(scm, cache, SCM);
         if (cacheKey == null) {

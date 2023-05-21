@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@SuppressWarnings({"java:S107"})
 @Setter
 @Getter
 @NoArgsConstructor

@@ -44,6 +44,10 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     private String                              type;
     private LinkedHashMap<String, Serializable> properties;
 
+    public void sort() {
+        properties = sortProperties(properties);
+    }
+
     @Override
     public int compareTo(final Relationship other) {
         return StringComparator.compareTo(buildHash(), other == null ? null : other.buildHash());

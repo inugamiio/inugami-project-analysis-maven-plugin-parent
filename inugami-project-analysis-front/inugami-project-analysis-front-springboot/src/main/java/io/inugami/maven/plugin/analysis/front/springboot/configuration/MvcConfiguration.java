@@ -91,37 +91,34 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ServletRegistrationBean indexHtmlBean() {
+    public ServletRegistrationBean<InugamiServlet> indexHtmlBean() {
         log.info("release note exposed : {}", contextPath + currentPath);
         final String basePath = contextPath + currentPath.substring(0, currentPath.length() - 1);
-        final ServletRegistrationBean bean = new ServletRegistrationBean(
+        final ServletRegistrationBean<InugamiServlet> bean = new ServletRegistrationBean<>(
                 new InugamiServlet(basePath), currentPath, currentPath + "index.html");
         bean.setLoadOnStartup(1);
         return bean;
     }
 
     @Bean
-    public ServletRegistrationBean pluginsModulesBean() {
-        final String basePath = currentPath.substring(0, currentPath.length() - 1);
-        final ServletRegistrationBean bean = new ServletRegistrationBean(
+    public ServletRegistrationBean<PluginsModuleServlet> pluginsModulesBean() {
+        final ServletRegistrationBean<PluginsModuleServlet> bean = new ServletRegistrationBean<>(
                 new PluginsModuleServlet(), currentPath + "app/modules/plugins.module.ts");
         bean.setLoadOnStartup(1);
         return bean;
     }
 
     @Bean
-    public ServletRegistrationBean releaseNoteDataBean() {
-        final String basePath = currentPath.substring(0, currentPath.length() - 1);
-        final ServletRegistrationBean bean = new ServletRegistrationBean(
+    public ServletRegistrationBean<ReleaseNoteServlet> releaseNoteDataBean() {
+        final ServletRegistrationBean<ReleaseNoteServlet> bean = new ServletRegistrationBean<>(
                 new ReleaseNoteServlet(artifactName), currentPath + "data/release-notes.json");
         bean.setLoadOnStartup(1);
         return bean;
     }
 
     @Bean
-    public ServletRegistrationBean dependenciesCheckData(@Autowired(required = false) final DependenciesCheckService dependenciesCheckService) {
-        final String basePath = currentPath.substring(0, currentPath.length() - 1);
-        final ServletRegistrationBean bean = new ServletRegistrationBean(
+    public ServletRegistrationBean<DependenciesCheckServlet> dependenciesCheckData(@Autowired(required = false) final DependenciesCheckService dependenciesCheckService) {
+        final ServletRegistrationBean<DependenciesCheckServlet> bean = new ServletRegistrationBean<>(
                 new DependenciesCheckServlet(dependenciesCheckService), currentPath + "data/dependencies-check.json");
         bean.setLoadOnStartup(1);
         return bean;

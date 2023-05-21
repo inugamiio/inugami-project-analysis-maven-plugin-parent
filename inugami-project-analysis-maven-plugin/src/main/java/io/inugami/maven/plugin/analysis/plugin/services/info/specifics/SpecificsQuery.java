@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@SuppressWarnings({"java:S6213"})
 @Slf4j
 public class SpecificsQuery implements ProjectInformation {
     // =========================================================================

@@ -116,7 +116,7 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
                 annotation = searchRequestMappingInInterface(clazz.getInterfaces());
             }
         }
-        if (annotation != null && annotation.path() != null && annotation.path().length > 0) {
+        if (annotation != null && annotation.path().length > 0) {
             result = annotation.path()[0];
         }
         return result;

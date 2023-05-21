@@ -38,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -81,26 +80,24 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String PUT    = "PUT";
     public static final String DELETE = "DELETE";
 
-    private static final Class<? extends Annotation> restControllerAnnotation = null;
-    private static final Boolean                     springContext            = null;
-    public static final  String                      IDENTIFIER               = "identifier";
-    public static final  String                      EMPTY                    = "";
-    public static final  String                      DOUBLE_URL_SEP           = "//";
-    public static final  String                      UNDERSCORE               = "_";
-    public static final  String                      QUOT                     = "\"";
-    public static final  String                      LINE                     = "\n";
-    public static final  String                      TAB                      = "\t";
-    public static final  String                      SIMPLE_QUOT              = "'";
-    public static final  String                      MESSAGE                  = "message";
-    public static final  String                      MESSAGE_DETAIL           = "messageDetail";
-    public static final  String                      ERROR_DESCRIPTION        = "description";
-    public static final  String                      EXAMPLE                  = "example";
-    public static final  String                      STATUS_CODE              = "statusCode";
-    public static final  String                      PAYLOAD                  = "payload";
-    public static final  String                      HAS_ERROR_POTENTIAL      = "HAS_ERROR_POTENTIAL";
-    public static final  String                      HAS_ENDPOINT             = "HAS_ENDPOINT";
-    public static final  String                      HAS_ERROR                = "HAS_ERROR";
-    public static final  String                      HAS_POTENTIAL_ERROR      = "HAS_POTENTIAL_ERROR";
+    public static final String IDENTIFIER          = "identifier";
+    public static final String EMPTY               = "";
+    public static final String DOUBLE_URL_SEP      = "//";
+    public static final String UNDERSCORE          = "_";
+    public static final String QUOT                = "\"";
+    public static final String LINE                = "\n";
+    public static final String TAB                 = "\t";
+    public static final String SIMPLE_QUOT         = "'";
+    public static final String MESSAGE             = "message";
+    public static final String MESSAGE_DETAIL      = "messageDetail";
+    public static final String ERROR_DESCRIPTION   = "description";
+    public static final String EXAMPLE             = "example";
+    public static final String STATUS_CODE         = "statusCode";
+    public static final String PAYLOAD             = "payload";
+    public static final String HAS_ERROR_POTENTIAL = "HAS_ERROR_POTENTIAL";
+    public static final String HAS_ENDPOINT        = "HAS_ENDPOINT";
+    public static final String HAS_ERROR           = "HAS_ERROR";
+    public static final String HAS_POTENTIAL_ERROR = "HAS_POTENTIAL_ERROR";
 
     // =========================================================================
     // API
@@ -334,7 +331,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return RestApi.builder()
                       .name(name)
                       .baseContext(rootContext == null ? URI_SEP : URI_SEP + rootContext)
-                      .endpoints(resolveEndpoints(clazz, rootContext == null ? EMPTY : rootContext, true))
+                      .endpoints(resolveEndpoints(clazz, rootContext == null ? EMPTY : rootContext))
                       .build()
                       .orderEndPoint();
     }
@@ -348,10 +345,10 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         }
 
         if (annotation != null) {
-            if (annotation.value() != null && annotation.value().length > 0) {
+            if (annotation.value().length > 0) {
                 result = annotation.value()[0];
             }
-            if (result.isEmpty() && annotation.path() != null && annotation.path().length > 0) {
+            if (result.isEmpty() && annotation.path().length > 0) {
                 result = annotation.path()[0];
             }
         }
@@ -376,12 +373,12 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
 
-    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext, final boolean strict) {
+    private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext) {
         final List<RestEndpoint> result = new ArrayList<>();
         for (final Method method : extractMethods(clazz)) {
             if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
                               DeleteMapping.class)) {
-                result.add(resolveEndpoint(method, baseContext, clazz, strict));
+                result.add(resolveEndpoint(method, baseContext, clazz));
             }
         }
         return result;
@@ -400,8 +397,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         return result.toArray(new Method[]{});
     }
 
-    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz,
-                                         final boolean strict) {
+    private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
         processOnAnnotation(method, RequestMapping.class, (annotation) -> {
@@ -457,14 +453,13 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         final Description description = getAnnotation(method, Description.class);
         DescriptionDTO    result      = null;
         if (description != null) {
-            result = buildDescription(method, description);
+            result = buildDescription(description);
         }
         return result;
     }
 
-    private DescriptionDTO buildDescription(final Method method, final Description description) {
-        final String                  example         = null;
-        final List<PotentialErrorDTO> potentialErrors = new ArrayList<>();
+    private DescriptionDTO buildDescription(final Description description) {
+        final String example = null;
 
         return DescriptionDTO.builder()
                              .url(description.url())

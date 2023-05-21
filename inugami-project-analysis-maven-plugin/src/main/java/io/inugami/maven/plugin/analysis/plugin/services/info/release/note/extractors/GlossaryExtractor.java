@@ -38,6 +38,7 @@ import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.extractNode;
 import static io.inugami.maven.plugin.analysis.plugin.services.MainQueryProducer.QUERIES_SEARCH_GLOSSARY;
 
+@SuppressWarnings({"java:S6213"})
 public class GlossaryExtractor implements ReleaseNoteExtractor {
 
     // =========================================================================

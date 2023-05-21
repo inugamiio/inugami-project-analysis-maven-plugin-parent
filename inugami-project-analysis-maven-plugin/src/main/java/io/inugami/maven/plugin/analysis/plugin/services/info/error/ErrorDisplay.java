@@ -37,7 +37,7 @@ import java.util.*;
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.tools.rendering.Neo4jRenderingUtils.*;
 
-@SuppressWarnings({"java:S3776"})
+@SuppressWarnings({"java:S3776", "java:S6213"})
 @Slf4j
 public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 

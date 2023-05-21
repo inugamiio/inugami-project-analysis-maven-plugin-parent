@@ -83,7 +83,7 @@ public class ReleaseNoteServlet extends HttpServlet {
 
         final JsonBuilder json = new JsonBuilder();
         json.openList();
-        if (content != null) {
+        if (!content.isEmpty()) {
             final Iterator<String> iterator = content.iterator();
             while (iterator.hasNext()) {
                 json.write(iterator.next());

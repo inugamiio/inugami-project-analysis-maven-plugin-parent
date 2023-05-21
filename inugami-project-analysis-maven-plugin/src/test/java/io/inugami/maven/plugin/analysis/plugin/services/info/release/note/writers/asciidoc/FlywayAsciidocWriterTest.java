@@ -25,7 +25,7 @@ public class FlywayAsciidocWriterTest {
     private InfoContext context;
 
     @Test
-    public void rendering_withFlywayScripts_shouldrenderingParagraph() {
+    void rendering_withFlywayScripts_shouldrenderingParagraph() {
         final FlywayAsciidocWriter writer = new FlywayAsciidocWriter();
 
         final ReleaseNoteResult data = new ReleaseNoteResult();

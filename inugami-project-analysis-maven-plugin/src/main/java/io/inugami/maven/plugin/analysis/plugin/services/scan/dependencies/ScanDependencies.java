@@ -20,7 +20,6 @@ import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectScanner;
 import io.inugami.maven.plugin.analysis.api.models.*;
 import io.inugami.maven.plugin.analysis.api.tools.BuilderTools;
-import org.apache.maven.project.MavenProject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,15 +105,6 @@ public class ScanDependencies implements ProjectScanner {
         }
 
         return projectDependency ? PROJECT_DEPENDENCY : DEPENDENCY;
-    }
-
-    private Gav buildGav(final MavenProject project) {
-        return Gav.builder()
-                  .groupId(project.getGroupId())
-                  .artifactId(project.getArtifactId())
-                  .version(project.getVersion())
-                  .type(project.getPackaging())
-                  .build();
     }
 
     private void addDependencies(final Gav parent, final Gav gav, final ScanNeo4jResult result,

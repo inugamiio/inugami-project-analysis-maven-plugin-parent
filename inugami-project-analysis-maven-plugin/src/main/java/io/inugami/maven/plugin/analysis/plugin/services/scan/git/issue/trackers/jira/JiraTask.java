@@ -273,11 +273,10 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
                 final JsonNode subtask = iterator.next();
                 if (isNotNull(subtask)) {
                     try {
-
+                        buildSubTask(subtask, uid, result);
                     } catch (final Exception e) {
                         log.error(e.getMessage(), e);
                     }
-                    buildSubTask(subtask, uid, result);
                 }
             }
         }

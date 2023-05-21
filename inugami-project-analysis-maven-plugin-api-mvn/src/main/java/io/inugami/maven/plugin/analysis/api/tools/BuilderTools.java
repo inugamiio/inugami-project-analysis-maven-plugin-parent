@@ -27,6 +27,8 @@ import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.utils.ObjectMapperBuilder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.project.MavenProject;
 
@@ -43,8 +45,10 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.isBasicType;
 
+@SuppressWarnings({"java:S6395"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class BuilderTools {
+public final class BuilderTools {
 
     // =========================================================================
     // ATTRIBUTES

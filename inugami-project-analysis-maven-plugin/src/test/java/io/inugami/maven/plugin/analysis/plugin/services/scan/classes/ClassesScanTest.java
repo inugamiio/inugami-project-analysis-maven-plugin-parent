@@ -7,11 +7,11 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class ClassesScanTest {
 
     @Test
-    public void testBuildClassNameNormilized(){
+    void testBuildClassNameNormilized() {
         assertThat(ClassesScan.buildClassNameNormilized("io/inugami/project/service/Service.class",
                                                         "io.inugami",
-                                                       "/"))
-        .isEqualTo("project.service.Service");
+                                                        "/"))
+                .isEqualTo("project.service.Service");
 
         assertThat(ClassesScan.buildClassNameNormilized("io\\inugami\\project/service\\Service.class",
                                                         "io.inugami",

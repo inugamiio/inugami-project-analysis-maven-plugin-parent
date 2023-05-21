@@ -14,6 +14,7 @@ import java.util.Date;
 
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.getAnnotation;
 
+@SuppressWarnings({"java:S1854"})
 public class DateTimeFieldTransformer implements FieldTransformer {
 
     // =========================================================================
@@ -50,7 +51,6 @@ public class DateTimeFieldTransformer implements FieldTransformer {
                     result = "long<justDate>";
                     break;
                 default:
-                    result = null;
                     break;
             }
         }

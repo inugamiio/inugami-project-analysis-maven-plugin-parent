@@ -41,7 +41,7 @@ public class NodeUtils {
         buffer.putAll(properties);
 
 
-        final List<K> keys = new ArrayList(buffer.keySet());
+        final List<K> keys = new ArrayList<K>(buffer.keySet());
         Collections.sort(keys);
         for (final K key : keys) {
             result.put(key, buffer.get(key));

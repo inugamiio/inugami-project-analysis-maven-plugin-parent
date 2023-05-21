@@ -69,6 +69,7 @@
     "uid" : "ERR-0000"
   }, {
     "name" : "Rest",
+    "properties" : { },
     "type" : "ServiceType",
     "uid" : "Rest"
   }, {
@@ -186,14 +187,17 @@
     "uid" : "e51c56667d2809bcd1c2b11cfd360d95582030cae57499f2baf868ced3acab4396c6f3f893f3aac4ed5b082e9c93e8b98ad0672a7aad71adcf9163a648db01a1"
   }, {
     "name" : "ERR-0000",
+    "properties" : { },
     "type" : "ErrorCode",
     "uid" : "errorCode_ERR-0000"
   }, {
     "name" : "S-002",
+    "properties" : { },
     "type" : "ErrorCode",
     "uid" : "errorCode_S-002"
   }, {
     "name" : "S-003",
+    "properties" : { },
     "type" : "ErrorCode",
     "uid" : "errorCode_S-003"
   }, {
@@ -235,154 +239,192 @@
   "nodesToDeletes" : [ ],
   "relationships" : [ {
     "from" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf",
+    "properties" : { },
     "to" : "e040014c0466b5bea7a396c3b208197d1672dec15fc3d899f1ea6b916e10be9fc27029f7266639875a16f1071739504128b2649b2dcd4ac4a81432a80025fcb2",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "properties" : { },
     "to" : "ERR-0000",
     "type" : "HAS_ERROR_POTENTIAL"
   }, {
     "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "properties" : { },
     "to" : "S-002",
     "type" : "HAS_ERROR_POTENTIAL"
   }, {
     "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "properties" : { },
     "to" : "S-003",
     "type" : "HAS_ERROR_POTENTIAL"
   }, {
     "from" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "36bf0380b6a150cc2819978ffbadafab8648cc16a70727eea19abf8bf39967d41d52937e9412474ab7b391f56229fa4d80f907bd4bb222ccff71e2451d5e55a0",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "3e11e8d5ac02e66739d4e41da9aa32534c61c56c0c9e884dab71bda5557eee331dde029062f8dea57b1b9b637577700a6181a2bdc50d4b1c3b9bfc281da80220",
+    "properties" : { },
     "to" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "98fd69661c0e1b2dda38812ead4dc1cfa8d7221a5c9b3f5df03af9a3fb4e04a0948108a89069eea1b2822ac8af3a03ce8f5f61e16496b30538244a74b252b16e",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "9aee79028ec73d4832a49ccf2f4598719b7f6c5e7642e7d56d16a15c68d5b0803e8e58426092d7a7a019a9c73a886210ad7289e3505d233be11fe46ad6698237",
+    "properties" : { },
     "to" : "e51c56667d2809bcd1c2b11cfd360d95582030cae57499f2baf868ced3acab4396c6f3f893f3aac4ed5b082e9c93e8b98ad0672a7aad71adcf9163a648db01a1",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "ERR-0000",
+    "properties" : { },
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
     "type" : "HAS_ENDPOINT"
   }, {
     "from" : "ERR-0000",
+    "properties" : { },
     "to" : "errorCode_ERR-0000",
     "type" : "HAS_ERROR"
   }, {
     "from" : "S-002",
+    "properties" : { },
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
     "type" : "HAS_ENDPOINT"
   }, {
     "from" : "S-002",
+    "properties" : { },
     "to" : "errorCode_S-002",
     "type" : "HAS_ERROR"
   }, {
     "from" : "S-003",
+    "properties" : { },
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
     "type" : "HAS_ENDPOINT"
   }, {
     "from" : "S-003",
+    "properties" : { },
     "to" : "errorCode_S-003",
     "type" : "HAS_ERROR"
   }, {
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
     "to" : "98fd69661c0e1b2dda38812ead4dc1cfa8d7221a5c9b3f5df03af9a3fb4e04a0948108a89069eea1b2822ac8af3a03ce8f5f61e16496b30538244a74b252b16e",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "bc57d06b8f32edabb2ed0dd56755b24345e9b766fd935246878051ce1d90116d8234f67fda767bac07569b6f6c220033f49af2b69f9103c2c050d9c548fea00e",
+    "properties" : { },
     "to" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "36bf0380b6a150cc2819978ffbadafab8648cc16a70727eea19abf8bf39967d41d52937e9412474ab7b391f56229fa4d80f907bd4bb222ccff71e2451d5e55a0",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "e040014c0466b5bea7a396c3b208197d1672dec15fc3d899f1ea6b916e10be9fc27029f7266639875a16f1071739504128b2649b2dcd4ac4a81432a80025fcb2",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "e51c56667d2809bcd1c2b11cfd360d95582030cae57499f2baf868ced3acab4396c6f3f893f3aac4ed5b082e9c93e8b98ad0672a7aad71adcf9163a648db01a1",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
+    "properties" : { },
     "to" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "e040014c0466b5bea7a396c3b208197d1672dec15fc3d899f1ea6b916e10be9fc27029f7266639875a16f1071739504128b2649b2dcd4ac4a81432a80025fcb2",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "e51c56667d2809bcd1c2b11cfd360d95582030cae57499f2baf868ced3acab4396c6f3f893f3aac4ed5b082e9c93e8b98ad0672a7aad71adcf9163a648db01a1",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "errorCode_ERR-0000",
+    "properties" : { },
     "to" : "ERR-0000",
     "type" : "HAS_POTENTIAL_ERROR"
   }, {
     "from" : "errorCode_S-002",
+    "properties" : { },
     "to" : "S-002",
     "type" : "HAS_POTENTIAL_ERROR"
   }, {
     "from" : "errorCode_S-003",
+    "properties" : { },
     "to" : "S-003",
     "type" : "HAS_POTENTIAL_ERROR"
   }, {
     "from" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
+    "properties" : { },
     "to" : "Rest",
     "type" : "SERVICE_TYPE"
   }, {
     "from" : "fb5686e79225e808e35eac24c0f0285cef68a5140fad2e9bc38cf4682e19e29e737ba1f51c6ceefca938cb016fe51891cdb4119f1af0b2f54163d39979e7eb9c",
+    "properties" : { },
     "to" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "1907adf3134a8274bd036a1d9ea3234e7882e76d3f0cd952d3585d7a170331e0798478e52070144812410095206a19a714b904b41fc8ae072b4150674698cfca",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "36bf0380b6a150cc2819978ffbadafab8648cc16a70727eea19abf8bf39967d41d52937e9412474ab7b391f56229fa4d80f907bd4bb222ccff71e2451d5e55a0",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "98fd69661c0e1b2dda38812ead4dc1cfa8d7221a5c9b3f5df03af9a3fb4e04a0948108a89069eea1b2822ac8af3a03ce8f5f61e16496b30538244a74b252b16e",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "c250a969df196d18465f29fbad748c9e29de42c7ab4c04bb8f116bb14e8dce24a351d2d1ccffef98cfa21e183fa4870d766aee271e0b8fb892d0e585f40555f3",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "e040014c0466b5bea7a396c3b208197d1672dec15fc3d899f1ea6b916e10be9fc27029f7266639875a16f1071739504128b2649b2dcd4ac4a81432a80025fcb2",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "e51c56667d2809bcd1c2b11cfd360d95582030cae57499f2baf868ced3acab4396c6f3f893f3aac4ed5b082e9c93e8b98ad0672a7aad71adcf9163a648db01a1",
     "type" : "EXPOSE"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
+    "properties" : { },
     "to" : "f3eb68a076ce80d441fcfb86da5a57e9146f6d8effd8b7f635c65cc66e87014b1dee10e6141371108c9de6c491e64d8d0df1a250d6b36e97acd5be61c0b8254c",
     "type" : "EXPOSE"
   } ],
