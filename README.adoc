@@ -165,7 +165,8 @@ CALL db.schema.visualization
 
 == Retrieve information :
 
-After analyze, all information is present into Neo4J. We can now query Neo4J to retrieve information.
+After analyze, all information is present into Neo4J.
+We can now query Neo4J to retrieve information.
 Attention : in some commons use cases it's easier to invoke the plugin to display result.
 
 All additional properties can be defined in properties section of pom.xml or via command line invocation (with -D prefix).
@@ -222,7 +223,6 @@ image::doc/queryDisplay-02.png[]
 Properties action displays project properties.
 This action retrieves also dependencies properties.
 At this moment these properties are extracted from Spring properties (@Value, bean properties, conditionals beans, properties usages on JMS or RabbitMQ listeners)
-
 
 If a property has no default value, it will be displayed in red.
 In yellow, we have properties who enable some beans.
@@ -889,7 +889,8 @@ To enable this behavior it's require to add `issueManagement` with link to SCM A
 </issueManagement>
 ----
 
-All issue management need credentials to grant access on REST API. To configure these you will add server tag in your maven settings.xml :
+All issue management need credentials to grant access on REST API.
+To configure these you will add server tag in your maven settings.xml :
 
 [source,xml]
 ----
