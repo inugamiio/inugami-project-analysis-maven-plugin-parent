@@ -9,7 +9,7 @@
     <parent>
         <artifactId>inugami-project-analysis-front</artifactId>
         <groupId>io.inugami.maven.plugin.analysis.front</groupId>
-        <version>3.2.3</version>
+        <version>3.2.4-SNAPSHOT</version>
     </parent>
 
 
