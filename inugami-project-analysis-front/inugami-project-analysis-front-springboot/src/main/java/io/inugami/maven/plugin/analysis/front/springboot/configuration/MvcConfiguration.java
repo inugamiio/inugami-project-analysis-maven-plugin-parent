@@ -17,13 +17,11 @@
 package io.inugami.maven.plugin.analysis.front.springboot.configuration;
 
 import io.inugami.maven.plugin.analysis.front.api.services.DependenciesCheckService;
-import io.inugami.maven.plugin.analysis.front.core.servlet.DependenciesCheckServlet;
-import io.inugami.maven.plugin.analysis.front.core.servlet.InugamiServlet;
-import io.inugami.maven.plugin.analysis.front.core.servlet.PluginsModuleServlet;
-import io.inugami.maven.plugin.analysis.front.core.servlet.ReleaseNoteServlet;
+import io.inugami.maven.plugin.analysis.front.core.servlet.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,13 +42,21 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @Value("${server.servlet.context-path:#{null}}")
     private             String                  contextPath;
 
+    @Value("${server.servlet.html.base.path:#{null}}")
+    private String htmlBasePath;
+
+
     @Value("${inugami.release.note.enabled:true}")
     private boolean enabled;
     @Value("${inugami.release.note.path:#{null}}")
     private String  path;
+
+    @Value("${inugami.release.note.custom.css.path:#{null}}")
+    private String customCss;
+
     @Value("${inugami.release.note.artifactName:release-note}")
-    private String  artifactName;
-    private String  currentPath;
+    private String artifactName;
+    private String currentPath;
 
 
     @PostConstruct
@@ -95,7 +101,26 @@ public class MvcConfiguration implements WebMvcConfigurer {
         log.info("release note exposed : {}", contextPath + currentPath);
         final String basePath = contextPath + currentPath.substring(0, currentPath.length() - 1);
         final ServletRegistrationBean<InugamiServlet> bean = new ServletRegistrationBean<>(
-                new InugamiServlet(basePath), currentPath, currentPath + "index.html");
+                InugamiServlet.builder()
+                              .contextPath(basePath)
+                              .htmlBasePath(htmlBasePath)
+                              .customCss(customCss)
+                              .build(),
+                currentPath, currentPath + "index.html");
+        bean.setLoadOnStartup(1);
+        return bean;
+    }
+
+    @ConditionalOnProperty(value = "inugami.release.note.custom.css.enabled", havingValue = "true")
+    @Bean
+    public ServletRegistrationBean<BasicRessourceServlet> customCssServlet() {
+        final String basePath = contextPath + currentPath.substring(0, currentPath.length() - 1);
+        final ServletRegistrationBean<BasicRessourceServlet> bean = new ServletRegistrationBean<>(
+                BasicRessourceServlet.builder()
+                                     .mediaType("text/css")
+                                     .resourcePath(customCss)
+                                     .build(),
+                currentPath + "css/custom.css");
         bean.setLoadOnStartup(1);
         return bean;
     }

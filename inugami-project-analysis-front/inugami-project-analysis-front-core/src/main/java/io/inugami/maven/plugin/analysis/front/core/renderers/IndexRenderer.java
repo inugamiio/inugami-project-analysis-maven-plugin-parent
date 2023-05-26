@@ -21,6 +21,7 @@ import io.inugami.api.spi.SpiLoader;
 import io.inugami.maven.plugin.analysis.front.api.FrontPluginSpi;
 import io.inugami.maven.plugin.analysis.front.api.IndexHtmlLoadingContentSpi;
 import io.inugami.maven.plugin.analysis.front.api.models.HtmlAttribute;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +34,7 @@ import static io.inugami.maven.plugin.analysis.front.api.RenderingConstants.*;
 import static io.inugami.maven.plugin.analysis.front.api.utils.HtmlRenderingUtils.*;
 
 @Slf4j
+@Builder
 @RequiredArgsConstructor
 public class IndexRenderer {
 
@@ -41,6 +43,8 @@ public class IndexRenderer {
     // ATTRIBUTES
     // =========================================================================
     private final        String                     contextPath;
+    private final        String                     htmlBasePath;
+    private final        String                     customCss;
     private static final AtomicReference<String>    CACHE                      = new AtomicReference<>();
     private static final List<FrontPluginSpi>       PLUGINS                    = loadPlugins();
     private static final IndexHtmlLoadingContentSpi INDEX_HTML_LOADING_CONTENT = loadIndexHtmlLoaderRenderer();
@@ -88,10 +92,15 @@ public class IndexRenderer {
         result.write(autoClosableTag(LINK,
                                      HtmlAttribute.build("rel", "shortcut icon"),
                                      HtmlAttribute.build("type", "image/x-icon"),
-                                     HtmlAttribute.build("type", buildPath(contextPath, buildPluginFavIcon()))
-        ));
+                                     HtmlAttribute.build("src", "./" + buildPluginFavIcon()))
+        );
 
-        result.write(autoClosableTag(BASE, HtmlAttribute.build("href", ".")));
+        if (htmlBasePath == null) {
+            result.write(autoClosableTag(BASE, HtmlAttribute.build("href", buildPath(contextPath, ""))));
+        } else {
+            result.write(autoClosableTag(BASE, HtmlAttribute.build("href", htmlBasePath)));
+        }
+
         result.write(autoClosableTag(META,
                                      HtmlAttribute.build("name", "viewport"),
                                      HtmlAttribute.build("content", "width=device-width, initial-scale=1")));
@@ -114,13 +123,13 @@ public class IndexRenderer {
                                             .flatMap(List::stream)
                                             .collect(Collectors.toList());
         writeJavaScript(result, Arrays.asList(
-                "/js/fontawesome.all.min.js",
-                "/vendors/jquery/dist/jquery.slim.min.js",
-                "/vendors/holder/holder.min.js",
-                "/vendors/popper/popper.min.js",
-                "/vendors/systemjs/dist/system.js",
-                "/vendors/zone.js/bundles/zone.umd.min.js",
-                "/vendors/bootstrap/dist/js/bootstrap.min.js"
+                "js/fontawesome.all.min.js",
+                "vendors/jquery/dist/jquery.slim.min.js",
+                "vendors/holder/holder.min.js",
+                "vendors/popper/popper.min.js",
+                "vendors/systemjs/dist/system.js",
+                "vendors/zone.js/bundles/zone.umd.min.js",
+                "vendors/bootstrap/dist/js/bootstrap.min.js"
         ));
         writeJavaScript(result, scripts);
 
@@ -131,15 +140,22 @@ public class IndexRenderer {
 
     private void writeCss(final JsonBuilder result, final List<String> cssFiles) {
         for (final String css : cssFiles) {
+            final String currentCss = css.startsWith("/") ? css.substring(1) : css;
             result.write(autoClosableTag(LINK,
-                                         HtmlAttribute.build("href", buildPath(contextPath, css)),
+                                         HtmlAttribute.build("href", "./" + currentCss),
+                                         HtmlAttribute.build("rel", "stylesheet")));
+        }
+
+        if (customCss != null) {
+            result.write(autoClosableTag(LINK,
+                                         HtmlAttribute.build("href", "./css/custom.css"),
                                          HtmlAttribute.build("rel", "stylesheet")));
         }
     }
 
     private void writeJavaScript(final JsonBuilder result, final List<String> scripts) {
         for (final String script : scripts) {
-            result.write(tag(SCRIPT, null, HtmlAttribute.build("src", buildPath(contextPath, script))));
+            result.write(tag(SCRIPT, null, HtmlAttribute.build("src", "./" + script)));
         }
     }
 
@@ -148,12 +164,12 @@ public class IndexRenderer {
         js.write(DECO).line();
         js.write("// GLOBALS VALUES").line();
         js.write(DECO).line();
-        js.write("const CONTEXT_PATH=").valueQuot(contextPath).addEndLine();
+        js.write("const CONTEXT_PATH=").valueQuot(".").addEndLine();
         js.write("document['CONTEXT_PATH']=CONTEXT_PATH").addEndLine();
         final String resourcePath = contextPath + PATH_SEP;
-        js.write("const RESOURCES_PATH=").valueQuot(contextPath + "/js/").addEndLine();
-        js.write("const APP_PATH=").valueQuot(resourcePath + "app").addEndLine();
-        js.write("const VENDOR_PATH=").valueQuot(resourcePath + "vendors/").addEndLine();
+        js.write("const RESOURCES_PATH=").valueQuot("./js/").addEndLine();
+        js.write("const APP_PATH=").valueQuot("./app").addEndLine();
+        js.write("const VENDOR_PATH=").valueQuot("./vendors/").addEndLine();
         js.line();
 
         js.write(writeMessageProperties());
@@ -170,7 +186,7 @@ public class IndexRenderer {
         js.closeObject().line();
 
         js.write("System.config(config);").line();
-        js.write("var app = System.import('" + contextPath + "/app/main.ts')").line();
+        js.write("var app = System.import('" + "./app/main.ts')").line();
         js.tab().write(".catch(console.error.bind(console));").line();
         js.tab().write("})(this);").line();
         js.line();
@@ -235,7 +251,7 @@ public class IndexRenderer {
 
         // bundles
         js.tab().write("bundles").write(DDOT).openObject().line();
-        js.tab().tab().addField(contextPath + "/vendors/rxjs-system-bundle/Rx.system.min.js").openList().line();
+        js.tab().tab().addField("./vendors/rxjs-system-bundle/Rx.system.min.js").openList().line();
         final Iterator<String> bundleIterator = List.of("rxjs",
                                                         "rxjs/*",
                                                         "rxjs/operator/*",
