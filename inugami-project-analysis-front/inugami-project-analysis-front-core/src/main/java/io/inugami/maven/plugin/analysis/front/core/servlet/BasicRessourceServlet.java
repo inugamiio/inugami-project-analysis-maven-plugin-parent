@@ -16,7 +16,7 @@
  */
 package io.inugami.maven.plugin.analysis.front.core.servlet;
 
-import io.inugami.maven.plugin.analysis.front.core.renderers.IndexRenderer;
+import io.inugami.commons.files.FilesUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -25,23 +25,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Slf4j
 @SuppressWarnings({"java:S1989"})
 @Builder
 @AllArgsConstructor
-public class InugamiServlet extends HttpServlet {
+public class BasicRessourceServlet extends HttpServlet {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
     private static final int SUCCCESS = 200;
 
-    private final String contextPath;
-    private final String htmlBasePath;
-    private final String customCss;
+    private final String resourcePath;
+    private final String mediaType;
     // =========================================================================
     // API
     // =========================================================================
@@ -50,15 +48,11 @@ public class InugamiServlet extends HttpServlet {
     protected void doGet(final HttpServletRequest req,
                          final HttpServletResponse resp) throws ServletException, IOException {
         resp.setStatus(SUCCCESS);
-        resp.setContentType(MediaType.TEXT_HTML);
+        resp.setContentType(mediaType);
         ServletCommons.setUtf8(resp);
         try {
-            resp.getWriter().print(IndexRenderer.builder()
-                                                .contextPath(contextPath)
-                                                .htmlBasePath(htmlBasePath)
-                                                .customCss(customCss)
-                                                .build()
-                                                .render());
+            final String content = FilesUtils.readFileFromClassLoader(resourcePath);
+            resp.getWriter().print(content);
         } catch (final Exception e) {
             log.error(e.getMessage(), e);
         }
