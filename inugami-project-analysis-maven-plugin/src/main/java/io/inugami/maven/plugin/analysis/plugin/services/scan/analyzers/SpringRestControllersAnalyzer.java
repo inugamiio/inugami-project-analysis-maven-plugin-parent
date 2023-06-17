@@ -47,6 +47,7 @@ import java.util.List;
 
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.HAS_INPUT_DTO;
+import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.PATCH;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
@@ -376,7 +377,12 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     private List<RestEndpoint> resolveEndpoints(final Class<?> clazz, final String baseContext) {
         final List<RestEndpoint> result = new ArrayList<>();
         for (final Method method : extractMethods(clazz)) {
-            if (hasAnnotation(method, RequestMapping.class, GetMapping.class, PostMapping.class, PutMapping.class,
+            if (hasAnnotation(method,
+                              RequestMapping.class,
+                              GetMapping.class,
+                              PostMapping.class,
+                              PutMapping.class,
+                              PatchMapping.class,
                               DeleteMapping.class)) {
                 result.add(resolveEndpoint(method, baseContext, clazz));
             }
@@ -427,6 +433,14 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
             builder.produce(String.join(SEPARATOR, annotation.consumes()));
             builder.uri(renderUri(baseContext, annotation.path()));
         });
+
+        processOnAnnotation(method, PatchMapping.class, (annotation) -> {
+            builder.verb(PATCH);
+            builder.consume(String.join(SEPARATOR, annotation.consumes()));
+            builder.produce(String.join(SEPARATOR, annotation.consumes()));
+            builder.uri(renderUri(baseContext, annotation.path()));
+        });
+
 
         processOnAnnotation(method, DeleteMapping.class, (annotation) -> {
             builder.verb(DELETE);
