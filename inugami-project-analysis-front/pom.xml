@@ -9,7 +9,7 @@
     <parent>
         <groupId>io.inugami.maven.plugin.analysis</groupId>
         <artifactId>inugami-project-analysis-maven-plugin-parent</artifactId>
-        <version>3.2.5-SNAPSHOT</version>
+        <version>3.2.5</version>
     </parent>
 
 
