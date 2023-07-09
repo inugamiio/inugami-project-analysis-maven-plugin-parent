@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.5.0</maven>
@@ -54,13 +55,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <plugins.org-apache-maven-plugins.maven-compiler-plugin>3.1
         </plugins.org-apache-maven-plugins.maven-compiler-plugin>
-        <maven-gpg-plugin.enabled />
+        <maven-gpg-plugin.enabled/>
         <!--[ ch ]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <ch.qos.logback.version>1.2.10</ch.qos.logback.version>
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>3.2.2</io.inugami.version>
+        <io.inugami.version>3.2.4</io.inugami.version>
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
