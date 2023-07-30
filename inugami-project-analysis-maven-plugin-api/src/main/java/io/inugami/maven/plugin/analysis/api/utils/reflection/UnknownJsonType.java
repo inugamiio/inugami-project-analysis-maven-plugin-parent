@@ -30,7 +30,7 @@ public class UnknownJsonType extends JsonNode {
 
 
     public UnknownJsonType() {
-        super(null, false, false, false, null, null, null, null, Collections.emptyList(), false);
+        super(null,null, false, false, false, null, null, null, null, Collections.emptyList(), false);
     }
 
     @Override

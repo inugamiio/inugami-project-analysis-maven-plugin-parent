@@ -21,6 +21,7 @@ import io.inugami.api.loggers.Loggers;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.api.tools.ReflectionUtils;
 import io.inugami.commons.security.EncryptionUtils;
+import io.inugami.maven.plugin.analysis.annotations.ExposedAs;
 import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
@@ -28,6 +29,7 @@ import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.D
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.Constraint;
 import java.io.Serializable;
@@ -41,6 +43,7 @@ import java.util.function.Supplier;
 import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.OUTPUT_DTO;
+import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.renderReturnType;
 
 @SuppressWarnings({
         "java:S1872",
@@ -101,6 +104,10 @@ public final class ReflectionService {
         } catch (final ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public static Class<?> safeLoadClass(final String className) {
+        return safeLoadClass(className, Thread.currentThread().getContextClassLoader());
     }
 
     public static Class<?> safeLoadClass(final String className, final ClassLoader classLoader) {
@@ -165,6 +172,21 @@ public final class ReflectionService {
 
         } catch (final Throwable err) {
             Loggers.DEBUG.warn(err.getMessage());
+        }
+
+        return result;
+    }
+
+
+    public static Method searchMethod(final Class<?> objectClass, final String method) {
+        Method result = null;
+
+        if (objectClass != null) {
+            return loadAllMethods(objectClass)
+                    .stream()
+                    .filter(m -> m.getName().equalsIgnoreCase(method))
+                    .findFirst()
+                    .orElse(null);
         }
 
         return result;
@@ -279,7 +301,15 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderReturnType(final Method method, final boolean strict) {
-        return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor(), strict);
+        ExposedAs exposedAs = method.getAnnotation(ExposedAs.class);
+        if (exposedAs == null) {
+            return renderType(method.getReturnType(), method.getGenericReturnType(), new ClassCursor(), strict);
+        } else {
+            return JsonNode.builder()
+                           .exposeAs(exposedAs.value())
+                           .build();
+        }
+
     }
 
     public static JsonNode renderType(final Class<?> type,
@@ -298,11 +328,44 @@ public final class ReflectionService {
 
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
-        if (result == null) {
-            result = processRenderType(type, genericReturnType, strict, key, cursor, result);
-
+        if (result != null) {
+            return result;
         }
 
+
+        if (type == ResponseEntity.class) {
+            Type[] types = ReflectionUtils.invokeMethod("getActualTypeArguments", genericReturnType);
+            if (types == null) {
+                result = new UnknownJsonType();
+                CACHE.put(key, result);
+                return result;
+            }
+            Class<?> currentClass = ReflectionUtils.invokeMethod("getRawType", types[0]);
+            if (currentClass == null) {
+                currentClass = safeLoadClass(types[0].getTypeName());
+            }
+            Type[] subTypes = ReflectionUtils.invokeMethod("getActualTypeArguments", types[0]);
+
+            final JsonNode childResult = renderType(currentClass, subTypes == null ? null : subTypes[subTypes.length - 1], new ClassCursor(), strict);
+            if (subTypes != null && subTypes.length > 1) {
+                final Class<?> keyClass = safeLoadClass(subTypes[0].getTypeName());
+                result = JsonNode.builder()
+                                 .map(true)
+                                 .mapKey(keyClass == null ? subTypes[0].getTypeName() : keyClass.getSimpleName())
+                                 .mapValue(childResult)
+                                 .build();
+            } else {
+                result = childResult;
+            }
+
+
+        } else {
+            result = processRenderType(type, genericReturnType, strict, key, cursor, result);
+        }
+
+        if (result != null) {
+            CACHE.put(key, result);
+        }
         return result;
     }
 

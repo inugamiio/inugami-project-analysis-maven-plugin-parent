@@ -34,6 +34,7 @@ import java.util.List;
 public class JsonNode implements JsonObject {
     private static final long    serialVersionUID = -8448971914950919949L;
     @EqualsAndHashCode.Include
+    private final String exposeAs;
     private final        String  path;
     private final        boolean list;
     private final        boolean structure;
@@ -52,6 +53,10 @@ public class JsonNode implements JsonObject {
 
     @Override
     public String convertToJson() {
+        if(exposeAs!=null){
+            return exposeAs;
+        }
+
         final JsonBuilder json        = new JsonBuilder();
         final int         level       = countLevel(path);
         final String      indentation = buildIndentation(level);
@@ -84,7 +89,9 @@ public class JsonNode implements JsonObject {
 
         } else if (map) {
             final String currentFieldIndentation = buildIndentation(level + 1);
-            json.addField(fieldName);
+            if(fieldName!=null){
+                json.addField(fieldName);
+            }
             json.openObject().line();
             json.write(currentFieldIndentation);
             json.addField("<" + mapKey + ">");
