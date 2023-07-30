@@ -1,0 +1,26 @@
+[
+  {
+    "id":"long",
+    "firstName":"String",
+    "lastName":"String",
+    "email":"String",
+    "sex":"Sex",
+    "phoneNumber":"String",
+    "old":"int",
+    "birthday":"LocalDate",
+    "socialId":"String",
+    "nationality":"String",
+    "streetNumber":"String",
+    "streetName":"String",
+    "streetType":"String",
+    "zipCode":"String",
+    "city":"String",
+    "district":"String",
+    "department":"String",
+    "canton":"String",
+    "region":"String",
+    "state":"String",
+    "country":"String",
+    "deviceIdentifier":"String"
+  }
+]

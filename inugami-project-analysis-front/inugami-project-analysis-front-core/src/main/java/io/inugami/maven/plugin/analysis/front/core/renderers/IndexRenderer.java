@@ -166,7 +166,6 @@ public class IndexRenderer {
         js.write(DECO).line();
         js.write("const CONTEXT_PATH=").valueQuot(".").addEndLine();
         js.write("document['CONTEXT_PATH']=CONTEXT_PATH").addEndLine();
-        final String resourcePath = contextPath + PATH_SEP;
         js.write("const RESOURCES_PATH=").valueQuot("./js/").addEndLine();
         js.write("const APP_PATH=").valueQuot("./app").addEndLine();
         js.write("const VENDOR_PATH=").valueQuot("./vendors/").addEndLine();

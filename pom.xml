@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <prerequisites>
         <maven>3.5.0</maven>
@@ -54,15 +55,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <plugins.org-apache-maven-plugins.maven-compiler-plugin>3.1
         </plugins.org-apache-maven-plugins.maven-compiler-plugin>
-        <maven-gpg-plugin.enabled />
+        <maven-gpg-plugin.enabled/>
         <!--[ ch ]+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <ch.qos.logback.version>1.2.10</ch.qos.logback.version>
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>3.2.4</io.inugami.version>
+        <io.inugami.version>3.2.5</io.inugami.version>
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <org.slf4j.version>1.7.21</org.slf4j.version>
         <org.apache.maven.version>3.5.0</org.apache.maven.version>
@@ -77,6 +78,7 @@
         <org.reflections.version>0.9.11</org.reflections.version>
         <org.junit.jupiter>5.7.0-M1</org.junit.jupiter>
         <org.apache.log4j.version>2.13.3</org.apache.log4j.version>
+        <org.springframework.version>5.3.29</org.springframework.version>
         <plugins.org-apache-maven-plugins.maven-javadoc-plugin>3.2.0
         </plugins.org-apache-maven-plugins.maven-javadoc-plugin>
         <!--[ net ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -93,6 +95,14 @@
             **/ConstantUtils*,
             **/*Test*
         </sonar.exclusions>
+        <sonar.cpd.exclusions>
+            **/*DTO.java,
+            **/*Entity.java,
+            **/unit/test/*.java,
+            **/unit/test/api/*.java,
+            **/unit/test/dto/*.java,
+            **/unit/test/marshaller/*.java
+        </sonar.cpd.exclusions>
     </properties>
 
 
@@ -324,6 +334,24 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax.servlet.version}</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>2.2.5.RELEASE</version>
             </dependency>
 
             <!--::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -34,8 +34,7 @@ import io.inugami.maven.plugin.analysis.plugin.services.ArtifactResolverListener
 import io.inugami.maven.plugin.analysis.plugin.services.ScanService;
 import io.inugami.maven.plugin.analysis.plugin.services.WriterService;
 import io.inugami.maven.plugin.analysis.plugin.services.neo4j.DefaultNeo4jDao;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -67,12 +66,17 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static io.inugami.api.exceptions.Asserts.assertNotEmpty;
 
 @SuppressWarnings({"java:S1854"})
 @Slf4j
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Mojo(name = "check", defaultPhase = LifecyclePhase.INSTALL)
 public class CheckMojo extends AbstractMojo {
@@ -83,6 +87,9 @@ public class CheckMojo extends AbstractMojo {
     // =========================================================================
     @Parameter
     private Set<String> resourcePackages;
+
+    @Parameter
+    private Set<String> excludedJars;
 
     @Parameter(defaultValue = "${project.basedir}", readonly = true)
     private File basedir;
@@ -120,6 +127,8 @@ public class CheckMojo extends AbstractMojo {
     @Component
     private SecDispatcher secDispatcher;
 
+    private List<Pattern> excluded;
+
     // =========================================================================
     // API
     // =========================================================================
@@ -127,6 +136,7 @@ public class CheckMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         log.info("scan project : {}:{}:{}:", project.getGroupId(), project.getArtifactId(), project.getVersion());
         log.info("building scan context");
+        initExcluded();
         final ArtifactResolverListener listener = new ArtifactResolverListener();
         final ScanConext               context  = buildContext(listener);
 
@@ -144,6 +154,25 @@ public class CheckMojo extends AbstractMojo {
             if (context.getNeo4jDao() != null) {
                 context.getNeo4jDao().shutdown();
             }
+        }
+    }
+
+    protected void initExcluded() {
+        final Set<String> excludedPattern = new LinkedHashSet<>();
+        if (excludedJars != null) {
+            excludedPattern.addAll(excludedJars);
+        }
+        excludedPattern.add(".*spring-web.*");
+        excludedPattern.add(".*spring-context.*");
+        excludedPattern.add(".*spring-cloud-starter-openfeign.*");
+        excludedPattern.add(".*javax.servlet-api.*");
+        excludedPattern.add(".*swagger-annotations.*");
+        excludedPattern.add(".*spring-jms.*");
+        excludedPattern.add(".*spring-rabbit.*");
+
+        excluded = new ArrayList<>();
+        for (final String pattern : excludedPattern) {
+            excluded.add(Pattern.compile(pattern, Pattern.CASE_INSENSITIVE));
         }
     }
 
@@ -339,6 +368,9 @@ public class CheckMojo extends AbstractMojo {
                         .addListener(listener)).getArtifacts();
 
         for (final Artifact artifact : artifacts) {
+            if (isExcludedJar(artifact)) {
+                continue;
+            }
             try {
                 final URL url = artifact.getFile().toURI().toURL();
                 Loggers.DEBUG.info("load jar : {}", url);
@@ -350,6 +382,16 @@ public class CheckMojo extends AbstractMojo {
             }
         }
         return result;
+    }
+
+    protected boolean isExcludedJar(final Artifact artifact) {
+        final String gav = String.join(":", artifact.getGroupId(), artifact.getArtifactId(), artifact.getType(), artifact.getVersion());
+        for (final Pattern regex : excluded) {
+            if (regex.matcher(gav).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
