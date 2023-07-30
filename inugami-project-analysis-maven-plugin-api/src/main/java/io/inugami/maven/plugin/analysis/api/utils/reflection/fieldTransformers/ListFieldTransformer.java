@@ -40,8 +40,8 @@ public class ListFieldTransformer implements FieldTransformer {
         if (cursor.isPresentInParents(classType)) {
             builder.type(ReflectionService.renderFieldTypeRecursive(classType));
         } else {
-            children = ReflectionService.renderStructureJson(ReflectionService.extractGenericType(genericType), currentPath + "[]",
-                                                             cursor.createNewContext(classType));
+            children = classType == null ? null : ReflectionService.renderStructureJson(ReflectionService.extractGenericType(genericType), currentPath + "[]",
+                                                                                        cursor.createNewContext(classType));
         }
 
         if (children != null) {
