@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-@SuppressWarnings({"java:S1845", "java:S6397"})
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S5852"})
 public class JiraIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
 

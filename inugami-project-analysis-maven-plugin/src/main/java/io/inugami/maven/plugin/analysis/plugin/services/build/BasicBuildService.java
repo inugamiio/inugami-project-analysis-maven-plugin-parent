@@ -17,6 +17,7 @@
 package io.inugami.maven.plugin.analysis.plugin.services.build;
 
 import io.inugami.api.exceptions.FatalException;
+import io.inugami.api.exceptions.UncheckedException;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.models.FileResources;
 import io.inugami.maven.plugin.analysis.api.models.PropertiesResources;
@@ -41,16 +42,17 @@ import static io.inugami.api.exceptions.Asserts.assertTrue;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_EXISTS;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_READABLE;
 
-@SuppressWarnings({"java:S2095", "java:S899", "java:S1068", "java:S4042", "java:S107"})
+@SuppressWarnings({"java:S2095", "java:S899", "java:S1068", "java:S4042", "java:S107", "java:S5042", "java:S1124"})
 @Slf4j
 public class BasicBuildService {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final static PropertiesLoader PROPERTIES_LOADER  = new PropertiesLoader();
-    private final static TemplateRenderer TEMPLATE_RENDERING = new TemplateRenderer();
-    private final static List<String>     TEXT_FILES         = Arrays.asList("application/json",
+    private static final long             MAX_SIZE           = 2000000000;
+    private static final PropertiesLoader PROPERTIES_LOADER  = new PropertiesLoader();
+    private static final TemplateRenderer TEMPLATE_RENDERING = new TemplateRenderer();
+    private static final List<String>     TEXT_FILES         = Arrays.asList("application/json",
                                                                              "application/x-javascript",
                                                                              "application/x-sh",
                                                                              "application/xml",
@@ -357,10 +359,15 @@ public class BasicBuildService {
         }
         final FileInputStream fileZipStream = openFileInputStream(new File(archive));
         final ZipInputStream  zip           = new ZipInputStream(fileZipStream);
+        long                  size          = 0;
         try {
             ZipEntry entry;
             do {
                 entry = zip.getNextEntry();
+                size += (entry == null ? 0 : entry.getSize());
+                if (size > MAX_SIZE) {
+                    throw new UncheckedException("potential zip bombe detected : zip file is too big");
+                }
                 if (entry != null && !targetFile.getAbsolutePath().contains(MACOSX_DELETED)) {
                     unzipFile(targetFile, zip, entry, properties, mavenProperties, filtering, mavenFiltering,
                               textFiles);

@@ -42,7 +42,16 @@ import static io.inugami.api.functionnals.FunctionalUtils.applyIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.INPUT_DTO;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.OUTPUT_DTO;
 
-@SuppressWarnings({"java:S1872", "java:S1452", "java:S1181", "java:S3011"})
+@SuppressWarnings({
+        "java:S1872",
+        "java:S1452",
+        "java:S1181",
+        "java:S3011",
+        "java:S119",
+        "java:S1125",
+        "java:S135",
+        "java:S119",
+        "java:S1125"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
@@ -69,6 +78,20 @@ public final class ReflectionService {
     // =========================================================================
     // API
     // =========================================================================
+    public static boolean hasClass(final String... classNames) {
+        try {
+            for (final String className : classNames) {
+                Thread.currentThread().getContextClassLoader().loadClass(className);
+            }
+
+        } catch (final Throwable e) {
+            return false;
+        }
+
+        return true;
+    }
+
+
     private static final List<FieldTransformer> FIELD_TRANSFORMERS = SpiLoader.getInstance()
                                                                               .loadSpiServicesByPriority(FieldTransformer.class, new DefaultFieldTransformer());
 
@@ -340,8 +363,9 @@ public final class ReflectionService {
 
 
     public static boolean isBasicType(final Class<?> currentClass) {
-        return currentClass == null ? true :
-                PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang", 0);
+        return currentClass == null
+                ? true
+                : PRIMITIF_TYPES.contains(currentClass) || currentClass.getName().startsWith("java.lang", 0);
     }
 
     public static JsonNode renderStructureJson(final Class<?> genericType, final String path,
@@ -393,6 +417,7 @@ public final class ReflectionService {
         return result;
     }
 
+    @SuppressWarnings({"java:S135"})
     public static JsonNode renderFieldJson(final Field field, final String parentPath,
                                            final ClassCursor cursor) {
         final JsonNode.JsonNodeBuilder result      = JsonNode.builder();

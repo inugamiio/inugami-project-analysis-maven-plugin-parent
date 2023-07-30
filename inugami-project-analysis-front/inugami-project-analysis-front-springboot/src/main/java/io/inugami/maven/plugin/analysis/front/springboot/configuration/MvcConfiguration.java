@@ -114,7 +114,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @ConditionalOnProperty(value = "inugami.release.note.custom.css.enabled", havingValue = "true")
     @Bean
     public ServletRegistrationBean<BasicRessourceServlet> customCssServlet() {
-        final String basePath = contextPath + currentPath.substring(0, currentPath.length() - 1);
         final ServletRegistrationBean<BasicRessourceServlet> bean = new ServletRegistrationBean<>(
                 BasicRessourceServlet.builder()
                                      .mediaType("text/css")

@@ -61,22 +61,21 @@ public class GitLogScan implements ProjectScanner {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final  String FEATURE_NAME                   = "inugami.maven.plugin.analysis.git";
-    public static final  String REFS_TAGS                      = "refs/tags/";
-    public static final  String RELATIONSHIP_HAVE_AUTHOR       = "HAVE_AUTHOR";
-    public static final  String RELATIONSHIP_HAVE_SCM_INFO     = "HAVE_SCM_INFO";
-    public static final  String RELATIONSHIP_WORKED_ON_VERSION = "WORKED_ON_VERSION";
-    public static final  String SCM                            = "scm";
-    public static final  String AUTHOR                         = "Author";
-    public static final  String SCM_TYPE                       = "Scm";
-    public static final  String OPEN                           = "[";
-    public static final  String CLOSE                          = "]";
-    public static final  String CLOSE_SPACE                    = "] ";
-    public static final  String SPACE                          = " ";
-    private static final String RELATIONSHIP_FIX_VERSION       = "FIX_VERSION";
-    public static final  String HAS_ISSUE                      = "HAS_ISSUE";
-    public static final  String HAS_SCM                        = "HAS_SCM";
-    public static final  String COMMIT_UID                     = "commitUid";
+    public static final String FEATURE_NAME                   = "inugami.maven.plugin.analysis.git";
+    public static final String REFS_TAGS                      = "refs/tags/";
+    public static final String RELATIONSHIP_HAVE_AUTHOR       = "HAVE_AUTHOR";
+    public static final String RELATIONSHIP_HAVE_SCM_INFO     = "HAVE_SCM_INFO";
+    public static final String RELATIONSHIP_WORKED_ON_VERSION = "WORKED_ON_VERSION";
+    public static final String SCM                            = "scm";
+    public static final String AUTHOR                         = "Author";
+    public static final String SCM_TYPE                       = "Scm";
+    public static final String OPEN                           = "[";
+    public static final String CLOSE                          = "]";
+    public static final String CLOSE_SPACE                    = "] ";
+    public static final String SPACE                          = " ";
+    public static final String HAS_ISSUE                      = "HAS_ISSUE";
+    public static final String HAS_SCM                        = "HAS_SCM";
+    public static final String COMMIT_UID                     = "commitUid";
 
 
     // =========================================================================
@@ -459,7 +458,7 @@ public class GitLogScan implements ProjectScanner {
             final Node       gitNode     = searchGitNode(entry.getKey(), nodeGit);
             final List<Node> isssueNodes = searchIssueNodes(entry.getValue(), nodeIssues);
 
-            if (gitNode != null && isssueNodes != null) {
+            if (gitNode != null) {
                 for (final Node isssueNode : isssueNodes) {
                     providerResult.addRelationship(Relationship
                                                            .builder()

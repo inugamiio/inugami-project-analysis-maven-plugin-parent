@@ -28,6 +28,7 @@ import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 
+@SuppressWarnings({"java:S1607"})
 @ExtendWith(MockitoExtension.class)
 class SpringFeignClientAnalyzerTest {
     @Mock
