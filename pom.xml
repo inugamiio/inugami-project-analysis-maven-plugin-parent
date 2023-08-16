@@ -103,6 +103,21 @@
             **/unit/test/dto/*.java,
             **/unit/test/marshaller/*.java
         </sonar.cpd.exclusions>
+        <sonar.coverage.exclusions>
+            **/test/*,
+            **/test_it/*,
+            **/js/vendors.js,
+            **/generated-sources/**/*,
+            **/generated-test-sources/**/*,
+            **/*DTOBuilder*,
+            **/*EntityBuilder*,
+            **/*Test*,
+            **/*Exception,
+            **/Constants,
+            **/*None*,
+            **/*NONE*,
+            **/*NONE_EXCEPTION*
+        </sonar.coverage.exclusions>
     </properties>
 
 
@@ -551,6 +566,9 @@
                         <exclude>**/*Test*</exclude>
                         <exclude>**/*Exception</exclude>
                         <exclude>**/Constants</exclude>
+                        <exclude>**/*None*</exclude>
+                        <exclude>**/*NONE*</exclude>
+                        <exclude>**/*NONE_EXCEPTION*</exclude>
                     </excludes>
                     <formats>
                         <format>XML</format>

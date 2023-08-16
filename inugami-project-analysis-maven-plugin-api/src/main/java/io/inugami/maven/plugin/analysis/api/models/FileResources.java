@@ -27,7 +27,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Setter
 @Getter
-public class FileResources {
+public final class FileResources {
     @EqualsAndHashCode.Include
     private String              target;
     private String              template;

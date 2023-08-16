@@ -30,7 +30,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PropertiesResources {
+public final class PropertiesResources {
 
     @EqualsAndHashCode.Include
     private String type;

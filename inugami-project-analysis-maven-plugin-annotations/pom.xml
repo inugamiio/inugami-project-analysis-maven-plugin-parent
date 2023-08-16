@@ -25,4 +25,16 @@
     <artifactId>inugami-project-analysis-maven-plugin-annotations</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.inugami</groupId>
+            <artifactId>inugami_commons_test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

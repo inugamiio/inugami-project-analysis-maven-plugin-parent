@@ -26,7 +26,7 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Exclude {
+public final class Exclude {
 
     private String exclude;
 }

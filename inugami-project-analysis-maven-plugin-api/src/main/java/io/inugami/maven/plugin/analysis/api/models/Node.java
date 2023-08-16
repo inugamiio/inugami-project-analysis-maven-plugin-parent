@@ -33,7 +33,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Node implements JsonObject, Comparable<Node> {
+public final class Node implements JsonObject, Comparable<Node> {
 
     private static final long                      serialVersionUID = 7519867544798392684L;
     private              String                    type;

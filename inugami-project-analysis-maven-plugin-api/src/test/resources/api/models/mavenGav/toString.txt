@@ -1,0 +1,1 @@
+MavenGav(groupId=io.inugami, artifactId=unit-test-artifact, version=1.0.0, packaging=jar, classifier=uber)

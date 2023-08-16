@@ -1,0 +1,17 @@
+{
+  "getArtifactId" : "unit-test-artifact",
+  "getBaseVersion" : "1.0.0",
+  "getClassifier" : "uber",
+  "getDependencyConflictId" : "none",
+  "getDependencyTrail" : [ "trail" ],
+  "getDownloadUrl" : "http://mock.inugami.io",
+  "getFile" : "/dev/artifact.jar",
+  "getGroupId" : "io.inugami",
+  "getId" : "io.inugami:unit-test-artifact:1.0.0:uber:jar",
+  "getPackaging" : "jar",
+  "getScope" : "compile",
+  "getType" : "jar",
+  "getVersion" : "1.0.0",
+  "isOptional" : true,
+  "isResolved" : true
+}

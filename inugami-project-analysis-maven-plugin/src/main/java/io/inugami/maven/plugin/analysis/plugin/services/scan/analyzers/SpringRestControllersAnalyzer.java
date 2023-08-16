@@ -52,7 +52,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeV
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
-@SuppressWarnings({"java:S1845", "java:S5361", "java:S115"})
+@SuppressWarnings({"java:S1845", "java:S5361", "java:S115", "java:S1611"})
 @Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
@@ -370,7 +370,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     protected String getApiName(final Class<?> clazz) {
-        return ifHasAnnotation(clazz, Api.class, Api::value, () -> clazz.getSimpleName());
+        return ifHasAnnotation(clazz, Api.class, Api::value, clazz::getSimpleName);
     }
 
 
@@ -406,7 +406,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
-        processOnAnnotation(method, RequestMapping.class, (annotation) -> {
+        processOnAnnotation(method, RequestMapping.class,(annotation) -> {
             builder.verb(renderVerb(annotation.method()));
             builder.consume(String.join(SEPARATOR, annotation.consumes()));
             builder.produce(String.join(SEPARATOR, annotation.consumes()));

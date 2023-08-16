@@ -11,7 +11,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class QueryDefinition {
+public final class QueryDefinition {
     @ToString.Include
     private String       name;
     @ToString.Include

@@ -1,5 +1,7 @@
 package io.inugami.maven.plugin.analysis.api.actions;
 
+import io.inugami.api.processors.ConfigHandler;
+import io.inugami.api.processors.DefaultConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +13,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings({"java:S5838"})
 class QueryConfiguratorTest {
 
+    @Test
+    void configure_nominal(){
+        ConfigHandler<String,String> config = new DefaultConfigHandler();
+        final ConfigHandler<String,String> newConfig = buildConfigurator().configure(null, null, config);
+        assertThat(System.identityHashCode(newConfig)).isEqualTo(System.identityHashCode(config));
+    }
 
     @Test
     void gavToMap_withNullValue() {

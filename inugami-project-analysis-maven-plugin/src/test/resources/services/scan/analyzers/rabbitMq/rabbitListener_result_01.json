@@ -18,10 +18,17 @@
   }, {
     "name" : "event",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}"
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"LocalDateTime\"\n}"
     },
     "type" : "INPUT_DTO",
-    "uid" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c"
+    "uid" : "52540fead214ad782213db2a0e9c2a344cb49b43e3102da08a80fbad9da3350a416477022d1187b1d6e27a9e5e278ab265c9f12c7cfded9532c4a0b1be4723ef"
+  }, {
+    "name" : "event",
+    "properties" : {
+      "payload" : "{\n  \"userName\":\"String\",\n  \"date\":\"LocalDateTime\"\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "9aecb57a74ccbf711215108520a75a26a99a601fe6e047096989a652d6d5de4a90726c0115facc562ec920fc1a2365ff8ffc8790cf422ee3822feb5e1bdb0adb"
   }, {
     "name" : "events.exchangeName",
     "properties" : {
@@ -48,7 +55,7 @@
       "errorHandler" : "myListenerErrorHandler",
       "exclusive" : false,
       "listenerId" : "class-listener",
-      "payload" : "{\n  \"userName\":\"String\",\n  \"date\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+      "payload" : "{\n  \"userName\":\"String\",\n  \"date\":\"LocalDateTime\"\n}",
       "queue" : "",
       "queuesToDeclare" : "[]"
     },
@@ -64,7 +71,7 @@
       "errorHandler" : "myListenerErrorHandler",
       "exclusive" : false,
       "listenerId" : "class-listener",
-      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}",
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"LocalDateTime\"\n}",
       "queue" : "",
       "queuesToDeclare" : "[]"
     },
@@ -151,13 +158,6 @@
     "type" : "Property",
     "uid" : "events.user.queueName"
   }, {
-    "name" : "event",
-    "properties" : {
-      "payload" : "{\n  \"userName\":\"String\",\n  \"date\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "f69fb1a43ec0e4a42966bc36e1ed0123421e7dd468a1b7dc8b916b5b673912edc5a5fbe952991816b4e6bc9b01c4c3069b258a1eb195c0ec14947fb67baf2936"
-  }, {
     "name" : "onAuthenticated",
     "properties" : {
       "class" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.RabbitMqAnalyzerTest$ClassListener",
@@ -206,8 +206,12 @@
     "to" : "events.exchangeName_events.user.created.routingKey",
     "type" : "HAS_INPUT_DTO"
   }, {
-    "from" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c",
+    "from" : "52540fead214ad782213db2a0e9c2a344cb49b43e3102da08a80fbad9da3350a416477022d1187b1d6e27a9e5e278ab265c9f12c7cfded9532c4a0b1be4723ef",
     "to" : "events.exchangeName_events.user.created.routingKey",
+    "type" : "HAS_INPUT_DTO"
+  }, {
+    "from" : "9aecb57a74ccbf711215108520a75a26a99a601fe6e047096989a652d6d5de4a90726c0115facc562ec920fc1a2365ff8ffc8790cf422ee3822feb5e1bdb0adb",
+    "to" : "events.exchangeName_events.user.authenticated.routingKey",
     "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "events.exchangeName_events.user.authenticated.routingKey",
@@ -231,10 +235,6 @@
     "from" : "events.exchangeName_events.user.created.routingKey",
     "to" : "rabbitMq",
     "type" : "SERVICE_TYPE"
-  }, {
-    "from" : "f69fb1a43ec0e4a42966bc36e1ed0123421e7dd468a1b7dc8b916b5b673912edc5a5fbe952991816b4e6bc9b01c4c3069b258a1eb195c0ec14947fb67baf2936",
-    "to" : "events.exchangeName_events.user.authenticated.routingKey",
-    "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "to" : "events.exchangeName",

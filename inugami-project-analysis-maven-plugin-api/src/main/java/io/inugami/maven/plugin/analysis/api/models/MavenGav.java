@@ -16,10 +16,8 @@
  */
 package io.inugami.maven.plugin.analysis.api.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
@@ -35,21 +33,36 @@ import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings({"java:S1874"})
+@JsonIgnoreProperties(value = {"metadataList", "repository", "dependencyFilter", "artifactHandler", "versionRange", "availableVersions", "selectedVersion"})
+@Builder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
-@Builder
-@AllArgsConstructor
-public class MavenGav implements Artifact {
-    private    String                       groupId;
-    private String                       artifactId;
-    private String                       version;
-    private String                       packaging;
-    private String                       type;
-    private String                       scope;
-    private String                       classifier;
-    private File                         file;
-    private String                       baseVersion;
-    private String                       id;
+public final class MavenGav implements Artifact {
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String groupId;
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String artifactId;
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String version;
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String packaging;
+    private String type;
+    private String scope;
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    private String classifier;
+    private File   file;
+    private String baseVersion;
+    private String id;
+
     private Collection<ArtifactMetadata> metadataList;
     private ArtifactRepository           repository;
     private String                       dependencyConflictId;
@@ -82,7 +95,7 @@ public class MavenGav implements Artifact {
 
     @Override
     public void updateVersion(final String s, final ArtifactRepository artifactRepository) {
-    // nothing to do
+        // nothing to do
     }
 
 
@@ -127,7 +140,8 @@ public class MavenGav implements Artifact {
         }
 
         final String currentGav = String.join(":", groupId, artifactId, packaging, version);
-        final String otherGav = String.join(":", other.getGroupId(), other.getArtifactId(), other.getArtifactHandler().getPackaging(), other.getVersion());
+        final String otherGav = String.join(":", other.getGroupId(), other.getArtifactId(), other.getArtifactHandler()
+                                                                                                 .getPackaging(), other.getVersion());
         return currentGav.compareTo(otherGav);
     }
 }

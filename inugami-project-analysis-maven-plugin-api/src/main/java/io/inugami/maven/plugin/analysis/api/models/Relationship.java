@@ -32,16 +32,16 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Relationship implements JsonObject, Comparable<Relationship> {
+public final class Relationship implements JsonObject, Comparable<Relationship> {
 
     private static final long serialVersionUID = 973646684487506001L;
 
     @EqualsAndHashCode.Include
-    private String                              from;
+    private String                    from;
     @EqualsAndHashCode.Include
-    private String                              to;
+    private String                    to;
     @EqualsAndHashCode.Include
-    private String                              type;
+    private String                    type;
     private Map<String, Serializable> properties;
 
     public void sort() {
@@ -53,7 +53,7 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
         return StringComparator.compareTo(buildHash(), other == null ? null : other.buildHash());
     }
 
-    protected String buildHash() {
+    public String buildHash() {
         return new StringBuilder().append(from)
                                   .append("-[").append(type).append("]->")
                                   .append(to)
@@ -61,8 +61,6 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     }
 
     public static class RelationshipBuilder {
-        private Map<String, Serializable> properties;
-
         public Relationship.RelationshipBuilder property(final String key, final Serializable value) {
             if (this.properties == null) {
                 this.properties = new LinkedHashMap<>();
@@ -74,7 +72,7 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
             return this;
         }
 
-        public Relationship.RelationshipBuilder properties(final Map<String, Serializable> properties) {
+        public Relationship.RelationshipBuilder Rproperties(final Map<String, Serializable> properties) {
             if (this.properties == null) {
                 this.properties = new LinkedHashMap<>();
             }
