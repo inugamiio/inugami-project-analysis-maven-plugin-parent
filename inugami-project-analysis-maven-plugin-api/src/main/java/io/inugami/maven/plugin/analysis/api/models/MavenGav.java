@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings({"java:S1874"})
 @Setter
 @Getter
 @Builder
@@ -81,13 +82,13 @@ public class MavenGav implements Artifact {
 
     @Override
     public void updateVersion(final String s, final ArtifactRepository artifactRepository) {
-
+    // nothing to do
     }
 
 
     @Override
     public void selectVersion(final String s) {
-
+        // nothing to do
     }
 
 
@@ -99,7 +100,7 @@ public class MavenGav implements Artifact {
 
     @Override
     public void setResolvedVersion(final String s) {
-
+        // nothing to do
     }
 
 
@@ -110,7 +111,7 @@ public class MavenGav implements Artifact {
 
     @Override
     public void setRelease(final boolean b) {
-
+        // nothing to do
     }
 
 

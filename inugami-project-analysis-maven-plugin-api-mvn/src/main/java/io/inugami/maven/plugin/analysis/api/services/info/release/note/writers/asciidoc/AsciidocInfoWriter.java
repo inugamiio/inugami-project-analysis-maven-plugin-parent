@@ -47,7 +47,7 @@ public interface AsciidocInfoWriter {
 
     default boolean isEnabled(final ConfigHandler<String, String> configuration) {
         final String featureName = getfeatureName();
-        return featureName == null ? true : Boolean.parseBoolean(configuration.grabOrDefault(featureName, "true"));
+        return Boolean.parseBoolean(configuration.grabOrDefault(featureName, "true"));
     }
 
     default String renderPayload(final String value) {

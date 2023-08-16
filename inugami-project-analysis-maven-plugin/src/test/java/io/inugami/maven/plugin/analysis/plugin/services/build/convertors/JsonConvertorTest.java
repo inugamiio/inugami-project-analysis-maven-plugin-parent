@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-public class JsonConvertorTest {
+class JsonConvertorTest {
 
     @Test
     void convert_nominal_shouldConvertToMap() {

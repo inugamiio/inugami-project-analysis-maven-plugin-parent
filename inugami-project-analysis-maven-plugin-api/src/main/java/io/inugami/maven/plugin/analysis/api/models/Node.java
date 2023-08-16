@@ -35,12 +35,12 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @AllArgsConstructor
 public class Node implements JsonObject, Comparable<Node> {
 
-    private static final long                                serialVersionUID = 7519867544798392684L;
-    private              String                              type;
-    private              String                              name;
+    private static final long                      serialVersionUID = 7519867544798392684L;
+    private              String                    type;
+    private              String                    name;
     @EqualsAndHashCode.Include
-    private              String                              uid;
-    private              LinkedHashMap<String, Serializable> properties;
+    private              String                    uid;
+    private              Map<String, Serializable> properties;
 
     @Override
     public int compareTo(final Node other) {
@@ -63,7 +63,7 @@ public class Node implements JsonObject, Comparable<Node> {
     }
 
     public static class NodeBuilder {
-        private LinkedHashMap<String, Serializable> properties;
+        private Map<String, Serializable> properties;
 
         public NodeBuilder addProperty(final String key, final Serializable value) {
             if (this.properties == null) {

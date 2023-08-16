@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.isBasicType;
 
-@SuppressWarnings({"java:S6395"})
+@SuppressWarnings({"java:S6395","java:S6353","java:S1125"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
 public final class BuilderTools {
@@ -264,8 +264,8 @@ public final class BuilderTools {
         final LinkedHashMap<String, Serializable> additionalInfo = new LinkedHashMap<>();
         additionalInfo.put(CLASS, clazz.getName());
         additionalInfo.put(METHOD, method.getName());
-        processIfNotNull(method.getReturnType(), (value) -> additionalInfo.put("returnType", value.getName()));
-        processIfNotNull(method.getParameters(), (value) -> additionalInfo.put("parameters",
+        processIfNotNull(method.getReturnType(), value -> additionalInfo.put("returnType", value.getName()));
+        processIfNotNull(method.getParameters(), value -> additionalInfo.put("parameters",
                                                                                buildArgsType(value, false, true)));
 
 

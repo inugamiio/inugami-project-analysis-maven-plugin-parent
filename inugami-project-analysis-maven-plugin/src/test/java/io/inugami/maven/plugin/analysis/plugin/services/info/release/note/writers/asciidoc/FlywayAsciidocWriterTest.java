@@ -19,7 +19,7 @@ import static io.inugami.commons.test.UnitTestHelper.loadJsonReference;
 
 
 @ExtendWith(MockitoExtension.class)
-public class FlywayAsciidocWriterTest {
+class FlywayAsciidocWriterTest {
 
     @Mock
     private InfoContext context;

@@ -25,7 +25,7 @@ public class MojoHelper {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    private final static Logger LOGGER = LoggerFactory.getLogger("MVN");
+    private static final Logger LOGGER = LoggerFactory.getLogger("MVN");
 
     private static final String EMPTY_STR = "";
 
@@ -46,6 +46,6 @@ public class MojoHelper {
         for (int i = size - 1; i >= 0; i--) {
             result.append(deco);
         }
-        return ConsoleColors.BLUE_BOLD + result.toString() + ConsoleColors.RESET;
+        return ConsoleColors.BLUE_BOLD + result + ConsoleColors.RESET;
     }
 }

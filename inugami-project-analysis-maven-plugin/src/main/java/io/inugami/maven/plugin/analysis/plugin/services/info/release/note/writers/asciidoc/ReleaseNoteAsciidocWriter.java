@@ -139,7 +139,13 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         }
     }
 
-    protected void renderOnWriterInfo(final ReleaseNoteResult releaseNote, final File baseDocFolder, final InfoContext context, final String version, final boolean notSplitFile, final Writer writer, final AsciidocInfoWriter writerInfo) throws IOException {
+    protected void renderOnWriterInfo(final ReleaseNoteResult releaseNote,
+                                      final File baseDocFolder,
+                                      final InfoContext context,
+                                      final String version,
+                                      final boolean notSplitFile,
+                                      final Writer writer,
+                                      final AsciidocInfoWriter writerInfo) throws IOException {
         log.info("invoke asciidoc writer : {}", writerInfo.getClass().getName());
         final LinkedHashMap<String, String> content = writerInfo.rendering(releaseNote, notSplitFile, context);
         if (content != null) {
@@ -238,10 +244,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
         final JsonBuilder writer = new JsonBuilder();
         if (authors != null) {
             final List<Author> currentAuthors = new ArrayList<>(authors);
-            currentAuthors.sort((ref, value) -> {
-                return String.valueOf(ref == null ? null : ref.getName())
-                             .compareTo(value == null ? null : value.getName());
-            });
+            currentAuthors.sort((ref, value) -> String.valueOf(ref == null ? null : ref.getName())
+                                                      .compareTo(value == null ? null : value.getName()));
 
             if (notSplitFile) {
                 writer.write("== Authors").line();
@@ -308,10 +312,9 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
                 writer.write("== Merge requests").line();
             }
             final List<MergeRequests> data = new ArrayList<>(mergeRequests);
-            data.sort((ref, value) -> {
-                return String.valueOf(ref == null ? null : ref.getDate())
-                             .compareTo(String.valueOf(value == null ? null : value.getDate()));
-            });
+            data.sort((ref, value) ->
+                              String.valueOf(ref == null ? null : ref.getDate())
+                                    .compareTo(String.valueOf(value == null ? null : value.getDate())));
 
             writer.write("[cols=\"2,1,3,4\", options=\"header\"]").line();
             writer.write("|===").line();
@@ -343,10 +346,8 @@ public class ReleaseNoteAsciidocWriter implements ReleaseNoteWriter {
             }
 
             final List<Issue> data = new ArrayList<>(values);
-            data.sort((ref, value) -> {
-                return String.valueOf(ref == null ? null : ref.getDate())
-                             .compareTo(String.valueOf(value == null ? null : value.getDate()));
-            });
+            data.sort((ref, value) -> String.valueOf(ref == null ? null : ref.getDate())
+                                            .compareTo(String.valueOf(value == null ? null : value.getDate())));
 
             writer.write("[cols=\"2,1,3,4\", options=\"header\"]").line();
             writer.write("|===").line();

@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class FlywayScanTest {
+class FlywayScanTest {
 
     // =========================================================================
     // ATTRIBUTES

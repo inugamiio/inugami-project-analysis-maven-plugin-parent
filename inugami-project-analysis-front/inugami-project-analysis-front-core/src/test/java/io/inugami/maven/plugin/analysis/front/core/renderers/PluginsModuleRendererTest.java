@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static io.inugami.commons.test.UnitTestHelper.assertText;
 import static io.inugami.commons.test.UnitTestHelper.loadJsonReference;
 
-public class PluginsModuleRendererTest {
+class PluginsModuleRendererTest {
     @Test
     void render_nominal() {
         final PluginsModuleRenderer renderer = new PluginsModuleRenderer();

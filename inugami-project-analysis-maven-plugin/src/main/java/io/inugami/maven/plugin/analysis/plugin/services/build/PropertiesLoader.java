@@ -21,6 +21,7 @@ import io.inugami.api.exceptions.services.ConnectorException;
 import io.inugami.api.spi.SpiLoader;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
+import io.inugami.commons.connectors.HttpRequest;
 import io.inugami.commons.files.FilesUtils;
 import io.inugami.maven.plugin.analysis.api.convertors.PropertiesConvertorSpi;
 import io.inugami.maven.plugin.analysis.api.models.PropertiesResources;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +87,7 @@ public class PropertiesLoader {
         String content = null;
         try {
             final Charset charset = propertiesResources.getEncoding() == null
-                    ? Charset.forName("UTF-8")
+                    ? StandardCharsets.UTF_8
                     : Charset.forName(propertiesResources.getEncoding());
             content = new String(FilesUtils.readBytes(file), charset);
         } catch (final IOException e) {
@@ -130,7 +132,10 @@ public class PropertiesLoader {
 
         HttpConnectorResult response = null;
         try {
-            response = http.get(propertiesResources.getPropertiesUrl(), null, headers);
+            response = http.get(HttpRequest.builder()
+                                           .url(propertiesResources.getPropertiesUrl())
+                                           .headers(headers)
+                                           .build());
         } catch (final ConnectorException e) {
             log.error(e.getMessage(), e);
         } finally {

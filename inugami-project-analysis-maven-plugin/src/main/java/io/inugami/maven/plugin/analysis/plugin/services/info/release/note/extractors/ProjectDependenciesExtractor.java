@@ -61,7 +61,7 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
                                             final Neo4jDao dao, final InfoContext context) {
         final List<JsonObject> currentValues = search(QUERIES_SEARCH_PROJECT_DEPENDENCIES_GRAPH_CQL, currentVersion,
                                                       context.getConfiguration(), dao,
-                                                      (resultSet) -> this.convert(resultSet, currentVersion));
+                                                      resultSet -> this.convert(resultSet, currentVersion));
 
         if (currentValues != null && !currentValues.isEmpty()) {
 
@@ -177,7 +177,7 @@ public class ProjectDependenciesExtractor implements ReleaseNoteExtractor {
             builder.dependencies(dependencies);
             result.add(builder.build());
         }
-        return new JsonObjects<Graph>(result);
+        return new JsonObjects<>(result);
     }
 
     protected Map<String, Map<String, List<String>>> resolveDependenciesGraph(final Map<Long, GavGraph> nodeRefs,

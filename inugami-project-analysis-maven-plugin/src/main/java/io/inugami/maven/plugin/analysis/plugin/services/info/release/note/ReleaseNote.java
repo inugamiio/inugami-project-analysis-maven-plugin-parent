@@ -137,12 +137,7 @@ public class ReleaseNote implements ProjectInformation, QueryConfigurator {
 
     private boolean shouldSkip(final ConfigHandler<String, String> configuration) {
         final String toggle = configuration.get(TOGGLE);
-
-        if (toggle == null || "".equals(toggle) || Boolean.parseBoolean(toggle)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(toggle == null || "".equals(toggle) || Boolean.parseBoolean(toggle));
     }
 
     private Gav buildPreviousGav(final Gav gav, final String previousVersion) {

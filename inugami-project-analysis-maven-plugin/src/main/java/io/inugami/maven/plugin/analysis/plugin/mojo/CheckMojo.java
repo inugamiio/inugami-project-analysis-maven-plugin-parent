@@ -330,8 +330,7 @@ public class CheckMojo extends AbstractMojo {
 
             final JarClassLoader dependenciesClassLoader = buildDependenciesClassLoader(listener);
             final Set<String>    dependencies            = new LinkedHashSet<>(getDependentClasspathElements());
-            final URL[]          urls                    = new URL[dependencies.size()];
-            final int            index                   = 0;
+            
             for (final String dependency : dependencies) {
                 dependenciesClassLoader.add(Paths.get(dependency).toUri().toURL());
             }

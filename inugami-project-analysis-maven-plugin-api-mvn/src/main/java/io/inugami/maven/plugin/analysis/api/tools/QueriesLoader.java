@@ -34,7 +34,7 @@ public final class QueriesLoader {
     // =========================================================================
     // API
     // =========================================================================
-    public synchronized static Set<QueryDefinition> loadQueries() {
+    public static synchronized  Set<QueryDefinition> loadQueries() {
         if (QUERIES.isEmpty()) {
             final List<QueryProducer> producers = SpiLoader.getInstance().loadSpiServicesByPriority(QueryProducer.class);
             if (producers != null) {

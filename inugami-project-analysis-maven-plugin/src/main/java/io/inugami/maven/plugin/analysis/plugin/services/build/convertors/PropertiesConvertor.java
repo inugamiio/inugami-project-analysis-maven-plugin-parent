@@ -26,7 +26,7 @@ import java.util.*;
 
 public class PropertiesConvertor implements PropertiesConvertorSpi {
 
-    public static final List<String> TYPES = Arrays.asList("properties", "text/x-java-properties");
+    private static final List<String> TYPES = Arrays.asList("properties", "text/x-java-properties");
 
 
     @Override

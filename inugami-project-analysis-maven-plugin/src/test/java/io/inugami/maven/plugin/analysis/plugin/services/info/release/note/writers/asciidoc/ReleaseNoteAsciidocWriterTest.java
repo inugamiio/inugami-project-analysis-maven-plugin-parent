@@ -18,7 +18,7 @@ import static io.inugami.commons.test.UnitTestHelper.*;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class ReleaseNoteAsciidocWriterTest {
+class ReleaseNoteAsciidocWriterTest {
     @Mock
     private InfoContext context;
 

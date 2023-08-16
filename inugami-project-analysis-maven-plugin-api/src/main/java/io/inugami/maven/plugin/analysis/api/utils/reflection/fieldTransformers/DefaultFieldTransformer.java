@@ -23,7 +23,7 @@ import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-
+@SuppressWarnings({"java:S120"})
 public class DefaultFieldTransformer implements FieldTransformer {
 
     // =========================================================================

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
-
+@SuppressWarnings({"java:S5838"})
 class QueryConfiguratorTest {
 
 

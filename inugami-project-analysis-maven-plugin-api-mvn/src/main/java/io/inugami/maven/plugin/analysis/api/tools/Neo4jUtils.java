@@ -67,9 +67,9 @@ public final class Neo4jUtils {
     public static Node buildArtifactVersion(final MavenProject project,
                                             final ConfigHandler<String, String> configuration) {
         final boolean useMavenProject = Boolean.parseBoolean(configuration.grabOrDefault("useMavenProject", "false"));
-        final Node artifactNode = useMavenProject ? buildNodeVersion(project)
+        return useMavenProject
+                ? buildNodeVersion(project)
                 : buildNodeVersion(buildGav(project, configuration));
-        return artifactNode;
     }
 
     public static Gav buildGav(final MavenProject project, final ConfigHandler<String, String> configuration) {
@@ -158,7 +158,7 @@ public final class Neo4jUtils {
                         .orElse(new ArrayList<>())
                         .stream()
                         .filter(Objects::nonNull)
-                        .filter(o -> o instanceof Relationship)
+                        .filter(Relationship.class::isInstance)
                         .map(o -> (Relationship) o)
                         .forEach(result::add);
             }
@@ -186,13 +186,12 @@ public final class Neo4jUtils {
         return result;
     }
 
-    public static <T> void ifPropertyNotNull(final String key, final org.neo4j.driver.types.Node node,
+    public static void ifPropertyNotNull(final String key, final org.neo4j.driver.types.Node node,
                                              final Consumer<Object> consumer) {
-        final String result = null;
         if (node != null) {
             final Map<String, Object> values = node.asMap();
             if (values != null && values.containsKey(key) && values.get(key) != null) {
-                consumer.accept((T) values.get(key));
+                consumer.accept(values.get(key));
             }
         }
     }

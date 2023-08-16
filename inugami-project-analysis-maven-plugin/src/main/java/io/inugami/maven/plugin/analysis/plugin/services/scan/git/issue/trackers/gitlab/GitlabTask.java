@@ -265,7 +265,7 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
             log.error(e.getMessage(), e);
         } finally {
             log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                      httpResult == null ? 0 : httpResult.getDelais());
+                      httpResult == null ? 0 : httpResult.getDelay());
             http.close();
         }
 

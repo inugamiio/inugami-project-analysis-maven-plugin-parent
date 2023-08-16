@@ -9,8 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-
-@SuppressWarnings({"java:S1854"})
+@SuppressWarnings({"java:S1854","java:S120"})
 public class ListFieldTransformer implements FieldTransformer {
 
     // =========================================================================

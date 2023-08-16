@@ -190,7 +190,6 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
     }
 
     private String extractName(final Value value) {
-        final Iterable<String> labels = null;
         Map<String, Object>    data   = null;
         if (value != null && !value.isNull()) {
             value.asNode().labels();
@@ -293,7 +292,7 @@ public class QueueInfo implements ProjectInformation, QueryConfigurator {
 
     private List<String> orderKeys(final Collection<String> keySet) {
         final List<String> result = new ArrayList<>(keySet);
-        result.sort((ref, value) -> ref.compareTo(value));
+        result.sort(Comparable::compareTo);
         return result;
     }
 

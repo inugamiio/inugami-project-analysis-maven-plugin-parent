@@ -35,11 +35,11 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.front.api.RenderingConstants.*;
 
-@SuppressWarnings({"java:S6395"})
+@SuppressWarnings({"java:S6395", "java:S6353"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HtmlRenderingUtils {
-    public static Pattern XML_ATTRIBUTE = Pattern.compile(
+    public static final Pattern XML_ATTRIBUTE = Pattern.compile(
             "(\\s*((?:(?:[a-zA-Z0-9-]+:){0,1}[a-zA-Z0-9-]+)\\s*=\\s*\\\"([^\\\"]+)\\\"))");
 
     // =========================================================================

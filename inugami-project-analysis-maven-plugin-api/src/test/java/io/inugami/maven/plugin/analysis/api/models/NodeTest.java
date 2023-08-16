@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static io.inugami.commons.test.UnitTestHelper.assertDto;
 import static org.assertj.core.api.Assertions.assertThat;
-
+@SuppressWarnings({"java:S5838"})
 class NodeTest {
 
     @Test

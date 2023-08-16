@@ -307,7 +307,7 @@ public final class Neo4jRenderingUtils {
         final List<String> result = new ArrayList<>();
         if (values != null) {
             result.addAll(values);
-            result.sort((ref, value) -> ref.compareTo(value));
+            result.sort(Comparable::compareTo);
         }
         return result;
     }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BasicBuildServiceTest {
+class BasicBuildServiceTest {
 
 
     @Test

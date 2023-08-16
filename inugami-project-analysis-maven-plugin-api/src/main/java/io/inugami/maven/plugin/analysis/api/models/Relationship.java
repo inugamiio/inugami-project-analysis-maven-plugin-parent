@@ -42,7 +42,7 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     private String                              to;
     @EqualsAndHashCode.Include
     private String                              type;
-    private LinkedHashMap<String, Serializable> properties;
+    private Map<String, Serializable> properties;
 
     public void sort() {
         properties = sortProperties(properties);
@@ -61,7 +61,7 @@ public class Relationship implements JsonObject, Comparable<Relationship> {
     }
 
     public static class RelationshipBuilder {
-        private LinkedHashMap<String, Serializable> properties;
+        private Map<String, Serializable> properties;
 
         public Relationship.RelationshipBuilder property(final String key, final Serializable value) {
             if (this.properties == null) {
