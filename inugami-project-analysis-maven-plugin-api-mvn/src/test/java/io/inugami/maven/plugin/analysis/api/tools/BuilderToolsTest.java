@@ -32,7 +32,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.extractTag;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
-@SuppressWarnings({"java:S5838","java:S5838"})
+@SuppressWarnings({"java:S5838","java:S5838","java:S5853"})
 @ExtendWith(MockitoExtension.class)
 class BuilderToolsTest {
 

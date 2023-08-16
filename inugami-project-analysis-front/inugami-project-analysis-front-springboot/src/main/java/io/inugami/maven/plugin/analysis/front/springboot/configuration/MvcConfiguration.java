@@ -32,7 +32,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicReference;
-
+@SuppressWarnings({"java:S1075"})
 @Slf4j
 @EnableWebMvc
 @Configuration

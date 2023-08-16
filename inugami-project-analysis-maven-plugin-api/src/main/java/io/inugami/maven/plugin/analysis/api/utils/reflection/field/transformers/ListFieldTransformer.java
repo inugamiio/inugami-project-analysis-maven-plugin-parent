@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
+package io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers;
 
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ClassCursor;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.FieldTransformer;

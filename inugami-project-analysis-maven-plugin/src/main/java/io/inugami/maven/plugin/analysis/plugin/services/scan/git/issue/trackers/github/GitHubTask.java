@@ -40,7 +40,7 @@ import java.util.concurrent.Callable;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.*;
-
+@SuppressWarnings({"java:S1301"})
 @Slf4j
 @RequiredArgsConstructor
 public class GitHubTask implements Callable<ScanNeo4jResult> {
@@ -115,7 +115,6 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
     }
 
     private Node processIssue(final Map<String, String> headers, final ScanNeo4jResult resultNeo4J) {
-        final Node          result  = null;
         final StringBuilder fullUrl = new StringBuilder();
         fullUrl.append(url);
         fullUrl.append("/issues/");

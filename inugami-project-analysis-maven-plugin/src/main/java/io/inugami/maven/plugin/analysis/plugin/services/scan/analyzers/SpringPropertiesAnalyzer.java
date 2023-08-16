@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeVersion;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
-@SuppressWarnings({"java:S6397", "java:S6395"})
+@SuppressWarnings({"java:S6397", "java:S6395","java:S6353"})
 @Slf4j
 public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
@@ -98,7 +98,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     private static final String                              CONSTRAINT_TYPE            = "constraintType";
     private static final List<BeanPropertyTypeResolver>      TYPE_RESOLVERS             = SpiLoader.getInstance().loadSpiServicesByPriority(BeanPropertyTypeResolver.class);
     private static final CyclicClassesResolver               CYCLIC_CLASSES_RESOLVER    = (CyclicClassesResolver) TYPE_RESOLVERS.stream()
-                                                                                                                                .filter(service -> service instanceof CyclicClassesResolver)
+                                                                                                                                .filter( CyclicClassesResolver.class::isInstance)
                                                                                                                                 .findFirst()
                                                                                                                                 .get();
     private static final List<ConstraintInformationResolver> CONSTRAINTS_INFO_RESOLVERS = SpiLoader.getInstance().loadSpiServicesByPriority(ConstraintInformationResolver.class);
@@ -158,8 +158,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // =========================================================================
     private Set<Node> searchOnClass(final Class<?> clazz) {
         final Set<Node> result = new LinkedHashSet<>();
-        final Set<Node> nodes = ifHasAnnotation(clazz, ConditionalOnProperty.class,
-                                                annotation -> this.mapToNode(annotation));
+        final Set<Node> nodes = ifHasAnnotation(clazz, ConditionalOnProperty.class,this::mapToNode);
 
 
         final Set<Node> nodesBeanProperties = ifHasAnnotation(clazz, ConfigurationProperties.class,
@@ -223,7 +222,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
 
     private void searchInMethod(final Set<Node> nodes, final Set<Node> conditionalProperties, final Method method) {
         final Set<Node> nodesConditionals = ifHasAnnotation(method, ConditionalOnProperty.class,
-                                                            annotation -> this.mapToNode(annotation));
+                                                            this::mapToNode);
         if (nodesConditionals != null) {
             conditionalProperties.addAll(nodesConditionals);
         }
@@ -406,9 +405,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     }
 
     public void addConstraints(final Field field, final Node node) {
-        final boolean      result      = false;
         final Annotation[] annotations = field.getDeclaredAnnotations();
-
         resolveConstraints(node, annotations);
     }
 
@@ -440,7 +437,7 @@ public class SpringPropertiesAnalyzer implements ClassAnalyzer {
     // TOOLS
     // =========================================================================
     public boolean setShortName(final Class<?> clazz) {
-        return clazz == null ? true : SHORT_NAME.contains(clazz);
+        return SHORT_NAME.contains(clazz);
     }
 
 

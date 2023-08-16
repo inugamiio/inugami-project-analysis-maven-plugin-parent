@@ -31,7 +31,7 @@ public final class IssueTrackerCommons {
     // =========================================================================
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Getter
-    public static enum TicketType {
+    public enum TicketType {
         MERGE_REQUEST("MergeRequest", "pr_"),
         ISSUE("Issue", "issue_"),
         ISSUE_LABEL("IssueLabel", "issue_label_");

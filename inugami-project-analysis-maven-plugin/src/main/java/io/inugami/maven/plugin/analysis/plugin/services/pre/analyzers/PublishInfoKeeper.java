@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.plugin.services.preAnalyzers;
+package io.inugami.maven.plugin.analysis.plugin.services.pre.analyzers;
 
 import io.inugami.api.processors.ConfigHandler;
 import io.inugami.configuration.services.ConfigHandlerHashMap;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 import static io.inugami.maven.plugin.analysis.api.tools.Neo4jUtils.getRelationship;
 
-@SuppressWarnings({"java:S6213"})
+@SuppressWarnings({"java:S6213","java:S3626"})
 @Slf4j
 public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator {
 
@@ -114,11 +114,5 @@ public class PublishInfoKeeper implements ProjectPreAnalyzer, QueryConfigurator 
 
         return result;
     }
-    // =========================================================================
-    // OVERRIDES
-    // =========================================================================
 
-    // =========================================================================
-    // GETTERS & SETTERS
-    // =========================================================================
 }

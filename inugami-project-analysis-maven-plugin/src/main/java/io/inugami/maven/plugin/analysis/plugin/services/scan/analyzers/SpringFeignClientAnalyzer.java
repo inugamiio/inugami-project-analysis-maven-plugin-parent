@@ -102,7 +102,7 @@ public class SpringFeignClientAnalyzer extends SpringRestControllersAnalyzer imp
     // =========================================================================
     @Override
     protected String getApiName(final Class<?> clazz) {
-        return ifHasAnnotation(clazz, FeignClient.class, FeignClient::name, () -> clazz.getSimpleName());
+        return ifHasAnnotation(clazz, FeignClient.class, FeignClient::name, clazz::getSimpleName);
     }
 
     @Override

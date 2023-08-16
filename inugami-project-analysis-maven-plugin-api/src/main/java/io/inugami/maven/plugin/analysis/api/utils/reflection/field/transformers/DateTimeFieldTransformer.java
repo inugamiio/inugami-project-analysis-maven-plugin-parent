@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
+package io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ClassCursor;

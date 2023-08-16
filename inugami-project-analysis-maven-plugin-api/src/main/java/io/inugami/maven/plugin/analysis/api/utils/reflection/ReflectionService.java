@@ -25,7 +25,7 @@ import io.inugami.maven.plugin.analysis.annotations.ExposedAs;
 import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

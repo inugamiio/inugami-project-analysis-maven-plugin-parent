@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 
-@SuppressWarnings({"java:S5998", "java:S5361", "java:S5852","java:S5852"})
+@SuppressWarnings({"java:S5998", "java:S5361", "java:S5852","java:S5852","java:S6353","java:S1210"})
 @Getter
 public class TagRefName implements Comparable<TagRefName> {
 

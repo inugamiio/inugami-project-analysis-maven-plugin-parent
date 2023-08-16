@@ -101,7 +101,7 @@ public class GlossaryAnalyzer implements ClassAnalyzer {
                 final Glossaries glossaries = getAnnotation(field, Glossaries.class);
                 if (glossaries.value() != null) {
                     for (final Glossary glossary : glossaries.value()) {
-                        nodes.add(buildNode(field, getAnnotation(field, Glossary.class)));
+                        nodes.add(buildNode(field, glossary));
                     }
                 }
             }

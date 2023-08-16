@@ -301,7 +301,6 @@ public class DefaultNeo4jDao implements Neo4jDao {
                 public Node execute(final Transaction tx) {
 
                     final Result statementResult = tx.run(query);
-                    final Node   result          = null;
                     List<Record> resultSet       = null;
                     if (statementResult != null) {
                         resultSet = statementResult.list();

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inugami.api.tools.StringTools;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
+import io.inugami.commons.connectors.HttpRequest;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
@@ -38,6 +39,7 @@ import java.util.concurrent.Callable;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.*;
 
+@SuppressWarnings({"java:S1301"})
 @Slf4j
 @RequiredArgsConstructor
 public class GitlabTask implements Callable<ScanNeo4jResult> {
@@ -105,7 +107,6 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
     // =========================================================================
     private Node processIssue(final Map<String, String> headers, final ObjectMapper objectMapper,
                               final ScanNeo4jResult resultNeo4J) {
-        final Node          result  = null;
         final StringBuilder fullUrl = new StringBuilder();
         fullUrl.append(url);
         fullUrl.append("/issues/");
@@ -119,7 +120,7 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
         Node result = null;
         if (json != null) {
             final String name = IssueTrackerCommons.TicketType.ISSUE.getNodePrefix() +
-                    extract(FIELD_IID, json);
+                                extract(FIELD_IID, json);
             final String                              uid        = projectSha + "_" + name;
             final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
             processIfNotNull(extract(UUID, json), value -> properties.put(UUID, value));
@@ -254,13 +255,19 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
         return result;
     }
 
-    protected static JsonNode processCallGitLab(final String fullUrl, final Map<String, String> headers, final ObjectMapper objectMapper, JsonNode result) {
+    protected static JsonNode processCallGitLab(final String fullUrl,
+                                                final Map<String, String> headers,
+                                                final ObjectMapper objectMapper,
+                                                JsonNode result) {
         HttpConnectorResult      httpResult = null;
         final HttpBasicConnector http       = new HttpBasicConnector();
         try {
             log.info("calling {}", fullUrl);
 
-            httpResult = http.get(fullUrl, headers);
+            httpResult = http.get(HttpRequest.builder()
+                                             .url(fullUrl)
+                                             .headers(headers)
+                                             .build());
         } catch (final Exception e) {
             log.error(e.getMessage(), e);
         } finally {
