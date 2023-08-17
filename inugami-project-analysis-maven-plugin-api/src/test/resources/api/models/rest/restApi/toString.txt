@@ -1,0 +1,1 @@
+RestApi(name=Lorem ipsum dolor sit amet, consectetur adipiscing elit, baseContext=http://mock.inmugami.io/api)

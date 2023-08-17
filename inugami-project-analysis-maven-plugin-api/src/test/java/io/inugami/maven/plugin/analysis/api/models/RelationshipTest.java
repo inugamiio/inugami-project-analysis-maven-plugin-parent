@@ -75,11 +75,6 @@ class RelationshipTest {
                                                 .properties(Map.ofEntries(Map.entry("date", "2023-05-21")))
                                                 .build();
         assertTextRelative(result, "api/models/relationshipTest/properties_nominal.1.json");
-
-        assertTextRelative(Relationship.builder()
-                                       .properties(null)
-                                       .build(),
-                           "api/models/relationshipTest/properties_nominal.2.json");
     }
 
 

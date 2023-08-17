@@ -72,7 +72,7 @@ public final class Relationship implements JsonObject, Comparable<Relationship> 
             return this;
         }
 
-        public Relationship.RelationshipBuilder Rproperties(final Map<String, Serializable> properties) {
+        public Relationship.RelationshipBuilder properties(final Map<String, Serializable> properties) {
             if (this.properties == null) {
                 this.properties = new LinkedHashMap<>();
             }

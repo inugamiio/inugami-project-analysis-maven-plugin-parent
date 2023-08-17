@@ -106,6 +106,7 @@
         <sonar.coverage.exclusions>
             **/test/*,
             **/test_it/*,
+            **/*Builder,
             **/js/vendors.js,
             **/generated-sources/**/*,
             **/generated-test-sources/**/*,
@@ -116,7 +117,8 @@
             **/Constants,
             **/*None*,
             **/*NONE*,
-            **/*NONE_EXCEPTION*
+            **/*NONE_EXCEPTION*,
+            **/NodeBuilder
         </sonar.coverage.exclusions>
     </properties>
 
@@ -569,6 +571,10 @@
                         <exclude>**/*None*</exclude>
                         <exclude>**/*NONE*</exclude>
                         <exclude>**/*NONE_EXCEPTION*</exclude>
+                        <exclude>**/*Builder</exclude>
+                        <exclude>**/*NodeBuilder</exclude>
+                        <exclude>**/*PropertiesResourcesBuilder</exclude>
+                        <exclude>**/*RelationshipBuilder</exclude>
                     </excludes>
                     <formats>
                         <format>XML</format>

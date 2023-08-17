@@ -23,29 +23,27 @@ import java.util.Collections;
 import java.util.List;
 
 
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 @Builder(toBuilder = true)
-public class RestApi implements JsonObject {
-    private static final long               serialVersionUID = 2101356331716509852L;
-    private final        String             name;
-    private final        String             description;
-    private final        String             baseContext;
-    private final        List<RestEndpoint> endpoints;
+public final class RestApi implements JsonObject {
+    private static final long serialVersionUID = 2101356331716509852L;
+
+    @ToString.Include
+    private String             name;
+    private String             description;
+    @ToString.Include
+    private String             baseContext;
+    @EqualsAndHashCode.Include
+    private List<RestEndpoint> endpoints;
 
     public RestApi orderEndPoint() {
         if (endpoints != null) {
-            Collections.sort(endpoints, (ref, value) -> {
-                int result = 0;
-                if (value.getUri() != null && value.getUri().equals(ref.getUri())) {
-                    result = String.valueOf(value.getVerb()).compareTo(String.valueOf(ref.getVerb()));
-                } else {
-                    result = String.valueOf(value.getUri()).compareTo(String.valueOf(ref.getUri()));
-                }
-                return result;
-            });
+            Collections.sort(endpoints);
         }
         return this;
     }

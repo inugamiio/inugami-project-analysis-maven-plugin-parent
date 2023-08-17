@@ -17,31 +17,40 @@
 package io.inugami.maven.plugin.analysis.api.utils;
 
 import io.inugami.api.loggers.Loggers;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.ehcache.impl.internal.concurrent.ConcurrentHashMap;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
 
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class CacheUtils {
+
+@UtilityClass
+public class CacheUtils {
 
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
     private static final Map<String, Object> CACHES = new ConcurrentHashMap<>();
 
+    protected static Map<String, Object> getCaches() {
+        return CACHES;
+    }
+
     // =========================================================================
     // API
     // =========================================================================
     public static synchronized void put(final String key,
                                         final Object value) throws CacheWritingException {
-        Loggers.CACHE.debug("push to cache : {}", key);
-        CACHES.put(key, value);
+        if (key != null && value != null) {
+            Loggers.CACHE.debug("push to cache : {}", key);
+            CACHES.put(key, value);
+        }
     }
 
     public static <T> T get(final String key) {
+        if (key == null) {
+            return null;
+        }
         return (T) CACHES.get(key);
     }
 

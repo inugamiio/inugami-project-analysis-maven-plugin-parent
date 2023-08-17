@@ -1,0 +1,34 @@
+{
+  "getBody" : "{\"name\":\"String\"}",
+  "getBodyRequireOnly" : "{}",
+  "getConsume" : "application/json",
+  "getDescription" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  "getDescriptionDetail" : {
+    "content" : "Suspendisse in quam in felis mollis ullamcorper ac in lectus",
+    "example" : "Nulla non leo vitae nunc aliquam mollis",
+    "potentialErrors" : [ {
+      "description" : "Suspendisse in quam in felis mollis ullamcorper ac in lectus",
+      "errorCode" : "ERR-1",
+      "errorCodeClass" : "io.inugami.api.exceptions.UncheckedException",
+      "errorMessage" : "sorry some error occurs",
+      "errorMessageDetail" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      "example" : "Nulla non leo vitae nunc aliquam mollis",
+      "httpStatus" : 400,
+      "payload" : "{\"error\":\"String\"}",
+      "throwsAs" : "java.lang.RuntimeException",
+      "type" : "functional",
+      "url" : "http://mock.inmugami.io/doc/errors#ERR-1"
+    } ],
+    "url" : "http://mock.inmugami.io/doc"
+  },
+  "getHeaders" : "x-correlation-id",
+  "getMethod" : "POST",
+  "getNickname" : "create",
+  "getProduce" : "application/json",
+  "getResponseType" : "{\"id\":\"long\",\"name\":\"String\"}",
+  "getResponseTypeRequireOnly" : "{\"id\":\"long\"}",
+  "getUid" : "bb895294-efe7-484b-b670-14d004eaf461",
+  "getUri" : "http://mock.inmugami.io",
+  "getVerb" : "POST",
+  "isDeprecated" : true
+}

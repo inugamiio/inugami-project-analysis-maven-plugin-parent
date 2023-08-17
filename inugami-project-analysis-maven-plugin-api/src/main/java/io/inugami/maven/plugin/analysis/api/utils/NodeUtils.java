@@ -28,6 +28,8 @@ import java.util.function.Consumer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NodeUtils {
 
+    public static final String NULL = "null";
+
     // =========================================================================
     // API
     // =========================================================================
@@ -69,7 +71,7 @@ public class NodeUtils {
     }
 
     public static void processIfNotEmptyForce(final String value, final Consumer<String> consumer) {
-        if (value != null && !value.isEmpty() && !"null".equals(value) && consumer != null) {
+        if (value != null && !value.isEmpty() && !NULL.equals(value) && consumer != null) {
             consumer.accept(value);
         }
     }
