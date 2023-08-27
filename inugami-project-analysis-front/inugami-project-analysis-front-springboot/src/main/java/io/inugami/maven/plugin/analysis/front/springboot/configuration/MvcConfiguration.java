@@ -32,13 +32,14 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicReference;
-
+@SuppressWarnings({"java:S1075"})
 @Slf4j
 @EnableWebMvc
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
     public static final AtomicReference<String> CURRENT_PATH = new AtomicReference<>();
     public static final String                  SEP          = "/";
+    public static final String DEFAULT_PATH = "/release-note-app/";
     @Value("${server.servlet.context-path:#{null}}")
     private             String                  contextPath;
 
@@ -62,7 +63,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @PostConstruct
     public void init() {
         if (path == null) {
-            path = "/release-note-app/";
+            path = DEFAULT_PATH;
         }
         CURRENT_PATH.set(path);
         currentPath = path;

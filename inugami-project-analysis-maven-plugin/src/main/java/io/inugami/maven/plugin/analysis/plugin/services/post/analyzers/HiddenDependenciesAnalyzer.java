@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.plugin.services.postAnalyzers;
+package io.inugami.maven.plugin.analysis.plugin.services.post.analyzers;
 
 import io.inugami.api.models.data.basic.JsonObject;
 import io.inugami.maven.plugin.analysis.api.actions.ProjectPostAnalyzer;

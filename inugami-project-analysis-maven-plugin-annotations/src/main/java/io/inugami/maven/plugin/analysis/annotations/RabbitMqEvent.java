@@ -8,6 +8,7 @@ import java.lang.annotation.*;
 public @interface RabbitMqEvent {
     Class<?> value() default RabbitMqEvent.None.class;
 
+    @SuppressWarnings({"java:S2094"})
     public static class None {
 
     }

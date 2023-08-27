@@ -31,7 +31,7 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @NoArgsConstructor
 @Setter
 @Getter
-public class Resource {
+public final class Resource {
     @ToString.Include
     @EqualsAndHashCode.Include
     private String              target;

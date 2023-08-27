@@ -32,9 +32,7 @@ import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.EMPTY;
 import static io.inugami.maven.plugin.analysis.api.constant.Constants.SPACE;
-
-;
-
+@SuppressWarnings({"java:S1125"})
 public class PropertiesAsciidocWriter implements AsciidocInfoWriter {
 
 

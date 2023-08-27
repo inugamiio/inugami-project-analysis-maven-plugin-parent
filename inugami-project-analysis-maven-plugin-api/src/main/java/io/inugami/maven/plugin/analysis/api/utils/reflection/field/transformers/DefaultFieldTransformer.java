@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
+package io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers;
 
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ClassCursor;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.FieldTransformer;
@@ -23,7 +23,7 @@ import io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-
+@SuppressWarnings({"java:S120"})
 public class DefaultFieldTransformer implements FieldTransformer {
 
     // =========================================================================

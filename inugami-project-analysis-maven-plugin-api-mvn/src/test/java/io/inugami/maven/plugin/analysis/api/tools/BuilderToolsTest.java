@@ -32,7 +32,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.*;
 import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.extractTag;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
-
+@SuppressWarnings({"java:S5838","java:S5838","java:S5853"})
 @ExtendWith(MockitoExtension.class)
 class BuilderToolsTest {
 
@@ -121,7 +121,7 @@ class BuilderToolsTest {
 
         final Map<String, Serializable> result = BuilderTools.buildMoreInformation(json);
         assertThat(result).isNotEmpty();
-        assertThat(result.size()).isEqualTo(7);
+        assertThat(result).hasSize(7);
 
         assertThat(result.get("projectType")).isEqualTo("microservice");
         assertThat(result.get("jdk")).isEqualTo("11");

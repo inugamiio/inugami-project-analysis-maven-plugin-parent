@@ -19,7 +19,6 @@ package io.inugami.maven.plugin.analysis.plugin.services.info.release.note.write
 import edu.emory.mathcs.backport.java.util.Collections;
 import io.inugami.api.models.JsonBuilder;
 import io.inugami.api.models.data.basic.JsonObject;
-import io.inugami.api.processors.ConfigHandler;
 import io.inugami.maven.plugin.analysis.api.models.Gav;
 import io.inugami.maven.plugin.analysis.api.models.InfoContext;
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Differential;
@@ -33,6 +32,10 @@ import java.util.List;
 
 public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
 
+    public static final String PROJECT_DEPENDENCIES = "project_dependencies";
+    public static final String TITLE = "Project dependencies";
+    public static final String PROPERTY_ENABLED = "io.inugami.maven.plugin.analysis.asciidoc.dependenciesProjects.enabled";
+
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
@@ -42,16 +45,16 @@ public class DependenciesProjectAsciidocWriter implements AsciidocInfoWriter {
     }
 
     protected String getParagraphBaseName() {
-        return "project_dependencies";
+        return PROJECT_DEPENDENCIES;
     }
 
     protected String getParagraphBaseTitle() {
-        return "Project dependencies";
+        return TITLE;
     }
 
     @Override
     public String getfeatureName() {
-        return "io.inugami.maven.plugin.analysis.asciidoc.dependenciesProjects.enabled";
+        return PROPERTY_ENABLED;
     }
 
     // =========================================================================

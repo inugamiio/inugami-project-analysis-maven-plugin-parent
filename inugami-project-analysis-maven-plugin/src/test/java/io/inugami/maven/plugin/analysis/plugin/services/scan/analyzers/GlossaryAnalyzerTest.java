@@ -20,7 +20,7 @@ import static io.inugami.commons.test.UnitTestHelper.assertTextRelative;
 import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
-public class GlossaryAnalyzerTest {
+class GlossaryAnalyzerTest {
     @Mock
     private MavenProject mavenProject;
     @Mock

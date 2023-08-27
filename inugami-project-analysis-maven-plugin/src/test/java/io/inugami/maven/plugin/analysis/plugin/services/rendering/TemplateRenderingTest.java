@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class TemplateRenderingTest {
+class TemplateRenderingTest {
 
     @Test
     void rendering_nominal_shouldRendered() {

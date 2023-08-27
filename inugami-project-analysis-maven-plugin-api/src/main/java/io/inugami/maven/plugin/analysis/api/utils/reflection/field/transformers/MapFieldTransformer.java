@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
+package io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers;
 
 import io.inugami.maven.plugin.analysis.api.utils.reflection.*;
 
@@ -7,7 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-@SuppressWarnings({"java:S1854"})
+@SuppressWarnings({"java:S1854","java:S120"})
 public class MapFieldTransformer implements FieldTransformer {
 
 

@@ -26,6 +26,6 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Include {
+public final class Include {
     private String include;
 }

@@ -52,7 +52,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeV
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.*;
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.*;
 
-@SuppressWarnings({"java:S1845", "java:S5361", "java:S115"})
+@SuppressWarnings({"java:S1845", "java:S5361", "java:S115", "java:S1611"})
 @Slf4j
 public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     public static final String FEATURE_NAME = "inugami.maven.plugin.analysis.analyzer.restControllers";
@@ -275,11 +275,11 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         json.addField(URI).valueQuot(endpoint.getUri()).addSeparator();
 
         //@formatter:off
-        processIfNotNull(endpoint.getHeaders(), (value) -> json.addField(HEADER).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getConsume(), (value) -> json.addField(ACCEPT).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getProduce(), (value) -> json.addField(CONTENT_TYPE).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getBodyRequireOnly(), (value) -> json.addField(REQUEST_PAYLOAD).valueQuot(value).addSeparator());
-        processIfNotNull(endpoint.getResponseTypeRequireOnly(), (value) -> json.addField(RESPONSE_PAYLOAD).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getHeaders(), value -> json.addField(HEADER).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getConsume(), value -> json.addField(ACCEPT).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getProduce(), value -> json.addField(CONTENT_TYPE).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getBodyRequireOnly(), value -> json.addField(REQUEST_PAYLOAD).valueQuot(value).addSeparator());
+        processIfNotNull(endpoint.getResponseTypeRequireOnly(), value -> json.addField(RESPONSE_PAYLOAD).valueQuot(value).addSeparator());
         //@formatter:on
 
         return json.toString()
@@ -310,14 +310,14 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         result.put(IDENTIFIER, identifier);
 
         //@formatter:off
-        processIfNotEmpty(endpoint.getNickname(), (value) -> result.put(NICKNAME, value));
-        processIfNotEmpty(endpoint.getMethod(), (value) -> result.put(METHOD, value));
-        processIfNotEmpty(endpoint.getHeaders(), (value) -> result.put(HEADER, value));
-        processIfNotEmpty(endpoint.getConsume(), (value) -> result.put(ACCEPT, value));
-        processIfNotEmpty(endpoint.getProduce(), (value) -> result.put(CONTENT_TYPE, value));
-        processIfNotEmpty(endpoint.getBody(), (value) -> result.put(REQUEST_PAYLOAD, value));
-        processIfNotEmpty(endpoint.getResponseType(), (value) -> result.put(RESPONSE_PAYLOAD, value));
-        processIfNotEmpty(endpoint.getDescription(), (value) -> result.put(DESCRIPTION, value));
+        processIfNotEmpty(endpoint.getNickname(), value -> result.put(NICKNAME, value));
+        processIfNotEmpty(endpoint.getMethod(), value -> result.put(METHOD, value));
+        processIfNotEmpty(endpoint.getHeaders(), value -> result.put(HEADER, value));
+        processIfNotEmpty(endpoint.getConsume(), value -> result.put(ACCEPT, value));
+        processIfNotEmpty(endpoint.getProduce(), value -> result.put(CONTENT_TYPE, value));
+        processIfNotEmpty(endpoint.getBody(), value -> result.put(REQUEST_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getResponseType(), value -> result.put(RESPONSE_PAYLOAD, value));
+        processIfNotEmpty(endpoint.getDescription(), value -> result.put(DESCRIPTION, value));
         //@formatter:on
 
         return result;
@@ -370,7 +370,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     }
 
     protected String getApiName(final Class<?> clazz) {
-        return ifHasAnnotation(clazz, Api.class, Api::value, () -> clazz.getSimpleName());
+        return ifHasAnnotation(clazz, Api.class, Api::value, clazz::getSimpleName);
     }
 
 
@@ -406,7 +406,7 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
     private RestEndpoint resolveEndpoint(final Method method, final String baseContext, final Class<?> clazz) {
         final RestEndpoint.RestEndpointBuilder builder = RestEndpoint.builder();
 
-        processOnAnnotation(method, RequestMapping.class, (annotation) -> {
+        processOnAnnotation(method, RequestMapping.class,(annotation) -> {
             builder.verb(renderVerb(annotation.method()));
             builder.consume(String.join(SEPARATOR, annotation.consumes()));
             builder.produce(String.join(SEPARATOR, annotation.consumes()));
@@ -513,9 +513,8 @@ public class SpringRestControllersAnalyzer implements ClassAnalyzer {
         }
 
         result.add(currentBaseContext);
-        for (final String path : paths) {
-            result.add(path);
-        }
+        result.addAll(Arrays.asList(paths));
+
         return String.join(EMPTY, result).replaceAll(DOUBLE_URL_SEP, URI_SEP);
     }
 

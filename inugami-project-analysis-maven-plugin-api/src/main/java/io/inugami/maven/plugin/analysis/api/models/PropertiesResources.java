@@ -30,19 +30,19 @@ import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.sortPropertie
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PropertiesResources {
+public final class PropertiesResources {
 
     @EqualsAndHashCode.Include
     private String type;
 
-    private String                        encoding;
+    private String              encoding;
     @EqualsAndHashCode.Include
-    private String                        propertiesPath;
-    private String                        propertiesUrl;
+    private String              propertiesPath;
+    private String              propertiesUrl;
     @ToString.Exclude
-    private String                        propertiesUrlAuthorization;
+    private String              propertiesUrlAuthorization;
     @ToString.Exclude
-    private LinkedHashMap<String, String> properties;
+    private Map<String, String> properties;
 
     public static class PropertiesResourcesBuilder {
 

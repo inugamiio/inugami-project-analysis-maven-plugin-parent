@@ -137,7 +137,7 @@ public class ErrorDisplay implements ProjectInformation, QueryConfigurator {
 
         final String type = retrieve(ERROR_TYPE, error);
         if (type != null) {
-            applyIfNotNull(resolveColor(type), color -> dataRow.setRowColor(color));
+            applyIfNotNull(resolveColor(type), dataRow::setRowColor);
         }
 
         final Map<String, Object> properties = error.asMap();

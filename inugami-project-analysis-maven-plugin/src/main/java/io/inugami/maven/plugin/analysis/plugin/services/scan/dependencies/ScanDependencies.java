@@ -93,7 +93,7 @@ public class ScanDependencies implements ProjectScanner {
     private String chooseRelationshiptType(final String currentGroupId,
                                            final Gav gav,
                                            final List<String> projectBaseNames) {
-        if (gav.getScope() != null && gav.getScope().toLowerCase().equals(SCOPE_TEST)) {
+        if (gav.getScope() != null && gav.getScope().equalsIgnoreCase(SCOPE_TEST)) {
             return TEST_DEPENDENCY;
         }
         boolean projectDependency = false;

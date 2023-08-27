@@ -3,6 +3,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
 import io.inugami.commons.connectors.HttpConnectorResultBuilder;
+import io.inugami.commons.connectors.HttpRequest;
 import io.inugami.commons.test.UnitTestHelper;
 import io.inugami.maven.plugin.analysis.api.connectors.HttpConnectorBuilder;
 import io.inugami.maven.plugin.analysis.api.models.ScanNeo4jResult;
@@ -19,8 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.lenient;
 
 @SuppressWarnings({"java:S5976"})
@@ -37,15 +37,13 @@ class JiraTaskTest {
     public void setup() throws Exception {
         lenient().when(httpConnectorBuilder.buildHttpConnector()).thenReturn(httpConnector);
 
-        lenient().when(httpConnector.get(anyString(), anyMap())).thenAnswer(new Answer<HttpConnectorResult>() {
-            @Override
-            public HttpConnectorResult answer(final InvocationOnMock invocationOnMock) throws Throwable {
+        lenient().when(httpConnector.get(any(HttpRequest.class))).thenAnswer(invocationOnMock-> {
                 HttpConnectorResult result = null;
-                final Object        url    = invocationOnMock.getArgument(0);
-                if (url != null) {
+                final HttpRequest        request    = invocationOnMock.getArgument(0);
+                if (request.getUrl() != null) {
                     final HttpConnectorResultBuilder builder = new HttpConnectorResultBuilder();
 
-                    final String[] urlParts = String.valueOf(url).split("/");
+                    final String[] urlParts = String.valueOf(request.getUrl()).split("/");
                     final String   id       = urlParts[urlParts.length - 1];
 
                     String data = null;
@@ -55,7 +53,7 @@ class JiraTaskTest {
                     } catch (final Exception e) {
                     }
 
-                    builder.addUrl(String.valueOf(url));
+                    builder.addUrl(String.valueOf(request.getUrl()));
                     builder.addVerb("GET");
                     builder.addStatusCode(data == null ? 404 : 200);
                     builder.addContentType("application/json");
@@ -64,7 +62,6 @@ class JiraTaskTest {
                     result = builder.build();
                 }
                 return result;
-            }
         });
     }
 

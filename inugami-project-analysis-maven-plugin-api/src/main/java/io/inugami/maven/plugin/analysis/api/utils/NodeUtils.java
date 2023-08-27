@@ -28,20 +28,22 @@ import java.util.function.Consumer;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NodeUtils {
 
+    public static final String NULL = "null";
+
     // =========================================================================
     // API
     // =========================================================================
-    public static <K extends Comparable<K>, V> LinkedHashMap<K, V> sortProperties(final Map<K, V> properties) {
-        final LinkedHashMap<K, V> result = new LinkedHashMap<>();
+    public static <K extends Comparable<K>, V> Map<K, V> sortProperties(final Map<K, V> properties) {
+        final Map<K, V> result = new LinkedHashMap<>();
         if (properties == null) {
             return result;
         }
 
-        final LinkedHashMap<K, V> buffer = new LinkedHashMap<>();
+        final Map<K, V> buffer = new LinkedHashMap<>();
         buffer.putAll(properties);
 
 
-        final List<K> keys = new ArrayList<K>(buffer.keySet());
+        final List<K> keys = new ArrayList<>(buffer.keySet());
         Collections.sort(keys);
         for (final K key : keys) {
             result.put(key, buffer.get(key));
@@ -69,7 +71,7 @@ public class NodeUtils {
     }
 
     public static void processIfNotEmptyForce(final String value, final Consumer<String> consumer) {
-        if (value != null && !value.isEmpty() && !"null".equals(value) && consumer != null) {
+        if (value != null && !value.isEmpty() && !NULL.equals(value) && consumer != null) {
             consumer.accept(value);
         }
     }

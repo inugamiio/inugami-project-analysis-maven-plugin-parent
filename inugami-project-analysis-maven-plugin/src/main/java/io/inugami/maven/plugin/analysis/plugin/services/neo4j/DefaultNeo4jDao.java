@@ -28,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
 
 import java.io.Serializable;
@@ -300,7 +301,6 @@ public class DefaultNeo4jDao implements Neo4jDao {
                 public Node execute(final Transaction tx) {
 
                     final Result statementResult = tx.run(query);
-                    final Node   result          = null;
                     List<Record> resultSet       = null;
                     if (statementResult != null) {
                         resultSet = statementResult.list();

@@ -8,6 +8,7 @@ import java.lang.annotation.*;
 public @interface FeignClientDefinition {
     Class<?> value() default FeignClientDefinition.None.class;
 
+    @SuppressWarnings({"java:S2094"})
     public static class None {
     }
 }

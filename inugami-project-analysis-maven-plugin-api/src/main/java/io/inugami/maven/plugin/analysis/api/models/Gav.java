@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Gav implements JsonObject, Comparable<Gav> {
+public final class Gav implements JsonObject, Comparable<Gav> {
 
 
     // =========================================================================

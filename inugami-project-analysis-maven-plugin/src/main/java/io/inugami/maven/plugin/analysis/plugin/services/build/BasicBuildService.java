@@ -42,7 +42,7 @@ import static io.inugami.api.exceptions.Asserts.assertTrue;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_EXISTS;
 import static io.inugami.maven.plugin.analysis.plugin.services.build.exceptions.BasicBuildError.TEMPLATE_FILE_NOT_READABLE;
 
-@SuppressWarnings({"java:S2095", "java:S899", "java:S1068", "java:S4042", "java:S107", "java:S5042", "java:S1124"})
+@SuppressWarnings({"java:S2095", "java:S899", "java:S1068", "java:S4042", "java:S107", "java:S5042", "java:S1124", "java:S1612"})
 @Slf4j
 public class BasicBuildService {
 
@@ -392,7 +392,7 @@ public class BasicBuildService {
                            final boolean filtering,
                            final boolean mavenFiltering,
                            final List<String> textFiles)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         final byte[] buffer   = new byte[1024];
         final String fileName = entry.getName();
         final File   newFile  = buildFileEntry(target, fileName);
@@ -565,11 +565,7 @@ public class BasicBuildService {
     // TOOLS
     // =========================================================================
     private FileInputStream openFileInputStream(final File tomcatZip) throws IOException {
-        try {
-            return new FileInputStream(tomcatZip);
-        } catch (final FileNotFoundException e) {
-            throw e;
-        }
+        return new FileInputStream(tomcatZip);
     }
 
     private void close(final AutoCloseable closable) {

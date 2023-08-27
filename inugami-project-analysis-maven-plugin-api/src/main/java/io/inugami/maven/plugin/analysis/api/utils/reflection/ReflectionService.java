@@ -25,7 +25,7 @@ import io.inugami.maven.plugin.analysis.annotations.ExposedAs;
 import io.inugami.maven.plugin.analysis.annotations.PotentialError;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.rest.PotentialErrorDTO;
-import io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers.DefaultFieldTransformer;
+import io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers.DefaultFieldTransformer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,8 @@ import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionSe
         "java:S1125",
         "java:S135",
         "java:S119",
-        "java:S1125"})
+        "java:S1125",
+        "java:S3824"})
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReflectionService {
@@ -65,7 +66,7 @@ public final class ReflectionService {
     public static final  String                PAYLOAD        = "payload";
     public static final  String                STATUS_CODE    = "statusCode";
     public static final  String                NAME           = "name";
-    private static       ClassLoader           CLASS_LOADER   = null;
+    private static       ClassLoader           classLoader    = null;
     private static final Map<String, JsonNode> CACHE          = new LinkedHashMap<>();
     private static final List<Class<?>>        PRIMITIF_TYPES = List.of(
             boolean.class,
@@ -207,7 +208,8 @@ public final class ReflectionService {
         return result;
     }
 
-    private static boolean listHashAnnotation(final List<Class<? extends Annotation>> values, final Class<? extends Annotation> annotation) {
+    private static boolean listHashAnnotation(final List<Class<? extends Annotation>> values,
+                                              final Class<? extends Annotation> annotation) {
         if (values == null) {
             return false;
         }
@@ -268,7 +270,8 @@ public final class ReflectionService {
         }
     }
 
-    public static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement, final Class<A> annotationClass) {
+    public static <A extends Annotation, AE extends AnnotatedElement> A getAnnotation(final AE annotatedElement,
+                                                                                      final Class<A> annotationClass) {
         final List<Annotation> allAnnotations = new ArrayList<>();
 
         if (annotatedElement.getAnnotations() != null) {
@@ -293,7 +296,8 @@ public final class ReflectionService {
     }
 
     public static JsonNode renderParameterType(final Parameter parameter, final boolean strict) {
-        return parameter == null ? null : renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
+        return parameter ==
+               null ? null : renderType(parameter.getType(), parameter.getParameterizedType(), new ClassCursor(), strict);
     }
 
     public static JsonNode renderReturnType(final Method method) {
@@ -318,13 +322,14 @@ public final class ReflectionService {
         return renderType(type, genericReturnType, classCursor, true);
     }
 
+    @SuppressWarnings({"java:S3776"})
     public static JsonNode renderType(final Class<?> type,
                                       final Type genericReturnType,
                                       final ClassCursor classCursor,
                                       final boolean strict) {
         final String key = "class:" + (type == null ? "null" : type
                 .getName()) + ":" + (genericReturnType == null ? null : genericReturnType.getTypeName())
-                + ":strict " + strict;
+                           + ":strict " + strict;
 
         final ClassCursor cursor = classCursor == null ? new ClassCursor() : classCursor;
         JsonNode          result = CACHE.get(key);
@@ -346,7 +351,8 @@ public final class ReflectionService {
             }
             Type[] subTypes = ReflectionUtils.invokeMethod("getActualTypeArguments", types[0]);
 
-            final JsonNode childResult = renderType(currentClass, subTypes == null ? null : subTypes[subTypes.length - 1], new ClassCursor(), strict);
+            final JsonNode childResult = renderType(currentClass, subTypes == null ? null : subTypes[subTypes.length -
+                                                                                                     1], new ClassCursor(), strict);
             if (subTypes != null && subTypes.length > 1) {
                 final Class<?> keyClass = safeLoadClass(subTypes[0].getTypeName());
                 result = JsonNode.builder()
@@ -369,7 +375,12 @@ public final class ReflectionService {
         return result;
     }
 
-    private static JsonNode processRenderType(final Class<?> type, final Type genericReturnType, final boolean strict, final String key, final ClassCursor cursor, JsonNode result) {
+    private static JsonNode processRenderType(final Class<?> type,
+                                              final Type genericReturnType,
+                                              final boolean strict,
+                                              final String key,
+                                              final ClassCursor cursor,
+                                              JsonNode result) {
         final Class<?> returnClass = type;
 
         final ClassCursor cursorChildren = cursor.createNewContext(returnClass);
@@ -384,7 +395,10 @@ public final class ReflectionService {
         return result;
     }
 
-    private static JsonNode processRenderingGenericType(final Type genericReturnType, final boolean strict, final Class<?> returnClass, final ClassCursor cursorChildren) {
+    private static JsonNode processRenderingGenericType(final Type genericReturnType,
+                                                        final boolean strict,
+                                                        final Class<?> returnClass,
+                                                        final ClassCursor cursorChildren) {
         final JsonNode result;
         String         path       = null;
         final Type     returnType = genericReturnType;
@@ -418,7 +432,8 @@ public final class ReflectionService {
 
         }
         if (Loggers.DEBUG.isDebugEnabled()) {
-            Loggers.DEBUG.debug("json structure : {}\n{}", currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
+            Loggers.DEBUG.debug("json structure : {}\n{}",
+                                currentClass == null ? null : currentClass.getTypeName(), result.convertToJson());
         }
 
         return result;
@@ -574,11 +589,11 @@ public final class ReflectionService {
     }
 
     private static ClassLoader getClassloader() {
-        return CLASS_LOADER == null ? Thread.currentThread().getContextClassLoader() : CLASS_LOADER;
+        return classLoader == null ? Thread.currentThread().getContextClassLoader() : classLoader;
     }
 
-    public static synchronized void initializeClassloader(final ClassLoader classLoader) {
-        CLASS_LOADER = classLoader;
+    public static synchronized void initializeClassloader(final ClassLoader inputClassLoader) {
+        classLoader = inputClassLoader;
     }
 
 
@@ -676,7 +691,7 @@ public final class ReflectionService {
 
         Class<?> errorCodeClass = null;
         if (potentialErrorAnnotation.errorCodeClass() != PotentialError.NONE.class) {
-            errorCodeClass = safeLoadClass(potentialErrorAnnotation.errorCodeClass().getName(), CLASS_LOADER);
+            errorCodeClass = safeLoadClass(potentialErrorAnnotation.errorCodeClass().getName(), classLoader);
         }
 
         Object realErrorCode = null;

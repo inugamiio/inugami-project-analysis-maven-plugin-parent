@@ -1,0 +1,39 @@
+{
+  "baseContext" : "http://mock.inmugami.io/api",
+  "description" : "Suspendisse in quam in felis mollis ullamcorper ac in lectus",
+  "endpoints" : [ {
+    "body" : "{\"name\":\"String\"}",
+    "bodyRequireOnly" : "{}",
+    "consume" : "application/json",
+    "deprecated" : true,
+    "description" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    "descriptionDetail" : {
+      "content" : "Suspendisse in quam in felis mollis ullamcorper ac in lectus",
+      "example" : "Nulla non leo vitae nunc aliquam mollis",
+      "potentialErrors" : [ {
+        "description" : "Suspendisse in quam in felis mollis ullamcorper ac in lectus",
+        "errorCode" : "ERR-1",
+        "errorCodeClass" : "io.inugami.api.exceptions.UncheckedException",
+        "errorMessage" : "sorry some error occurs",
+        "errorMessageDetail" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+        "example" : "Nulla non leo vitae nunc aliquam mollis",
+        "httpStatus" : 400,
+        "payload" : "{\"error\":\"String\"}",
+        "throwsAs" : "java.lang.RuntimeException",
+        "type" : "functional",
+        "url" : "http://mock.inmugami.io/doc/errors#ERR-1"
+      } ],
+      "url" : "http://mock.inmugami.io/doc"
+    },
+    "headers" : "x-correlation-id",
+    "method" : "POST",
+    "nickname" : "create",
+    "produce" : "application/json",
+    "responseType" : "{\"id\":\"long\",\"name\":\"String\"}",
+    "responseTypeRequireOnly" : "{\"id\":\"long\"}",
+    "uid" : "bb895294-efe7-484b-b670-14d004eaf461",
+    "uri" : "http://mock.inmugami.io",
+    "verb" : "POST"
+  } ],
+  "name" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+}

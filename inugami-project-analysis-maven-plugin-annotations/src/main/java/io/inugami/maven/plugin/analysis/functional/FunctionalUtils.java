@@ -16,21 +16,15 @@
  */
 package io.inugami.maven.plugin.analysis.functional;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@UtilityClass
 public final class FunctionalUtils {
 
-    private FunctionalUtils(){
-    }
-
-
-    public static <T> void applyIfNotNull(T value, Consumer<T> consumer){
-        if(value != null  && consumer!=null){
-            consumer.accept(value);
-        }
-    }
 
     public static  void applyIfNotEmpty(String value, Consumer<String> consumer){
         if(value != null && !value.isEmpty() && consumer!=null){

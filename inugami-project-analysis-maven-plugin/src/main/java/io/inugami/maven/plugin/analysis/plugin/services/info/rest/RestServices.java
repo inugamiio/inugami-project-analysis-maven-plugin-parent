@@ -39,7 +39,7 @@ import org.neo4j.driver.types.Node;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-@SuppressWarnings({"java:S6213"})
+@SuppressWarnings({"java:S6213", "java:S1481"})
 @Slf4j
 public class RestServices implements ProjectInformation, QueryConfigurator {
 
@@ -268,24 +268,24 @@ public class RestServices implements ProjectInformation, QueryConfigurator {
               .line();
         result.write("\tuid:").write(endpoint.getUid()).line();
         NodeUtils.processIfNotEmptyForce(endpoint.getMethod(),
-                                         (value) -> result.write("\tMethod:").write(value).line());
+                                         value -> result.write("\tMethod:").write(value).line());
 
         NodeUtils.processIfNotEmptyForce(endpoint.getDescription(),
-                                         (value) -> result.write("\tDescription:").write(value).line());
+                                         value -> result.write("\tDescription:").write(value).line());
         NodeUtils
                 .processIfNotEmptyForce(endpoint.getHeaders(),
-                                        (value) -> result.write("\tHeader:").write(value).line());
+                                        value -> result.write("\tHeader:").write(value).line());
         NodeUtils
                 .processIfNotEmptyForce(endpoint.getConsume(),
-                                        (value) -> result.write("\tAccept:").write(value).line());
+                                        value -> result.write("\tAccept:").write(value).line());
         NodeUtils.processIfNotEmptyForce(endpoint.getProduce(),
-                                         (value) -> result.write("\tContent-Type:").write(value).line());
+                                         value -> result.write("\tContent-Type:").write(value).line());
         NodeUtils.processIfNotEmptyForce(endpoint.getBody(),
-                                         (value) -> result.write("\trequest payload:\n")
+                                         value -> result.write("\trequest payload:\n")
                                                           .write(spacePayload(value, "\t\t"))
                                                           .line());
         NodeUtils.processIfNotEmptyForce(endpoint.getResponseType(),
-                                         (value) -> result.write("\tresponse payload:\n")
+                                         value -> result.write("\tresponse payload:\n")
                                                           .write(spacePayload(value, "\t\t"))
                                                           .line());
 

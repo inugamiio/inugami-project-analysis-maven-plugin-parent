@@ -8,6 +8,7 @@ import java.lang.annotation.*;
 public @interface JmsEvent {
     Class<?> value() default JmsEvent.None.class;
 
+    @SuppressWarnings({"java:S2094"})
     public static class None {
 
     }

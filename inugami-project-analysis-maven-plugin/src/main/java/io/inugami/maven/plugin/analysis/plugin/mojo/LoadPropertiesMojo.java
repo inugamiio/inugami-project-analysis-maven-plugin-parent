@@ -35,7 +35,7 @@ import java.util.Map;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Mojo(name = "loadProperties", defaultPhase = LifecyclePhase.INSTALL)
-public class loadPropertiesMojo extends AbstractMojo {
+public class LoadPropertiesMojo extends AbstractMojo {
 
     // =========================================================================
     // ATTRIBUTES

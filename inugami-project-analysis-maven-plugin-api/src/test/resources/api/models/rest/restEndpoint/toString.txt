@@ -1,0 +1,1 @@
+RestEndpoint(uri=http://mock.inmugami.io, verb=POST)

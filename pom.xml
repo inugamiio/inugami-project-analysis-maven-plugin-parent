@@ -60,7 +60,7 @@
         <commons-io.version>2.5</commons-io.version>
 
         <!--[ io ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <io.inugami.version>3.2.5</io.inugami.version>
+        <io.inugami.version>3.3.0</io.inugami.version>
         <!--[ javax ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <!--[ org ]++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -102,6 +102,23 @@
             **/unit/test/dto/*.java,
             **/unit/test/marshaller/*.java
         </sonar.cpd.exclusions>
+        <sonar.coverage.exclusions>
+            **/test/*,
+            **/test_it/*,
+            **/*Builder,
+            **/js/vendors.js,
+            **/generated-sources/**/*,
+            **/generated-test-sources/**/*,
+            **/*DTOBuilder*,
+            **/*EntityBuilder*,
+            **/*Test*,
+            **/*Exception,
+            **/Constants,
+            **/*None*,
+            **/*NONE*,
+            **/*NONE_EXCEPTION*,
+            **/NodeBuilder
+        </sonar.coverage.exclusions>
     </properties>
 
 
@@ -550,6 +567,13 @@
                         <exclude>**/*Test*</exclude>
                         <exclude>**/*Exception</exclude>
                         <exclude>**/Constants</exclude>
+                        <exclude>**/*None*</exclude>
+                        <exclude>**/*NONE*</exclude>
+                        <exclude>**/*NONE_EXCEPTION*</exclude>
+                        <exclude>**/*Builder</exclude>
+                        <exclude>**/*NodeBuilder</exclude>
+                        <exclude>**/*PropertiesResourcesBuilder</exclude>
+                        <exclude>**/*RelationshipBuilder</exclude>
                     </excludes>
                     <formats>
                         <format>XML</format>
@@ -568,7 +592,7 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <phase>package</phase>
+                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>

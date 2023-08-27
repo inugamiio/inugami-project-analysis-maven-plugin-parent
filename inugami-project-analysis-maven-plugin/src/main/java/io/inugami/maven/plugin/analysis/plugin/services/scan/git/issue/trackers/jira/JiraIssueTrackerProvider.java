@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
-@SuppressWarnings({"java:S1845", "java:S6397", "java:S5852"})
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S5852", "java:S6353"})
 public class JiraIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
 
@@ -102,7 +102,7 @@ public class JiraIssueTrackerProvider implements IssueTrackerProvider, Propertie
             final Matcher matcher = REGEX.matcher(commitMessage);
             while (matcher.find()) {
                 final String issue = matcher.group(GRP_ISSUE);
-                processIfNotNull(issue, value -> result.add(value));
+                processIfNotNull(issue, result::add);
             }
         }
 

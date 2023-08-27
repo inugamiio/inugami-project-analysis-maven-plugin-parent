@@ -19,7 +19,7 @@ package io.inugami.maven.plugin.analysis.plugin.services.build.convertors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.inugami.api.exceptions.FatalException;
-import io.inugami.commons.marshaling.JsonMarshaller;
+import io.inugami.api.marshalling.JsonMarshaller;
 import io.inugami.maven.plugin.analysis.api.convertors.PropertiesConvertorSpi;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class JsonConvertor implements PropertiesConvertorSpi {
     // =========================================================================
     // ATTRIBUTES
     // =========================================================================
-    public static final List<String> TYPES = Arrays.asList("json",
+    private static final List<String> TYPES = Arrays.asList("json",
                                                            "application/json",
                                                            "application/x-javascript",
                                                            "text/javascript",

@@ -25,14 +25,12 @@ import io.inugami.maven.plugin.analysis.api.services.info.release.note.models.Re
 import io.inugami.maven.plugin.analysis.api.services.info.release.note.writers.asciidoc.AsciidocInfoWriter;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.extractors.EntitiesExtractor;
 import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.EntityDTO;
-import io.inugami.maven.plugin.analysis.plugin.services.info.release.note.models.ErrorCodeDTO;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.inugami.maven.plugin.analysis.api.tools.StringTools.orElse;
-import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 
 public class EntityAsciidocWriter implements AsciidocInfoWriter {
 

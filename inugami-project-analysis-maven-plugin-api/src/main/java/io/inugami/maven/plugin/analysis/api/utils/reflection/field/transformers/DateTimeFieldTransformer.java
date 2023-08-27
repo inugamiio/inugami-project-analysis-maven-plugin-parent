@@ -1,4 +1,4 @@
-package io.inugami.maven.plugin.analysis.api.utils.reflection.fieldTransformers;
+package io.inugami.maven.plugin.analysis.api.utils.reflection.field.transformers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.inugami.maven.plugin.analysis.api.utils.reflection.ClassCursor;
@@ -14,7 +14,7 @@ import java.util.Date;
 
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.getAnnotation;
 
-@SuppressWarnings({"java:S1854"})
+@SuppressWarnings({"java:S1854", "java:S120"})
 public class DateTimeFieldTransformer implements FieldTransformer {
 
     // =========================================================================

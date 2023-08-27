@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.inugami.api.tools.StringTools;
 import io.inugami.commons.connectors.HttpBasicConnector;
 import io.inugami.commons.connectors.HttpConnectorResult;
+import io.inugami.commons.connectors.HttpRequest;
 import io.inugami.maven.plugin.analysis.api.connectors.HttpConnectorBuilder;
 import io.inugami.maven.plugin.analysis.api.models.Node;
 import io.inugami.maven.plugin.analysis.api.models.Relationship;
@@ -42,6 +43,7 @@ import java.util.concurrent.Callable;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.*;
 
+@SuppressWarnings({"java:S1075"})
 @Slf4j
 @RequiredArgsConstructor
 public class JiraTask implements Callable<ScanNeo4jResult> {
@@ -371,12 +373,15 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
         try {
             log.info("calling {}", fullUrl);
 
-            httpResult = http.get(fullUrl, headers);
+            httpResult = http.get(HttpRequest.builder()
+                                             .url(fullUrl)
+                                             .headers(headers)
+                                             .build());
         } catch (final Exception e) {
             log.error(e.getMessage(), e);
         } finally {
             log.debug("[{}]{} ({}ms)", httpResult == null ? 500 : httpResult.getStatusCode(), fullUrl,
-                      httpResult == null ? 0 : httpResult.getDelais());
+                      httpResult == null ? 0 : httpResult.getDelay());
             http.close();
         }
 

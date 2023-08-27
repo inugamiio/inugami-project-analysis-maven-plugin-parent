@@ -32,11 +32,12 @@ public @interface PotentialError {
 
     String type() default "technical";
 
-
+    @SuppressWarnings({"java:S2094", "java:S101"})
     public static class NONE {
 
     }
 
+    @SuppressWarnings({"java:S2094", "java:S101"})
     public static class NONE_EXCEPTION extends Exception {
 
     }

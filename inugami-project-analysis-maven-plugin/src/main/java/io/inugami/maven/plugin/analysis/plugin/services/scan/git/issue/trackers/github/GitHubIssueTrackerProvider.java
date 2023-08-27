@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.PR_URL;
 
-@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395", "java:S1068"})
+@SuppressWarnings({"java:S1845", "java:S6397", "java:S6395", "java:S1068", "java:S6353"})
 @Slf4j
 public class GitHubIssueTrackerProvider implements IssueTrackerProvider, PropertiesInitialization {
 
@@ -56,8 +56,6 @@ public class GitHubIssueTrackerProvider implements IssueTrackerProvider, Propert
 
     private String url;
     private String urlPr;
-    private long   timeout;
-    private int    nbThreads;
     private String token;
     private String projectSha;
 
@@ -87,8 +85,6 @@ public class GitHubIssueTrackerProvider implements IssueTrackerProvider, Propert
         url = configuration.grab(IssueTrackerProvider.URL);
         urlPr = configuration.grabOrDefault(PR_URL, url);
         token = configuration.grab(SERVER_TOKEN);
-        timeout = configuration.grabLong(TIMEOUT, 30000L);
-        nbThreads = configuration.grabInt(NB_THREADS, 10);
         projectSha = new EncryptionUtils().encodeSha1(url);
     }
 
@@ -114,7 +110,7 @@ public class GitHubIssueTrackerProvider implements IssueTrackerProvider, Propert
                 while (matcher.find()) {
                     final String feature    = matcher.group(GRP_FEATURE);
                     final String refFeature = matcher.group(GRP_REF_FEATURE);
-                    processIfNotNull(feature, value -> result.add(value));
+                    processIfNotNull(feature, result::add);
                     processIfNotNull(refFeature, value -> result.add("#" + value));
                 }
             }

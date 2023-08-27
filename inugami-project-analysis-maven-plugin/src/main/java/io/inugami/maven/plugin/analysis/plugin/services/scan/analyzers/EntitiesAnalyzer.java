@@ -40,6 +40,7 @@ import static io.inugami.maven.plugin.analysis.api.tools.BuilderTools.buildNodeV
 import static io.inugami.maven.plugin.analysis.api.utils.reflection.ReflectionService.hasAnnotation;
 import static io.inugami.maven.plugin.analysis.functional.FunctionalUtils.applyIfNotEmpty;
 
+
 @Slf4j
 public class EntitiesAnalyzer implements ClassAnalyzer {
 

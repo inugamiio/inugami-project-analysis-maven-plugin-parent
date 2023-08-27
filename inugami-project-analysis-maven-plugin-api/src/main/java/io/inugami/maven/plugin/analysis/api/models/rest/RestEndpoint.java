@@ -25,14 +25,19 @@ import java.lang.reflect.Method;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder(toBuilder = true)
-public class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
+public final class RestEndpoint implements JsonObject, Comparable<RestEndpoint> {
     private static final long           serialVersionUID = -6556991122270585469L;
     private              String         nickname;
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private              String         uri;
+    @ToString.Include
+    @EqualsAndHashCode.Include
     private              String         verb;
     private              String         headers;
     private              String         body;

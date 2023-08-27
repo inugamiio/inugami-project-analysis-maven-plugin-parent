@@ -1,0 +1,51 @@
+{
+  "createScripts" : [ "create script", "other create script" ],
+  "deleteScripts" : [ "deleteScripts", "other delete script" ],
+  "nodes" : [ {
+    "name" : "artifact",
+    "properties" : {
+      "color" : "blue",
+      "date" : "2023-05-21"
+    },
+    "type" : "Version",
+    "uid" : "uid"
+  }, {
+    "name" : "artifact",
+    "properties" : {
+      "color" : "blue",
+      "date" : "2023-05-21"
+    },
+    "type" : "addNode",
+    "uid" : "uid"
+  }, {
+    "name" : "simpleNode"
+  } ],
+  "nodesToDeletes" : [ "nodeD" ],
+  "relationships" : [ {
+    "from" : "nodeA",
+    "properties" : {
+      "color" : "red",
+      "date" : "2023-05-21"
+    },
+    "to" : "nodeB",
+    "type" : "has_relationship"
+  }, {
+    "from" : "nodeA",
+    "properties" : {
+      "color" : "red",
+      "date" : "2023-05-21"
+    },
+    "to" : "nodeB",
+    "type" : "other_relationship"
+  } ],
+  "relationshipsToDeletes" : [ {
+    "from" : "nodeA",
+    "properties" : {
+      "color" : "red",
+      "date" : "2023-05-21"
+    },
+    "to" : "nodeB",
+    "type" : "to_delete"
+  } ],
+  "type" : "neo4j"
+}
