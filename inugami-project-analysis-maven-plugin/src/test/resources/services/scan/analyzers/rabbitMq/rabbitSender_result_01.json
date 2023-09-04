@@ -11,10 +11,10 @@
   }, {
     "name" : "event",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"LocalDateTime\"\n}"
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}"
     },
     "type" : "INPUT_DTO",
-    "uid" : "52540fead214ad782213db2a0e9c2a344cb49b43e3102da08a80fbad9da3350a416477022d1187b1d6e27a9e5e278ab265c9f12c7cfded9532c4a0b1be4723ef"
+    "uid" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c"
   }, {
     "name" : "someValue",
     "properties" : {
@@ -33,7 +33,7 @@
   }, {
     "name" : "events.exchangeName_events.user.method.created.routingKey",
     "properties" : {
-      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"LocalDateTime\"\n}"
+      "payload" : "{\n  \"uid\":\"String\",\n  \"userName\":\"String\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\"\n}"
     },
     "type" : "Service",
     "uid" : "events.exchangeName_events.user.method.created.routingKey"
@@ -88,7 +88,7 @@
     "to" : "events.exchangeName_events.user.method.created.routingKey",
     "type" : "HAS_INPUT_DTO"
   }, {
-    "from" : "52540fead214ad782213db2a0e9c2a344cb49b43e3102da08a80fbad9da3350a416477022d1187b1d6e27a9e5e278ab265c9f12c7cfded9532c4a0b1be4723ef",
+    "from" : "c1fbea8ecc1a73ff19649e970ea066855c8ac06a5fa963ed9dbdbc0b05a37e3039b6ee76480b4f184842af0fa9dc8fd5008e1aa49e58e8bae4d57ac56c73820c",
     "to" : "events.exchangeName_events.user.method.created.routingKey",
     "type" : "HAS_INPUT_DTO"
   }, {
