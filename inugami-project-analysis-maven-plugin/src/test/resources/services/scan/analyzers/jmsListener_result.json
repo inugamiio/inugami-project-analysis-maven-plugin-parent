@@ -37,6 +37,13 @@
     "type" : "OUTPUT_DTO",
     "uid" : "0ced49a71eccb81128d2b485b18edbfe2697d6c8b1af63337d108c47a75bbbdb3742bf5c81a63fc94059eaf3a8d044921b8bc53eda37ad29a0a41a2c30309ebf"
   }, {
+    "name" : "comment",
+    "properties" : {
+      "payload" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}"
+    },
+    "type" : "INPUT_DTO",
+    "uid" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8"
+  }, {
     "name" : "JMS",
     "properties" : { },
     "type" : "ServiceType",
@@ -65,13 +72,6 @@
     },
     "type" : "Service",
     "uid" : "create.user.queue"
-  }, {
-    "name" : "comment",
-    "properties" : {
-      "payload" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"LocalDateTime\",\n  \"responses\":\"<<CommentEvent>>\"\n}"
-    },
-    "type" : "INPUT_DTO",
-    "uid" : "f699b5e858ffe8bf1141eb3510c45e678153a8e5d3aa61e1a63b59aaa95cb8d4ed155fbc9063bf93e983be9df9beeca380c70c4e800349b8bcc2251b6313e261"
   }, {
     "name" : "onCreate",
     "properties" : {
@@ -153,7 +153,7 @@
     "properties" : {
       "containerFactory" : "myContainerFactory",
       "destination" : "${my.activeMq.onCreated.queue}",
-      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"LocalDateTime\",\n  \"responses\":\"<<CommentEvent>>\"\n}",
+      "event" : "{\n  \"uid\":\"Long\",\n  \"content\":\"String\",\n  \"user\":\"User\",\n  \"created\":\"yyyy-MM-dd'T'HH:mm:ss.sssZ\",\n  \"responses\":[\"<<CommentEvent>>\"]\n}",
       "selector" : "${my.activeMq.selector}",
       "subscription" : "${my.activeMq.subscription}"
     },
@@ -187,6 +187,11 @@
     "to" : "onCreateComment",
     "type" : "HAS_INPUT_DTO"
   }, {
+    "from" : "887862acc93e9acb82618fc1c9a0871344a671b0e0fcfdc5a32eec666613ecc48595ea44a56ce979bcf9e75bd41f67459c4df8b61533574c48ba9c415cbaaee8",
+    "properties" : { },
+    "to" : "onCreateComment",
+    "type" : "HAS_INPUT_DTO"
+  }, {
     "from" : "cc3e5d5524d45f41866d76f22715ac70f2d11d3c3ed433580a6f740c4b7c04d1435cda0c602b9e12ee098fa67be6590c06bcd53f94cd86ec4bdf46b1fe814cc5",
     "properties" : { },
     "to" : "create.user.queue",
@@ -215,11 +220,6 @@
     },
     "to" : "io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$Listener.sendCreateUser(<String>,<io.inugami.maven.plugin.analysis.plugin.services.scan.analyzers.JmsListenerAnalyzerTest$User>)",
     "type" : "USE_BY"
-  }, {
-    "from" : "f699b5e858ffe8bf1141eb3510c45e678153a8e5d3aa61e1a63b59aaa95cb8d4ed155fbc9063bf93e983be9df9beeca380c70c4e800349b8bcc2251b6313e261",
-    "properties" : { },
-    "to" : "onCreateComment",
-    "type" : "HAS_INPUT_DTO"
   }, {
     "from" : "io.inugami.test:basic-artifact:1.0.0-SNAPSHOT:jar",
     "properties" : { },
