@@ -35,6 +35,15 @@ export class GlossaryDisplayComponent implements OnInit {
             this.hasValues = value != null && value.length > 0;
             this.innerValue = value;
         }
+
+        if(this.innerValue !=undefined && this.innerValue!=null && this.innerValue.length>0){
+
+            this.innerValue.sort((ref,value)=>{
+                let refValue = ref!=null && ref.value!=null ? ref.value: "";
+                let valueValue = value!=null && value.value!=null ? value.value: "";
+                return refValue.localeCompare(valueValue);
+            })
+        }
     }
 
     registerOnChange(fn: any) {

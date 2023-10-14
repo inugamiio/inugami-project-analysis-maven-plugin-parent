@@ -94,12 +94,51 @@ export class ReleaseNoteComponent implements ControlValueAccessor, OnInit {
     }
     return "default";
   }
+
+  public sortData(){
+    if(this.innerValue==undefined || this.innerValue==null){
+       return;
+    }
+
+    this.sortIssues();
+  }
+
+  public sortIssues(){
+    if(this.innerValue.issues==undefined || this.innerValue.issues==null){
+      return;
+   }
+
+   this.innerValue.issues.sort((ref,value)=>{
+     let refHash = this.buildIssueHash(ref);
+     let valueHash = this.buildIssueHash(value);
+     return refHash.localeCompare(valueHash);
+   });
+  }
+
+  public buildIssueHash(issue:any):string{
+    if(issue==undefined|| issue==null){
+      return "";
+    }
+    let value = [];
+    if(issue.labels != undefined && issue.labels!=null){
+      issue.labels.sort();
+      value.push(issue.labels.join("_"));
+    }else{
+      value.push("undefined");
+    }
+
+    value.push(issue.name==undefined || issue.name==null ? "undefined":issue.name);
+    return value.join(":");
+  }
+
   /*****************************************************************************
   * IMPLEMENTS ControlValueAccessor
   *****************************************************************************/
   writeValue(value: any) {
     if (value !== this.innerValue) {
       this.innerValue = value;
+      this.sortData();
+     
     }
   }
 

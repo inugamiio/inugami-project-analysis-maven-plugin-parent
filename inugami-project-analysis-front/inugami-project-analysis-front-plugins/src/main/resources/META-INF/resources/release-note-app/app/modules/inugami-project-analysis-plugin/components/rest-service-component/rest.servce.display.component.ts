@@ -78,6 +78,21 @@ export class RestServiceDisplayComponent{
     renderScript(value:string){
         return this.domSanitizer.sanitize(SecurityContext.HTML,value);
     }
+
+    buildServiceHash(value:any){
+        let hash=[];
+        if(value.uri==undefined ||value.uri==null ){
+            hash.push("undefined");
+        }else{
+            hash.push(value.uri);
+        }
+        if(value.verb==undefined ||value.verb==null ){
+            hash.push("undefined");
+        }else{
+            hash.push(value.verb);
+        }
+        return hash.join(":");
+    }
     /*****************************************************************************
     * IMPLEMENTS ControlValueAccessor
     *****************************************************************************/
@@ -87,6 +102,11 @@ export class RestServiceDisplayComponent{
             this.innerValue = value;
         }
         if(this.hasValues){
+            this.innerValue.sort((ref,value)=>{
+                let refHash = this.buildServiceHash(ref);
+                let valueHash = this.buildServiceHash(value);
+                return refHash.localeCompare(valueHash);
+            });
             for(let item of this.innerValue ){
                 this.showDetail.push(false);
             }
