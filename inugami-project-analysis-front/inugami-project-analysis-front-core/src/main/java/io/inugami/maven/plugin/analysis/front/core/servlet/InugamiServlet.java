@@ -42,6 +42,7 @@ public class InugamiServlet extends HttpServlet {
     private final String contextPath;
     private final String htmlBasePath;
     private final String customCss;
+    private final String title;
     // =========================================================================
     // API
     // =========================================================================
@@ -57,6 +58,7 @@ public class InugamiServlet extends HttpServlet {
                                                 .contextPath(contextPath)
                                                 .htmlBasePath(htmlBasePath)
                                                 .customCss(customCss)
+                                                .title(title)
                                                 .build()
                                                 .render());
         } catch (final Exception e) {
