@@ -128,7 +128,6 @@ public class JiraTask implements Callable<ScanNeo4jResult> {
 
         processIfNotNull(extractIssueType(fields), value -> properties.put(FIELD_ISSUE_TYPE, value));
         processIfNotNull(extract(FIELD_SUMMARY, fields), value -> properties.put(FIELD_TITLE, value));
-        processIfNotNull(extract(FIELD_DESCRIPTION, fields), value -> properties.put(FIELD_DESCRIPTION, value));
         processIfNotNull(extract(FIELD_CREATED, json), value -> properties.put(FIELD_CREATED_AT, value));
         processIfNotNull(buildUrl(name), value -> properties.put(FIELD_URL, value));
 

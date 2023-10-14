@@ -8,7 +8,6 @@
   }, {
     "name" : "INU-4",
     "properties" : {
-      "description" : "Donec eu urna in felis tempus viverra. Quisque mi magna, fringilla sed dui nec, maximus congue est. Maecenas sit amet interdum purus, eget mattis nisi. Cras nulla mauris, placerat sit amet ante ac, aliquet suscipit elit. Donec commodo nunc vel nibh feugiat pharetra.",
       "issueType" : "sub-task",
       "title" : "add http connector",
       "url" : "http://localhost/browse/INU-4"

@@ -40,6 +40,7 @@ import java.util.concurrent.Callable;
 
 import static io.inugami.maven.plugin.analysis.api.utils.NodeUtils.processIfNotNull;
 import static io.inugami.maven.plugin.analysis.plugin.services.scan.git.issue.trackers.IssueTrackerCommons.*;
+
 @SuppressWarnings({"java:S1301"})
 @Slf4j
 @RequiredArgsConstructor
@@ -129,14 +130,13 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
         if (json != null) {
 
             final String name = IssueTrackerCommons.TicketType.ISSUE.getNodePrefix() +
-                    extract(FIELD_IID, json);
+                                extract(FIELD_IID, json);
             final String uid = projectSha + "_" + name;
 
             final LinkedHashMap<String, Serializable> properties = new LinkedHashMap<>();
 
             processIfNotNull(extract(FIELD_IID, json), value -> properties.put(UUID, value));
             processIfNotNull(extract(FIELD_TITLE, json), value -> properties.put(FIELD_TITLE, value));
-            processIfNotNull(extract(FIELD_BODY, json), value -> properties.put(FIELD_DESCRIPTION, value));
             processIfNotNull(extract(FIELD_CREATED_AT, json), value -> properties.put(FIELD_CREATED_AT, value));
             processIfNotNull(extract(FIELD_WEB_URL, json), value -> properties.put(FIELD_URL, value));
 
@@ -155,7 +155,11 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
         return result;
     }
 
-    protected void vuildIssueNodeLabels(final JsonNode json, final ScanNeo4jResult resultNeo4J, final String uid, final LinkedHashMap<String, Serializable> properties, final JsonNode labels) {
+    protected void vuildIssueNodeLabels(final JsonNode json,
+                                        final ScanNeo4jResult resultNeo4J,
+                                        final String uid,
+                                        final LinkedHashMap<String, Serializable> properties,
+                                        final JsonNode labels) {
         final List<String> labelNames = new ArrayList<>();
         labels.spliterator().forEachRemaining(item -> {
             if (!item.isNull()) {
@@ -323,7 +327,9 @@ public class GitHubTask implements Callable<ScanNeo4jResult> {
         return result;
     }
 
-    protected static JsonNode processCallGitHub(final String fullUrl, final Map<String, String> headers, JsonNode result) {
+    protected static JsonNode processCallGitHub(final String fullUrl,
+                                                final Map<String, String> headers,
+                                                JsonNode result) {
         HttpConnectorResult      httpResult = null;
         final HttpBasicConnector http       = new HttpBasicConnector(TIMEOUT, TIMEOUT, MAX_CONNECTIONS, MAX_CONNECTIONS, TIMEOUT);
 

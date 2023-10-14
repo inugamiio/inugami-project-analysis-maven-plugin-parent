@@ -126,7 +126,6 @@ public class GitlabTask implements Callable<ScanNeo4jResult> {
             processIfNotNull(extract(UUID, json), value -> properties.put(UUID, value));
             processIfNotNull(extract(FIELD_PROJECT_ID, json), value -> properties.put(FIELD_PROJECT_ID, value));
             processIfNotNull(extract(FIELD_TITLE, json), value -> properties.put(FIELD_TITLE, value));
-            processIfNotNull(extract(FIELD_DESCRIPTION, json), value -> properties.put(FIELD_DESCRIPTION, value));
             processIfNotNull(extract(FIELD_CREATED_AT, json), value -> properties.put(FIELD_CREATED_AT, value));
             processIfNotNull(extract(FIELD_WEB_URL, json), value -> properties.put(FIELD_URL, value));
 
