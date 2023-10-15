@@ -45,6 +45,7 @@ public class IndexRenderer {
     private final        String                     contextPath;
     private final        String                     htmlBasePath;
     private final        String                     customCss;
+    private final        String                     title;
     private static final AtomicReference<String>    CACHE                      = new AtomicReference<>();
     private static final List<FrontPluginSpi>       PLUGINS                    = loadPlugins();
     private static final IndexHtmlLoadingContentSpi INDEX_HTML_LOADING_CONTENT = loadIndexHtmlLoaderRenderer();
@@ -88,7 +89,12 @@ public class IndexRenderer {
     protected void renderHead(final JsonBuilder result) {
         result.write(DOCTYPE_HTML).line();
         result.write(openTag(HEAD));
-        result.write(tag(TITLE, () -> INDEX_HTML_LOADING_CONTENT.buildPluginTitle(PLUGINS)));
+        if (title == null) {
+            result.write(tag(TITLE, () -> INDEX_HTML_LOADING_CONTENT.buildPluginTitle(PLUGINS)));
+        } else {
+            result.write(tag(TITLE, () -> title));
+        }
+
         result.write(autoClosableTag(LINK,
                                      HtmlAttribute.build("rel", "shortcut icon"),
                                      HtmlAttribute.build("type", "image/x-icon"),

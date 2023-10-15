@@ -32,6 +32,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.atomic.AtomicReference;
+
 @SuppressWarnings({"java:S1075"})
 @Slf4j
 @EnableWebMvc
@@ -39,7 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MvcConfiguration implements WebMvcConfigurer {
     public static final AtomicReference<String> CURRENT_PATH = new AtomicReference<>();
     public static final String                  SEP          = "/";
-    public static final String DEFAULT_PATH = "/release-note-app/";
+    public static final String                  DEFAULT_PATH = "/release-note-app/";
     @Value("${server.servlet.context-path:#{null}}")
     private             String                  contextPath;
 
@@ -98,7 +99,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public ServletRegistrationBean<InugamiServlet> indexHtmlBean() {
+    public ServletRegistrationBean<InugamiServlet> indexHtmlBean(@Value("${inugami.release.note.title:#{null}}") final String title) {
         log.info("release note exposed : {}", contextPath + currentPath);
         final String basePath = contextPath + currentPath.substring(0, currentPath.length() - 1);
         final ServletRegistrationBean<InugamiServlet> bean = new ServletRegistrationBean<>(
@@ -106,6 +107,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
                               .contextPath(basePath)
                               .htmlBasePath(htmlBasePath)
                               .customCss(customCss)
+                              .title(title)
                               .build(),
                 currentPath, currentPath + "index.html");
         bean.setLoadOnStartup(1);
